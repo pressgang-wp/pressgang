@@ -4,7 +4,7 @@
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
-;(function($) {
+;(function ($) {
 	'use strict';
 
 	var ts = $.tablesorter,
@@ -12,7 +12,7 @@
 		tpos, ttop, tleft,
 
 		view = ts.view = {
-			copyCaption: function(c, wo) {
+			copyCaption: function (c, wo) {
 				view.removeCaption(c, wo);
 
 				if (c.$table.find('caption').length > 0) {
@@ -20,16 +20,16 @@
 				}
 			},
 
-			removeCaption: function(c, wo) {
+			removeCaption: function (c, wo) {
 				$(wo.view_caption).empty();
 			},
 
-			buildToolBar: function(c, wo) {
+			buildToolBar: function (c, wo) {
 				view.removeToolBar(c, wo);
 				view.copyCaption(c, wo);
 				var $toolbar = $(wo.view_toolbar);
 
-				$.each(wo.view_layouts, function(k, v) {
+				$.each(wo.view_layouts, function (k, v) {
 					var classes = wo.view_switcher_class;
 					if (k === wo.view_layout) {
 						classes += ' active';
@@ -49,7 +49,7 @@
 					$toolbar.append($switcher);
 				});
 
-				$toolbar.find('.' + wo.view_switcher_class).on('click', function(e) {
+				$toolbar.find('.' + wo.view_switcher_class).on('click', function (e) {
 					e.preventDefault();
 					if ($(this).hasClass('active')) {
 						// if currently clicked button has the active class
@@ -75,12 +75,12 @@
 				});
 			},
 
-			removeToolBar: function(c, wo) {
+			removeToolBar: function (c, wo) {
 				$(wo.view_toolbar).empty();
 				view.removeCaption(c, wo);
 			},
 
-			buildView: function(c, wo) {
+			buildView: function (c, wo) {
 				view.removeView(c, wo);
 
 				var myview = wo.view_layouts[wo.view_layout];
@@ -88,13 +88,13 @@
 					'class': wo.view_layout
 				});
 
-				ts.getColumnText(c.$table, 0, function(data) {
+				ts.getColumnText(c.$table, 0, function (data) {
 					var tmpl = myview.tmpl;
 
-					$.each($(data.$row).find('td'), function(k, v) {
+					$.each($(data.$row).find('td'), function (k, v) {
 						var attrs = {};
 						var reg = '{col' + k + '}';
-						$.each(v.attributes, function(idx, attr) {
+						$.each(v.attributes, function (idx, attr) {
 							attrs[attr.nodeName] = attr.nodeValue;
 						});
 						var content = $(v).html();
@@ -107,7 +107,7 @@
 					});
 
 					var $tmpl = $(tmpl);
-					$.each(data.$row[0].attributes, function(idx, attr) {
+					$.each(data.$row[0].attributes, function (idx, attr) {
 						if (attr.nodeName === 'class') {
 							$tmpl.attr(attr.nodeName, $tmpl.attr(attr.nodeName) + ' ' + attr.nodeValue);
 						} else {
@@ -121,11 +121,11 @@
 				c.$table.triggerHandler('viewComplete');
 			},
 
-			removeView: function(c, wo) {
+			removeView: function (c, wo) {
 				$(wo.view_container).empty();
 			},
 
-			hideTable: function(c) {
+			hideTable: function (c) {
 				tpos = c.$table.css('position');
 				ttop = c.$table.css('bottom');
 				tleft = c.$table.css('left');
@@ -139,7 +139,7 @@
 				is_hidden = true;
 			},
 
-			init: function(c, wo) {
+			init: function (c, wo) {
 				if (wo.view_layout === false) {
 					return;
 				}
@@ -152,13 +152,13 @@
 					view.hideTable(c, wo);
 				}
 
-				c.$table.on('tablesorter-ready', function() {
+				c.$table.on('tablesorter-ready', function () {
 					view.buildToolBar(c, wo);
 					view.buildView(c, wo);
 				});
 			},
 
-			remove: function(c, wo) {
+			remove: function (c, wo) {
 				view.removeToolBar(c, wo);
 				view.removeView(c, wo);
 
@@ -183,11 +183,11 @@
 			view_layouts: {}
 		},
 
-		init: function(table, thisWidget, c, wo) {
+		init: function (table, thisWidget, c, wo) {
 			view.init(c, wo);
 		},
 
-		remove: function(table, c, wo) {
+		remove: function (table, c, wo) {
 			view.remove(c, wo);
 		}
 	});

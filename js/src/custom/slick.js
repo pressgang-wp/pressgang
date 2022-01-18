@@ -1,6 +1,6 @@
 (function ($) {
 
-    // setup slick
-    $('[data-slick]').slick();
+	// setup slick
+	$('[data-slick]').slick();
 
 })(jQuery);

@@ -1,8 +1,8 @@
 (function ($) {
 
-    $(function () {
+	$(function () {
 
 
-    });
+	});
 
 })(jQuery);

@@ -4,26 +4,26 @@
  * Jonathan Snook comment @ http://blog.stevenlevithan.com/archives/javascript-roman-numeral-converter#comment-16140
  */
 /*jshint jquery:true, unused:false */
-;(function($) {
+;(function ($) {
 	'use strict';
 
 	// allow lower case roman numerals, since lists use i, ii, iii, etc.
 	var validator = /^M*(?:D?C{0,3}|C[MD])(?:L?X{0,3}|X[CL])(?:V?I{0,3}|I[XV])$/i,
 		matcher = /\b([MCDLXVI]+\b)/gi,
-		lookup = { I:1, V:5, X:10, L:50, C:100, D:500, M:1000 };
+		lookup = {I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000};
 
 	$.tablesorter.addParser({
 		id: 'roman',
-		is: function() {
+		is: function () {
 			return false;
 		},
-		format: function(s) {
+		format: function (s) {
 			var val,
 				roman = s.toUpperCase().split(''),
 				num = 0;
 
 			// roman numerals not found!
-			if ( !(s && validator.test(s)) ) {
+			if (!(s && validator.test(s))) {
 				return s;
 			}
 
@@ -39,25 +39,25 @@
 
 	$.tablesorter.addParser({
 		id: 'roman-ignore',
-		is: function() {
+		is: function () {
 			return false;
 		},
-		format: function(s, table, cell, column) {
+		format: function (s, table, cell, column) {
 			var val, orig,
 				c = table.config,
 				ignore = $.isArray(c.roman_ignore) ? c.roman_ignore[column] : 0,
 				// find roman numerals
-				roman = ( isNaN(ignore) ?
-					// ignore can be a regex or string
-					$.trim( s.replace(ignore, '') ) :
-					// or a number to ignore the last x letters...
-					$.trim( s.substring(0, s.length - ignore) )
+				roman = (isNaN(ignore) ?
+						// ignore can be a regex or string
+						$.trim(s.replace(ignore, '')) :
+						// or a number to ignore the last x letters...
+						$.trim(s.substring(0, s.length - ignore))
 				).match(matcher),
 				v = validator.test(roman),
 				num = 0;
 
 			// roman numerals not found!
-			if ( !(v) ) {
+			if (!(v)) {
 				return s;
 			}
 
@@ -80,13 +80,13 @@
 
 	$.tablesorter.addParser({
 		id: 'roman-extract',
-		is: function() {
+		is: function () {
 			return false;
 		},
-		format: function(s) {
+		format: function (s) {
 			var val,
 				// find roman numerals
-				roman = $.grep(s.split(/\b/), function(v) {
+				roman = $.grep(s.split(/\b/), function (v) {
 					return validator.test(v) ? v : '';
 				}).join('').match(matcher),
 
@@ -94,7 +94,7 @@
 				num = 0;
 
 			// roman numerals not found!
-			if ( !(v) ) {
+			if (!(v)) {
 				return s;
 			}
 

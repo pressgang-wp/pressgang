@@ -13,40 +13,40 @@ namespace PressGang;
  */
 class ColorPalette {
 
-    protected $color_palette = array();
+	protected $color_palette = array();
 
-    /**
-     * constructor
-     *
-     */
-    public function __construct() {
-        add_action('after_setup_theme', array($this, 'setup'), 50);
-    }
+	/**
+	 * constructor
+	 *
+	 */
+	public function __construct() {
+		add_action( 'after_setup_theme', array( $this, 'setup' ), 50 );
+	}
 
-    /**
-     * Theme Setup
-     *
-     * @hooked after_setup_theme
-     */
-    public function setup() {
+	/**
+	 * Theme Setup
+	 *
+	 * @hooked after_setup_theme
+	 */
+	public function setup() {
 
-        $this->color_palette = Config::get('color-palette');
+		$this->color_palette = Config::get( 'color-palette' );
 
-        if(is_array($this->color_palette)) {
+		if ( is_array( $this->color_palette ) ) {
 
-            foreach ($this->color_palette as &$palette) {
-                if (!isset($palette['slug'])) {
-                    $palette['slug'] = sanitize_title($palette['name']);
-                }
-            }
+			foreach ( $this->color_palette as &$palette ) {
+				if ( ! isset( $palette['slug'] ) ) {
+					$palette['slug'] = sanitize_title( $palette['name'] );
+				}
+			}
 
-            // disable custom Colors
-            add_theme_support('disable-custom-colors');
+			// disable custom Colors
+			add_theme_support( 'disable-custom-colors' );
 
-            // editor color palette
-            add_theme_support('editor-color-palette', $this->color_palette);
-        }
-    }
+			// editor color palette
+			add_theme_support( 'editor-color-palette', $this->color_palette );
+		}
+	}
 }
 
 new ColorPalette();

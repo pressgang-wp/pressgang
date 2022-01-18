@@ -1,16 +1,16 @@
 /*! Parser: duration & countdown - updated 2/7/2015 (v2.19.0) */
 /*jshint jquery:true, unused:false */
-;(function($) {
+;(function ($) {
 	'use strict';
 
 	// If any number > 9999, then set table.config.durationLength = 5
 	// The below regex matches this duration example: 1y 23d 12h 44m 9s
 	$.tablesorter.addParser({
 		id: 'duration',
-		is: function() {
+		is: function () {
 			return false;
 		},
-		format: function(s, table) {
+		format: function (s, table) {
 			var i, time,
 				c = table.config,
 				t = '',
@@ -27,9 +27,9 @@
 				c.durationRegex = new RegExp(t, 'i');
 			}
 			// remove commas from value
-			time = ( c.usNumberFormat ? s.replace(/,/g, '') : s.replace( /(\d)(?:\.|\s*)(\d)/g, '$1$2') ).match(c.durationRegex);
+			time = (c.usNumberFormat ? s.replace(/,/g, '') : s.replace(/(\d)(?:\.|\s*)(\d)/g, '$1$2')).match(c.durationRegex);
 			for (i = 1; i < llen + 1; i++) {
-				duration += ( str + ( time[i] || 0 ) ).slice(-len);
+				duration += (str + (time[i] || 0)).slice(-len);
 			}
 			return duration;
 		},
@@ -43,23 +43,23 @@
 		is: function () {
 			return false;
 		},
-		format: function ( text, table ) {
+		format: function (text, table) {
 			// change maxDigits to 4, if values go > 999
 			// or to 5 for values > 9999, etc.
 			var maxDigits = table.config.durationLength || 4,
 				// prefix contains leading zeros that are tacked
-				prefix = new Array( maxDigits + 1 ).join( '0' ),
+				prefix = new Array(maxDigits + 1).join('0'),
 				// split time into blocks
-				blocks = text.split( /\s*:\s*/ ),
+				blocks = text.split(/\s*:\s*/),
 				len = blocks.length,
 				result = [];
 			// add values in reverse, so if there is only one block
 			// ( e.g. '10' ), then it would be the time in seconds
-			while ( len ) {
-				result.push( ( prefix + ( blocks[ --len ] || 0 ) ).slice( -maxDigits ) );
+			while (len) {
+				result.push((prefix + (blocks[--len] || 0)).slice(-maxDigits));
 			}
 			// reverse the results and join them
-			return result.length ? result.reverse().join( '' ) : text;
+			return result.length ? result.reverse().join('') : text;
 		},
 		type: 'text'
 	});
