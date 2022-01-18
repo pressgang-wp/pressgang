@@ -4,12 +4,12 @@
 * Demo: http://jsfiddle.net/Mottie/abkNM/154/
 */
 /*global jQuery: false */
-;(function($) {
+;(function ($) {
 	'use strict';
 
 	var ts = $.tablesorter;
 	ts.symbolRegex = /[\u215b\u215c\u215d\u215e\u00bc\u00bd\u00be]/g;
-	ts.processFractions = function(n, table) {
+	ts.processFractions = function (n, table) {
 		if (n) {
 			var t, p = 0;
 			n = $.trim(n.replace(/\"/, ''));
@@ -26,15 +26,15 @@
 				n = p + parseInt(t[0], 10) / parseInt(t[1] || 1, 10);
 				// look for fraction symbols
 			} else if (ts.symbolRegex.test(n)) {
-				n = p + n.replace(ts.symbolRegex, function(m) {
+				n = p + n.replace(ts.symbolRegex, function (m) {
 					return {
-						'\u215b' : '.125', // 1/8
-						'\u215c' : '.375', // 3/8
-						'\u215d' : '.625', // 5/8
-						'\u215e' : '.875', // 7/8
-						'\u00bc' : '.25',  // 1/4
-						'\u00bd' : '.5',   // 1/2
-						'\u00be' : '.75'   // 3/4
+						'\u215b': '.125', // 1/8
+						'\u215c': '.375', // 3/8
+						'\u215d': '.625', // 5/8
+						'\u215e': '.875', // 7/8
+						'\u00bc': '.25',  // 1/4
+						'\u00bd': '.5',   // 1/2
+						'\u00be': '.75'   // 3/4
 					}[m];
 				});
 			}
@@ -44,17 +44,19 @@
 
 	$.tablesorter.addParser({
 		id: 'distance',
-		is: function() {
+		is: function () {
 			// return false so this parser is not auto detected
 			return false;
 		},
-		format: function(s, table) {
-			if (s === '') { return ''; }
+		format: function (s, table) {
+			if (s === '') {
+				return '';
+			}
 			// look for feet symbol = '
 			// very generic test to catch 1.1', 1 1/2' and 1½'
-			var d = (/^\s*\S*(\s+\S+)?\s*\'/.test(s)) ? s.split(/\'/) : [ 0, s ],
-			f = ts.processFractions(d[0], table), // feet
-			i = ts.processFractions(d[1], table); // inches
+			var d = (/^\s*\S*(\s+\S+)?\s*\'/.test(s)) ? s.split(/\'/) : [0, s],
+				f = ts.processFractions(d[0], table), // feet
+				i = ts.processFractions(d[1], table); // inches
 			return (/[\'\"]/).test(s) ? parseFloat(f) + (parseFloat(i) / 12 || 0) : parseFloat(f) + parseFloat(i);
 		},
 		type: 'numeric'

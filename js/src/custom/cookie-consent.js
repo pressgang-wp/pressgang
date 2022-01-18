@@ -1,22 +1,22 @@
 (function ($) {
 
-    $(function () {
+	$(function () {
 
-        var $consent = $('.cookie-consent');
+		var $consent = $('.cookie-consent');
 
-        if (Cookies.get('cookie-consent')) {
-            $consent.hide();
-        }
+		if (Cookies.get('cookie-consent')) {
+			$consent.hide();
+		}
 
-        $consent.find('.btn').on('click', function () {
+		$consent.find('.btn').on('click', function () {
 
-            Cookies.set('cookie-consent', 1, {expires: 28});
+			Cookies.set('cookie-consent', 1, {expires: 28});
 
-            $consent.fadeOut();
+			$consent.fadeOut();
 
-            return false;
-        });
+			return false;
+		});
 
-    });
+	});
 
 })(jQuery);

@@ -109,7 +109,7 @@ class DuplicatePost {
 					}
 
 					foreach ( $meta_values as $meta_value ) {
-						add_post_meta( $new_post_id, $meta_key, maybe_unserialize($meta_value) );
+						add_post_meta( $new_post_id, $meta_key, maybe_unserialize( $meta_value ) );
 					}
 				}
 			}

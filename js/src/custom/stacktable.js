@@ -1,6 +1,6 @@
 (function ($) {
 
-    // setup stacktables
-    $('.stacktable').stacktable();
+	// setup stacktables
+	$('.stacktable').stacktable();
 
 })(jQuery);

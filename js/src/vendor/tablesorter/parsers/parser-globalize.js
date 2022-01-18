@@ -3,7 +3,7 @@
  Globalize.locale( 'xx' ) in the globalize settings */
 /*jshint jquery:true, newcap: false */
 /*global Globalize:false */
-;( function( $ ) {
+;(function ($) {
 	'use strict';
 
 	/*! jQuery Globalize date parser (https://github.com/jquery/globalize#date-module) */
@@ -12,26 +12,26 @@
 		is: function () {
 			return false;
 		},
-		format: function ( str, table, cell, cellIndex ) {
+		format: function (str, table, cell, cellIndex) {
 			var globalize, date,
 				c = table.config,
 				// add options to 'config.globalize' for all columns --> globalize : { skeleton: 'GyMMMd' }
 				// or per column by using the column index --> globalize : { 0 : { datetime: 'medium' } }
-				options = c.globalize && ( c.globalize[ cellIndex ] || c.globalize ) || {};
-			if ( Globalize ) {
+				options = c.globalize && (c.globalize[cellIndex] || c.globalize) || {};
+			if (Globalize) {
 				globalize = typeof options.Globalize === 'object' ?
 					// initialized Globalize object
 					options.Globalize :
 					// Globalize initialized from "lang" option
-					Globalize( options.lang || 'en' );
-				if ( !options.Globalize ) {
+					Globalize(options.lang || 'en');
+				if (!options.Globalize) {
 					// cache the object
 					options.Globalize = globalize;
 				}
 			}
-			date = globalize && globalize.dateParser ? globalize.dateParser( options )( str ) :
-				str ? new Date( str ) : str;
-			return date instanceof Date && isFinite( date ) ? date.getTime() : str;
+			date = globalize && globalize.dateParser ? globalize.dateParser(options)(str) :
+				str ? new Date(str) : str;
+			return date instanceof Date && isFinite(date) ? date.getTime() : str;
 		},
 		type: 'numeric'
 	});
@@ -42,28 +42,28 @@
 		is: function () {
 			return false;
 		},
-		format: function ( str, table, cell, cellIndex ) {
+		format: function (str, table, cell, cellIndex) {
 			var globalize, num,
 				c = table.config,
 				// add options to 'config.globalize' for all columns --> globalize : { skeleton: 'GyMMMd' }
 				// or per column by using the column index --> globalize : { 0 : { datetime: 'medium' } }
-				options = c.globalize && ( c.globalize[ cellIndex ] || c.globalize ) || {};
-			if ( Globalize ) {
+				options = c.globalize && (c.globalize[cellIndex] || c.globalize) || {};
+			if (Globalize) {
 				globalize = typeof options.Globalize === 'object' ?
 					// initialized Globalize object
 					options.Globalize :
 					// Globalize initialized from "lang" option
-					Globalize( options.lang || 'en' );
-				if ( !options.Globalize ) {
+					Globalize(options.lang || 'en');
+				if (!options.Globalize) {
 					// cache the object
 					options.Globalize = globalize;
 				}
 			}
-			num = globalize && globalize.numberParser ? globalize.numberParser( options )( str ) :
-				str ? $.tablesorter.formatFloat( ( str || '' ).replace( /[^\w,. \-()]/g, '' ), table ) : str;
+			num = globalize && globalize.numberParser ? globalize.numberParser(options)(str) :
+				str ? $.tablesorter.formatFloat((str || '').replace(/[^\w,. \-()]/g, ''), table) : str;
 			return str && typeof num === 'number' ? num : str;
 		},
 		type: 'numeric'
 	});
 
-})( jQuery );
+})(jQuery);

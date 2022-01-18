@@ -37,7 +37,7 @@
 	   val = (v && v.hasOwnProperty('mywidget')) ? v.mywidget : '';
 	   alert(val); // 'data1' if saved, or '' if not
 	*/
-	ts.storage = function(table, key, value, options) {
+	ts.storage = function (table, key, value, options) {
 		table = $(table)[0];
 		var cookieIndex, cookies, date,
 			hasStorage = false,
@@ -46,17 +46,17 @@
 			wo = c && c.widgetOptions,
 			debug = ts.debug(c, 'storage'),
 			storageType = (
-				( options && options.storageType ) || ( wo && wo.storage_storageType )
+				(options && options.storageType) || (wo && wo.storage_storageType)
 			).toString().charAt(0).toLowerCase(),
 			// deprecating "useSessionStorage"; any storageType setting overrides it
 			session = storageType ? '' :
-				( options && options.useSessionStorage ) || ( wo && wo.storage_useSessionStorage ),
+				(options && options.useSessionStorage) || (wo && wo.storage_useSessionStorage),
 			$table = $(table),
 			// id from (1) options ID, (2) table 'data-table-group' attribute, (3) widgetOptions.storage_tableId,
 			// (4) table ID, then (5) table index
 			id = options && options.id ||
-				$table.attr( options && options.group || wo && wo.storage_group || 'data-table-group') ||
-				wo && wo.storage_tableId || table.id || $('.tablesorter').index( $table ),
+				$table.attr(options && options.group || wo && wo.storage_group || 'data-table-group') ||
+				wo && wo.storage_tableId || table.id || $('.tablesorter').index($table),
 			// url from (1) options url, (2) table 'data-table-page' attribute, (3) widgetOptions.storage_fixedUrl,
 			// (4) table.config.fixedUrl (deprecated), then (5) window location path
 			url = options && options.url ||
@@ -73,7 +73,7 @@
 					hasStorage = true;
 					window[storageType].removeItem('_tmptest');
 				} catch (error) {
-					console.warn( storageType + ' is not supported in this browser' );
+					console.warn(storageType + ' is not supported in this browser');
 				}
 			}
 		}
@@ -83,7 +83,7 @@
 		// *** get value ***
 		if ($.parseJSON) {
 			if (hasStorage) {
-				values = $.parseJSON( window[storageType][key] || 'null' ) || {};
+				values = $.parseJSON(window[storageType][key] || 'null') || {};
 			} else {
 				// old browser, using cookies
 				cookies = document.cookie.split(/[;\s|=]/);

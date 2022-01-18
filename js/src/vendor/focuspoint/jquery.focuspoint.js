@@ -6,7 +6,7 @@
  * @preserve
  */
 ;
-(function($) {
+(function ($) {
 
 	var defaults = {
 		reCalcOnWindowResize: true,
@@ -14,11 +14,11 @@
 	};
 
 	//Setup a container instance
-	var setupContainer = function($el) {
+	var setupContainer = function ($el) {
 		var imageSrc = $el.find('img').attr('src');
 		$el.data('imageSrc', imageSrc);
 
-		resolveImageSize(imageSrc, function(err, dim) {
+		resolveImageSize(imageSrc, function (err, dim) {
 			$el.data({
 				imageW: dim.width,
 				imageH: dim.height
@@ -29,11 +29,11 @@
 
 	//Get the width and the height of an image
 	//by creating a new temporary image
-	var resolveImageSize = function(src, cb) {
+	var resolveImageSize = function (src, cb) {
 		//Create a new image and set a
 		//handler which listens to the first
 		//call of the 'load' event.
-		$('<img />').one('load', function() {
+		$('<img />').one('load', function () {
 			//'this' references to the new
 			//created image
 			cb(null, {
@@ -44,13 +44,13 @@
 	};
 
 	//Create a throttled version of a function
-	var throttle = function(fn, ms) {
+	var throttle = function (fn, ms) {
 		var isRunning = false;
-		return function() {
+		return function () {
 			var args = Array.prototype.slice.call(arguments, 0);
 			if (isRunning) return false;
 			isRunning = true;
-			setTimeout(function() {
+			setTimeout(function () {
 				isRunning = false;
 				fn.apply(null, args);
 			}, ms);
@@ -58,11 +58,11 @@
 	};
 
 	//Calculate the new left/top values of an image
-	var calcShift = function(conToImageRatio, containerSize, imageSize, focusSize, toMinus) {
+	var calcShift = function (conToImageRatio, containerSize, imageSize, focusSize, toMinus) {
 		var containerCenter = Math.floor(containerSize / 2); //Container center in px
 		var focusFactor = (focusSize + 1) / 2; //Focus point of resize image in px
 		var scaledImage = Math.floor(imageSize / conToImageRatio); //Can't use width() as images may be display:none
-		var focus =  Math.floor(focusFactor * scaledImage);
+		var focus = Math.floor(focusFactor * scaledImage);
 		if (toMinus) focus = scaledImage - focus;
 		var focusOffset = focus - containerCenter; //Calculate difference between focus point and center
 		var remainder = scaledImage - focus; //Reduce offset if necessary so image remains filled
@@ -70,11 +70,11 @@
 		if (remainder < containerRemainder) focusOffset -= containerRemainder - remainder;
 		if (focusOffset < 0) focusOffset = 0;
 
-		return (focusOffset * -100 / containerSize)  + '%';
+		return (focusOffset * -100 / containerSize) + '%';
 	};
 
 	//Re-adjust the focus
-	var adjustFocus = function($el) {
+	var adjustFocus = function ($el) {
 		var imageW = $el.data('image-w');
 		var imageH = $el.data('image-h');
 		var imageSrc = $el.data('image-src');
@@ -126,10 +126,14 @@
 
 	var $window = $(window);
 
-	var focusPoint = function($el, settings) {
+	var focusPoint = function ($el, settings) {
 		var thrAdjustFocus = settings.throttleDuration ?
-			throttle(function(){adjustFocus($el);}, settings.throttleDuration)
-			: function(){adjustFocus($el);};//Only throttle when desired
+			throttle(function () {
+				adjustFocus($el);
+			}, settings.throttleDuration)
+			: function () {
+				adjustFocus($el);
+			};//Only throttle when desired
 		var isListening = false;
 
 		adjustFocus($el); //Focus image in container
@@ -137,18 +141,18 @@
 		//Expose a public API
 		return {
 
-			adjustFocus: function() {
+			adjustFocus: function () {
 				return adjustFocus($el);
 			},
 
-			windowOn: function() {
+			windowOn: function () {
 				if (isListening) return;
 				//Recalculate each time the window is resized
 				$window.on('resize', thrAdjustFocus);
 				return isListening = true;
 			},
 
-			windowOff: function() {
+			windowOff: function () {
 				if (!isListening) return;
 				//Stop listening to the resize event
 				$window.off('resize', thrAdjustFocus);
@@ -159,17 +163,17 @@
 		};
 	};
 
-	$.fn.focusPoint = function(optionsOrMethod) {
+	$.fn.focusPoint = function (optionsOrMethod) {
 		//Shortcut to functions - if string passed assume method name and execute
 		if (typeof optionsOrMethod === 'string') {
-			return this.each(function() {
+			return this.each(function () {
 				var $el = $(this);
 				$el.data('focusPoint')[optionsOrMethod]();
 			});
 		}
 		//Otherwise assume options being passed and setup
 		var settings = $.extend({}, defaults, optionsOrMethod);
-		return this.each(function() {
+		return this.each(function () {
 			var $el = $(this);
 			var fp = focusPoint($el, settings);
 			//Stop the resize event of any previous attached
@@ -181,9 +185,9 @@
 
 	};
 
-	$.fn.adjustFocus = function() {
+	$.fn.adjustFocus = function () {
 		//Deprecated v1.2
-		return this.each(function() {
+		return this.each(function () {
 			adjustFocus($(this));
 		});
 	};

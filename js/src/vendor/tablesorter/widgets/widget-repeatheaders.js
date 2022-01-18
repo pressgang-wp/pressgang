@@ -3,24 +3,24 @@
 * Original by Christian Bach from the example-widgets.html demo
 */
 /*global jQuery: false */
-;(function($) {
+;(function ($) {
 	'use strict';
 
 	$.tablesorter.addWidget({
 		id: 'repeatHeaders',
 		priority: 10,
 		options: {
-			rowsToSkip : 4
+			rowsToSkip: 4
 		},
 		// format is called on init and when a sorting has finished
-		format: function(table, c, wo) {
+		format: function (table, c, wo) {
 			var h = '', i, $tr, l, skip;
 			// cache and collect all TH headers
 			if (!wo.repeatHeaders) {
 				h = '<tr class="repeated-header ' + c.selectorRemove.slice(1) + '">';
 				for (i = 0; i < c.columns; i++) {
 					// repeat the content of the current header (including child elements)
-					h += '<th>' + $.trim( c.$headers.eq(i).html() ) + '</th>';
+					h += '<th>' + $.trim(c.$headers.eq(i).html()) + '</th>';
 				}
 				// 'remove-me' class was added in case the table needs to be updated, the 'remove-me' rows will be
 				// removed prior to the update to prevent including the rows in the update - see 'selectorRemove' option
@@ -42,7 +42,7 @@
 		},
 		// this remove function is called when using the refreshWidgets method or when destroying the tablesorter plugin
 		// this function only applies to tablesorter v2.4+
-		remove: function(table, c, wo) {
+		remove: function (table, c, wo) {
 			wo.repeatHeaders = '';
 			c.$table.find('tr.repeated-header').remove();
 		}

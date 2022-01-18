@@ -9,13 +9,12 @@ namespace enshrined\svgSanitize\data;
  *
  * @package enshrined\svgSanitize\data
  */
-interface AttributeInterface
-{
+interface AttributeInterface {
 
-    /**
-     * Returns an array of attributes
-     *
-     * @return array
-     */
-    public static function getAttributes();
+	/**
+	 * Returns an array of attributes
+	 *
+	 * @return array
+	 */
+	public static function getAttributes();
 }
