@@ -87,7 +87,7 @@ class Scripts {
 	}
 
 	/**
-	 * add_defer
+	 * add_script_attrs
 	 *
 	 * @param $tag
 	 * @param $handle
