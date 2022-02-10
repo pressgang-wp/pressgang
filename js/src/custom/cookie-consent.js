@@ -1,12 +1,12 @@
-const consentEl = document.getElementsByClassName('cookie-consent');
+const consentEl = document.getElementsByClassName('cookie-consent')[0];
 
 if (consentEl) {
 
 	if (localStorage.getItem('cookie-consent')) {
-		consentEl.style.display==="none";
+		consentEl.remove();
 	}
 
-	consentEl.getElementsByClassName('.btn').addEventListener('click', function () {
+	consentEl.getElementsByTagName('button')[0].addEventListener('click', function () {
 
 		localStorage.setItem('cookie-consent', true);
 
