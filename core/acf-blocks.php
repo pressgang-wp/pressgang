@@ -35,7 +35,7 @@ class AcfBlocks {
 
 				// when category is an array use it to register custom categories
 				// otherwise expect category to be the slug for a default gutenberg category
-				if ( is_array( $settings['category'] ) ) {
+				if ( isset( $settings['category']) && is_array( $settings['category'] ) ) {
 
 					$this->custom_categories[ $settings['category']['slug'] ] = $settings['category'];
 					$settings['category']                                     = $settings['category']['slug'];
