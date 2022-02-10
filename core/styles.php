@@ -11,8 +11,7 @@ class Styles {
 	 */
 	public static $styles = array();
 
-	public static $async = array();
-	public static $defer = array();
+	public static $preconnect = array();
 
 	/**
 	 * __construct
@@ -25,6 +24,7 @@ class Styles {
 	public function __construct() {
 		static::$styles = Config::get( 'styles' );
 		add_action( 'init', array( 'PressGang\Styles', 'register_styles' ) );
+		add_filter( 'style_loader_tag', array( 'PressGang\Styles', 'add_style_attrs' ), 10, 4 );
 	}
 
 	/**
@@ -34,15 +34,17 @@ class Styles {
 	 *
 	 */
 	public static function register_styles() {
+
 		foreach ( static::$styles as $key => &$args ) {
 
 			$defaults = array(
-				'handle' => $key,
-				'src'    => '',
-				'deps'   => array(),
-				'ver'    => false,
-				'media'  => 'all',
-				'hook'   => 'wp_enqueue_scripts',
+				'handle'     => $key,
+				'src'        => '',
+				'deps'       => array(),
+				'ver'        => false,
+				'media'      => 'all',
+				'hook'       => 'wp_enqueue_scripts',
+				'preconnect' => null,
 			);
 
 			if ( is_string( $args ) ) {
@@ -69,7 +71,31 @@ class Styles {
 					wp_enqueue_style( $args['handle'] );
 				} );
 			}
+
+			if ( $args['preconnect'] ) {
+				static::$preconnect[ $key ] = filter_var( $args['preconnect'], FILTER_VALIDATE_URL );
+			}
 		}
+	}
+
+	/**
+	 * add_style_attrs
+	 *
+	 * @param $tag
+	 * @param $handle
+	 *
+	 * @return mixed
+	 */
+	public static function add_style_attrs( $html, $handle, $href, $media ) {
+		if ( isset( Styles::$preconnect[ $handle ] ) ) {
+			$url = Styles::$preconnect[ $handle ];
+
+			$html = str_replace( ' href', sprintf( ' preconnect="%s" href', urlencode( $url ) ), $html );
+
+			$html = '<link rel="preconnect" href="https://fonts.googleapis.com">' . PHP_EOL . $html;
+		}
+
+		return $html;
 	}
 }
 
