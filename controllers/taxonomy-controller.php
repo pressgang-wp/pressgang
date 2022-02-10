@@ -18,8 +18,8 @@ class TaxonomyController extends PostsController {
 	 *
 	 * @param string $template
 	 */
-	public function __construct( $template = 'taxonomy.twig' ) {
-		parent::__construct( $template );
+	public function __construct( $template = 'taxonomy.twig', $post_type = null ) {
+		parent::__construct( $template, $post_type );
 	}
 
 	/**
