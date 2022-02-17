@@ -4,7 +4,7 @@ if (consentEl) {
 
 	const now = new Date();
 
-	if (localStorage.getItem("cookie-consent").expiry < now.valueOf()) {
+	if (localStorage.getItem("cookie-consent") && localStorage.getItem("cookie-consent").expiry < now.valueOf()) {
 		consentEl.remove();
 	}
 
