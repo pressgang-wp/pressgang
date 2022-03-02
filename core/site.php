@@ -126,20 +126,20 @@ class Site extends \TimberSite {
 	 * Add Custom Functions to Twig
 	 */
 	public function add_to_twig( $twig ) {
-		$twig->addFunction( new \Twig_SimpleFunction( 'esc_attr', 'esc_attr' ) );
-		$twig->addFunction( new \Twig_SimpleFunction( 'esc_url', 'esc_url' ) );
-		$twig->addFunction( new \Twig_SimpleFunction( 'get_search_query', 'get_search_query' ) );
+		$twig->addFunction( new \Twig\TwigFunction( 'esc_attr', 'esc_attr' ) );
+		$twig->addFunction( new \Twig\TwigFunction( 'esc_url', 'esc_url' ) );
+		$twig->addFunction( new \Twig\TwigFunction( 'get_search_query', 'get_search_query' ) );
 
-		$twig->addFunction( new \Twig_SimpleFunction( 'meta_description', array(
+		$twig->addFunction( new \Twig\TwigFunction( 'meta_description', array(
 			'PressGang\Site',
 			'meta_description'
 		) ) );
 
-		$twig->addFunction( new \Twig_SimpleFunction( 'get_option', 'get_option' ) );
-		$twig->addFunction( new \Twig_SimpleFunction( 'get_theme_mod', 'get_theme_mod' ) );
+		$twig->addFunction( new \Twig\TwigFunction( 'get_option', 'get_option' ) );
+		$twig->addFunction( new \Twig\TwigFunction( 'get_theme_mod', 'get_theme_mod' ) );
 
 		if ( class_exists( 'WooCommerce' ) ) {
-			$twig->addFunction( new \Twig_SimpleFunction( 'timber_set_product', array(
+			$twig->addFunction( new \Twig\TwigFilter( 'timber_set_product', array(
 				'PressGang\Site',
 				'timber_set_product'
 			) ) );
@@ -147,7 +147,7 @@ class Site extends \TimberSite {
 
 		// TODO can we lazy load or include?
 
-		$twig->addFilter( new \Twig_SimpleFilter( 'pluralize', array( 'PressGang\Pluralizer', 'pluralize' ) ) );
+		$twig->addFilter( new \Twig\TwigFilter( 'pluralize', array( 'PressGang\Pluralizer', 'pluralize' ) ) );
 
 		// add text-domain to global
 		$twig->addGlobal( 'THEMENAME', THEMENAME );
