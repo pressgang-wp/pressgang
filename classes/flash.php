@@ -20,11 +20,11 @@ class Flash {
 	 *
 	 * @return mixed
 	 */
-	public static function get( $key ) {
+	public static function get( $key, $default = null ) {
 
 		self::session();
 
-		return $_SESSION['flash'][ $key ] ?? null;
+		return $_SESSION['flash'][ $key ] ?? $default;
 	}
 
 	/**
@@ -40,6 +40,21 @@ class Flash {
 		self::session();
 
 		return $_SESSION['flash'][ $key ] = $value;
+	}
+
+	/**
+	 * delete
+	 *
+	 * @param $key
+	 * @param $value
+	 *
+	 * @return mixed
+	 */
+	public static function delete( $key ) {
+
+		self::session();
+
+		unset( $_SESSION['flash'], $key );
 	}
 
 	/**
