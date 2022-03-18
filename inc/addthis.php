@@ -13,11 +13,11 @@ class AddThis {
 	 */
 	public function __construct() {
 		add_action( 'customize_register', array( $this, 'customizer' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'register_script' ) );
-		add_shortcode( 'addthis', array( $this, array( 'PressGang\AddThis', 'button' ) ) );
+		add_shortcode( 'addthis', array( $this, array( $this, 'button' ) ) );
 		add_filter( 'get_twig', array( $this, 'add_to_twig' ) );
 
 		$this->consented = isset( $_COOKIE['cookie-consent'] ) && ! ! $_COOKIE['cookie-consent'];
+		$this->register_script();
 	}
 
 	/**
@@ -68,8 +68,16 @@ class AddThis {
 	public function register_script() {
 		if ( ! EXPLICIT_CONSENT || $this->consented ) {
 			if ( $addthis_id = urlencode( get_theme_mod( 'addthis-id' ) ) ) {
-				wp_register_script( 'addthis', "//s7.addthis.com/js/300/addthis_widget.js#pubid={$addthis_id}", array(), false, true );
-				wp_enqueue_script( 'addthis' );
+
+				Scripts::$scripts['addthis'] = array(
+					'src'       => "//s7.addthis.com/js/300/addthis_widget.js#pubid={$addthis_id}",
+					'deps'      => array(),
+					'ver'       => '8.28.7',
+					'in_footer' => true,
+					'defer'     => true,
+					'async'     => true,
+					'hook'      => 'show_addthis',
+				);
 			}
 		}
 	}
@@ -95,12 +103,14 @@ class AddThis {
 	 * Displays the addthis sharing button configured on the addthis.com dashboard page
 	 *
 	 */
-	public static function button() {
+	public function button() {
 
-		if ( ! ( isset( $_COOKIE['cookie-consent'] ) && ! ! $_COOKIE['cookie-consent'] ) ) {
+		if ( ! EXPLICIT_CONSENT || $this->consented ) {
 			if ( $addthis_id = get_theme_mod( 'addthis-id' ) ) {
-				wp_enqueue_script( 'addthis' );
-				\Timber::render( 'addthis.twig', array( 'addthis_class' => get_theme_mod( 'addthis-class' ) ) );
+
+				do_action( 'show_addthis' );
+				\Timber::render( 'partials/addthis.twig', array( 'addthis_class' => get_theme_mod( 'addthis-class' ) ) );
+
 			}
 		}
 	}
