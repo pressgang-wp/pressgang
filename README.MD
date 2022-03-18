@@ -21,3 +21,7 @@ Otherwise clone this repo `git clone https://github.com/benedict-w/pressgang.git
 For more documentation see the Wiki:
 
 https://github.com/benedict-w/pressgang/wiki
+
+## License
+
+PressGang is open-sourced software licensed under the [MIT license](LICENSE.md).
