@@ -26,7 +26,6 @@ class Contact {
 	public function __construct( $to = null, $subject = null, $has_recaptcha = false, $template = null ) {
 		$to            = sanitize_email( $to ? $to : get_option( 'admin_email' ) );
 		$subject       = $subject ? $subject : __( "New Contact Message", THEMENAME );
-		$has_recaptcha = $has_recaptcha;
 
 		$flash = Flash::get( 'contact' );
 
@@ -139,7 +138,7 @@ class Contact {
 		] );
 
 		$redirect = filter_input( INPUT_POST, '_wp_http_referer', FILTER_SANITIZE_STRING );
-		$redirect .= '/?success=' . time(); // cache  buster
+		$redirect .= sprintf("/?%d&success=%s", time(), !!$success ); // cache  buster
 
 		wp_safe_redirect( $redirect );
 		exit;
