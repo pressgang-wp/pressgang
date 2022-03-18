@@ -13,7 +13,8 @@
   "require": {
     "php": ">=7.0.0",
     "twig/cache-extension": "~1.0",
-    "doctrine/cache": "^1.9@dev"
+    "doctrine/cache": "^1.9@dev",
+    "timber/timber": "^2.0"
   },
   "extra": {
     "installer-paths": {
