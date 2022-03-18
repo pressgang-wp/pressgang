@@ -1,6 +1,6 @@
 {
-  "name": "benedict-w/pressgang",
-  "description": "Package for the Wordpress Pressgang parent theme",
+  "name": "https://github.com/pressgang-wp/pressgang",
+  "description": "Package for the Wordpress PressGang parent theme framework",
   "type": "wordpress-theme",
   "license": "GPL-2.0",
   "authors": [
@@ -17,8 +17,12 @@
   },
   "extra": {
     "installer-paths": {
-      "../plugins/{$name}/": ["type:wordpress-plugin"],
-      "../themes/{$name}/": ["type:wordpress-theme"]
+      "../plugins/{$name}/": [
+        "type:wordpress-plugin"
+      ],
+      "../themes/{$name}/": [
+        "type:wordpress-theme"
+      ]
     }
   }
 }
