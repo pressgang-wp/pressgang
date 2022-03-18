@@ -2,7 +2,7 @@
   "name": "pressgang-wp/pressgang",
   "description": "Package for the Wordpress PressGang parent theme framework",
   "type": "wordpress-theme",
-  "license": "GPL-2.0-or-later",
+  "license": "MIT",
   "authors": [
     {
       "name": "Benedict Wallis",
