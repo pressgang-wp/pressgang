@@ -11,7 +11,7 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "php": ">=7.0.0",
+    "php": "^7.3|^8.0",
     "twig/cache-extension": "~1.0",
     "doctrine/cache": "^1.9@dev",
     "timber/timber": "^2.0"
