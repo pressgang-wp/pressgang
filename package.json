@@ -1,10 +1,10 @@
 {
   "name": "pressgang",
   "title": "PressGang",
-  "description": "A parent theme framework for WordPress.",
+  "description": "A parent theme framework for rapid WordPress development.",
   "version": "0.1.0",
-  "homepage": "https://github.com/benedict-w/pressgang",
-  "reposityory": "https://github.com/benedict-w/pressgang",
+  "homepage": "https://github.com/pressgang-wp/pressgang",
+  "reposityory": "https://github.com/pressgang-wp/pressgang",
   "author": {
     "name": "Benedict Wallis",
     "email": "ben@benedict-wallis.com",
