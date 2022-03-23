@@ -28,7 +28,7 @@ class WoocommerceProductCategoryController extends TaxonomyController {
 	 */
 	public function get_context() {
 		parent::get_context();
-		
+
 		$this->context['category'] = $this->get_taxonomy();
 		$this->context['title']    = single_term_title( '', false );
 
