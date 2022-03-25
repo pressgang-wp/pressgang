@@ -69,7 +69,7 @@ class Site extends \TimberSite {
 
 		// switch on twig caching if production
 		if ( class_exists( 'Timber' ) ) {
-			\Timber::$cache = ! WP_DEBUG;
+			\Timber::$cache = \defined('TIMBER_CACHE') ? TIMBER_CACHE : !WP_DEBUG;
 		}
 
 		// add a theme color
