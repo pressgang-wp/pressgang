@@ -1,6 +1,6 @@
 <?php
 
-namespace Pressgang;
+namespace PressGang;
 
 class Helper {
 
@@ -46,7 +46,7 @@ class Helper {
 	 *
 	 * @return string
 	 */
-	public static function reading_time( $text, $to_nearest_minute = true, $speed = 200 ) {
+	public static function reading_time( $text, $to_nearest_minute = false, $speed = 200 ) {
 		$words = str_word_count( strip_tags( $text ) );
 
 		if ( $to_nearest_minute ) {
@@ -56,10 +56,10 @@ class Helper {
 			$minutes = ceil( $words / $speed );
 		}
 
-		$est = sprintf( _n( "%d minutes", "%d minutes", $minutes, THEMENAME ), $minutes );
+		$est = sprintf( _n( "%d minute", "%d minutes", $minutes, THEMENAME ), $minutes );
 
 		if ( $seconds ) {
-			$est .= ',' . sprintf( _n( "%d seconds", "%d seconds", $seconds, THEMENAME ), $seconds );
+			$est .= ',' . sprintf( _n( "%d second", "%d seconds", $seconds, THEMENAME ), $seconds );
 		}
 
 		return $est;
