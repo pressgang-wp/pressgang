@@ -50,7 +50,7 @@ class Helper {
 		$words = str_word_count( strip_tags( $text ) );
 
 		$seconds = 0;
-		
+
 		if ( $to_nearest_minute ) {
 			$minutes = floor( $words / $speed );
 			$seconds = floor( $words % $speed / ( $speed / 60 ) );
