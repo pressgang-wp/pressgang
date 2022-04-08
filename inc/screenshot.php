@@ -13,24 +13,24 @@ namespace Pressgang;
  */
 class Screenshot {
 
-    // TODO https://screenshotlayer.com/
-    // make chron task
+	// TODO https://screenshotlayer.com/
+	// make chron task
 
-    public function __construct() {
+	public function __construct() {
 
-    }
+	}
 
-    function get_screenshot() {
+	function get_screenshot() {
 
-        $snap = 'http://s.wordpress.com/mshots/v1/';
-        $url = 'http://www.wpbeginner.com';
-        $width = '1200';
-        $height = '900';
+		$snap   = 'http://s.wordpress.com/mshots/v1/';
+		$url    = 'http://www.wpbeginner.com';
+		$width  = '1200';
+		$height = '900';
 
-        $img = sprintf("%s%s?w='%s&h=%s", $snap, urlencode($url), $width, $height);
+		$img = sprintf( "%s%s?w='%s&h=%s", $snap, urlencode( $url ), $width, $height );
 
-        return $img;
-    }
+		return $img;
+	}
 }
 
 new Screenshot();

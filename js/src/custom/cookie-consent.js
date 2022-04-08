@@ -1,22 +1,32 @@
-(function ($) {
+const consentEl = document.getElementsByClassName("cookie-consent")[0];
 
-    $(function () {
+if (consentEl) {
 
-        var $consent = $('.cookie-consent');
+	const now = new Date();
 
-        if (Cookies.get('cookie-consent')) {
-            $consent.hide();
-        }
+	if (localStorage.getItem("cookie-consent") && localStorage.getItem("cookie-consent").expiry < now.valueOf()) {
+		consentEl.remove();
+	}
 
-        $consent.find('.btn').on('click', function () {
+	consentEl.getElementsByTagName("button")[0].addEventListener("click", function () {
 
-            Cookies.set('cookie-consent', 1, {expires: 28});
+		const expiry = now.setTime(now.getTime() + (28 * 24 * 60 * 60 * 1000));
 
-            $consent.fadeOut();
+		const item = {
+			value: true,
+			expiry: expiry,
+		};
 
-            return false;
-        });
+		localStorage.setItem("cookie-consent", JSON.stringify(item));
 
-    });
+		// drop a cookie for the backend
+		document.cookie = "cookie-consent=true;expires=" + expiry + ";path=/";
 
-})(jQuery);
+		// remove the consent element
+		consentEl.style.opacity = "0";
+		consentEl.addEventListener("transitionend", () => consentEl.remove());
+
+		return false;
+	});
+
+}
