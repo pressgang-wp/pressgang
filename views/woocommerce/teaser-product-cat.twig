@@ -1,6 +1,0 @@
-<article {{ fn('post_class', 'product-category-teaser', category.ID) }}>
-    <a href="{{ category.link|relative }}">
-        <img src="{{ category.thumbnail.src|resize('woocommerce_thumbnail')|relative|default('http://via.placeholder.com/300x300?text=' ~ category.name|url_encode) }}" alt="{{ category.title }}">
-    </a>
-    <h3 class="product-category-name"><a href="{{ category.link }}">{{ category.name }}</a></h3>
-</article>
