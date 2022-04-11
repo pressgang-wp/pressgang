@@ -23,7 +23,7 @@ class TwitterSummary {
 	 */
 	public static function twitter_summary() {
 
-		$post = new \TimberPost();
+		$post = new \Timber\Post();
 
 		$img = has_post_thumbnail( $post->ID )
 			? wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'large' )[0]
