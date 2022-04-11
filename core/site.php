@@ -9,7 +9,7 @@ require_once( 'loader.php' );
  *
  * @package PressGang
  */
-class Site extends \TimberSite {
+class Site extends \Timber\Site {
 	public $stylesheet;
 	public $keywords;
 	public $logo;

@@ -2,6 +2,10 @@
 
 namespace PressGang;
 
+use \Timber\Timber;
+use \Timber\User as TimberUser;
+use \Timber\Image as TimberImage;
+
 require_once 'base-controller.php';
 
 /**
@@ -33,8 +37,8 @@ class AuthorController extends BaseController {
 	protected function get_author() {
 		if ( empty( $this->author ) ) {
 			if ( $id = get_queried_object_id() ) {
-				$this->author            = new \TimberUser( $id );
-				$this->author->thumbnail = new \TimberImage( get_avatar_url( $this->author->id ) );
+				$this->author            = new TimberUser( $id );
+				$this->author->thumbnail = new TimberImage( get_avatar_url( $this->author->id ) );
 			}
 		}
 
@@ -53,7 +57,7 @@ class AuthorController extends BaseController {
 		);
 
 		if ( empty( $this->posts ) ) {
-			$this->posts = \Timber::get_posts( $args );
+			$this->posts = Timber::get_posts( $args );
 		}
 
 		return $this->posts;

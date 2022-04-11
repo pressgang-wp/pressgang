@@ -2,6 +2,8 @@
 
 namespace PressGang;
 
+use \Timber\Timber;
+
 /**
  * Class WCProductController
  *
@@ -25,7 +27,7 @@ class WoocommerceProductController extends BaseController {
 	 */
 	protected function get_post() {
 		if ( empty( $this->post ) ) {
-			$this->post = \Timber::get_post();
+			$this->post = Timber::get_post();
 		}
 
 		return $this->post;
@@ -36,9 +38,9 @@ class WoocommerceProductController extends BaseController {
 	 */
 	public function get_context() {
 		parent::get_context();
-		$this->context['widget_sidebar'] = \Timber::get_widgets( 'shop_sidebar' );
+		$this->context['widget_sidebar'] = Timber::get_widgets( 'shop_sidebar' );
 		$this->context['product']        = \wc_get_product( $this->get_post()->ID );
-		$this->context['post']           = \Timber::get_post( $this->get_post()->ID );
+		$this->context['post']           = Timber::get_post( $this->get_post()->ID );
 
 		return $this->context;
 	}

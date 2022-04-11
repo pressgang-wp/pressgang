@@ -2,6 +2,8 @@
 
 namespace PressGang;
 
+use Timber\Timber;
+
 require_once 'base-controller.php';
 
 /**
@@ -74,7 +76,7 @@ class PostsController extends BaseController {
 	 */
 	protected function get_posts() {
 		if ( empty( $this->posts ) ) {
-			$this->posts = \Timber::get_posts();
+			$this->posts = Timber::get_posts();
 		}
 
 		return $this->posts;
@@ -116,7 +118,7 @@ class PostsController extends BaseController {
 	protected function get_pagination() {
 
 		if ( empty( $this->pagination ) ) {
-			$this->pagination = \Timber::get_pagination();
+			$this->pagination = Timber::get_pagination();
 		}
 
 		return $this->pagination;
