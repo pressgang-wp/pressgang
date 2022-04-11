@@ -34,7 +34,7 @@ class Block {
 		static::$context = array();
 
 		// add a reference to the post
-		static::$context['post'] = new \TimberPost();
+		static::$context['post'] = new \Timber\Post();
 
 		// add a block ID in case needed for front end
 		static::$context['id'] = static::$id;
