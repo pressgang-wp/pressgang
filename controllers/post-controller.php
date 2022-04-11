@@ -6,6 +6,10 @@ if ( ! defined( 'POST_NO_RELATED_POSTS' ) ) {
 	define( 'POST_NO_RELATED_POSTS', 4 );
 }
 
+use Timber\Timber;
+use Timber\Image as TimberImage;
+use Timber\Term as TimberTerm;
+
 require_once 'page-controller.php';
 
 /**
@@ -98,7 +102,7 @@ class PostController extends PageController {
 					if ( is_array( $terms ) && count( $terms ) ) {
 
 						foreach ( $terms as &$term ) {
-							$term = new \TimberTerm( $term );
+							$term = new TimberTerm( $term );
 						}
 
 						$name                                 = Pluralizer::pluralize( $slug );
@@ -168,7 +172,7 @@ class PostController extends PageController {
 					}
 				}
 
-				$posts = \Timber::get_posts( $args );
+				$posts = Timber::get_posts( $args );
 
 				foreach ( $posts as &$post ) {
 					$this->related_posts[ $post->ID ] = $post;
@@ -184,7 +188,7 @@ class PostController extends PageController {
 					$args['post__not_in']          = $not_in;
 					$args['numberposts']           = $posts_per_page - count( $this->related_posts );
 
-					$posts = \Timber::get_posts( $args );
+					$posts = Timber::get_posts( $args );
 
 					foreach ( $posts as &$post ) {
 						$this->related_posts[ $post->ID ] = $post;
@@ -199,7 +203,7 @@ class PostController extends PageController {
 						$args['numberposts'] = $not_in;
 						$args['numberposts'] = $posts_per_page - count( $this->related_posts );
 
-						$posts = \Timber::get_posts( $args );
+						$posts = Timber::get_posts( $args );
 
 						foreach ( $posts as &$post ) {
 							$this->related_posts[ $post->ID ] = $post;
@@ -225,7 +229,7 @@ class PostController extends PageController {
 			$post = $this->get_post();
 			if ( $post ) {
 				$this->author            = $post->get_author();
-				$this->author->thumbnail = new \TimberImage( get_avatar_url( $this->author->id ) );
+				$this->author->thumbnail = new TimberImage( get_avatar_url( $this->author->id ) );
 			}
 		}
 

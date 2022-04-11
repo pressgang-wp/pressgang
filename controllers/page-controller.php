@@ -2,7 +2,7 @@
 
 namespace PressGang;
 
-require_once 'base-controller.php';
+use Timber\Timber;
 
 /**
  * Class PageController
@@ -31,7 +31,7 @@ class PageController extends BaseController {
 	 */
 	protected function get_post() {
 		if ( empty( $this->post ) ) {
-			$this->post = \Timber::get_post();
+			$this->post = Timber::get_post();
 		}
 
 		return $this->post;

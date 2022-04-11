@@ -4,12 +4,8 @@ if ( ! defined( 'THEMENAME' ) ) {
 	define( 'THEMENAME', 'pressgang' );
 }
 
-/**
- * Error if Timber not installed
- */
-if ( ! class_exists( '\TimberTheme' ) ) {
-	throw new Exception( "Pressgang requires that the Timber plugin is installed and activated, see: https://wordpress.org/plugins/timber-library/" );
-}
+// Ensure composer is auto loaded
+require_once( __DIR__ . '/vendor/autoload.php' );
 
 /**
  * Go!
