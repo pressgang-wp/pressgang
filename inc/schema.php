@@ -52,7 +52,7 @@ class Schema {
 			'vat_id'           => get_field( 'vat_registration_number', 'option' ),
 		);
 
-		\Timber::render( 'json-ld/organization.twig', $data );
+		\Timber\Timber::render( 'json-ld/organization.twig', $data );
 	}
 
 	/**
@@ -73,7 +73,7 @@ class Schema {
 			'url'  => get_bloginfo( 'url' ),
 		);
 
-		\Timber::render( 'json-ld/website.twig', $data );
+		\Timber\Timber::render( 'json-ld/website.twig', $data );
 	}
 
 	/**
@@ -85,7 +85,7 @@ class Schema {
 	public function creative_work() {
 		if ( is_singular( 'project' ) ) {
 
-			$post = \Timber::get_post();
+			$post = \Timber\Timber::get_post();
 
 			$contributors = array();
 
@@ -111,7 +111,7 @@ class Schema {
 				);
 			}
 
-			\Timber::render( 'json-ld/creative-work.twig', $data );
+			\Timber\Timber::render( 'json-ld/creative-work.twig', $data );
 		}
 	}
 
@@ -125,7 +125,7 @@ class Schema {
 	public function webpage() {
 		if ( is_page() ) {
 
-			$post = \Timber::get_post();
+			$post = \Timber\Timber::get_post();
 
 			$data = array(
 				'publisher'             => get_bloginfo( 'url' ),
@@ -136,7 +136,7 @@ class Schema {
 				'last_reviewed'         => $post->modified_date( 'Y-m-d H:i:s' ),
 			);
 
-			\Timber::render( 'json-ld/webpage.twig', $data );
+			\Timber\Timber::render( 'json-ld/webpage.twig', $data );
 		}
 	}
 
@@ -150,7 +150,7 @@ class Schema {
 
 		if ( is_single() && get_post_type() === 'post' ) {
 
-			$post = \Timber::get_post();
+			$post = \Timber\Timber::get_post();
 			self::add_blog_posting( $post );
 
 		}
@@ -175,7 +175,7 @@ class Schema {
 			'main_entity_of_page' => $post->link,
 		);
 
-		\Timber::render( 'json-ld/blog-posting.twig', $data );
+		\Timber\Timber::render( 'json-ld/blog-posting.twig', $data );
 	}
 
 	/**
@@ -188,7 +188,7 @@ class Schema {
 
 		if ( is_single() && get_post_type() === 'team_member' ) {
 
-			$post = \Timber::get_post();
+			$post = \Timber\Timber::get_post();
 			self::add_person( $post );
 
 		}
@@ -211,7 +211,7 @@ class Schema {
 			'work_location' => get_field( 'address', 'option' ),
 		);
 
-		\Timber::render( 'json-ld/person.twig', $data );
+		\Timber\Timber::render( 'json-ld/person.twig', $data );
 	}
 
 	/**
@@ -224,7 +224,7 @@ class Schema {
 
 		if ( is_single() && get_post_type() === 'job' ) {
 
-			$post = \Timber::get_post();
+			$post = \Timber\Timber::get_post();
 
 			$data = array(
 				'title'               => $post->title,
@@ -236,7 +236,7 @@ class Schema {
 				'date_posted'         => $post->date,
 			);
 
-			\Timber::render( 'json-ld/job-posting.twig', $data );
+			\Timber\Timber::render( 'json-ld/job-posting.twig', $data );
 
 		}
 	}
@@ -251,7 +251,7 @@ class Schema {
 
 		if ( is_single() && get_post_type() === 'event' ) {
 
-			$post = \Timber::get_post();
+			$post = \Timber\Timber::get_post();
 
 			$data = array(
 				'start_date'  => $post->get_field( 'start_date' ),
@@ -263,7 +263,7 @@ class Schema {
 				'location'    => $post->get_field( 'post_map' ) ? $post->get_field( 'post_map' )['address'] : $post->get_field( 'custom_location' ),
 			);
 
-			\Timber::render( 'json-ld/event.twig', $data );
+			\Timber\Timber::render( 'json-ld/event.twig', $data );
 
 		}
 	}

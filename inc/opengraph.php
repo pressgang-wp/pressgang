@@ -60,7 +60,7 @@ class OpenGraph {
 			'image'       => esc_url( apply_filters( 'og_image', $img ) ),
 		);
 
-		\Timber::render( 'partials/open-graph.twig', array( 'open_graph' => $open_graph ) );
+		\Timber\Timber::render( 'partials/open-graph.twig', array( 'open_graph' => $open_graph ) );
 	}
 }
 

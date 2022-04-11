@@ -57,7 +57,7 @@ class TwitterSummary {
 			'image'       => esc_url( apply_filters( 'og_image', $img ) ),
 		);
 
-		\Timber::render( 'twitter-summary.twig', $context );
+		\Timber\Timber::render( 'twitter-summary.twig', $context );
 	}
 }
 

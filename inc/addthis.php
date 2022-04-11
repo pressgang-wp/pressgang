@@ -109,7 +109,7 @@ class AddThis {
 			if ( $addthis_id = get_theme_mod( 'addthis-id' ) ) {
 
 				do_action( 'show_addthis' );
-				\Timber::render( 'partials/addthis.twig', array( 'addthis_class' => get_theme_mod( 'addthis-class' ) ) );
+				\Timber\Timber::render( 'partials/addthis.twig', array( 'addthis_class' => get_theme_mod( 'addthis-class' ) ) );
 
 			}
 		}

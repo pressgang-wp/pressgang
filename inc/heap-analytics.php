@@ -70,7 +70,7 @@ class HeapAnalytics {
 		if ( $track_logged_in || ( ! $track_logged_in && ! is_user_logged_in() ) ) {
 
 			if ( $heap_analytics_id = urlencode( get_theme_mod( 'heap-analytics-id' ) ) ) {
-				\Timber::render( 'heap-analytics.twig', array(
+				\Timber\Timber::render( 'heap-analytics.twig', array(
 					'heap_analytics_id' => $heap_analytics_id,
 				) );
 			}

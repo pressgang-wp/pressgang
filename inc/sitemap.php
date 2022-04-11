@@ -139,7 +139,7 @@ class Sitemap {
 			'nodes' => $nodes,
 		);
 
-		$sitemap = \Timber::compile( 'sitemap-xml.twig', $data );
+		$sitemap = \Timber\Timber::compile( 'sitemap-xml.twig', $data );
 
 		$path = $this->path();
 

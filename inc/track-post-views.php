@@ -91,7 +91,7 @@ class TrackPostViews {
 		$paged  = $paged ? $paged : 0;
 		$number = $number ? $number : get_option( 'posts_per_page' );
 
-		return \Timber::get_posts( array(
+		return \Timber\Timber::get_posts( array(
 			'post_type'      => $post_type,
 			'posts_per_page' => $number,
 			'meta_key'       => self::COUNT_KEY,

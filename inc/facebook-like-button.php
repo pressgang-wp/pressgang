@@ -94,7 +94,7 @@ class FacebookLikeButton {
 
 		if ( $facebook_sdk_nonce = get_theme_mod( 'facebook_sdk_nonce' ) ) {
 
-			\Timber::render( 'fb-sdk.twig', array(
+			\Timber\Timber::render( 'fb-sdk.twig', array(
 				'locale'          => get_locale(),
 				'nonce'           => $facebook_sdk_nonce,
 				'facebook_app_id' => get_theme_mod( 'facebook_app_id' )
@@ -114,7 +114,7 @@ class FacebookLikeButton {
 	public function add_to_twig( $twig ) {
 
 		$twig->addFunction( new \Twig\TwigFunction( 'fb_like_btn', function () {
-			\Timber::render( 'fb-like.twig', array(
+			\Timber\Timber::render( 'fb-like.twig', array(
 				'url' => get_theme_mod( 'facebook_like_url' )
 			) );
 		} ) );

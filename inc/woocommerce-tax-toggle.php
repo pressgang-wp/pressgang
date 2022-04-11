@@ -75,7 +75,7 @@ class WooCommerceTaxToggle {
 	 */
 	public function render_tax_toggle() {
 
-		\Timber::render( 'woocommerce/tax-toggle.twig', array(
+		\Timber\Timber::render( 'woocommerce/tax-toggle.twig', array(
 			'display_tax' => ( self::woocommerce_tax_display_shop() === 'incl' ),
 			'cookie_name' => self::COOKIE_NAME,
 		) );

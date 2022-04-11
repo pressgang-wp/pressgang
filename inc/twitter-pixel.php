@@ -70,7 +70,7 @@ class TwitterPixel {
 		if ( $track_logged_in || ( ! $track_logged_in && ! is_user_logged_in() ) ) {
 
 			if ( $facebook_pixel_id = urlencode( get_theme_mod( 'twitter-pixel-id' ) ) ) {
-				\Timber::render( 'twitter-pixel.twig', array(
+				\Timber\Timber::render( 'twitter-pixel.twig', array(
 					'twitter_pixel_id' => $facebook_pixel_id,
 				) );
 			}

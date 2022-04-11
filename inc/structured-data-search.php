@@ -2,6 +2,8 @@
 
 namespace Pressgang;
 
+use Timber\Timber;
+
 class StructuredDataSearch {
 	/**
 	 * __construct
@@ -25,7 +27,7 @@ class StructuredDataSearch {
 				'url'  => get_bloginfo( 'url' ),
 			);
 
-			\Timber::render( 'structured-data-search.twig', $data );
+			Timber::render( 'structured-data-search.twig', $data );
 		}
 	}
 }
