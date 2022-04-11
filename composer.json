@@ -12,9 +12,7 @@
   "minimum-stability": "dev",
   "require": {
 	"composer/installers": "~1.0",
-    "php": "^7.3|^8.0",
-    "twig/cache-extension": "~1.0",
-    "doctrine/cache": "^1.9@dev"
+    "php": "^7.3|^8.0"
   },
   "extra": {
     "installer-paths": {
