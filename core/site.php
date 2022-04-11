@@ -2,6 +2,11 @@
 
 namespace PressGang;
 
+use \Timber\Timber;
+use \Timber\Post as TimberPost;
+use \Timber\Helper as TimberHelper;
+use \Timber\Image as TimberImage;
+
 require_once( 'loader.php' );
 
 /**
@@ -49,7 +54,7 @@ class Site extends \Timber\Site {
 
 		// replace the site icon with an image object
 		if ( $this->site_icon ) {
-			$this->site_icon = new \TimberImage( $this->site_icon );
+			$this->site_icon = new TimberImage( $this->site_icon );
 		}
 
 		// get stylesheet (can be set in customizer theme mod)
@@ -69,7 +74,7 @@ class Site extends \Timber\Site {
 
 		// switch on twig caching if production
 		if ( class_exists( 'Timber' ) ) {
-			\Timber::$cache = \defined('TIMBER_CACHE') ? TIMBER_CACHE : !WP_DEBUG;
+			Timber::$cache = \defined('TIMBER_CACHE') ? TIMBER_CACHE : !WP_DEBUG;
 		}
 
 		// add a theme color
@@ -166,7 +171,7 @@ class Site extends \Timber\Site {
 
 		if ( empty( $description ) ) {
 
-			$post = new \TimberPost();
+			$post = new TimberPost();
 
 			$key = sprintf( "meta_description_%d", $post->ID );
 
@@ -213,7 +218,7 @@ class Site extends \Timber\Site {
 				// limit to SEO recommended length
 				if ( strlen( $description ) > 155 ) {
 					$description = mb_substr( $description, 0, 155 );
-					$description = \TimberHelper::trim_words( $description, str_word_count( $description ) - 1 );
+					$description = TimberHelper::trim_words( $description, str_word_count( $description ) - 1 );
 				}
 
 				self::$meta_description = $description;
