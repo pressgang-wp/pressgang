@@ -80,7 +80,7 @@ class BingUniversalEventTracking {
 		if ( ( $track_logged_in || ( ! $track_logged_in && ! is_user_logged_in() ) ) && ( ! EXPLICIT_CONSENT || $this->consented ) ) {
 
 			if ( $bing_uet_id = get_theme_mod( 'bing-uet-id' ) ) {
-				\Timber::render( 'bing-uet.twig', array(
+				\Timber\Timber::render( 'bing-uet.twig', array(
 					'bing_uet_id' => $bing_uet_id,
 				) );
 			}

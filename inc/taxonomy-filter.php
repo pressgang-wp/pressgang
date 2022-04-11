@@ -27,7 +27,7 @@ class TaxonomyFilter {
 		if ( in_array( $taxonomy, $this->taxonomies ) ) {
 
 			if ( empty( $this->$taxonomy ) ) {
-				$this->$taxonomy = \Timber::get_terms( array(
+				$this->$taxonomy = \Timber\Timber::get_terms( array(
 					'taxonomy' => array( $taxonomy ),
 				) );
 			}

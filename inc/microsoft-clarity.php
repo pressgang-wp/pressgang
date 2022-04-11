@@ -80,7 +80,7 @@ class ClarityTracking {
 		if ( ( $track_logged_in || ( ! $track_logged_in && ! is_user_logged_in() ) ) && ( ! EXPLICIT_CONSENT || $this->consented ) ) {
 
 			if ( $clarity_id = get_theme_mod( 'clarity-id' ) ) {
-				\Timber::render( 'microsoft-clarity.twig', array(
+				\Timber\Timber::render( 'microsoft-clarity.twig', array(
 					'clarity_id' => $clarity_id,
 				) );
 			}

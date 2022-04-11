@@ -78,7 +78,7 @@ class GoogleAnalytics {
 		if ( ( $track_logged_in || ( ! $track_logged_in && ! is_user_logged_in() ) ) && ( ! EXPLICIT_CONSENT || $this->consented ) ) {
 
 			if ( $google_analytics_id = get_theme_mod( 'google-analytics-id' ) ) {
-				\Timber::render( 'google-analytics.twig', array(
+				\Timber\Timber::render( 'google-analytics.twig', array(
 					'google_analytics_id' => $google_analytics_id,
 				) );
 			}

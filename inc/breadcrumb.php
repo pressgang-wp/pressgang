@@ -269,7 +269,7 @@ class Breadcrumb {
 
 		$this->links();
 
-		\Timber::render( 'breadcrumb.twig', array(
+		\Timber\Timber::render( 'breadcrumb.twig', array(
 			'class'       => $this->breadcrumbs_class,
 			'breadcrumbs' => $this->breadcrumbs,
 		) );

@@ -18,7 +18,7 @@ class Tawkto {
 	 *
 	 */
 	public function render() {
-		\Timber::render( 'tawkto.twig' );
+		\Timber\Timber::render( 'tawkto.twig' );
 	}
 }
 

@@ -70,7 +70,7 @@ class Hotjar {
 		if ( $track_logged_in || ( ! $track_logged_in && ! is_user_logged_in() ) ) {
 
 			if ( $hotjar_id = urlencode( get_theme_mod( 'hotjar-id' ) ) ) {
-				\Timber::render( 'hotjar.twig', array(
+				\Timber\Timber::render( 'hotjar.twig', array(
 					'hotjar_id' => $hotjar_id,
 				) );
 			}

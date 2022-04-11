@@ -232,7 +232,7 @@ class Paypal {
 
 		if ( $atts['id'] ) {
 
-			$item = \Timber::get_post( $atts['id'] );
+			$item = \Timber\Timber::get_post( $atts['id'] );
 
 			if ( $item->post_type === 'paypal_item' ) {
 
@@ -242,7 +242,7 @@ class Paypal {
 					'location' => get_field( 'paypal_location', 'option' ),
 				);
 
-				return \Timber::compile( 'paypal-item.twig', array(
+				return \Timber\Timber::compile( 'paypal-item.twig', array(
 					'paypal_item'    => $item,
 					'paypal_account' => $account,
 				) );

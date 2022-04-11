@@ -8,7 +8,7 @@ class StructuredDataPageMap {
 	}
 
 	public function render() {
-		return \Timber::render( 'structured-data-page-map.twig' );
+		return \Timber\Timber::render( 'structured-data-page-map.twig' );
 	}
 }
 

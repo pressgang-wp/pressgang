@@ -110,7 +110,7 @@ class CookieConsent {
 
 			do_action( 'show_cookie_consent' );
 
-			\Timber::render( 'partials/cookie-consent.twig', array(
+			\Timber\Timber::render( 'partials/cookie-consent.twig', array(
 				'implied_consent_text' => get_theme_mod( 'implied-consent-text', $this->implied_consent_text ),
 				'button_text'          => get_theme_mod( 'button-text', $this->button_text ),
 				'privacy_url'          => get_theme_mod( 'privacy-url', $this->privacy_url ),

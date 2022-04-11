@@ -102,7 +102,7 @@ class Gallery {
 			$data['id']         = sprintf( "gallery-%s", $gallery_inc );
 			$data['thumbnails'] = $attachments;
 
-			return \Timber::compile( 'gallery.twig', $data );
+			return \Timber\Timber::compile( 'gallery.twig', $data );
 		}
 	}
 }

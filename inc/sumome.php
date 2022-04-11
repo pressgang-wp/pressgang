@@ -55,7 +55,7 @@ class SumoMe {
 	 */
 	public static function add_script() {
 		if ( $sumome_id = get_theme_mod( 'sumome-id' ) ) {
-			\Timber::render( 'sumome.twig', array( 'sumome_id' => $sumome_id ) );
+			\Timber\Timber::render( 'sumome.twig', array( 'sumome_id' => $sumome_id ) );
 		}
 	}
 

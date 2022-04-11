@@ -71,7 +71,7 @@ class FacebookPixel {
 
 			if ( $facebook_pixel_id = urlencode( get_theme_mod( 'facebook-pixel-id' ) ) ) {
 
-				\Timber::render( 'facebook-pixel.twig', array(
+				\Timber\Timber::render( 'facebook-pixel.twig', array(
 					'facebook_pixel_id' => $facebook_pixel_id,
 				) );
 			}

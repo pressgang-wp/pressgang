@@ -44,7 +44,7 @@ class Carousel {
 		static $slider_id = 0;
 		$slider_id ++;
 
-		$slides = \Timber::get_posts( $query );
+		$slides = \Timber\Timber::get_posts( $query );
 
 		foreach ( $slides as &$slide ) {
 			$slide->height = $height;
@@ -61,7 +61,7 @@ class Carousel {
 				$carousel['options'] = $slick;
 			}
 
-			return \Timber::compile( $template, $carousel );
+			return \Timber\Timber::compile( $template, $carousel );
 		}
 
 	}

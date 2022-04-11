@@ -52,7 +52,7 @@ class GoogleAnalyticsWooCommerce {
 						);
 					}
 
-					\Timber::render( 'google-analytics-ecommerce.twig', array(
+					\Timber\Timber::render( 'google-analytics-ecommerce.twig', array(
 						'transaction_id'          => $order->get_order_key(),
 						'transaction_affiliation' => 'WooCommerce',
 						'transaction_total'       => $order->get_total(),

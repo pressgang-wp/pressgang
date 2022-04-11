@@ -52,7 +52,7 @@ class Chimpstatic {
 	 */
 	public function script() {
 		if ( $chimpstatic_id = urlencode( get_theme_mod( 'chimpstatic-id' ) ) ) {
-			\Timber::render( 'chimpstatic.twig', array(
+			\Timber\Timber::render( 'chimpstatic.twig', array(
 				'chimpstatic_id' => $chimpstatic_id,
 			) );
 		}

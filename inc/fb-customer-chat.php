@@ -67,7 +67,7 @@ class FbCustomerChat {
 	 */
 	public function script() {
 		if ( $fb_customer_chat_id = get_theme_mod( 'fb-customer-chat-id' ) ) {
-			\Timber::render( 'fb-customer-chat.twig', array(
+			\Timber\Timber::render( 'fb-customer-chat.twig', array(
 				'fb_customer_chat_id' => $fb_customer_chat_id,
 				'theme_color'         => get_theme_mod( 'fb-customer-chat-theme-color', '#000000' ),
 			) );

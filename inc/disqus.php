@@ -46,7 +46,7 @@ class Disqus {
 	 *
 	 */
 	public function render() {
-		\Timber::render( 'disqus.twig', array( 'disqus_shortname' => get_theme_mod( 'disqus-shortname' ), ) );
+		\Timber\Timber::render( 'disqus.twig', array( 'disqus_shortname' => get_theme_mod( 'disqus-shortname' ), ) );
 	}
 }
 
