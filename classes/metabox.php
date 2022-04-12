@@ -2,6 +2,8 @@
 
 namespace PressGang;
 
+use \Timber\Timber;
+
 class MetaBox {
 	protected $meta_name = '';
 	protected $post_type = '';
@@ -68,11 +70,11 @@ class MetaBox {
 
 			switch ( $field['type'] ) {
 				case 'text' :
-					\Timber::render( 'admin.text.twig', $field );
+					Timber::render( 'admin.text.twig', $field );
 					break;
 
 				case 'number' :
-					\Timber::render( 'admin.number.twig', $field );
+					Timber::render( 'admin.number.twig', $field );
 					break;
 
 				// TODO add more types!

@@ -2,6 +2,8 @@
 
 namespace PressGang;
 
+use \Timber\Timber;
+
 require_once( __DIR__ . '/flash.php' );
 
 /**
@@ -93,7 +95,7 @@ class Contact {
 
 				if ( $template ) {
 
-					$message = \Timber::compile( $template, $args );
+					$message = Timber::compile( $template, $args );
 
 				} else {
 					foreach ( $args as $key => &$val ) {
