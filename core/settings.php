@@ -71,7 +71,7 @@ return array(
 	 * scripts
 	 *
 	 * Array of scripts on $handle => $args array where $args match wp_register_script, wit additional 'hook' param
-	 * for the action to enque the script on (default = wp_enqueue_scripts)
+	 * for the action to enqueue the script on (default = wp_enqueue_scripts)
 	 *
 	*/
 	'scripts'           => array(
