@@ -2,7 +2,7 @@
 
 namespace PressGang;
 
-use \Timber\Timber;
+use Timber\Timber;
 
 class Block {
 
@@ -19,9 +19,40 @@ class Block {
 		$slug       = substr( $block['name'], strpos( $block['name'], '/' ) + 1, strlen( $block['name'] ) );
 		static::$id = $block['id'];
 
-		$context = static::get_context( $block );
+		$context            = static::get_context( $block );
+		$context['classes'] = static::get_css_classes( $block );
 
 		Timber::render( "blocks/{$slug}.twig", $context );
+	}
+
+	/**
+	 * Determine the Gutenberg classes applied to the Block, when the block 'supports' color or className
+	 *
+	 * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/#color
+	 * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/#classname
+	 *
+	 * @param $block
+	 *
+	 * @return array
+	 */
+	private static function get_css_classes( $block ) {
+
+		$classes = [];
+
+		if ( isset( $block['className'] ) ) {
+			$classes[] = $block['className'];
+		}
+
+		if ( isset( $block['backgroundColor'] ) ) {
+			$classes[] = $block['backgroundColor'];
+			$classes[] = sprintf( "has-%s-background-color", $block['backgroundColor'] );
+		}
+
+		if ( isset( $block['textColor'] ) ) {
+			$classes[] = sprintf( "has-%s-color", $block['textColor'] );
+		}
+
+		return $classes;
 	}
 
 	/**
@@ -54,6 +85,5 @@ class Block {
 
 		return static::$context;
 	}
-
 
 }
