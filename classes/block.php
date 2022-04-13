@@ -21,8 +21,31 @@ class Block {
 
 		$context            = static::get_context( $block );
 		$context['classes'] = static::get_css_classes( $block );
+		$context['styles']  = static::get_styles( $block );
 
 		Timber::render( "blocks/{$slug}.twig", $context );
+	}
+
+	/**
+	 * Determine the Gutenberg spacing styles e.g. padding, and margins
+	 *
+	 * @param $block
+	 *
+	 * @return array
+	 */
+	private static function get_styles( $block ) {
+
+		$styles = [];
+
+		foreach ( [ 'margin', 'padding' ] as &$spacing ) {
+			foreach ( [ 'top', 'right', 'bottom', 'left' ] as &$position ) {
+				if ( isset( $block['style']['spacing'][ $spacing ][ $position ] ) ) {
+					$styles[] = sprintf( "%s-%s: %s", $spacing, $position, $block['style']['spacing'][ $spacing ][ $position ] );
+				}
+			}
+		}
+
+		return $styles;
 	}
 
 	/**
