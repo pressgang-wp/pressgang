@@ -2,10 +2,6 @@
 
 namespace PressGang;
 
-if ( ! defined( 'POST_NO_RELATED_POSTS' ) ) {
-	define( 'POST_NO_RELATED_POSTS', 4 );
-}
-
 use Timber\Timber;
 use Timber\Image as TimberImage;
 use Timber\Term as TimberTerm;
@@ -24,6 +20,7 @@ class PostController extends PageController {
 	protected $tags;
 	protected $categories;
 	protected $related_posts = array();
+	protected $latest_posts = array();
 	protected $custom_taxonomy_terms = array();
 
 	/**
@@ -128,7 +125,7 @@ class PostController extends PageController {
 	 */
 	public function get_related_posts( $posts_per_page = null ) {
 
-		$posts_per_page = $posts_per_page ?? $posts_per_page;
+		$posts_per_page = $posts_per_page ?? get_option( 'posts_per_page' );
 
 		if ( empty( $this->related_posts ) ) {
 
@@ -219,6 +216,46 @@ class PostController extends PageController {
 	}
 
 	/**
+	 * get_latest_posts
+	 *
+	 * @param $post
+	 * @param $tags
+	 *
+	 * @return array
+	 */
+	public function get_latest_posts( $posts_per_page = null ) {
+
+		$posts_per_page = $posts_per_page ?? get_option( 'posts_per_page' );
+
+		if ( empty( $this->latest_posts ) ) {
+
+			$id = $this->get_post()->ID;
+
+			$key = sprintf( "latest_posts_%d", $id );
+
+			$this->latest_posts = wp_cache_get( $key, 'latest_posts', true );
+
+			if ( empty( $this->latest_posts ) ) {
+
+				$this->latest_posts = array();
+
+				$args = array(
+					'post_type'    => $this->post_type,
+					'orderby'      => 'date',
+					'numberposts'  => $posts_per_page,
+					'post__not_in' => array( $id ),
+				);
+
+				$this->latest_posts = Timber::get_posts( $args );
+
+				wp_cache_add( $key, $this->latest_posts, 'latest_posts', 1 * 24 * 60 * 60 );
+			}
+		}
+
+		return $this->latest_posts;
+	}
+
+	/**
 	 * get_author
 	 *
 	 * @return TimberUser
@@ -260,6 +297,7 @@ class PostController extends PageController {
 
 		$twig->addFunction( new \Timber\Twig_Function( 'get_author', array( $this, 'get_author' ) ) );
 		$twig->addFunction( new \Timber\Twig_Function( 'get_related_posts', array( $this, 'get_related_posts' ) ) );
+		$twig->addFunction( new \Timber\Twig_Function( 'get_latest_posts', array( $this, 'get_latest_posts' ) ) );
 		$twig->addFunction( new \Timber\Twig_Function( 'get_tags', array( $this, 'get_tags' ) ) );
 		$twig->addFunction( new \Timber\Twig_Function( 'get_categories', array( $this, 'get_categories' ) ) );
 		$twig->addFunction( new \Timber\Twig_Function( 'get_custom_taxonomy_terms', array(
