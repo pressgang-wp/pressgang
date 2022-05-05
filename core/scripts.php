@@ -7,12 +7,26 @@ class Scripts {
 	/**
 	 * scripts
 	 *
-	 * @var array|mixed
+	 * @var array
 	 */
-	public static $scripts = array();
+	public $scripts = array();
 
-	public static $async = array();
-	public static $defer = array();
+	/**
+	 * deregister_scripts
+	 *
+	 * @var array
+	 */
+	public $deregister_scripts = array();
+
+	/**
+	 * @var array
+	 */
+	public $async = array();
+
+	/**
+	 * @var array
+	 */
+	public $defer = array();
 
 	/**
 	 * __construct
@@ -23,10 +37,10 @@ class Scripts {
 	 *
 	 */
 	public function __construct() {
-		static::$scripts = Config::get( 'scripts' );
-		add_action( 'init', array( 'PressGang\Scripts', 'register_scripts' ) );
-		add_action( 'init', array( $this, 'modify_jquery' ) );
-		add_filter( 'script_loader_tag', array( 'PressGang\Scripts', 'add_script_attrs' ), 10, 3 );
+		$this->scripts = Config::get( 'scripts' );
+		add_action( 'init', array( $this, 'register_scripts' ) );
+		add_action( 'init', array( $this, 'deregister_scripts' ) );
+		add_filter( 'script_loader_tag', array( $this, 'add_script_attrs' ), 10, 3 );
 	}
 
 	/**
@@ -35,8 +49,8 @@ class Scripts {
 	 * See - https://codex.wordpress.org/Function_Reference/wp_register_script
 	 *
 	 */
-	public static function register_scripts() {
-		foreach ( static::$scripts as $key => &$args ) {
+	public function register_scripts() {
+		foreach ( $this->scripts as $key => &$args ) {
 
 			$defaults = array(
 				'handle'    => $key,
@@ -76,11 +90,11 @@ class Scripts {
 			}
 
 			if ( $args['defer'] ) {
-				static::$defer[] = $key;
+				$this->defer[] = $key;
 			}
 
 			if ( $args['async'] ) {
-				static::$async[] = $key;
+				$this->async[] = $key;
 			}
 
 		}
@@ -94,12 +108,12 @@ class Scripts {
 	 *
 	 * @return mixed
 	 */
-	public static function add_script_attrs( $tag, $handle ) {
-		if ( in_array( $handle, Scripts::$defer ) ) {
+	public function add_script_attrs( $tag, $handle ) {
+		if ( in_array( $handle, $this->defer ) ) {
 			$tag = str_replace( ' src', ' defer="defer" src', $tag );
 		}
 
-		if ( in_array( $handle, Scripts::$async ) ) {
+		if ( in_array( $handle, $this->async ) ) {
 			$tag = str_replace( ' src', ' async="async" src', $tag );
 		}
 
@@ -107,19 +121,22 @@ class Scripts {
 	}
 
 	/**
-	 * modify_jquery
+	 * deregister_scripts
 	 *
-	 * load a newer version of jquery for bootstrap 4 etc.
+	 * Can be used for unloading jQuery etc.
+	 *
 	 */
-	public function modify_jquery() {
+	public function deregister_scripts() {
 		if ( ! is_admin() ) {
-			add_action( 'wp_enqueue_scripts', function () {
-				wp_deregister_script( 'jquery-core' );
-				wp_register_script( 'jquery-core', "https://code.jquery.com/jquery-3.5.1.min.js", array(), '3.5.1' );
 
-				wp_deregister_script( 'jquery-migrate' );
-				wp_register_script( 'jquery-migrate', "https://code.jquery.com/jquery-migrate-3.3.1.min.js", array(), '3.3.1' );
-			}, 0 );
+			foreach ( $this->deregister_scripts as $key => &$args ) {
+
+				add_action( 'wp_enqueue_scripts', function () use ($key) {
+					wp_deregister_script( $key );
+				}, 0 );
+
+			}
+
 		}
 	}
 
