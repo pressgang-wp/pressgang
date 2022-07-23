@@ -31,7 +31,7 @@ class BlockPatterns {
 		foreach ( $block_patterns as $key => &$args ) {
 
 			if(empty($args['content'])) {
-				$args['content'] = Timber::compile(sprintf('block-patterns/%s.twig', $key));
+				$args['content'] = Timber::compile(sprintf("block-patterns/%s.twig", $key));
 			}
 
 			register_block_pattern( $key, $args );
