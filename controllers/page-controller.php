@@ -44,6 +44,7 @@ class PageController extends BaseController {
 	 */
 	protected function get_context() {
 		$this->context['page'] = $this->get_post();
+		$this->context['post'] = $this->get_post();
 
 		return $this->context;
 	}
