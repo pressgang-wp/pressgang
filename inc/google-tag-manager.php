@@ -53,7 +53,7 @@ class GoogleTagManager {
 	 */
 	public function script() {
 		if ( $google_tag_manager_id = get_theme_mod( 'google-tag-manager-id' ) ) {
-			\Timber\Timber::render( 'google-tag-manager.twig', array(
+			\Timber\Timber::render( 'partials/google-tag-manager.twig', array(
 				'google_tag_manager_id' => $google_tag_manager_id,
 			) );
 		}
@@ -66,7 +66,7 @@ class GoogleTagManager {
 	 */
 	public function no_script() {
 		if ( $google_tag_manager_id = get_theme_mod( 'google-tag-manager-id' ) ) {
-			\Timber\Timber::render( 'google-tag-manager-no-script.twig', array(
+			\Timber\Timber::render( 'partials/google-tag-manager-no-script.twig', array(
 				'google_tag_manager_id' => $google_tag_manager_id,
 			) );
 		}
