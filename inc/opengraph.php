@@ -52,7 +52,7 @@ class OpenGraph {
 		}
 
 		$open_graph = array(
-			'site_name'   => esc_attr( apply_filters( 'og_site_name', get_bloginfo() ) ),
+			'site_name'   => apply_filters( 'og_site_name', get_bloginfo() ),
 			'title'       => apply_filters( 'og_title', $title ),
 			'description' => wp_strip_all_tags( apply_filters( 'og_description', $description ) ),
 			'type'        => esc_attr( apply_filters( 'og_type', $type ) ),
