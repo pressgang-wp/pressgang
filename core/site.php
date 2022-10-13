@@ -211,14 +211,14 @@ class Site extends \Timber\Site {
 					if ( empty( $description ) ) {
 						$description = get_bloginfo( 'description', 'raw' );
 					}
-				}
 
-				$description = esc_attr( wp_strip_all_tags( $description ) );
+					$description = esc_attr( wp_strip_all_tags( $description ) );
 
-				// limit to SEO recommended length
-				if ( strlen( $description ) > 155 ) {
-					$description = mb_substr( $description, 0, 155 );
-					$description = TimberHelper::trim_words( $description, str_word_count( $description ) - 1 );
+					// limit to SEO recommended length
+					if ( strlen( $description ) > 155 ) {
+						$description = mb_substr( $description, 0, 155 );
+						$description = TimberHelper::trim_words( $description, str_word_count( $description ) - 1 );
+					}
 				}
 
 				self::$meta_description = $description;
