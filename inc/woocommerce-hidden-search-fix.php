@@ -18,7 +18,9 @@ class WooCommerceHiddenSearchFix {
 	 */
 	public function hidden_product_search_query_fix( $query = false ) {
 
-		if ( ! is_admin() && is_search() ) {
+		global $wp_the_query;
+
+		if ( $query === $wp_the_query && $query->is_search() && ! is_admin() ) {
 
 			$query->set( 'tax_query', array(
 				'relation' => 'OR',
