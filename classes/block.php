@@ -14,7 +14,7 @@ class Block {
 	 *
 	 * @param $block
 	 */
-	public static function render( $block, $content, $is_preview, $post_id, $wp_block, $context ) {
+	public static function render( $block ) {
 		// convert name into path friendly slug
 		$slug       = substr( $block['name'], strpos( $block['name'], '/' ) + 1, strlen( $block['name'] ) );
 		static::$id = $block['id'];
@@ -33,14 +33,21 @@ class Block {
 	 *
 	 * @return array
 	 */
-	protected static function get_styles( $block ) {
+	protected static function get_styles( $block, $content = null, $is_preview = null, $post_id = null, $wp_block = null, $context = null ) {
 
 		$styles = [];
 
 		foreach ( [ 'margin', 'padding' ] as &$spacing ) {
 			foreach ( [ 'top', 'right', 'bottom', 'left' ] as &$position ) {
 				if ( isset( $block['style']['spacing'][ $spacing ][ $position ] ) ) {
-					$styles[] = sprintf( "%s-%s: %s", $spacing, $position, $block['style']['spacing'][ $spacing ][ $position ] );
+					$var = $block['style']['spacing'][ $spacing ][ $position ];
+
+					if ( substr( $var, 0, 4 ) === 'var:' ) {
+						$var = explode( '|', $var );
+						$var = sprintf( 'var(--wp--preset--spacing--%d)', end( $var ) );
+					}
+
+					$styles[] = sprintf( "%s-%s: %s", $spacing, $position, $var );
 				}
 			}
 		}
