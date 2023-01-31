@@ -83,7 +83,7 @@ class Block {
 		}
 
 		if ( isset( $block['align'] ) ) {
-			$classes[] = sprintf( "align-%s", $block['className'] );
+			$classes[] = sprintf( "align-%s", $block['align'] );
 		}
 
 		return $classes;
