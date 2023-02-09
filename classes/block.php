@@ -82,7 +82,7 @@ class Block {
 			$classes[] = sprintf( "has-%s-color", $block['textColor'] );
 		}
 
-		if ( isset( $block['align'] ) ) {
+		if ( ! empty( $block['align'] ) ) {
 			$classes[] = sprintf( "align-%s", $block['align'] );
 		}
 
