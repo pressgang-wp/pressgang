@@ -113,6 +113,7 @@ class Block {
 			}
 		}
 
+		static::$context['block']      = $block;
 		static::$context['css_class']  = isset( $block['className'] ) ? $block['className'] : '';
 		static::$context['align']      = isset( $block['align'] ) ? $block['align'] : '';
 		static::$context['align_text'] = isset( $block['align_text'] ) ? $block['align_text'] : '';
