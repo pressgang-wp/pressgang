@@ -18,7 +18,7 @@ class Config {
 	 *
 	 * @return array|mixed
 	 */
-	public static function get( $key = null ) {
+	public static function get( $key = null, $default = [] ) {
 		if ( ! self::$settings ) {
 
 			$parent = require_once TEMPLATEPATH . '/core/settings.php';
@@ -35,7 +35,7 @@ class Config {
 				return static::$settings[ $key ];
 			}
 
-			return null;
+			return $default;
 		}
 
 		return static::$settings;
