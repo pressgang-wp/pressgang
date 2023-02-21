@@ -100,8 +100,8 @@ class Styles {
 	 * @return void
 	 */
 	public static function dequeue_styles() {
-		foreach ( static::$dequeue_styles as $key => &$val ) {
-			wp_dequeue_style( $key );
+		foreach ( static::$dequeue_styles as $style ) {
+			wp_dequeue_style( $style );
 		}
 	}
 
