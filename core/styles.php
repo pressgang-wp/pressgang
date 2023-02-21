@@ -11,6 +11,18 @@ class Styles {
 	 */
 	public static $styles = array();
 
+	/**
+	 * Default styles to dequeue
+	 *
+	 * @var array
+	 */
+	public static $dequeue_styles = array();
+
+	/**
+	 * Preconnect styles
+	 *
+	 * @var array
+	 */
 	public static $preconnect = array();
 
 	/**
@@ -22,8 +34,12 @@ class Styles {
 	 *
 	 */
 	public function __construct() {
-		static::$styles = Config::get( 'styles' );
+
+		static::$styles         = Config::get( 'styles' );
+		static::$dequeue_styles = Config::get( 'dequeue_styles' );
+
 		add_action( 'init', array( 'PressGang\Styles', 'register_styles' ) );
+		add_action( 'wp_enqueue_scripts', array( 'PressGang\Styles', 'dequeue_styles' ) );
 		add_filter( 'style_loader_tag', array( 'PressGang\Styles', 'add_style_attrs' ), 10, 4 );
 	}
 
@@ -75,6 +91,17 @@ class Styles {
 			if ( $args['preconnect'] ) {
 				static::$preconnect[ $key ] = filter_var( $args['preconnect'], FILTER_VALIDATE_URL );
 			}
+		}
+	}
+
+	/**
+	 * dequeue_styles
+	 *
+	 * @return void
+	 */
+	public static function dequeue_styles() {
+		foreach ( static::$dequeue_styles as $key => &$val ) {
+			wp_dequeue_style( $key );
 		}
 	}
 
