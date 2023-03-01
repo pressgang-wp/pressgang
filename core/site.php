@@ -28,6 +28,11 @@ class Site extends \Timber\Site {
 	 * @param  string|int  $site_name_or_id
 	 */
 	function __construct( $site_name_or_id = null ) {
+
+		// instantiate Timber
+		// https://github.com/studiometa/create-wordpress-project/issues/10
+		new \Timber\Timber();
+
 		// load all customizer mods
 		if ( $theme_mods = get_theme_mods() ) {
 			foreach ( $theme_mods as $mod_key => &$mod_val ) {
