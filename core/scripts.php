@@ -37,7 +37,7 @@ class Scripts {
 	 *
 	 */
 	public function __construct() {
-		$this->scripts = Config::get( 'scripts' );
+		static::$scripts = Config::get( 'scripts' );
 		add_action( 'init', array( $this, 'register_scripts' ) );
 		add_action( 'init', array( $this, 'deregister_scripts' ) );
 		add_filter( 'script_loader_tag', array( $this, 'add_script_attrs' ), 10, 3 );
@@ -50,7 +50,7 @@ class Scripts {
 	 *
 	 */
 	public function register_scripts() {
-		foreach ( $this->scripts as $key => &$args ) {
+		foreach ( static::$scripts as $key => &$args ) {
 
 			$defaults = array(
 				'handle'    => $key,
