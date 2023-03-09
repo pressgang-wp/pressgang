@@ -9,7 +9,7 @@ class Scripts {
 	 *
 	 * @var array
 	 */
-	public $scripts = array();
+	public static $scripts = array();
 
 	/**
 	 * deregister_scripts
