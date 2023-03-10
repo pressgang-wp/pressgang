@@ -186,76 +186,80 @@ class Site extends \Timber\Site {
 
 		if ( empty( $description ) ) {
 
-			$object = get_queried_object();
-			$key    = sprintf( "meta_description_%s_%d",
-				strtolower( get_class( $object ) ), $object->ID );
+			if ( $object = get_queried_object() ) {
 
-			if ( ! $description = wp_cache_get( $key ) ) {
+				$key = sprintf( "meta_description_%s_%d",
+					strtolower( get_class( $object ) ), $object->ID );
 
-				if ( is_single() || is_page() ) {
 
-					// try Yoast
-					$description = get_post_meta( $object->ID,
-						'_yoast_wpseo_metadesc', true );
+				if ( ! $description = wp_cache_get( $key ) ) {
 
-					if ( empty( $description ) ) {
+					if ( is_single() || is_page() ) {
 
-						$post = new TimberPost();
+						// try Yoast
+						$description = get_post_meta( $object->ID,
+							'_yoast_wpseo_metadesc', true );
 
-						// check for custom field
-						$description = wptexturize( $post->get_field( 'meta_description' ) );
-
-						// else use excerpt
 						if ( empty( $description ) ) {
-							$description = $post->post_excerpt;
+
+							$post = new TimberPost();
+
+							// check for custom field
+							$description = wptexturize( $post->get_field( 'meta_description' ) );
+
+							// else use excerpt
+							if ( empty( $description ) ) {
+								$description = $post->post_excerpt;
+							}
+
+							// else use preview
+							if ( empty( $description ) ) {
+								$description = strip_shortcodes( $post->post_content );
+							}
 						}
 
-						// else use preview
-						if ( empty( $description ) ) {
-							$description = strip_shortcodes( $post->post_content );
+					}
+
+					if ( is_tax() ) {
+
+						// try Yoast
+
+						if ( $yoast_meta = get_option( 'wpseo_taxonomy_meta' ) ) {
+							$description = $yoast_meta[ $object->taxonomy ][ $object->term_id ]['wpseo_desc'];
 						}
-					}
 
-				}
+						if ( empty( $description ) ) {
 
-				if ( is_tax() ) {
+							if ( $temp = term_description( get_queried_object(),
+								get_query_var( 'taxonomy' ) ) ) {
+								$description = $temp;
+							}
+						}
 
-					// try Yoast
-
-					if ( $yoast_meta = get_option( 'wpseo_taxonomy_meta' ) ) {
-						$description = $yoast_meta[ $object->taxonomy ][ $object->term_id ]['wpseo_desc'];
-					}
-
-					if ( empty( $description ) ) {
-
-						if ( $temp = term_description( get_queried_object(),
-							get_query_var( 'taxonomy' ) ) ) {
+					} elseif ( is_post_type_archive() ) {
+						if ( $temp = get_the_archive_description() ) {
 							$description = $temp;
 						}
 					}
 
-				} elseif ( is_post_type_archive() ) {
-					if ( $temp = get_the_archive_description() ) {
-						$description = $temp;
+					// finally use the blog description
+					if ( empty( $description ) ) {
+						$description = get_bloginfo( 'description', 'raw' );
 					}
+
+					$description = esc_attr( wp_strip_all_tags( $description ) );
+
+					// limit to SEO recommended length
+					if ( strlen( $description ) > 155 ) {
+						$description = mb_substr( $description, 0, 155 );
+						$description = TimberHelper::trim_words( $description,
+							str_word_count( $description ) - 1 );
+					}
+
+					self::$meta_description = $description;
+					wp_cache_set( $key, self::$meta_description );
 				}
 
-				// finally use the blog description
-				if ( empty( $description ) ) {
-					$description = get_bloginfo( 'description', 'raw' );
-				}
-
-				$description = esc_attr( wp_strip_all_tags( $description ) );
-
-				// limit to SEO recommended length
-				if ( strlen( $description ) > 155 ) {
-					$description = mb_substr( $description, 0, 155 );
-					$description = TimberHelper::trim_words( $description,
-						str_word_count( $description ) - 1 );
-				}
-
-				self::$meta_description = $description;
-				wp_cache_set( $key, self::$meta_description );
 			}
 		}
 
