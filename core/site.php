@@ -72,11 +72,6 @@ class Site extends \Timber\Site {
 		add_filter( 'timber_context', [ $this, 'add_to_context' ] );
 		add_filter( 'get_twig', [ $this, 'add_to_twig' ] );
 
-		add_filter( 'meta_description',
-			[ 'PressGang\Site', 'meta_description' ] );
-
-		// add_filter('wp_headers', array($this, 'add_ie_header'));
-
 		if ( class_exists( 'WooCommerce' ) ) {
 			add_filter( 'timber_context',
 				[ $this, 'add_woocommerce_to_context' ] );
@@ -262,6 +257,8 @@ class Site extends \Timber\Site {
 
 			}
 		}
+
+		$description = apply_filters( 'meta_description', $description);
 
 		return $description;
 	}
