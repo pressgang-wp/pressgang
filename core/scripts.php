@@ -94,7 +94,7 @@ class Scripts {
 			}
 
 			if ( $args['async'] ) {
-				static::async[] = $key;
+				static::$async[] = $key;
 			}
 
 		}
