@@ -16,17 +16,17 @@ class Scripts {
 	 *
 	 * @var array
 	 */
-	public $deregister_scripts = array();
+	public static $deregister_scripts = array();
 
 	/**
 	 * @var array
 	 */
-	public $async = array();
+	public static $async = array();
 
 	/**
 	 * @var array
 	 */
-	public $defer = array();
+	public static $defer = array();
 
 	/**
 	 * __construct
@@ -90,11 +90,11 @@ class Scripts {
 			}
 
 			if ( $args['defer'] ) {
-				$this->defer[] = $key;
+				static::$defer[] = $key;
 			}
 
 			if ( $args['async'] ) {
-				$this->async[] = $key;
+				static::async[] = $key;
 			}
 
 		}
@@ -109,11 +109,11 @@ class Scripts {
 	 * @return mixed
 	 */
 	public function add_script_attrs( $tag, $handle ) {
-		if ( in_array( $handle, $this->defer ) ) {
+		if ( in_array( $handle, static::$defer ) ) {
 			$tag = str_replace( ' src', ' defer="defer" src', $tag );
 		}
 
-		if ( in_array( $handle, $this->async ) ) {
+		if ( in_array( $handle, static::$async ) ) {
 			$tag = str_replace( ' src', ' async="async" src', $tag );
 		}
 
@@ -129,7 +129,7 @@ class Scripts {
 	public function deregister_scripts() {
 		if ( ! is_admin() ) {
 
-			foreach ( $this->deregister_scripts as $key => &$args ) {
+			foreach ( static::$deregister_scripts as $key => &$args ) {
 
 				add_action( 'wp_enqueue_scripts', function () use ($key) {
 					wp_deregister_script( $key );
