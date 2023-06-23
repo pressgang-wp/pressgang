@@ -237,12 +237,12 @@ class Site extends \Timber\Site {
 						}
 					}
 
+					$description = esc_attr( wp_strip_all_tags( $description ) );
+
 					// finally use the blog description
 					if ( empty( $description ) ) {
 						$description = get_bloginfo( 'description', 'raw' );
 					}
-
-					$description = esc_attr( wp_strip_all_tags( $description ) );
 
 					// limit to SEO recommended length
 					if ( strlen( $description ) > 155 ) {
