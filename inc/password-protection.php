@@ -10,6 +10,8 @@ class PasswordProtection {
 	 * By default, this will use the **password-protected.php** template file. If you want password
 	 * templates specific to a post type, use **password-protected-$posttype.php**.
 	 *
+	 * The form can be rendered with {{ fn('get_the_password_form') }}
+	 *
 	 * @see https://timber.github.io/docs/v2/guides/posts/#password-protected-posts
 	 */
 	public function __construct() {
