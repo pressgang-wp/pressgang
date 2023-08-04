@@ -57,7 +57,7 @@ class Styles {
 				'handle'     => $key,
 				'src'        => '',
 				'deps'       => array(),
-				'ver'        => false,
+				'ver'        => null,
 				'media'      => 'all',
 				'hook'       => 'wp_enqueue_scripts',
 				'preconnect' => null,
@@ -78,7 +78,7 @@ class Styles {
 				// register scripts
 				add_action( 'wp_loaded', function () use ( $args ) {
 					// TODO filemtime()
-					$ver = isset( $args['version'] ) ? $args['version'] : ( isset( $args['ver'] ) ? $args['ver'] : '1.0.0' );
+					$ver = isset( $args['version'] ) ? $args['version'] : ( isset( $args['ver'] ) ? $args['ver'] : null );
 					wp_register_style( $args['handle'], $args['src'], $args['deps'], $ver, $args['media'] );
 				} );
 
