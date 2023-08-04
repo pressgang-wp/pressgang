@@ -56,7 +56,7 @@ class Scripts {
 				'handle'    => $key,
 				'src'       => '',
 				'deps'      => array(),
-				'ver'       => false,
+				'ver'       => null,
 				'in_footer' => false,
 				'hook'      => 'wp_enqueue_scripts',
 				'defer'     => false,
@@ -76,7 +76,7 @@ class Scripts {
 			if ( isset( $args['src'] ) && $args['src'] ) {
 
 				// TODO filemtime()
-				$ver = isset( $args['version'] ) ? $args['version'] : ( isset( $args['ver'] ) ? $args['ver'] : '1.0.0' );
+				$ver = isset( $args['version'] ) ? $args['version'] : ( isset( $args['ver'] ) ? $args['ver'] : null );
 
 				// register scripts
 				add_action( 'wp_loaded', function () use ( $args, $ver ) {
