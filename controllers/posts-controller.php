@@ -90,9 +90,13 @@ class PostsController extends BaseController {
 	 */
 	protected function get_context() {
 		$this->context['page_title'] = $this->get_page_title();
-		// TODO get from config
-		$this->context[ Pluralizer::pluralize( $this->post_type ) ] = $this->context['posts'] = $this->get_posts();
-		$this->context['pagination']                                = $this->get_pagination();
+
+		$this->context['posts'] = $this->get_posts();
+		$this->context['pagination'] = $this->get_pagination();
+
+		if ( $this->post_type ) {
+			$this->context[ Pluralizer::pluralize( $this->post_type ) ] = $this->get_posts();
+		}
 
 		return $this->context;
 	}
