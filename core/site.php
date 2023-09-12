@@ -183,9 +183,8 @@ class Site extends \Timber\Site {
 
 			if ( $object = get_queried_object() ) {
 
-				$key = sprintf( "meta_description_%s_%d",
-					strtolower( get_class( $object ) ), $object->ID );
-
+				$key = sprintf( "meta_description_%s_%s",
+					strtolower( get_class( $object ) ), $object->ID ?? $object->name );
 
 				if ( ! $description = wp_cache_get( $key ) ) {
 
