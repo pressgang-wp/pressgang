@@ -1,6 +1,6 @@
 <?php
 
-namespace Pressgang;
+namespace PressGang;
 
 class Masonry {
 	public function __construct() {

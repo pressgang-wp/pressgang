@@ -1,6 +1,6 @@
 <?php
 
-namespace Pressgang;
+namespace PressGang;
 
 /**
  * Class TaxonomyFilter
@@ -9,7 +9,7 @@ namespace Pressgang;
  *
  * Further reading: https://thereforei.am/2011/10/28/advanced-taxonomy-queries-with-pretty-urls/
  *
- * @package Pressgang
+ * @package PressGang
  */
 class TaxonomyFilter {
 

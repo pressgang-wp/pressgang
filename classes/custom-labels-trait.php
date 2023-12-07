@@ -7,7 +7,7 @@ require_once __DIR__ . '/../library/pluralizer.php';
 /**
  * Trait CustomLabels
  *
- * This trait is shared between PressGang\CustomTaxonomies and Pressgang\CustomTaxonomies
+ * This trait is shared between PressGang\CustomTaxonomies and PressGang\CustomTaxonomies
  * It is used to automatically pluralize the singular values provided
  *
  * @package PressGang

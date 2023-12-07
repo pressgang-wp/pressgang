@@ -1,6 +1,6 @@
 <?php
 
-namespace Pressgang;
+namespace PressGang;
 
 /**
  * Class Screenshot
@@ -9,7 +9,7 @@ namespace Pressgang;
  *
  * https://codex.wordpress.org/Theme_Development#Screenshot
  *
- * @package Pressgang
+ * @package PressGang
  */
 class Screenshot {
 

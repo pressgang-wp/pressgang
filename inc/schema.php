@@ -1,13 +1,13 @@
 <?php
 
-namespace Pressgang;
+namespace PressGang;
 
 /**
  * Class Schema
  *
  * See - https://iamsteve.me/blog/entry/how-to-use-json-ld-to-replace-microdata-with-wordpress
  *
- * @package Pressgang
+ * @package PressGang
  */
 class Schema {
 	/**

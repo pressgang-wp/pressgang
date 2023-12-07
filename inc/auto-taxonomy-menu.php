@@ -146,7 +146,7 @@ class AutoTaxonomyMenu {
 				'instruction_placement' => 'label',
 				'hide_on_screen'        => '',
 				'active'                => 1,
-				'description'           => 'Used by Pressgang include "auto-taxonomy-menu.php"',
+				'description'           => 'Used by PressGang include "auto-taxonomy-menu.php"',
 			) );
 
 		endif;

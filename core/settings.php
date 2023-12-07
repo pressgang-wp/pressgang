@@ -61,7 +61,7 @@ return array(
 	/*
 	 * templates
 	 *
-	 * Load any of the Pressgang page templates into the childtheme
+	 * Load any of the PressGang page templates into the childtheme
 	 *
 	 * @var array
 	 */

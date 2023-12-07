@@ -12,9 +12,9 @@ class TrackPostViews {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action( 'wp_head', array( '\Pressgang\TrackPostViews', 'track_post_views' ) );
-		add_action( 'wp_head', array( '\Pressgang\TrackPostViews', 'cache_breaker' ) );
-		add_action( 'the_post', array( '\Pressgang\TrackPostViews', 'add_views_to_post' ) );
+		add_action( 'wp_head', array( '\PressGang\TrackPostViews', 'track_post_views' ) );
+		add_action( 'wp_head', array( '\PressGang\TrackPostViews', 'cache_breaker' ) );
+		add_action( 'the_post', array( '\PressGang\TrackPostViews', 'add_views_to_post' ) );
 
 		// to keep the count accurate, get rid of pre-fetching
 		remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10 );
@@ -109,7 +109,7 @@ class TrackPostViews {
 	 */
 	public static function cache_breaker() {
 		if ( is_single() ) { ?>
-			<!-- mfunc \Pressgang\TrackPostViews::set_post_views($post_id); --><!-- /mfunc -->
+			<!-- mfunc \PressGang\TrackPostViews::set_post_views($post_id); --><!-- /mfunc -->
 			<?php
 		}
 	}

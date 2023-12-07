@@ -1,4 +1,4 @@
 <?php
 
-$controller = new \Pressgang\PostController('password-protected.twig');
+$controller = new \PressGang\PostController('password-protected.twig');
 $controller->render();

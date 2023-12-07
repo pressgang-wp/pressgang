@@ -1,6 +1,6 @@
 <?php
 
-namespace Pressgang;
+namespace PressGang;
 
 class StructuredDataPageMap {
 	public function __construct() {

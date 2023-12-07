@@ -1,6 +1,6 @@
 <?php
 
-Namespace Pressgang;
+Namespace PressGang;
 
 /**
  * Class CustomMenuItems
@@ -8,7 +8,7 @@ Namespace Pressgang;
  * Adds items to a given WordPress menu, taken from core/settings.php
  *
  *
- * @package Pressgang
+ * @package PressGang
  */
 class CustomMenuItems {
 

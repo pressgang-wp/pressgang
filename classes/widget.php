@@ -1,13 +1,13 @@
 <?php
 
-namespace Pressgang;
+namespace PressGang;
 
 use \Timber\Timber;
 
 /**
  * Class Widget
  *
- * @package Pressgang
+ * @package PressGang
  */
 class Widget extends \WP_Widget {
 	protected $classname;

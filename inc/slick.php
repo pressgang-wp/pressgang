@@ -1,6 +1,6 @@
 <?php
 
-namespace Pressgang;
+namespace PressGang;
 
 class Slick {
 	public function __construct() {
