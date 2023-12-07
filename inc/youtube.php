@@ -10,11 +10,11 @@ class YouTube {
 	public function __construct() {
 
 		add_filter( 'timber/twig', function ( \Twig_Environment $twig ) {
-			$twig->addFunction( new \Timber\Twig_Function( 'get_youtube_id_from_url', array(
+			$twig->addFunction( new \Twig\TwigFunction( 'get_youtube_id_from_url', array(
 				$this,
 				'get_youtube_id_from_url'
 			) ) );
-			$twig->addFunction( new \Timber\Twig_Function( 'get_youtube_list_id_from_url', array(
+			$twig->addFunction( new \Twig\TwigFunction( 'get_youtube_list_id_from_url', array(
 				$this,
 				'get_youtube_list_id_from_url'
 			) ) );
