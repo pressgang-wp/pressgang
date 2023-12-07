@@ -2,6 +2,8 @@
 
 namespace PressGang;
 
+use Timber\Timber;
+
 /**
  * Class WoocommerceProductsController
  *
@@ -44,10 +46,10 @@ class WoocommerceProductsController extends BaseController {
 			) ) );
 
 			foreach ( $product_categories as &$category ) {
-				$category = \Timber::get_term( $category );
+				$category = Timber::get_term( $category );
 				$meta     = get_term_meta( $category->term_id );
 				if ( isset( $meta['thumbnail_id'][0] ) ) {
-					$category->thumbnail = \Timber::get_image( $meta['thumbnail_id'][0] );
+					$category->thumbnail = Timber::get_image( $meta['thumbnail_id'][0] );
 				}
 			}
 
@@ -79,7 +81,7 @@ class WoocommerceProductsController extends BaseController {
 		parent::get_context();
 
 		$this->context['products']          = $this->context['posts'] = $this->get_posts();
-		$this->context['widget_sidebar']    = \Timber::get_widgets( 'shop_sidebar' );
+		$this->context['widget_sidebar']    = Timber::get_widgets( 'shop_sidebar' );
 		$this->context['shop_page_display'] = get_option( 'woocommerce_shop_page_display' );
 
 		// $this->context['product_categories'] = $this->get_product_categories();

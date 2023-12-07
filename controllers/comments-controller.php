@@ -2,6 +2,8 @@
 
 namespace PressGang;
 
+use Timber\Timber;
+
 require_once 'base-controller.php';
 
 /**
@@ -36,7 +38,7 @@ class CommentsController extends BaseController {
 	 */
 	protected function get_post() {
 		if ( empty( $this->post ) ) {
-			$this->post = \Timber::get_post();
+			$this->post = Timber::get_post();
 		}
 
 		return $this->post;
