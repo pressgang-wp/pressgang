@@ -9,7 +9,7 @@ namespace PressGang;
  *
  * See - https://developer.wordpress.org/block-editor/developers/themes/theme-support/
  *
- * @package Pressgang
+ * @package PressGang
  */
 class ColorPalette {
 

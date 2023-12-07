@@ -1,6 +1,6 @@
 <?php
 
-Namespace Pressgang;
+Namespace PressGang;
 
 use \Timber\Post as TimberPost;
 
@@ -9,7 +9,7 @@ require_once 'page-controller.php';
 /**
  * Class SinglePageController
  *
- * @package Pressgang
+ * @package PressGang
  */
 class SinglePageController extends PageController {
 

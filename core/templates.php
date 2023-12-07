@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * This class allows the loading of the Pressgang page templates in the child theme's settings.php
+ * This class allows the loading of the PressGang page templates in the child theme's settings.php
  */
 
 namespace PressGang;

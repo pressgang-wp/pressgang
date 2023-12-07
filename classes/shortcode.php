@@ -1,13 +1,13 @@
 <?php
 
-namespace Pressgang;
+namespace PressGang;
 
 use \Timber\Timber;
 
 /**
  * Class Clients
  *
- * @package Pressgang
+ * @package PressGang
  */
 class Shortcode {
 

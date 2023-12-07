@@ -1,13 +1,13 @@
 <?php
 
-namespace Pressgang;
+namespace PressGang;
 
 /**
  * Class SearchExclude
  *
  * Exclude pages from search
  *
- * @package Pressgang
+ * @package PressGang
  */
 class SearchExclude {
 	/**

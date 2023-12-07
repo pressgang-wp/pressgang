@@ -1,6 +1,6 @@
 <?php
 
-namespace Pressgang;
+namespace PressGang;
 
 /**
  * Class Customize
@@ -12,7 +12,7 @@ namespace Pressgang;
  * https://codex.wordpress.org/Class_Reference/WP_Customize_Manager/add_setting
  * https://codex.wordpress.org/Class_Reference/WP_Customize_Manager/add_control
  *
- * @package Pressgang
+ * @package PressGang
  */
 class Customize {
 	protected $customizer;
