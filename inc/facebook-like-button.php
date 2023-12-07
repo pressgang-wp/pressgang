@@ -19,7 +19,7 @@ class FacebookLikeButton {
 	public function __construct() {
 		add_action( 'customize_register', array( $this, 'customizer' ) );
 		add_action( 'wp_body_open', array( $this, 'script' ) );
-		add_filter( 'get_twig', array( $this, 'add_to_twig' ) );
+		add_filter( 'timber/twig', array( $this, 'add_to_twig' ) );
 	}
 
 	/**

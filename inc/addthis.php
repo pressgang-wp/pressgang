@@ -18,7 +18,7 @@ class AddThis {
 	public function __construct() {
 		add_action( 'customize_register', array( $this, 'customizer' ) );
 		add_shortcode( 'addthis', array( $this, array( $this, 'button' ) ) );
-		add_filter( 'get_twig', array( $this, 'add_to_twig' ) );
+		add_filter( 'timber/twig', array( $this, 'add_to_twig' ) );
 
 		$this->consented = isset( $_COOKIE['cookie-consent'] ) && ! ! $_COOKIE['cookie-consent'];
 		$this->register_script();

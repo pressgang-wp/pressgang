@@ -26,7 +26,7 @@ class Breadcrumb {
 		$this->breadcrumbs_class = 'breadcrumb';
 		$this->home_title        = __( "Home", THEMENAME );
 
-		add_filter( 'get_twig', array( $this, 'add_to_twig' ) );
+		add_filter( 'timber/twig', array( $this, 'add_to_twig' ) );
 	}
 
 	/**

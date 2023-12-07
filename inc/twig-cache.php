@@ -7,7 +7,7 @@ use Twig\CacheExtension\CacheProvider\DoctrineCacheAdapter;
 use Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy;
 use Twig\CacheExtension\Extension as CacheExtension;
 
-add_filter( 'get_twig', function ( $twig ) {
+add_filter( 'timber/twig', function ( $twig ) {
 	$cacheProvider  = new DoctrineCacheAdapter( new ArrayCache() );
 	$cacheStrategy  = new LifetimeCacheStrategy( $cacheProvider );
 	$cacheExtension = new CacheExtension( $cacheStrategy );
