@@ -55,11 +55,11 @@ class Site extends \Timber\Site {
 			get_stylesheet_directory_uri(), $this->stylesheet,
 			filemtime( get_stylesheet_directory() . "/css/{$this->stylesheet}" ) );
 
-		add_filter( 'timber_context', [ $this, 'add_to_context' ] );
+		add_filter( 'timber\context', [ $this, 'add_to_context' ] );
 		add_filter( 'get_twig', [ $this, 'add_to_twig' ] );
 
 		if ( class_exists( 'WooCommerce' ) ) {
-			add_filter( 'timber_context',
+			add_filter( 'timber\context',
 				[ $this, 'add_woocommerce_to_context' ] );
 		}
 

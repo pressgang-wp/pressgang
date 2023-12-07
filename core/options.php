@@ -12,7 +12,7 @@ class Options {
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'init' ) );
-		add_filter( 'timber_context', array( $this, 'add_to_timber_context' ) );
+		add_filter( 'timber\context', array( $this, 'add_to_timber_context' ) );
 	}
 
 	/**
