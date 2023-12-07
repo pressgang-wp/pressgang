@@ -3,7 +3,6 @@
 namespace PressGang;
 
 use \Timber\Timber;
-use \Timber\Post as TimberPost;
 use \Timber\Helper as TimberHelper;
 use \Timber\Image as TimberImage;
 
@@ -25,13 +24,9 @@ class Site extends \Timber\Site {
 	/**
 	 *__construct
 	 *
-	 * @param  string|int  $site_name_or_id
+	 * @param string|int $site_name_or_id
 	 */
 	function __construct( $site_name_or_id = null ) {
-
-		// instantiate Timber
-		// https://github.com/studiometa/create-wordpress-project/issues/10
-		new \Timber\Timber();
 
 		// load all customizer mods
 		if ( $theme_mods = get_theme_mods() ) {
@@ -57,11 +52,6 @@ class Site extends \Timber\Site {
 
 		// get site email
 		$this->email = get_option( 'admin_email' );
-
-		// replace the site icon with an image object
-		if ( $this->site_icon ) {
-			$this->site_icon = new TimberImage( $this->site_icon );
-		}
 
 		// get stylesheet (can be set in customizer theme mod)
 		$this->stylesheet = $this->stylesheet ?: 'styles.css';
@@ -196,7 +186,7 @@ class Site extends \Timber\Site {
 
 						if ( empty( $description ) ) {
 
-							$post = new TimberPost();
+							$post = Timber::get_post();
 
 							// check for custom field
 							$description = wptexturize( $post->get_field( 'meta_description' ) );
@@ -257,7 +247,7 @@ class Site extends \Timber\Site {
 			}
 		}
 
-		$description = apply_filters( 'meta_description', $description);
+		$description = apply_filters( 'meta_description', $description );
 
 		return $description;
 	}
