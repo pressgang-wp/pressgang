@@ -12,7 +12,7 @@
   "minimum-stability": "dev",
   "require": {
     "php": "^7.3|^8.0",
-    "timber/timber": "dev-master"
+    "timber/timber": "2.x-dev"
   },
   "extra": {
     "installer-paths": {
