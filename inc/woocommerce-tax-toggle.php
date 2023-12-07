@@ -63,7 +63,7 @@ class WooCommerceTaxToggle {
 	 *
 	 */
 	public function add_to_twig( $twig ) {
-		$twig->addFunction( new \Twig_SimpleFunction( 'tax_toggle', array( $this, 'render_tax_toggle' ) ) );
+		$twig->addFunction( new \Twig\TwigFunction( 'tax_toggle', array( $this, 'render_tax_toggle' ) ) );
 
 		return $twig;
 	}

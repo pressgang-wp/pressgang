@@ -39,7 +39,7 @@ class Breadcrumb {
 	 * @return mixed
 	 */
 	public function add_to_twig( $twig ) {
-		$twig->addFunction( new \Twig_SimpleFunction( 'breadcrumb', array( $this, 'render' ) ) );
+		$twig->addFunction( new \Twig\TwigFunction( 'breadcrumb', array( $this, 'render' ) ) );
 
 		return $twig;
 	}
