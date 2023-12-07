@@ -2,8 +2,6 @@
 
 namespace PressGang;
 
-use \Timber\Timber;
-
 /**
  * Class Widget
  *
@@ -71,7 +69,7 @@ class Widget extends \WP_Widget {
 
 		do_action( "render_widget_{$name}" );
 
-		Timber::render( $this->view, $instance );
+		\Timber::render( $this->view, $instance );
 	}
 
 	/**
@@ -129,7 +127,7 @@ class Widget extends \WP_Widget {
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 
 		foreach ( $this->fields as $field => &$config ) {
-			Timber::render( $config['view'], array(
+			\Timber::render( $config['view'], array(
 				'label' => __( $config['label'], THEMENAME ),
 				'id'    => $this->get_field_id( $field ),
 				'name'  => $this->get_field_name( $field ),
