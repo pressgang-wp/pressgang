@@ -2,8 +2,6 @@
 
 namespace PressGang;
 
-use \Timber\Timber;
-
 /**
  * Class Clients
  *
@@ -62,7 +60,7 @@ class Shortcode {
 	public function do_shortcode( $atts, $content = null ) {
 		$args = shortcode_atts( $this->get_defaults(), $atts );
 
-		return Timber::compile( $this->template, $this->get_context( $args ) );
+		return \Timber::compile( $this->template, $this->get_context( $args ) );
 	}
 
 }

@@ -3,8 +3,6 @@
 namespace PressGang;
 
 use Timber\Timber;
-use Timber\Image as TimberImage;
-use Timber\Term as TimberTerm;
 
 require_once 'page-controller.php';
 
@@ -99,7 +97,7 @@ class PostController extends PageController {
 					if ( is_array( $terms ) && count( $terms ) ) {
 
 						foreach ( $terms as &$term ) {
-							$term = new TimberTerm( $term );
+							$term = \Timber::get_term( $term );
 						}
 
 						$name                                 = Pluralizer::pluralize( $slug );
@@ -169,7 +167,7 @@ class PostController extends PageController {
 					}
 				}
 
-				$posts = Timber::get_posts( $args );
+				$posts = \Timber::get_posts( $args );
 
 				foreach ( $posts as &$post ) {
 					$this->related_posts[ $post->ID ] = $post;
@@ -185,19 +183,18 @@ class PostController extends PageController {
 					$args['post__not_in']          = $not_in;
 					$args['numberposts']           = $posts_per_page - count( $this->related_posts );
 
-					$posts = Timber::get_posts( $args );
+					$posts = \Timber::get_posts( $args );
 
 					foreach ( $posts as &$post ) {
 						$this->related_posts[ $post->ID ] = $post;
 					}
 
-					// fill the rest of related posts by post_type
-
+					// fill the rest with related posts by post_type
 					if ( count( $this->related_posts ) < $posts_per_page ) {
 						$not_in = array_merge( $not_in, array_keys( $this->related_posts ) );
 
 						unset( $args['tax_query'] );
-						$args['numberposts'] = $not_in;
+						$args['post__not_in'] = $not_in;
 						$args['numberposts'] = $posts_per_page - count( $this->related_posts );
 
 						$posts = Timber::get_posts( $args );
@@ -246,7 +243,7 @@ class PostController extends PageController {
 					'post__not_in' => array( $id ),
 				);
 
-				$this->latest_posts = Timber::get_posts( $args );
+				$this->latest_posts = \Timber::get_posts( $args );
 
 				wp_cache_add( $key, $this->latest_posts, 'latest_posts', 1 * 24 * 60 * 60 );
 			}
@@ -258,15 +255,15 @@ class PostController extends PageController {
 	/**
 	 * get_author
 	 *
-	 * @return TimberUser
+	 * @return \Timber\User
 	 */
 	public function get_author() {
 
 		if ( empty( $this->author ) ) {
 			$post = $this->get_post();
 			if ( $post ) {
-				$this->author            = $post->get_author();
-				$this->author->thumbnail = new TimberImage( get_avatar_url( $this->author->id ) );
+				$this->author            = \Timber::get_user($post->get_author());
+				// $this->author->thumbnail = \Timber::get_image( get_avatar_url( $this->author->id ) );
 			}
 		}
 

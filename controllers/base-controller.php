@@ -2,8 +2,6 @@
 
 namespace PressGang;
 
-use Timber\Timber;
-
 require_once 'base-controller.php';
 
 /**
@@ -26,7 +24,7 @@ abstract class BaseController {
 	 */
 	public function __construct( $template = null ) {
 		$this->template = $template;
-		$this->context  = Timber::get_context();
+		$this->context  = \Timber::get_context();
 	}
 
 	/**

@@ -2,10 +2,6 @@
 
 namespace PressGang;
 
-use \Timber\Timber;
-use \Timber\Helper as TimberHelper;
-use \Timber\Image as TimberImage;
-
 require_once( 'loader.php' );
 
 /**
@@ -69,7 +65,7 @@ class Site extends \Timber\Site {
 
 		// switch on twig caching if production
 		if ( class_exists( 'Timber' ) ) {
-			Timber::$cache = \defined( 'TIMBER_CACHE' ) ? TIMBER_CACHE : ! WP_DEBUG;
+			\Timber::$cache = \defined( 'TIMBER_CACHE' ) ? TIMBER_CACHE : ! WP_DEBUG;
 		}
 
 		// add a theme color
@@ -186,7 +182,7 @@ class Site extends \Timber\Site {
 
 						if ( empty( $description ) ) {
 
-							$post = Timber::get_post();
+							$post = \Timber::get_post();
 
 							// check for custom field
 							$description = wptexturize( $post->get_field( 'meta_description' ) );
@@ -236,7 +232,7 @@ class Site extends \Timber\Site {
 					// limit to SEO recommended length
 					if ( strlen( $description ) > 155 ) {
 						$description = mb_substr( $description, 0, 155 );
-						$description = TimberHelper::trim_words( $description,
+						$description = \Timber\TextHelper::trim_words( $description,
 							str_word_count( $description ) - 1 );
 					}
 

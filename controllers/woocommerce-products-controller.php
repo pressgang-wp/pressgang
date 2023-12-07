@@ -2,9 +2,6 @@
 
 namespace PressGang;
 
-use \Timber\Timber;
-use \Timber\Term as TimberTerm;
-
 /**
  * Class WoocommerceProductsController
  *
@@ -47,10 +44,10 @@ class WoocommerceProductsController extends BaseController {
 			) ) );
 
 			foreach ( $product_categories as &$category ) {
-				$category = new TimberTerm( $category );
+				$category = \Timber::get_term( $category );
 				$meta     = get_term_meta( $category->term_id );
 				if ( isset( $meta['thumbnail_id'][0] ) ) {
-					$category->thumbnail = new \TimberImage( $meta['thumbnail_id'][0] );
+					$category->thumbnail = \Timber::get_image( $meta['thumbnail_id'][0] );
 				}
 			}
 
@@ -68,7 +65,7 @@ class WoocommerceProductsController extends BaseController {
 	 */
 	protected function get_posts() {
 		if ( empty( $this->posts ) ) {
-			$this->posts = Timber::get_posts();
+			$this->posts = \Timber::get_posts();
 		}
 
 		return $this->posts;
@@ -82,7 +79,7 @@ class WoocommerceProductsController extends BaseController {
 		parent::get_context();
 
 		$this->context['products']          = $this->context['posts'] = $this->get_posts();
-		$this->context['widget_sidebar']    = Timber::get_widgets( 'shop_sidebar' );
+		$this->context['widget_sidebar']    = \Timber::get_widgets( 'shop_sidebar' );
 		$this->context['shop_page_display'] = get_option( 'woocommerce_shop_page_display' );
 
 		// $this->context['product_categories'] = $this->get_product_categories();
