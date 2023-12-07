@@ -56,7 +56,7 @@ class Site extends \Timber\Site {
 			filemtime( get_stylesheet_directory() . "/css/{$this->stylesheet}" ) );
 
 		add_filter( 'timber\context', [ $this, 'add_to_context' ] );
-		add_filter( 'get_twig', [ $this, 'add_to_twig' ] );
+		add_filter( 'timber/twig', [ $this, 'add_to_twig' ] );
 
 		if ( class_exists( 'WooCommerce' ) ) {
 			add_filter( 'timber\context',
