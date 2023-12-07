@@ -2,6 +2,8 @@
 
 Namespace PressGang;
 
+use Timber\Timber;
+
 require_once 'page-controller.php';
 
 /**
@@ -59,7 +61,7 @@ class SinglePageController extends PageController {
 
 			foreach ( $children as &$child ) {
 
-				$page = \Timber::get_post( $child );
+				$page = Timber::get_post( $child );
 
 				$template = get_page_template_slug( $page->ID );
 				$template = preg_replace( array( '/.*\//', '/\.php/i' ), array( '', '.twig' ), $template );

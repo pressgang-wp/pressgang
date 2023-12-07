@@ -97,7 +97,7 @@ class PostController extends PageController {
 					if ( is_array( $terms ) && count( $terms ) ) {
 
 						foreach ( $terms as &$term ) {
-							$term = \Timber::get_term( $term );
+							$term = Timber::get_term( $term );
 						}
 
 						$name                                 = Pluralizer::pluralize( $slug );
@@ -167,7 +167,7 @@ class PostController extends PageController {
 					}
 				}
 
-				$posts = \Timber::get_posts( $args );
+				$posts = Timber::get_posts( $args );
 
 				foreach ( $posts as &$post ) {
 					$this->related_posts[ $post->ID ] = $post;
@@ -183,7 +183,7 @@ class PostController extends PageController {
 					$args['post__not_in']          = $not_in;
 					$args['numberposts']           = $posts_per_page - count( $this->related_posts );
 
-					$posts = \Timber::get_posts( $args );
+					$posts = Timber::get_posts( $args );
 
 					foreach ( $posts as &$post ) {
 						$this->related_posts[ $post->ID ] = $post;
@@ -243,7 +243,7 @@ class PostController extends PageController {
 					'post__not_in' => array( $id ),
 				);
 
-				$this->latest_posts = \Timber::get_posts( $args );
+				$this->latest_posts = Timber::get_posts( $args );
 
 				wp_cache_add( $key, $this->latest_posts, 'latest_posts', 1 * 24 * 60 * 60 );
 			}
@@ -255,15 +255,15 @@ class PostController extends PageController {
 	/**
 	 * get_author
 	 *
-	 * @return \Timber\User
+	 * @return Timber\User
 	 */
 	public function get_author() {
 
 		if ( empty( $this->author ) ) {
 			$post = $this->get_post();
 			if ( $post ) {
-				$this->author            = \Timber::get_user($post->get_author());
-				// $this->author->thumbnail = \Timber::get_image( get_avatar_url( $this->author->id ) );
+				$this->author            = Timber::get_user($post->get_author());
+				// $this->author->thumbnail = Timber::get_image( get_avatar_url( $this->author->id ) );
 			}
 		}
 
@@ -292,12 +292,12 @@ class PostController extends PageController {
 	 */
 	public function add_to_twig( $twig ) {
 
-		$twig->addFunction( new \Timber\Twig_Function( 'get_author', array( $this, 'get_author' ) ) );
-		$twig->addFunction( new \Timber\Twig_Function( 'get_related_posts', array( $this, 'get_related_posts' ) ) );
-		$twig->addFunction( new \Timber\Twig_Function( 'get_latest_posts', array( $this, 'get_latest_posts' ) ) );
-		$twig->addFunction( new \Timber\Twig_Function( 'get_tags', array( $this, 'get_tags' ) ) );
-		$twig->addFunction( new \Timber\Twig_Function( 'get_categories', array( $this, 'get_categories' ) ) );
-		$twig->addFunction( new \Timber\Twig_Function( 'get_custom_taxonomy_terms', array(
+		$twig->addFunction( new Timber\Twig_Function( 'get_author', array( $this, 'get_author' ) ) );
+		$twig->addFunction( new Timber\Twig_Function( 'get_related_posts', array( $this, 'get_related_posts' ) ) );
+		$twig->addFunction( new Timber\Twig_Function( 'get_latest_posts', array( $this, 'get_latest_posts' ) ) );
+		$twig->addFunction( new Timber\Twig_Function( 'get_tags', array( $this, 'get_tags' ) ) );
+		$twig->addFunction( new Timber\Twig_Function( 'get_categories', array( $this, 'get_categories' ) ) );
+		$twig->addFunction( new Timber\Twig_Function( 'get_custom_taxonomy_terms', array(
 			$this,
 			'get_custom_taxonomy_terms'
 		) ) );

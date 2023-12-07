@@ -2,6 +2,8 @@
 
 namespace PressGang;
 
+use Timber\Timber;
+
 /**
  * Class TaxonomyController
  *
