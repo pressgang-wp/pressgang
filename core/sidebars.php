@@ -75,7 +75,7 @@ class Sidebars {
 	public function add_widget_functions( \Twig\Environment $twig ) {
 		foreach ( $this->sidebars as $key => &$sidebar ) {
 
-			$twig->addFunction( new \Timber\Twig_Function( "widget_{$key}", function () use ( $sidebar ) {
+			$twig->addFunction( new \Twig\TwigFunction( "widget_{$key}", function () use ( $sidebar ) {
 				return \Timber::get_widgets( $sidebar['id'] );
 			} ) );
 		}
