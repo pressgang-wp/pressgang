@@ -124,7 +124,7 @@ class PostsController extends BaseController {
 	protected function get_pagination() {
 
 		if ( empty( $this->pagination ) ) {
-			$this->pagination = Timber::pagination();
+			$this->pagination = $this->get_posts()->pagination();
 		}
 
 		return $this->pagination;
