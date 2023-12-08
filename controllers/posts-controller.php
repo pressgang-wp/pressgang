@@ -77,7 +77,8 @@ class PostsController extends BaseController {
 	 */
 	protected function get_posts() {
 		if ( empty( $this->posts ) ) {
-			$this->posts = new PostQuery;
+			global $wp_query;
+			$this->posts = new PostQuery($wp_query);
 		}
 
 		return $this->posts;
@@ -123,7 +124,7 @@ class PostsController extends BaseController {
 	protected function get_pagination() {
 
 		if ( empty( $this->pagination ) ) {
-			$this->pagination = Timber::get_pagination();
+			$this->pagination = Timber::pagination();
 		}
 
 		return $this->pagination;

@@ -292,12 +292,12 @@ class PostController extends PageController {
 	 */
 	public function add_to_twig( $twig ) {
 
-		$twig->addFunction( new Twig\TwigFunction( 'get_author', array( $this, 'get_author' ) ) );
-		$twig->addFunction( new Twig\TwigFunction( 'get_related_posts', array( $this, 'get_related_posts' ) ) );
-		$twig->addFunction( new Twig\TwigFunction( 'get_latest_posts', array( $this, 'get_latest_posts' ) ) );
-		$twig->addFunction( new Twig\TwigFunction( 'get_tags', array( $this, 'get_tags' ) ) );
-		$twig->addFunction( new Twig\TwigFunction( 'get_categories', array( $this, 'get_categories' ) ) );
-		$twig->addFunction( new Twig\TwigFunction( 'get_custom_taxonomy_terms', array(
+		$twig->addFunction( new \Twig\TwigFunction( 'get_author', array( $this, 'get_author' ) ) );
+		$twig->addFunction( new \Twig\TwigFunction( 'get_related_posts', array( $this, 'get_related_posts' ) ) );
+		$twig->addFunction( new \Twig\TwigFunction( 'get_latest_posts', array( $this, 'get_latest_posts' ) ) );
+		$twig->addFunction( new \Twig\TwigFunction( 'get_tags', array( $this, 'get_tags' ) ) );
+		$twig->addFunction( new \Twig\TwigFunction( 'get_categories', array( $this, 'get_categories' ) ) );
+		$twig->addFunction( new \Twig\TwigFunction( 'get_custom_taxonomy_terms', array(
 			$this,
 			'get_custom_taxonomy_terms'
 		) ) );
