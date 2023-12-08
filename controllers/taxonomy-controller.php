@@ -2,7 +2,7 @@
 
 namespace PressGang;
 
-use Timber\Timber;
+use \Timber\Timber;
 
 /**
  * Class TaxonomyController
@@ -31,7 +31,7 @@ class TaxonomyController extends PostsController {
 	 */
 	protected function get_taxonomy() {
 		if ( empty( $this->taxonomy ) ) {
-			$this->taxonomy = \Timber::get_term( get_queried_object() );
+			$this->taxonomy = Timber::get_term( get_queried_object() );
 		}
 
 		return $this->taxonomy;
