@@ -201,14 +201,14 @@ class Schema {
 	 */
 	public static function add_person( $post ) {
 		$data = array(
-			'given_name'    => $post->get_field( 'person_firstname' ),
-			'family_name'   => $post->get_field( 'person_surname' ),
-			'awards'        => $post->get_field( 'person_qualifications' ),
+			'given_name'    => $post->meta( 'person_firstname' ),
+			'family_name'   => $post->meta( 'person_surname' ),
+			'awards'        => $post->meta( 'person_qualifications' ),
 			'image'         => ! empty( $post->thumbnail() ) ? $post->thumbnail->src : '',
 			'url'           => $post->link,
 			'job_title'     => implode( ', ', $post->terms( 'person_postition' ) ),
 			'works_for'     => get_bloginfo( 'url' ),
-			'work_location' => get_field( 'address', 'option' ),
+			'work_location' => meta( 'address', 'option' ),
 		);
 
 		\Timber\Timber::render( 'json-ld/person.twig', $data );
@@ -229,9 +229,9 @@ class Schema {
 			$data = array(
 				'title'               => $post->title,
 				'description'         => wp_strip_all_tags( $post->post_content ),
-				'employment_type'     => $post->get_field( 'job_type' ),
-				'base_salary'         => $post->get_field( 'job_salary' ),
-				'valid_through'       => $post->get_field( 'date_end' ),
+				'employment_type'     => $post->meta( 'job_type' ),
+				'base_salary'         => $post->meta( 'job_salary' ),
+				'valid_through'       => $post->meta( 'date_end' ),
 				'hiring_organization' => get_bloginfo( 'url' ),
 				'date_posted'         => $post->date,
 			);
@@ -254,13 +254,13 @@ class Schema {
 			$post = \Timber\Timber::get_post();
 
 			$data = array(
-				'start_date'  => $post->get_field( 'start_date' ),
-				'end_date'    => $post->get_field( 'end_date' ),
+				'start_date'  => $post->meta( 'start_date' ),
+				'end_date'    => $post->meta( 'end_date' ),
 				'url'         => $post->link,
 				'name'        => $post->title,
 				'description' => wp_strip_all_tags( $post->post_content ),
 				'image'       => ! empty( $post->thumbnail() ) ? $post->thumbnail->src : '',
-				'location'    => $post->get_field( 'post_map' ) ? $post->get_field( 'post_map' )['address'] : $post->get_field( 'custom_location' ),
+				'location'    => $post->meta( 'post_map' ) ? $post->meta( 'post_map' )['address'] : $post->meta( 'custom_location' ),
 			);
 
 			\Timber\Timber::render( 'json-ld/event.twig', $data );
