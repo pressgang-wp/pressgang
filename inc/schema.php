@@ -89,7 +89,7 @@ class Schema {
 
 			$contributors = array();
 
-			if ( $project_leaders = $post->get_field( 'project_leaders' ) ) {
+			if ( $project_leaders = $post->meta( 'project_leaders' ) ) {
 				foreach ( $project_leaders as $project_leader ) {
 					$contributors[] = array(
 						'name' => esc_html( $project_leader->name ),
