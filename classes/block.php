@@ -2,6 +2,8 @@
 
 namespace PressGang;
 
+use \Timber\Timber;
+
 class Block {
 
 	protected static $id = null;
@@ -21,7 +23,7 @@ class Block {
 		$context['classes'] = static::get_css_classes( $block );
 		$context['styles']  = static::get_styles( $block );
 
-		\Timber::render( "blocks/{$slug}.twig", $context );
+		Timber::render( "blocks/{$slug}.twig", $context );
 	}
 
 	/**
@@ -100,7 +102,7 @@ class Block {
 		static::$context = array();
 
 		// add a reference to the post
-		static::$context['post'] = \Timber::get_post();
+		static::$context['post'] = Timber::get_post();
 
 		// add a block ID in case needed for front end
 		static::$context['id'] = static::$id;
