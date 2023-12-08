@@ -20,7 +20,7 @@ class LogoSvg {
 	public function __construct() {
 		add_action( 'customize_register', array( $this, 'logo_svg' ) );
 		add_filter( 'upload_mimes', array( $this, 'add_svg_mime' ) );
-		add_filter( 'timber\context', array( $this, 'add_to_context' ), 100 );
+		add_filter( 'timber/context', array( $this, 'add_to_context' ), 100 );
 	}
 
 	/**

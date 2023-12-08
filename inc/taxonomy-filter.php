@@ -60,7 +60,7 @@ class TaxonomyFilter {
 		}
 
 		if ( ! empty( $this->inputs ) ) {
-			add_filter( 'timber\context', array( $this, 'add_filter_inputs_to_context' ) );
+			add_filter( 'timber/context', array( $this, 'add_filter_inputs_to_context' ) );
 		}
 
 		// allow twig to lazy load lookups

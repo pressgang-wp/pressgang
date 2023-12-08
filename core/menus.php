@@ -2,6 +2,8 @@
 
 namespace PressGang;
 
+use Timber\Timber;
+
 /**
  * Class Menus
  *
@@ -25,7 +27,7 @@ class Menus {
 	public function __construct() {
 		self::$menus = Config::get( 'menus' );
 		add_action( 'init', array( 'PressGang\Menus', 'register' ) );
-		add_filter( 'timber\context', array( 'PressGang\Menus', 'add_to_context' ) );
+		add_filter( 'timber/context', array( 'PressGang\Menus', 'add_to_context' ) );
 	}
 
 	/**
@@ -61,7 +63,7 @@ class Menus {
 	public static function add_to_context( $context ) {
 		foreach ( static::$menus as $location => &$description ) {
 			if ( has_nav_menu( $location ) ) {
-				$context["menu_{$location}"] = apply_filters( "menu_{$location}", \Timber::get_menu( $location ) );
+				$context["menu_{$location}"] = apply_filters( "menu_{$location}", Timber::get_menu( $location ) );
 			}
 		}
 

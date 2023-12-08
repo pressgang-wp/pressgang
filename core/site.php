@@ -55,11 +55,11 @@ class Site extends \Timber\Site {
 			get_stylesheet_directory_uri(), $this->stylesheet,
 			filemtime( get_stylesheet_directory() . "/css/{$this->stylesheet}" ) );
 
-		add_filter( 'timber\context', [ $this, 'add_to_context' ] );
+		add_filter( 'timber/context', [ $this, 'add_to_context' ] );
 		add_filter( 'timber/twig', [ $this, 'add_to_twig' ] );
 
 		if ( class_exists( 'WooCommerce' ) ) {
-			add_filter( 'timber\context',
+			add_filter( 'timber/context',
 				[ $this, 'add_woocommerce_to_context' ] );
 		}
 
@@ -71,7 +71,7 @@ class Site extends \Timber\Site {
 		// add a theme color
 		$this->theme_color = Config::get( 'theme-color' );
 
-		// disable default ypast meta description (we'll add it ourselves)
+		// disable default Yoast meta description (we'll add it ourselves)
 		add_filter( 'wpseo_metadesc', function () {
 			return false;
 		} );
@@ -134,6 +134,7 @@ class Site extends \Timber\Site {
 
 		$twig->addFunction( new \Twig\TwigFunction( 'get_option',
 			'get_option' ) );
+
 		$twig->addFunction( new \Twig\TwigFunction( 'get_theme_mod',
 			'get_theme_mod' ) );
 
@@ -246,21 +247,6 @@ class Site extends \Timber\Site {
 		$description = apply_filters( 'meta_description', $description );
 
 		return $description;
-	}
-
-	/**
-	 * force_ie_headers
-	 *
-	 * TODO BREAKS SITEGROUND DYNAMIC CACHE
-	 *
-	 * see -
-	 * http://stackoverflow.com/questions/14198594/bad-value-x-ua-compatible-for-attribute-http-equiv-on-element-meta
-	 */
-	public function add_ie_header() {
-		if ( isset( $_SERVER['HTTP_USER_AGENT'] ) && ( strpos( $_SERVER['HTTP_USER_AGENT'],
-					'MSIE' ) !== false ) ) {
-			header( 'X-UA-Compatible: IE=edge,chrome=1' );
-		}
 	}
 
 	/**

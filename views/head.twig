@@ -21,6 +21,6 @@
 		<meta name="web_author" content="{{ WEB_AUTHOR|e('html_attr') }}">
 	{% endif %}
 	<!-- wp head -->
-	{{ wp_head }}
+	{{ fn('wp_head') }}
 	{% block after_wp_head %}{% endblock %}
 </head>
