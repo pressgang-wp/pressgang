@@ -25,7 +25,7 @@ class OpenGraph {
 
 		$post = \Timber::get_post();
 
-		$img = has_post_thumbnail( $post->ID )
+		$img = $post && has_post_thumbnail( $post->ID )
 			? wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'large' )[0]
 			: ( get_theme_mod( 'og_img' )
 				? get_theme_mod( 'og_img' )
