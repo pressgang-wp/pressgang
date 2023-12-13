@@ -2,6 +2,8 @@
 
 namespace PressGang;
 
+use \Timber\Timber;
+
 require_once( 'loader.php' );
 
 /**
@@ -23,6 +25,8 @@ class Site extends \Timber\Site {
 	 * @param string|int $site_name_or_id
 	 */
 	function __construct( $site_name_or_id = null ) {
+
+		Timber::init();
 
 		// load all customizer mods
 		if ( $theme_mods = get_theme_mods() ) {
@@ -61,11 +65,6 @@ class Site extends \Timber\Site {
 		if ( class_exists( 'WooCommerce' ) ) {
 			add_filter( 'timber/context',
 				[ $this, 'add_woocommerce_to_context' ] );
-		}
-
-		// switch on twig caching if production
-		if ( class_exists( 'Timber' ) ) {
-			\Timber::$cache = \defined( 'TIMBER_CACHE' ) ? TIMBER_CACHE : ! WP_DEBUG;
 		}
 
 		// add a theme color
