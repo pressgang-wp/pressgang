@@ -3,7 +3,6 @@
 namespace PressGang;
 
 use Timber\PostQuery;
-use Timber\Timber;
 
 require_once 'base-controller.php';
 

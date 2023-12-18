@@ -2,9 +2,7 @@
 
 namespace PressGang;
 
-require_once 'base-controller.php';
-
-use \Timber\Timber;
+use Timber\Timber;
 
 /**
  * Class BaseController

@@ -4,8 +4,6 @@ Namespace PressGang;
 
 use Timber\Timber;
 
-require_once 'page-controller.php';
-
 /**
  * Class SinglePageController
  *

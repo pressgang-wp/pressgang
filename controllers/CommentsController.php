@@ -4,8 +4,6 @@ namespace PressGang;
 
 use Timber\Timber;
 
-require_once 'base-controller.php';
-
 /**
  * Class CommentsController
  *

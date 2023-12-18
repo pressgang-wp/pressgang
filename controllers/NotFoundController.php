@@ -2,8 +2,6 @@
 
 namespace PressGang;
 
-require_once 'page-controller.php';
-
 /**
  * Class NotFoundController
  *
