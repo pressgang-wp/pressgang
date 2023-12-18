@@ -2,9 +2,7 @@
 
 namespace PressGang;
 
-use TimberTimber;
-
-require_once 'base-controller.php';
+use Timber\Timber;
 
 /**
  * Class AuthorController
