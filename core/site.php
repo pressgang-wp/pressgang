@@ -203,9 +203,10 @@ class Site extends \Timber\Site {
 					if ( is_tax() ) {
 
 						// try Yoast
-
 						if ( $yoast_meta = get_option( 'wpseo_taxonomy_meta' ) ) {
-							$description = $yoast_meta[ $object->taxonomy ][ $object->term_id ]['wpseo_desc'];
+							if ( isset( $yoast_meta[ $object->taxonomy ][ $object->term_id ]['wpseo_desc'] ) ) {
+								$description = $yoast_meta[ $object->taxonomy ][ $object->term_id ]['wpseo_desc'];
+							}
 						}
 
 						if ( empty( $description ) ) {
