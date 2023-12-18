@@ -185,7 +185,7 @@ class Site extends \Timber\Site {
 							$post = \Timber::get_post();
 
 							// check for custom field
-							$description = wptexturize( $post->get_field( 'meta_description' ) );
+							$description = wptexturize( $post->meta( 'meta_description' ) );
 
 							// else use excerpt
 							if ( empty( $description ) ) {

@@ -144,7 +144,7 @@ class PostController extends PageController {
 				$args = array(
 					'post_type'           => $this->post_type,
 					'orderby'             => 'rand',
-					'numberposts'         => $posts_per_page,
+					'posts_per_page'      => $posts_per_page,
 					'post__not_in'        => $not_in,
 					'ignore_sticky_posts' => true,
 					'tax_query'           => array(
@@ -169,7 +169,7 @@ class PostController extends PageController {
 
 				$posts = Timber::get_posts( $args );
 
-				foreach ( $posts as &$post ) {
+				foreach ( $posts as $post ) {
 					$this->related_posts[ $post->ID ] = $post;
 				}
 
@@ -181,11 +181,11 @@ class PostController extends PageController {
 
 					$args['tax_query']['relation'] = 'OR';
 					$args['post__not_in']          = $not_in;
-					$args['numberposts']           = $posts_per_page - count( $this->related_posts );
+					$args['posts_per_page']        = $posts_per_page - count( $this->related_posts );
 
 					$posts = Timber::get_posts( $args );
 
-					foreach ( $posts as &$post ) {
+					foreach ( $posts as $post ) {
 						$this->related_posts[ $post->ID ] = $post;
 					}
 
@@ -194,12 +194,12 @@ class PostController extends PageController {
 						$not_in = array_merge( $not_in, array_keys( $this->related_posts ) );
 
 						unset( $args['tax_query'] );
-						$args['post__not_in'] = $not_in;
-						$args['numberposts'] = $posts_per_page - count( $this->related_posts );
+						$args['post__not_in']   = $not_in;
+						$args['posts_per_page'] = $posts_per_page - count( $this->related_posts );
 
 						$posts = Timber::get_posts( $args );
 
-						foreach ( $posts as &$post ) {
+						foreach ( $posts as $post ) {
 							$this->related_posts[ $post->ID ] = $post;
 						}
 					}
@@ -237,10 +237,10 @@ class PostController extends PageController {
 				$this->latest_posts = array();
 
 				$args = array(
-					'post_type'    => $this->post_type,
-					'orderby'      => 'date',
-					'numberposts'  => $posts_per_page,
-					'post__not_in' => array( $id ),
+					'post_type'      => $this->post_type,
+					'orderby'        => 'date',
+					'posts_per_page' => $posts_per_page,
+					'post__not_in'   => array( $id ),
 				);
 
 				$this->latest_posts = Timber::get_posts( $args );
@@ -262,7 +262,7 @@ class PostController extends PageController {
 		if ( empty( $this->author ) ) {
 			$post = $this->get_post();
 			if ( $post ) {
-				$this->author            = Timber::get_user($post->get_author());
+				$this->author = Timber::get_user( $post->get_author() );
 				// $this->author->thumbnail = Timber::get_image( get_avatar_url( $this->author->id ) );
 			}
 		}
