@@ -26,8 +26,8 @@ class Menus {
 	 */
 	public function __construct() {
 		self::$menus = Config::get( 'menus' );
-		add_action( 'init', array( 'PressGang\Menus', 'register' ) );
-		add_filter( 'timber/context', array( 'PressGang\Menus', 'add_to_context' ) );
+		add_action( 'init', array( 'PressGang\Core\Menus', 'register' ) );
+		add_filter( 'timber/context', array( 'PressGang\Core\Menus', 'add_to_context' ) );
 	}
 
 	/**
