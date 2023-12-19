@@ -2,6 +2,8 @@
 
 namespace PressGang\Core;
 
+use PressGang\Classes\CustomLabelsTrait;
+
 /**
  * Class CustomTaxonomies
  *
