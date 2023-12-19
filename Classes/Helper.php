@@ -39,6 +39,24 @@ class Helper {
 	}
 
 	/**
+	 * Convert hyphenated text to camelCase
+	 *
+	 * @param string $name The hyphenated text
+	 * @param bool $capitalizeFirstCharacter Whether to capitalize the first character or not
+	 *
+	 * @return string The camelCase text
+	 */
+	public static function hyphenated_to_camel( $name, $capitalizeFirstCharacter = false ) {
+		$str = str_replace( '-', '', ucwords( $name, '-' ) );
+
+		if ( ! $capitalizeFirstCharacter ) {
+			$str = lcfirst( $str );
+		}
+
+		return $str;
+	}
+
+	/**
 	 * Calculates a reading time for a given block of text
 	 *
 	 * @param $text

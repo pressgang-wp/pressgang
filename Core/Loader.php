@@ -2,6 +2,8 @@
 
 namespace PressGang\Core;
 
+use PressGang\Classes\Helper;
+
 /**
  * Class Loader
  *
@@ -19,17 +21,15 @@ class Loader {
 
 		$this->auto_loader();
 
-		foreach ( Config::get() as $className => $config ) {
-			// Check if class exists and is valid
+		foreach ( Config::get() as $key => $config ) {
+
+			$className = Helper::hyphenated_to_camel( $key );
+
 			if ( class_exists( $className ) ) {
 				// Instantiate the class, you can pass $config to the constructor if needed
 				new $className( $config );
 			} else {
-				$className = ucwords( $className );
-				if ( class_exists( $className ) ) {
-					// Instantiate the class, you can pass $config to the constructor if needed
-					new $className( $config );
-				}
+				// TODO error?
 			}
 		}
 
