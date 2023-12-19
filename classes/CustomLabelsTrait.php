@@ -2,8 +2,6 @@
 
 namespace PressGang;
 
-require_once __DIR__ . '/../library/pluralizer.php';
-
 /**
  * Trait CustomLabels
  *
@@ -12,12 +10,12 @@ require_once __DIR__ . '/../library/pluralizer.php';
  *
  * @package PressGang
  */
-trait CustomLabels {
+trait CustomLabelsTrait {
 
 	/**
 	 * parse_labels
 	 *
-	 * @param $key - this is the Custom Post Type or Custom Taxonmy Key passed from the settings.php array
+	 * @param $key - this is the Custom Post Type or Custom Taxonomy Key passed from the settings.php array
 	 * @param $args
 	 *
 	 * @retun $args - array used for registering the Custom Post Type or Custom Taxonomy

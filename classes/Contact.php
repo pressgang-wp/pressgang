@@ -2,8 +2,6 @@
 
 namespace PressGang;
 
-require_once( __DIR__ . '/flash.php' );
-
 /**
  * Class Contact
  *
