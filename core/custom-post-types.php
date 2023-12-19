@@ -2,15 +2,14 @@
 
 namespace PressGang;
 
-require_once __DIR__ . '/../classes/custom-labels-trait.php';
-
 /**
  * Class CustomPostTypes
  *
  * @package PressGang
  */
 class CustomPostTypes {
-	use CustomLabels;
+
+	use CustomLabelsTrait;
 
 	/**
 	 * custom_post_types

@@ -2,15 +2,14 @@
 
 namespace PressGang;
 
-require_once __DIR__ . '/../classes/custom-labels-trait.php';
-
 /**
  * Class CustomTaxonomies
  *
  * @package PressGang
  */
 class CustomTaxonomies {
-	use CustomLabels;
+
+	use CustomLabelsTrait;
 
 	/**
 	 * custom_taxonomies
