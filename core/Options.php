@@ -1,6 +1,6 @@
 <?php
 
-namespace PressGang;
+namespace PressGang\Core;
 
 class Options {
 	protected $options;

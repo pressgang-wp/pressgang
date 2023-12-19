@@ -1,6 +1,6 @@
 <?php
 
-namespace PressGang;
+namespace PressGang\Core;
 
 use Timber\Timber;
 

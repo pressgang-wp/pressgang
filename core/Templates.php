@@ -4,7 +4,7 @@
  * This class allows the loading of the PressGang page templates in the child theme's settings.php
  */
 
-namespace PressGang;
+namespace PressGang\Core;
 
 class Templates {
 
