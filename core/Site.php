@@ -2,7 +2,7 @@
 
 namespace PressGang\Core;
 
-use \Timber\Timber;
+use Timber\Timber;
 
 require_once( 'loader.php' );
 
@@ -147,7 +147,7 @@ class Site extends \Timber\Site {
 		// TODO can we lazy load or include?
 
 		$twig->addFilter( new \Twig\TwigFilter( 'pluralize',
-			[ 'PressGang\Pluralizer', 'pluralize' ] ) );
+			[ 'PressGang\Classes\Pluralizer', 'pluralize' ] ) );
 
 		// add text-domain to global
 		$twig->addGlobal( 'THEMENAME', THEMENAME );
