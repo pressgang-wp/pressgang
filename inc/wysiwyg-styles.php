@@ -2,6 +2,8 @@
 
 namespace PressGang;
 
+use PressGang\Core\Config;
+
 /**
  * Class WysiwygStyles
  * @package PressGang

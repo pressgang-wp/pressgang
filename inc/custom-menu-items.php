@@ -2,6 +2,8 @@
 
 Namespace PressGang;
 
+use PressGang\Core\Config;
+
 /**
  * Class CustomMenuItems
  *
