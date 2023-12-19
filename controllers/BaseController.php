@@ -2,6 +2,7 @@
 
 namespace PressGang;
 
+use PressGang\Classes\Helper;
 use Timber\Timber;
 
 /**
