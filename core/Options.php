@@ -22,7 +22,7 @@ class Options {
 	public function init() {
 		$this->options = Config::get( 'options' );
 
-		foreach ( $this->options as $i => &$options ) {
+		foreach ( $this->options as $options ) {
 
 			// default to ACF options page
 			if ( function_exists( 'acf_add_options_page' ) ) {
