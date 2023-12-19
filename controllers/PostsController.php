@@ -2,6 +2,7 @@
 
 namespace PressGang;
 
+use PressGang\Classes\Pluralizer;
 use Timber\PostQuery;
 
 /**
