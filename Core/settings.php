@@ -17,7 +17,7 @@ return array(
 	/*
 	 * menus
 	 *
-	 * Associative rray representing each Menu in the theme.
+	 * Associative array representing each Menu in the theme.
 	 *
 	 * [$key => $description]
 	 *
