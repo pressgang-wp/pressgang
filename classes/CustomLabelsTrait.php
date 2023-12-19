@@ -3,7 +3,7 @@
 namespace PressGang;
 
 /**
- * Trait CustomLabels
+ * CustomLabelsTrait
  *
  * This trait is shared between PressGang\CustomTaxonomies and PressGang\CustomTaxonomies
  * It is used to automatically pluralize the singular values provided
