@@ -23,18 +23,19 @@ class Loader {
 
 		foreach ( Config::get() as $key => $config ) {
 
-			$className = Helper::hyphenated_to_camel( $key );
+			$className = Helper::hyphenated_to_camel( $key, true );
+
+			// prepend namespace
+			$className = "PressGang\\Core\\{$className}";
 
 			if ( class_exists( $className ) ) {
 				// Instantiate the class, you can pass $config to the constructor if needed
 				new $className( $config );
-			} else {
-				// TODO error?
 			}
 		}
 
 		// load inc, shortcodes, widgets files
-		foreach ( array( 'inc', 'shortcodes', 'widgets' ) as &$folder ) {
+		foreach ( array( 'inc', 'shortcodes', 'widgets' ) as $folder ) {
 			if ( $config = Config::get( $folder ) ) {
 				foreach ( $config as $file ) {
 					$inc = preg_match( '/.php/', $file ) ? "{$folder}/{$file}" : "{$folder}/{$file}.php";
