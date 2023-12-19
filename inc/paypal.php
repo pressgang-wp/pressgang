@@ -2,6 +2,8 @@
 
 namespace PressGang;
 
+use PressGang\Core\Config;
+
 class Paypal {
 
 	/**
