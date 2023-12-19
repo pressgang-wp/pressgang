@@ -2,6 +2,8 @@
 
 namespace PressGang\Core;
 
+use PressGang\Classes\CustomLabelsTrait;
+
 /**
  * Class CustomPostTypes
  *
@@ -9,7 +11,7 @@ namespace PressGang\Core;
  */
 class CustomPostTypes {
 
-	use PressGang\Classes\CustomLabelsTrait;
+	use CustomLabelsTrait;
 
 	/**
 	 * custom_post_types
