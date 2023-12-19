@@ -1,32 +1,38 @@
 {
-  "name": "pressgang-wp/pressgang",
-  "description": "Package for the WordPress PressGang parent theme framework",
-  "type": "wordpress-theme",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Benedict Wallis",
-      "email": "ben@benedict-wallis.com"
-    }
-  ],
-  "minimum-stability": "dev",
-  "require": {
-    "php": "^7.3|^8.0",
-    "timber/timber": "2.x-dev"
-  },
-  "extra": {
-    "installer-paths": {
-      "../plugins/{$name}/": [
-        "type:wordpress-plugin"
-      ],
-      "../themes/{$name}/": [
-        "type:wordpress-theme"
-      ]
-    }
-  },
-  "config": {
-    "allow-plugins": {
-      "composer/installers": true
-    }
-  }
+	"name": "pressgang-wp/pressgang",
+	"description": "Package for the WordPress PressGang parent theme framework",
+	"type": "wordpress-theme",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Benedict Wallis",
+			"email": "ben@benedict-wallis.com"
+		}
+	],
+	"minimum-stability": "dev",
+	"require": {
+		"php": "^7.3|^8.0",
+		"timber/timber": "2.x-dev"
+	},
+	"extra": {
+		"installer-paths": {
+			"../plugins/{$name}/": [
+				"type:wordpress-plugin"
+			],
+			"../themes/{$name}/": [
+				"type:wordpress-theme"
+			]
+		}
+	},
+	"config": {
+		"allow-plugins": {
+			"composer/installers": true
+		}
+	},
+	"autoload": {
+		"psr-4": {
+			"PressGang\\": "../pressgang/controllers/",
+			"PressGang\\Classes\\": "../pressgang/classes/"
+		}
+	}
 }
