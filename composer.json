@@ -31,9 +31,9 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"PressGang\\": "../pressgang/controllers/",
-			"PressGang\\Core\\": "../pressgang/core/",
-			"PressGang\\Classes\\": "../pressgang/classes/"
+			"PressGang\\": "controllers/",
+			"PressGang\\Core\\": "core/",
+			"PressGang\\Classes\\": "classes/"
 		}
 	}
 }
