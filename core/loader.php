@@ -2,8 +2,7 @@
 
 namespace PressGang;
 
-require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/../classes/helper.php';
+use PressGang\Classes\Helper;
 
 /**
  * Class Loader
