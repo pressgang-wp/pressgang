@@ -7,7 +7,7 @@ namespace PressGang\Blocks;
  *
  * @package PressGang
  */
-class GoogleMap extends \PressGang\Block {
+class GoogleMap extends PressGang\Classes\Block {
 
 	/**
 	 * do_shortcode
@@ -27,8 +27,8 @@ class GoogleMap extends \PressGang\Block {
 
 		wp_enqueue_script( 'google-maps' );
 
-		\PressGang\Scripts::$defer[] = 'google-maps';
-		\PressGang\Scripts::$async[] = 'pressgang-google-map';
+		PressGang\Core\Scripts::$defer[] = 'google-maps';
+		PressGang\Core\Scripts::$async[] = 'pressgang-google-map';
 
 		static $i;
 		$i ++;
