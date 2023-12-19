@@ -38,9 +38,9 @@ class Styles {
 		static::$styles         = Config::get( 'styles' );
 		static::$dequeue_styles = Config::get( 'dequeue_styles' );
 
-		add_action( 'init', array( 'PressGang\Styles', 'register_styles' ) );
-		add_action( 'wp_enqueue_scripts', array( 'PressGang\Styles', 'dequeue_styles' ) );
-		add_filter( 'style_loader_tag', array( 'PressGang\Styles', 'add_style_attrs' ), 10, 4 );
+		add_action( 'init', array( 'PressGang\Core\Styles', 'register_styles' ) );
+		add_action( 'wp_enqueue_scripts', array( 'PressGang\Core\Styles', 'dequeue_styles' ) );
+		add_filter( 'style_loader_tag', array( 'PressGang\Core\Styles', 'add_style_attrs' ), 10, 4 );
 	}
 
 	/**
