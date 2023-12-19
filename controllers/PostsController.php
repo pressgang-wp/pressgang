@@ -4,8 +4,6 @@ namespace PressGang;
 
 use Timber\PostQuery;
 
-require_once 'base-controller.php';
-
 /**
  * Class PostsController
  *
