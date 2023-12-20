@@ -2,6 +2,8 @@
 
 namespace PressGang\Classes;
 
+use Doctrine\Inflector\InflectorFactory;
+
 /**
  * CustomLabelsTrait
  *
@@ -22,9 +24,11 @@ trait CustomLabelsTrait {
 	 */
 	protected function parse_labels( $key, $args ) {
 
-		$name   = isset( $args['name'] ) ? $args['name'] : $key;
-		$name   = __( ucwords( str_replace( '_', ' ', $name ) ), THEMENAME );
-		$plural = Pluralizer::pluralize( $name );
+		$name = isset( $args['name'] ) ? $args['name'] : $key;
+		$name = __( ucwords( str_replace( '_', ' ', $name ) ), THEMENAME );
+
+		$inflector = InflectorFactory::create()->build();
+		$plural    = $inflector->pluralize( $name );
 
 		if ( ! isset( $args['name'] ) ) {
 			$args['name'] = $name;
