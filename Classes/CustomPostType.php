@@ -2,6 +2,8 @@
 
 namespace PressGang\Classes;
 
+use PressGang\Core\Config;
+
 class CustomPostType {
 
 	public static $post_type = '';
