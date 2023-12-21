@@ -32,9 +32,9 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"PressGang\\": "controllers/",
-			"PressGang\\Core\\": "core/",
-			"PressGang\\Classes\\": "classes/"
+			"PressGang\\": "Controllers/",
+			"PressGang\\Core\\": "Core/",
+			"PressGang\\Classes\\": "Classes/"
 		}
 	}
 }
