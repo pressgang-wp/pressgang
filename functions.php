@@ -4,7 +4,7 @@ if ( ! defined( 'THEMENAME' ) ) {
 	define( 'THEMENAME', 'pressgang' );
 }
 
-require __DIR__ . '/vendor/autoload.php';
+// require __DIR__ . '/vendor/autoload.php';
 
 /**
  * Go!
