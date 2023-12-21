@@ -24,7 +24,7 @@ class Plugins {
 	 */
 	public function __construct() {
 		self::$plugins = Config::get( 'plugins' );
-		add_filter( 'admin_init', array( 'PressGang/Plugins', 'check_plugins_active' ) );
+		add_filter( 'admin_init', array( 'PressGang\\Core\\Plugins', 'check_plugins_active' ) );
 	}
 
 	/**
