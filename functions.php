@@ -10,4 +10,4 @@ require 'vendor/autoload.php';
  * Go!
  *
  */
-require_once( 'Core/Site.php' );
+require_once( __DIR__ . '/Core/Site.php' );

@@ -4,7 +4,7 @@ namespace PressGang\Core;
 
 use Timber\Timber;
 
-require_once( 'Loader.php' );
+require_once( __DIR__ . '/Loader.php' );
 
 /**
  * Class Site
