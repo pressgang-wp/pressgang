@@ -21,13 +21,18 @@ class Config {
 	public static function get( $key = null, $default = [] ) {
 		if ( ! self::$settings ) {
 
-			$parent = require_once TEMPLATEPATH . '/core/settings.php';
+			$parent = require_once get_template_directory() . '/Core/settings.php';
 
-			$child = file_exists( STYLESHEETPATH . '/core/settings.php' )
-				? require_once STYLESHEETPATH . '/core/settings.php'
-				: array();
+			$parent = is_array( $parent ) ? $parent : [];
+
+			$child = file_exists( get_stylesheet_directory() . '/Core/settings.php' )
+				? require_once get_stylesheet_directory() . '/Core/settings.php'
+				: [];
+
+			$child = is_array( $child ) ? $child : [];
 
 			self::$settings = apply_filters( 'pressgang_get_settings', array_merge( $parent, $child ) );
+			
 		}
 
 		if ( $key ) {
