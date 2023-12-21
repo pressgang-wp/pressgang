@@ -2,7 +2,7 @@
 
 namespace PressGang;
 
-use PressGang\Classes\Pluralizer;
+use Doctrine\Inflector\InflectorFactory;
 use Timber\Timber;
 
 /**
@@ -99,7 +99,9 @@ class PostController extends PageController {
 							$term = Timber::get_term( $term );
 						}
 
-						$name                                 = Pluralizer::pluralize( $slug );
+						$inflector = InflectorFactory::create()->build();
+						$name      = $inflector->pluralize( $slug );
+
 						$this->custom_taxonomy_terms[ $name ] = $terms;
 					}
 				}
