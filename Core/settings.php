@@ -105,7 +105,13 @@ return array(
 	 * @var array
 	 */
 	'support'           => array(
-		'html5',
+		'html5' => array(
+			'comment-list',
+			'comment-form',
+			'search-form',
+			'gallery',
+			'caption',
+		),
 		'post-thumbnails',
 	),
 
@@ -120,7 +126,5 @@ return array(
 	 * Optionally array values supply the admin warning message
 	 *
 	 */
-	'plugins'           => array(
-		'Timber',  // Timber is required for the theme templating!
-	),
+	'plugins'           => array(),
 );
