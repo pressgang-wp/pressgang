@@ -2,7 +2,7 @@
 
 namespace PressGang;
 
-use PressGang\Classes\Pluralizer;
+use Doctrine\Inflector\InflectorFactory;
 use Timber\PostQuery;
 
 /**
@@ -76,7 +76,7 @@ class PostsController extends BaseController {
 	protected function get_posts() {
 		if ( empty( $this->posts ) ) {
 			global $wp_query;
-			$this->posts = new PostQuery($wp_query);
+			$this->posts = new PostQuery( $wp_query );
 		}
 
 		return $this->posts;
@@ -90,11 +90,14 @@ class PostsController extends BaseController {
 	protected function get_context() {
 		$this->context['page_title'] = $this->get_page_title();
 
-		$this->context['posts'] = $this->get_posts();
+		$this->context['posts']      = $this->get_posts();
 		$this->context['pagination'] = $this->get_pagination();
 
 		if ( $this->post_type ) {
-			$this->context[ Pluralizer::pluralize( $this->post_type ) ] = $this->get_posts();
+			$inflector = InflectorFactory::create()->build();
+			$plural    = strtolower( $inflector->pluralize( $this->post_type ) );
+
+			$this->context[ $plural ] = $this->get_posts();
 		}
 
 		return $this->context;
