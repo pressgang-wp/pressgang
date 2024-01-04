@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8efd1d114d6394ea9461bfcd2a1818c0",
+    "content-hash": "5044f24f23685ea5dcd9f13a27c7dc2e",
     "packages": [
         {
             "name": "composer/installers",
@@ -249,12 +249,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "7c3aff79d10325257a001fcf92d991f24fc967cf"
+                "reference": "2c438b99bb2753c1628c1e6f523991edea5b03a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/7c3aff79d10325257a001fcf92d991f24fc967cf",
-                "reference": "7c3aff79d10325257a001fcf92d991f24fc967cf",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/2c438b99bb2753c1628c1e6f523991edea5b03a4",
+                "reference": "2c438b99bb2753c1628c1e6f523991edea5b03a4",
                 "shasum": ""
             },
             "require": {
@@ -264,7 +264,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "3.4-dev"
+                    "dev-main": "3.5-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -293,7 +293,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.4.0"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/main"
             },
             "funding": [
                 {
@@ -309,7 +309,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-23T14:45:45+00:00"
+            "time": "2024-01-02T14:07:37+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -652,12 +652,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "204cd6f4121c7de05b876060f57970a4a805a82f"
+                "reference": "b4c3c1c448583e9ffa24933675c01f4be3435b41"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/204cd6f4121c7de05b876060f57970a4a805a82f",
-                "reference": "204cd6f4121c7de05b876060f57970a4a805a82f",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/b4c3c1c448583e9ffa24933675c01f4be3435b41",
+                "reference": "b4c3c1c448583e9ffa24933675c01f4be3435b41",
                 "shasum": ""
             },
             "require": {
@@ -724,15 +724,13 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-12-19T07:19:15+00:00"
+            "time": "2024-01-01T14:44:03+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "timber/timber": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
