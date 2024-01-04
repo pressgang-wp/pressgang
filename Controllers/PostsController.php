@@ -49,8 +49,8 @@ class PostsController extends BaseController {
 				$template = sprintf( "taxonomy-%s.twig", $obj->taxonomy );
 
 				// check template exits
-				$caller = LocationManager::get_calling_script_dir( 1 );
-				$loader = new Loader( $caller );
+				$caller = \Timber\LocationManager::get_calling_script_dir( 1 );
+				$loader = new \Timber\Loader( $caller );
 				$file   = $loader->choose_template( $template );
 
 				if ( ! $file ) {
