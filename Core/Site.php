@@ -146,9 +146,6 @@ class Site extends \Timber\Site {
 
 		// TODO can we lazy load or include?
 
-		$twig->addFilter( new \Twig\TwigFilter( 'pluralize',
-			[ 'PressGang\Classes\Pluralizer', 'pluralize' ] ) );
-
 		// add text-domain to global
 		$twig->addGlobal( 'THEMENAME', THEMENAME );
 
