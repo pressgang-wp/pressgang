@@ -37,7 +37,7 @@ class CustomPostTypes {
 	public function init() {
 		$this->custom_post_types = Config::get( 'custom-post-types' );
 
-		foreach ( $this->custom_post_types as $key => &$args ) {
+		foreach ( $this->custom_post_types as $key => $args ) {
 
 			$args = $this->parse_labels( $key, $args );
 
