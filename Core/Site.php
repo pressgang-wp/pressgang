@@ -63,8 +63,7 @@ class Site extends \Timber\Site {
 		add_filter( 'timber/twig', [ $this, 'add_to_twig' ] );
 
 		if ( class_exists( 'WooCommerce' ) ) {
-			add_filter( 'timber/context',
-				[ $this, 'add_woocommerce_to_context' ] );
+			add_filter( 'timber/context', [ $this, 'add_woocommerce_to_context' ] );
 		}
 
 		// add a theme color
@@ -101,8 +100,6 @@ class Site extends \Timber\Site {
 	 * @return mixed
 	 */
 	public function add_woocommerce_to_context( $context ) {
-
-		global $woocommerce;
 
 		$account_page_id = get_option( 'woocommerce_myaccount_page_id' );
 
