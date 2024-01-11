@@ -68,7 +68,7 @@ class PostsController extends AbstractController {
 
 		}
 
-		parent::__construct( array( $template, 'archive.twig' ) );
+		parent::__construct( $template );
 	}
 
 	/**
