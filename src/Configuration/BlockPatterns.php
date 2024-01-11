@@ -23,7 +23,7 @@ class BlockPatterns extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for block patterns.
 	 */
-	public function initialize( $config ) {
+	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_action( 'init', [ $this, 'register_block_patterns' ] );
 	}
@@ -35,7 +35,7 @@ class BlockPatterns extends ConfigurationSingleton {
 	 * If the 'content' field is not set, it tries to load it from a Twig template named
 	 * after the pattern key in the 'block-patterns' directory.
 	 */
-	public function register_block_patterns() {
+	public function register_block_patterns(): void {
 		foreach ( $this->config as $key => $args ) {
 			if ( empty( $args['content'] ) ) {
 				$args['content'] = Timber::compile( "block-patterns/{$key}.twig" );

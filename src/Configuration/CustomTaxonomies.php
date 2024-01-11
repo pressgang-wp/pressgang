@@ -26,7 +26,7 @@ class CustomTaxonomies extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for custom taxonomies.
 	 */
-	public function initialize( $config ) {
+	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_action( 'init', [ $this, 'register_custom_taxonomies' ], 5 );
 	}
@@ -37,7 +37,7 @@ class CustomTaxonomies extends ConfigurationSingleton {
 	 * Iterates through the configuration array and registers each custom taxonomy with WordPress.
 	 * Custom labels for taxonomies are handled by the HasCustomLabels trait.
 	 */
-	public function register_custom_taxonomies() {
+	public function register_custom_taxonomies(): void {
 		foreach ( $this->config as $key => $args ) {
 
 			$object_type = isset( $args['object-type'] ) ? $args['object-type'] : 'post';

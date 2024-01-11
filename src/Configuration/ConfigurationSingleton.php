@@ -3,14 +3,14 @@
 namespace PressGang\Configuration;
 
 abstract class ConfigurationSingleton implements ConfigurationInterface {
-	private static $instances = [];
+	private static array $instances = [];
 
 	/**
 	 * Configuration array for the class loaded from the config files.
 	 *
 	 * @var array
 	 */
-	protected $config = [];
+	protected array $config = [];
 
 	/**
 	 * Protected constructor to prevent creating a new instance.
@@ -23,7 +23,7 @@ abstract class ConfigurationSingleton implements ConfigurationInterface {
 	 *
 	 * @return static The Singleton instance.
 	 */
-	public static function get_instance() {
+	public static function get_instance(): mixed {
 		$class = static::class;
 		if ( ! isset( self::$instances[ $class ] ) ) {
 			self::$instances[ $class ] = new static();
@@ -32,7 +32,7 @@ abstract class ConfigurationSingleton implements ConfigurationInterface {
 		return self::$instances[ $class ];
 	}
 
-	// Prevent cloning and unserialization
+	// Prevent cloning and un-serialization
 	private function __clone() {
 	}
 

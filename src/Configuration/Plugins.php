@@ -19,7 +19,7 @@ class Plugins extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for required plugins.
 	 */
-	public function initialize( $config ) {
+	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_filter( 'admin_init', [ $this, 'check_plugins_active' ] );
 	}
@@ -30,22 +30,22 @@ class Plugins extends ConfigurationSingleton {
 	 * Iterates through the configuration array and checks each plugin's active status.
 	 * Displays an admin warning for any plugin that is not active.
 	 */
-	public function check_plugins_active() {
+	public function check_plugins_active(): void {
 		foreach ( $this->config as $plugin => $message ) {
 			if ( ! \is_plugin_active( $plugin ) ) {
 
 				$message = $message ?: sprintf( _x( "%s not activated. Make sure you activate the plugin to use %s", 'Admin', THEMENAME ), $plugin, THEMENAME );
 
 				\add_action( 'admin_notices', function () use ( $message, $plugin ) { ?>
-					<div class="error">
-					<p>
-						<?php echo \esc_html( $message ); ?>
-						<a href="<?php echo \esc_url( \admin_url( "plugins.php#{$plugin}" ) ); ?>">
-							<?php echo \esc_url( \admin_url( "plugins.php" ) ); ?>
-						</a>.
-					</p>
-					</div><?php
-				}
+						<div class="error">
+							<p>
+								<?php echo \esc_html( $message ); ?>
+								<a href="<?php echo \esc_url( \admin_url( "plugins.php#{$plugin}" ) ); ?>">
+									<?php echo \esc_url( \admin_url( "plugins.php" ) ); ?>
+								</a>.
+							</p>
+						</div><?php
+					}
 				);
 			}
 		}

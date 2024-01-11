@@ -19,7 +19,7 @@ class DeregisterScripts extends ConfigurationSingleton {
 	 * See - https://codex.wordpress.org/Plugin_API/Action_Reference/wp_enqueue_scripts
 	 *
 	 */
-	public function initialize( $config ) {
+	public function initialize( $config ): void {
 		$this->config = $config;
 		\add_action( 'init', [ $this, 'deregister_scripts' ] );
 	}
@@ -30,13 +30,13 @@ class DeregisterScripts extends ConfigurationSingleton {
 	 * Can be used for unloading jQuery etc.
 	 *
 	 */
-	public function deregister_scripts() {
-		if ( ! is_admin() ) {
+	public function deregister_scripts(): void {
+		if ( ! \is_admin() ) {
 
 			foreach ( $this->congig as $key => $args ) {
 
-				add_action( 'wp_enqueue_scripts', function () use ( $key ) {
-					wp_deregister_script( $key );
+				\add_action( 'wp_enqueue_scripts', function () use ( $key ) {
+					\wp_deregister_script( $key );
 				}, 0 );
 
 			}

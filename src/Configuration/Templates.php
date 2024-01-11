@@ -29,11 +29,11 @@ class Templates extends ConfigurationSingleton {
 	 *
 	 * @param array $config Array of template file names to be registered.
 	 */
-	public function initialize( $config ) {
+	public function initialize( array $config ): void {
 		$this->config = $config;
-		add_filter( 'page_attributes_dropdown_pages_args', [ $this, 'register_templates' ] );
-		add_filter( 'wp_insert_post_data', [ $this, 'register_templates' ] );
-		add_filter( 'template_include', [ $this, 'view_template' ] );
+		\add_filter( 'page_attributes_dropdown_pages_args', [ $this, 'register_templates' ] );
+		\add_filter( 'wp_insert_post_data', [ $this, 'register_templates' ] );
+		\add_filter( 'template_include', [ $this, 'view_template' ] );
 	}
 
 	/**
@@ -55,7 +55,7 @@ class Templates extends ConfigurationSingleton {
 		$cache_key = 'page_templates-' . md5( \get_theme_root() . '/' . \get_stylesheet() );
 
 		// Retrieve the current list of page templates from the active theme
-		$templates = wp_get_theme()->get_page_templates();
+		$templates = \wp_get_theme()->get_page_templates();
 
 		// Initialize an empty array if no templates are found
 		// This ensures $templates is always an array, even if empty
@@ -90,7 +90,7 @@ class Templates extends ConfigurationSingleton {
 	 *
 	 * @return string The path of the custom or default template.
 	 */
-	public function view_template( $template ) {
+	public function view_template( string $template ): string {
 
 		global $post;
 

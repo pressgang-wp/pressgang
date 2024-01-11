@@ -25,7 +25,7 @@ class ColorPalette extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for the color palette.
 	 */
-	public function initialize( $config ) {
+	public function initialize( array $config ): void {
 		$this->config = $config;
 		add_action( 'after_setup_theme', [ $this, 'add_color_palette' ], 50 );
 	}
@@ -42,7 +42,7 @@ class ColorPalette extends ConfigurationSingleton {
 	 *
 	 * @hooked action 'after_setup_theme'
 	 */
-	public function add_color_palette() {
+	public function add_color_palette(): void {
 
 		$palette = [];
 

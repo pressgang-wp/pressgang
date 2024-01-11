@@ -25,9 +25,9 @@ class CustomPostTypes extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for custom post types.
 	 */
-	public function initialize( array $config ) {
+	public function initialize( array $config ): void {
 		$this->config = $config;
-		add_action( 'init', [ $this, 'register_custom_post_types' ] );
+		\add_action( 'init', [ $this, 'register_custom_post_types' ] );
 	}
 
 	/**
@@ -36,14 +36,14 @@ class CustomPostTypes extends ConfigurationSingleton {
 	 * Iterates through the configuration array and registers each custom post type with WordPress.
 	 * Custom labels for post types are handled by the HasCustomLabels trait.
 	 */
-	public function register_custom_post_types() {
+	public function register_custom_post_types(): void {
 		foreach ( $this->config as $key => $args ) {
 
 			$args = $this->parse_labels( $key, $args );
 
-			$key  = apply_filters( "pressgang_cpt_{$key}", $key );
-			$args = apply_filters( "pressgang_cpt_{$key}_args", $args );
-			register_post_type( $key, $args );
+			$key  = \apply_filters( "pressgang_cpt_{$key}", $key );
+			$args = \apply_filters( "pressgang_cpt_{$key}_args", $args );
+			\register_post_type( $key, $args );
 		}
 
 	}

@@ -30,7 +30,7 @@ class Actions extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for actions.
 	 */
-	public function initialize( array $config ) {
+	public function initialize( array $config ): void {
 		foreach ( $config as $key => $args ) {
 			\add_action( $key, $args );
 		}
