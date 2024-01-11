@@ -20,6 +20,5 @@
  * @see http://codex.wordpress.org/Function_Reference/is_plugin_active
  * @var array
  */
-return [
-	'timber-library/timber.php' => 'Timber is required for the theme templating!',
-];
+
+return [];
