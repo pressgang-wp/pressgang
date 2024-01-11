@@ -2,4 +2,4 @@
 
 use PressGang\Controllers\SearchController;
 
-PressGang\PressGang::render( [ SearchController::class ] );
+PressGang\PressGang::render( controller: SearchController::class );

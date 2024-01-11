@@ -1,13 +1,15 @@
 <?php
 
-$controller = null;
+use PressGang\Controllers\WooCommerce\ProductCategoryController;
+use PressGang\Controllers\WooCommerce\ProductController;
+use PressGang\Controllers\WooCommerce\ProductsController;
+
+$controller = ProductsController::class;
 
 if ( \is_singular( 'product' ) ) {
-	$controller = new \PressGang\Controllers\WooCommerce\ProductController();
+	$controller = ProductController::class;
 } else if ( \is_product_category() ) {
-	$controller = new \PressGang\Controllers\WooCommerce\ProductCategoryController();
-} else {
-	$controller = new \PressGang\Controllers\WooCommerce\ProductsController();
+	$controller = ProductCategoryController::class;
 }
 
-$controller->render();
+PressGang\PressGang::render( controller: $controller );

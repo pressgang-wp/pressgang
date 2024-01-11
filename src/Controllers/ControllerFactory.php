@@ -62,16 +62,14 @@ class ControllerFactory {
 	/**
 	 * Render a view using a specified controller and Twig template.
 	 *
-	 * @param array $params An associative array of parameters for rendering.
-	 *                      Possible keys: 'template', 'controller_class', 'twig_template'.
+	 * @param string|null $template The name of the template.
+	 * @param string|null $controller The controller class to use.
+	 * @param string|null $twig The Twig template to use.
 	 */
-	public static function render( array $params = [] ) {
-		$template         = $params['template'] ?? null;
-		$controller_class = $params['controller_class'] ?? self::infer_controller_class( $template );
-		$twig_template    = $params['twig_template'] ?? null;
+	public static function render( ?string $template = null, ?string $controller = null, ?string $twig = null ) {
+		$controller = $controller ?? self::infer_controller_class( $template );
 
-		$controller = self::make( $controller_class, $twig_template );
+		$controller = self::make( $controller, $twig );
 		$controller->render();
 	}
 }
-
