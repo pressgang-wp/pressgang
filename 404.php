@@ -1,4 +1,3 @@
 <?php
 
-$not_found_contoller = new \PressGang\NotFoundController();
-$not_found_contoller->render();
+PressGang\PressGang::render([__FILE__]);

@@ -7,4 +7,4 @@ if ( ! defined( 'THEMENAME' ) ) {
 require __DIR__ . '/vendor/autoload.php';
 
 // Initialize the PressGang theme
-(new PressGang\PressGang())->boot();
+( new PressGang\PressGang() )->boot();
