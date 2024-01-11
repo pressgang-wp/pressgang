@@ -33,7 +33,7 @@ class DeregisterScripts extends ConfigurationSingleton {
 	public function deregister_scripts(): void {
 		if ( ! \is_admin() ) {
 
-			foreach ( $this->congig as $key => $args ) {
+			foreach ( $this->config as $key => $args ) {
 
 				\add_action( 'wp_enqueue_scripts', function () use ( $key ) {
 					\wp_deregister_script( $key );
