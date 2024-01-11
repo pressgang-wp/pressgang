@@ -1,4 +1,5 @@
 <?php
 
-$page_controller = new \PressGang\PageController();
-$page_controller->render();
+use PressGang\Controllers\PageController;
+
+PressGang\PressGang::render( [ PageController::class ] );

@@ -1,4 +1,5 @@
 <?php
 
-$comments_controller = new \PressGang\CommentsController( 'comments.twig' );
-$comments_controller->render();
+use PressGang\Controllers\CommentsController;
+
+PressGang\PressGang::render( [ CommentsController::class ] );

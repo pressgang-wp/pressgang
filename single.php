@@ -1,4 +1,5 @@
 <?php
 
-$post_controller = new \PressGang\PostController();
-$post_controller->render();
+use PressGang\Controllers\PostController;
+
+PressGang\PressGang::render( [ PostController::class ] );
