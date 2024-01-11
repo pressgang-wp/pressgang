@@ -2,4 +2,4 @@
 
 use PressGang\Controllers\PostsController;
 
-PressGang\PressGang::render( [ PostsController::class ] );
+PressGang\PressGang::render( controller: PostsController::class );

@@ -1,3 +1,3 @@
 <?php
 
-PressGang\PressGang::render([__FILE__]);
+PressGang\PressGang::render( template: __FILE__ );

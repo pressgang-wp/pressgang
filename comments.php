@@ -2,4 +2,4 @@
 
 use PressGang\Controllers\CommentsController;
 
-PressGang\PressGang::render( [ CommentsController::class ] );
+PressGang\PressGang::render( controller: CommentsController::class );

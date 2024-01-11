@@ -44,7 +44,7 @@ class PressGang {
 	 *
 	 * @param array $params An associative array of parameters which can include the template, controller class, and twig template.
 	 */
-	public static function render( array $params = [] ) {
-		ControllerFactory::render( $params );
+	public static function render( ?string $template = null, ?string $controller = null, ?string $twig = null ) {
+		ControllerFactory::render( $template, $controller, $twig );
 	}
 }
