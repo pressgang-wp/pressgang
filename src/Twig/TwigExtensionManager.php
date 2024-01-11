@@ -81,9 +81,6 @@ class TwigExtensionManager {
 	 */
 	protected function get_default_twig_functions() {
 		return [
-			new TwigFunction( 'esc_attr', 'esc_attr' ),
-			new TwigFunction( 'esc_attr', 'esc_attr' ),
-			new TwigFunction( 'esc_url', 'esc_url' ),
 			new TwigFunction( 'get_search_query', 'get_search_query' ),
 			new TwigFunction( 'get_option', 'get_option' ),
 			new TwigFunction( 'get_theme_mod', 'get_theme_mod' ),
