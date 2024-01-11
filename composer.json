@@ -9,11 +9,11 @@
 			"email": "ben@benedict-wallis.com"
 		}
 	],
-	"minimum-stability": "dev",
+	"minimum-stability": "stable",
 	"require": {
 		"php": "^7.3|^8.0",
 		"timber/timber": "^2.0",
-		"doctrine/inflector": "^2.1"
+		"doctrine/inflector": "^2.0"
 	},
 	"extra": {
 		"installer-paths": {
