@@ -25,7 +25,7 @@ class Routes extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for custom routes.
 	 */
-	public function initialize( $config ) {
+	public function initialize( array $config ): void {
 		foreach ( $config as $route => $template ) {
 			\Routes::map( $route, function ( $params ) use ( $template ) {
 				\Routes::load( $template, $params, 200 );

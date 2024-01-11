@@ -16,7 +16,7 @@ class Blocks extends ConfigurationSingleton {
 	/**
 	 * @var array
 	 */
-	protected $custom_categories = [];
+	protected array $custom_categories = [];
 
 	/**
 	 * Initializes the Blocks class with configuration data.
@@ -26,10 +26,10 @@ class Blocks extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for Gutenberg blocks.
 	 */
-	public function initialize( $config ) {
+	public function initialize( array $config ) {
 		$this->config = $config;
-		add_action( 'init', [ $this, 'register_block_types' ] );
-		add_filter( 'block_categories_all', [ $this, 'add_custom_categories' ] );
+		\add_action( 'init', [ $this, 'register_block_types' ] );
+		\add_filter( 'block_categories_all', [ $this, 'add_custom_categories' ] );
 	}
 
 	/**
@@ -38,13 +38,13 @@ class Blocks extends ConfigurationSingleton {
 	 * Iterates through the configuration array and registers each block type.
 	 * Also manages the registration of custom block categories.
 	 */
-	public function register_block_types() {
+	public function register_block_types(): void {
 
 		foreach ( $this->config as $path => $settings ) {
 
 			// Check for block definition in child theme
-			$child_theme_path = get_stylesheet_directory() . $path;
-			$parent_theme_path = get_template_directory() . $path;
+			$child_theme_path = \get_stylesheet_directory() . $path;
+			$parent_theme_path = \get_template_directory() . $path;
 
 			// Determine the correct path to use
 			$block_path = file_exists($child_theme_path) ? $child_theme_path : $parent_theme_path;
@@ -64,9 +64,10 @@ class Blocks extends ConfigurationSingleton {
 	 * Adds custom block categories to the block editor.
 	 *
 	 * @param array $categories Existing block categories.
+	 *
 	 * @return array Modified array of block categories including custom ones.
 	 */
-	public function add_custom_categories( $categories ) {
+	public function add_custom_categories( array $categories ): array {
 
 		return array_values( array_merge( $categories, $this->custom_categories ) );
 

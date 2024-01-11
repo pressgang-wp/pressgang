@@ -21,9 +21,9 @@ class MetaTags extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for meta tags.
 	 */
-	public function initialize( $config ) {
+	public function initialize( array $config ): void {
 		$this->config = $config;
-		add_action( 'wp_head', [ $this, 'add_meta_tags' ] );
+		\add_action( 'wp_head', [ $this, 'add_meta_tags' ] );
 	}
 
 	/**
@@ -33,9 +33,9 @@ class MetaTags extends ConfigurationSingleton {
 	 *
 	 * @hooked action 'wp_head'
 	 */
-	public function add_meta_tags() {
+	public function add_meta_tags(): void {
 		foreach ( $this->config as $name => $content ) {
-			echo sprintf( '<meta name="%s" content="%s">', esc_attr( $name ), esc_attr( $content ) );
+			echo sprintf( '<meta name="%s" content="%s">', \esc_attr( $name ), \esc_attr( $content ) );
 		}
 	}
 }

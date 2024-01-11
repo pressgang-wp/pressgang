@@ -36,7 +36,7 @@ class Scripts extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for scripts.
 	 */
-	public function initialize( $config ) {
+	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_action( 'init', [ $this, 'register_scripts' ] );
 		\add_filter( 'script_loader_tag', [ $this, 'add_script_attrs' ], 10, 3 );
@@ -51,7 +51,7 @@ class Scripts extends ConfigurationSingleton {
 	 *
 	 * @see https://codex.wordpress.org/Function_Reference/wp_register_script
 	 */
-	public function register_scripts() {
+	public function register_scripts(): void {
 		foreach ( $this->config as $key => $args ) {
 
 			$defaults = [
@@ -114,7 +114,7 @@ class Scripts extends ConfigurationSingleton {
 	 *
 	 * @return string The modified HTML tag.
 	 */
-	public function add_script_attrs( $tag, $handle ) {
+	public function add_script_attrs( string $tag, string $handle ): string {
 		if ( in_array( $handle, $this->defer ) ) {
 			$tag = str_replace( ' src', ' defer="defer" src', $tag );
 		}

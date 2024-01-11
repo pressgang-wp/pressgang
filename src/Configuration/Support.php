@@ -11,7 +11,7 @@ namespace PressGang\Configuration;
  *
  * @package PressGang
  */
-class Support {
+class Support extends ConfigurationSingleton {
 
 	/**
 	 * Initializes the theme support features based on provided configuration.
@@ -22,7 +22,7 @@ class Support {
 	 *
 	 * @param array $config Configuration array for theme support options.
 	 */
-	public function initialize( $config ) {
+	public function initialize( array $config ): void {
 		foreach ( $config as $key => $args ) {
 			if ( is_numeric( $key ) ) {
 				// Simple theme support feature, added directly

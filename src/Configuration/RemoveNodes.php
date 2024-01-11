@@ -19,11 +19,11 @@ class RemoveNodes extends ConfigurationSingleton {
 	 * Sets up the configuration for toolbar nodes removal and adds an action hook
 	 * to remove nodes from the admin toolbar.
 	 *
-	 * @param array $config The configuration array for nodes to be removed.
+	 * @par\am array $config The configuration array for nodes to be removed.
 	 */
-	public function initialize( $config ) {
+	public function initialize( array $config ): void {
 		$this->config = $config;
-		add_action( 'admin_bar_menu', [ $this, 'remove_toolbar_node' ], 999 );
+		\add_action( 'admin_bar_menu', [ $this, 'remove_toolbar_node' ], 999 );
 	}
 
 	/**
@@ -31,9 +31,9 @@ class RemoveNodes extends ConfigurationSingleton {
 	 *
 	 * Iterates through the configuration array and removes each specified node from the toolbar.
 	 *
-	 * @param WP_Admin_Bar $wp_admin_bar The WordPress Admin Bar object.
+	 * @param \WP_Admin_Bar $wp_admin_bar The WordPress Admin Bar object.
 	 */
-	public function remove_toolbar_node( $wp_admin_bar ) {
+	public function remove_toolbar_node( \WP_Admin_Bar $wp_admin_bar ): void {
 		foreach ( $this->config as $node ) {
 			$wp_admin_bar->remove_node( $node );
 		}

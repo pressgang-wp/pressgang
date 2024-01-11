@@ -21,7 +21,7 @@ class Sidebars extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for sidebars.
 	 */
-	public function initialize( $config ) {
+	public function initialize( $config ): void {
 		$this->config = $config;
 		\add_theme_support( 'widgets' );
 		\add_action( 'widgets_init', [ $this, 'register_sidebars' ] );
@@ -35,7 +35,7 @@ class Sidebars extends ConfigurationSingleton {
 	 *
 	 * @see https://developer.wordpress.org/reference/functions/register_sidebars/
 	 */
-	public function register_sidebars() {
+	public function register_sidebars(): void {
 		foreach ( $this->sidebars as $key => &$sidebar ) {
 			$sidebar = \apply_filters( "pressgang_widget_{$key}", $sidebar );
 			if ( is_array( $sidebar ) ) {
@@ -53,7 +53,7 @@ class Sidebars extends ConfigurationSingleton {
 	 *
 	 * @return array Merged array of arguments.
 	 */
-	public function parse_args( $args ) {
+	public function parse_args( $args ): array {
 		$defaults = [
 			'before_widget' => '',
 			'after_widget'  => '',

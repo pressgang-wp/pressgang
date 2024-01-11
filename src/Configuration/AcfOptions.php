@@ -20,7 +20,7 @@ class AcfOptions extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for ACF options pages.
 	 */
-	public function initialize( $config ) {
+	public function initialize( array $config ): void {
 		$this->config = $config;
 		add_action( 'init', [ $this, 'add_options_pages' ] );
 	}
@@ -34,7 +34,7 @@ class AcfOptions extends ConfigurationSingleton {
 	 * @see https://www.advancedcustomfields.com/resources/acf_add_options_page/
 	 * @return void
 	 */
-	public function add_options_pages() {
+	public function add_options_pages(): void {
 
 		foreach ( $this->config as $key => $options ) {
 			if ( function_exists( 'acf_add_options_page' ) ) {

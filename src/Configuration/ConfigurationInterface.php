@@ -13,5 +13,5 @@ interface ConfigurationInterface {
 	 * Get a Singleton instance of the Configuration class
 	 * @return mixed
 	 */
-	public static function get_instance();
+	public static function get_instance(): mixed;
 }

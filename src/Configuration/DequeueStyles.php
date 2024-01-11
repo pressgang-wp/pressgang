@@ -12,7 +12,7 @@ class DequeueStyles extends ConfigurationSingleton {
 	 * See - https://codex.wordpress.org/Plugin_API/Action_Reference/wp_enqueue_scripts
 	 *
 	 */
-	public function initialize( $config ) {
+	public function initialize( $config ): void {
 		$this->config = $config;
 		\add_action( 'wp_enqueue_scripts', [ $this, 'dequeue_styles' ] );
 	}
@@ -22,7 +22,7 @@ class DequeueStyles extends ConfigurationSingleton {
 	 *
 	 * @return void
 	 */
-	public function dequeue_styles() {
+	public function dequeue_styles(): void {
 		foreach ( $this->config as $style ) {
 			\wp_dequeue_style( $style );
 		}

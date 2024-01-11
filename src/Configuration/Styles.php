@@ -14,11 +14,11 @@ namespace PressGang\Configuration;
 class Styles extends ConfigurationSingleton {
 
 	/**
-	 * Array to store URLs for preconnect.
+	 * Array to store URLs for pre-connect.
 	 *
 	 * @var array
 	 */
-	public $preconnect = [];
+	public array $preconnect = [];
 
 	/**
 	 * Initializes the Styles class with configuration data.
@@ -29,10 +29,10 @@ class Styles extends ConfigurationSingleton {
 	 *
 	 * @param array $config Configuration array for styles.
 	 */
-	public function initialize( $config ) {
+	public function initialize( array $config ): void {
 		$this->config = $config;
-		add_action( 'init', [ $this, 'register_styles' ] );
-		add_filter( 'style_loader_tag', [ $this, 'add_style_attrs' ], 10, 4 );
+		\add_action( 'init', [ $this, 'register_styles' ] );
+		\add_filter( 'style_loader_tag', [ $this, 'add_style_attrs' ], 10, 4 );
 	}
 
 	/**
@@ -43,7 +43,7 @@ class Styles extends ConfigurationSingleton {
 	 *
 	 * @see https://codex.wordpress.org/Function_Reference/wp_register_style
 	 */
-	public function register_styles() {
+	public function register_styles(): void {
 
 		foreach ( $this->config as $key => $args ) {
 
@@ -78,12 +78,12 @@ class Styles extends ConfigurationSingleton {
 				}
 
 				// Register styles
-				add_action( 'wp_loaded', function () use ( $args, $ver ) {
+				\add_action( 'wp_loaded', function () use ( $args, $ver ) {
 					\wp_register_style( $args['handle'], $args['src'], $args['deps'], $ver, $args['media'] );
 				} );
 
 				// Enqueue styles on the given hook
-				add_action( $args['hook'], function () use ( $args ) {
+				\add_action( $args['hook'], function () use ( $args ) {
 					\wp_enqueue_style( $args['handle'] );
 				} );
 			}
@@ -104,7 +104,7 @@ class Styles extends ConfigurationSingleton {
 	 *
 	 * @return string The modified HTML of the style tag.
 	 */
-	public function add_style_attrs( $html, $handle, $href, $media ) {
+	public function add_style_attrs( string $html, string $handle, string $href, string $media ): string {
 
 		if ( isset( $this->preconnect[ $handle ] ) ) {
 			$url = $this->preconnect[ $handle ];

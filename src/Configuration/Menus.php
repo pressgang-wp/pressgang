@@ -20,9 +20,9 @@ class Menus extends ConfigurationSingleton {
 	 * Register Menus
 	 *
 	 */
-	public function initialize( $config ) {
+	public function initialize( $config ): void {
 		$this->config = $config;
-		add_action( 'init', [ $this, 'register_nav_menus' ] );
+		\add_action( 'init', [ $this, 'register_nav_menus' ] );
 	}
 
 	/**
@@ -31,7 +31,7 @@ class Menus extends ConfigurationSingleton {
 	 * Iterates through the configuration array and registers each menu with WordPress.
 	 * Menus can be filtered in child themes and plugins if required.
 	 */
-	public function register_nav_menus() {
+	public function register_nav_menus(): void {
 
 		$menus = [];
 
