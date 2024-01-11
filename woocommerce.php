@@ -7,11 +7,11 @@ require_once( __DIR__ . '/controllers/woocommerce-product-category-controller.ph
 $controller = null;
 
 if ( is_singular( 'product' ) ) {
-	$controller = new \PressGang\WooCommerceProductController();
+	$controller = new \PressGang\Controllers\WooCommerce\ProductController();
 } else if ( is_product_category() ) {
-	$controller = new \PressGang\WooCommerceProductCategoryController();
+	$controller = new \PressGang\Controllers\WooCommerce\ProductCategoryController();
 } else {
-	$controller = new \PressGang\WooCommerceProductsController();
+	$controller = new \PressGang\Controllers\WooCommerce\ProductsController();
 }
 
 $controller->render();
