@@ -36,9 +36,6 @@ abstract class ConfigurationSingleton implements ConfigurationInterface {
 	private function __clone() {
 	}
 
-	private function __wakeup() {
-	}
-
 	// Implement the 'initialize' method from ConfigurationInterface
 	abstract public function initialize( array $config );
 }
