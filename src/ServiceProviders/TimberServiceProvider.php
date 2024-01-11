@@ -51,7 +51,7 @@ class TimberServiceProvider {
 		\add_filter( 'timber/twig', function ( $twig ) {
 			$twigExtensionsManager = new TwigExtensionManager();
 
-			return $twigExtensionsManager->addToTwig( $twig );
+			return $twigExtensionsManager->add_to_twig( $twig );
 		} );
 	}
 
