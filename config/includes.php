@@ -19,7 +19,6 @@ return [
 	'logo-svg',
 	'customizer',
 	'emojicons',
-	'filters',
 	'google-analytics',
 	'opengraph',
 	'permalinks',
