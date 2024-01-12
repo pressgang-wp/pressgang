@@ -60,6 +60,8 @@
  * @var array
  */
 return [
+	'title-tag',
+	'post-thumbnails',
 	'html5' => [
 		'comment-list',
 		'comment-form',
@@ -67,5 +69,4 @@ return [
 		'gallery',
 		'caption',
 	],
-	'post-thumbnails',
 ];
