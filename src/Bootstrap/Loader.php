@@ -18,7 +18,7 @@ class Loader {
 	/**
 	 * Folders to include additional files from.
 	 */
-	const INCLUDE_FOLDERS = [ 'inc', 'shortcodes', 'widgets' ];
+	const INCLUDE_FOLDERS = [ 'includes', 'shortcodes', 'widgets' ];
 
 	/**
 	 * Loader constructor.
@@ -69,7 +69,7 @@ class Loader {
 	 *
 	 * This typically includes files from 'inc', 'shortcodes', and 'widgets' directories.
 	 */
-	protected function include_files() {
+	protected function include_files(): void {
 		foreach ( self::INCLUDE_FOLDERS as $folder ) {
 			if ( $files = Config::get( $folder ) ) {
 				foreach ( $files as $file ) {
