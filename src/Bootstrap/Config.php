@@ -15,9 +15,9 @@ class Config {
 	private static ?array $settings = null;
 
 	/**
-	 * @var ConfigLoaderInterface The loader responsible for fetching configuration settings.
+	 * @var ConfigLoaderInterface|null The loader responsible for fetching configuration settings.
 	 */
-	private static ConfigLoaderInterface $loader;
+	private static ?ConfigLoaderInterface $loader = null;
 
 	/**
 	 * Sets the configuration loader.
