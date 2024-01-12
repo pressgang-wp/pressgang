@@ -12,7 +12,7 @@ class OpenGraph {
 	 *
 	 */
 	public function __construct() {
-		add_action( 'wp_head', [ $this, 'fb_opengraph' ], 5 );
+		\add_action( 'wp_head', [ $this, 'fb_opengraph' ], 5 );
 	}
 
 	/**
@@ -31,34 +31,34 @@ class OpenGraph {
 
 		$type = is_author() ? 'profile' : ( is_single() ? 'article' : 'website' );
 
-		$description = Site::meta_description();
+		$description = PressGang\SEO\MetaDescriptionService::getMetaDescription();
 
 		if ( is_tax() ) {
-			$url   = get_term_link( get_query_var( 'term' ), get_query_var( 'taxonomy' ) );
-			$title = single_term_title( '', false );
+			$url   = \get_term_link( \get_query_var( 'term' ), \get_query_var( 'taxonomy' ) );
+			$title = \single_term_title( '', false );
 		} elseif ( is_post_type_archive() ) {
-			$url   = get_post_type_archive_link( get_query_var( 'post_type' ) );
-			$title = get_the_archive_title();
+			$url   = \get_post_type_archive_link( \get_query_var( 'post_type' ) );
+			$title = \get_the_archive_title();
 		} else {
-			$url   = get_permalink();
-			$title = get_the_title();
+			$url   = \get_permalink();
+			$title = \get_the_title();
 		}
 
-		$url = rtrim( esc_url( apply_filters( 'og_url', $url ) ) );
-		if ( ! substr( $url, - 1 ) === '/' ) {
+		$url = rtrim( \esc_url( \apply_filters( 'og_url', $url ) ) );
+		if ( ! str_ends_with( $url, '/' ) ) {
 			$url .= '/'; // slash fixes Facebook Debugger "Circular Redirect Path"
 		}
 
 		$open_graph = [
-			'site_name'   => apply_filters( 'og_site_name', get_bloginfo() ),
-			'title'       => apply_filters( 'og_title', $title ),
-			'description' => wp_strip_all_tags( apply_filters( 'og_description', $description ) ),
-			'type'        => esc_attr( apply_filters( 'og_type', $type ) ),
-			'url'         => esc_url( 'og_url', $url ),
-			'image'       => esc_url( apply_filters( 'og_image', $img ) ),
+			'site_name'   => \apply_filters( 'og_site_name', \get_bloginfo() ),
+			'title'       => \apply_filters( 'og_title', $title ),
+			'description' => \wp_strip_all_tags( \apply_filters( 'og_description', $description ) ),
+			'type'        => \esc_attr( apply_filters( 'og_type', $type ) ),
+			'url'         => \esc_url( 'og_url', $url ),
+			'image'       => \esc_url( \apply_filters( 'og_image', $img ) ),
 		];
 
-		\Timber\Timber::render( 'partials/open-graph.twig', [ 'open_graph' => $open_graph ] );
+		\Timber::render( 'partials/open-graph.twig', [ 'open_graph' => $open_graph ] );
 	}
 }
 
