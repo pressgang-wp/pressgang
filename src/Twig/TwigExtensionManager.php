@@ -84,7 +84,7 @@ class TwigExtensionManager {
 			new TwigFunction( 'get_search_query', 'get_search_query' ),
 			new TwigFunction( 'get_option', 'get_option' ),
 			new TwigFunction( 'get_theme_mod', 'get_theme_mod' ),
-			new TwigFunction( 'meta_description', [ MetaDescriptionService::class, 'getMetaDescription' ] ),
+			new TwigFunction( 'meta_description', [ MetaDescriptionService::class, 'get_meta_description' ] ),
 		];
 	}
 
