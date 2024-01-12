@@ -6,10 +6,10 @@ use Timber\TextHelper;
 use Timber\Timber;
 
 class MetaDescriptionService {
-	private static string $meta_description;
+	private static string $meta_description = '';
 
 	public static function get_meta_description() {
-		if ( self::$meta_description !== null ) {
+		if ( ! empty( self::$meta_description ) ) {
 			return self::$meta_description;
 		}
 
