@@ -18,7 +18,7 @@ return [
 	'admin-logo',
 	'logo-svg',
 	'customizer',
-	'emojicons',
+	'disable-emojis',
 	'google-analytics',
 	'opengraph',
 	'permalinks',
