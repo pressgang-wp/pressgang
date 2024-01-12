@@ -22,7 +22,8 @@ class AdminLogo {
 	 * Only adds the logo if a custom logo has been set in the theme customizer.
 	 */
 	public function add_login_logo(): void {
-		$logo = \get_theme_mod( 'logo' );
+
+		$logo = \get_theme_mod( 'logo' ) ?? \get_theme_mod( 'logo-svg' );
 
 		if ( $logo ) {
 			echo $this->generate_login_logo_css( \esc_url( $logo ) );
