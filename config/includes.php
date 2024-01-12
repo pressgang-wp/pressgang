@@ -15,13 +15,7 @@
  *
  */
 return [
-	'admin-logo',
-	'logo-svg',
-	'customizer',
 	'disable-emojis',
-	'google-analytics',
 	'opengraph',
-	'permalinks',
-	'title',
 	'editor-styles',
 ];
