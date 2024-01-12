@@ -13,13 +13,13 @@ class AdminLogo {
 	/**
 	 * add_login_logo
 	 *
-	 * Replace the Wordpress Logo with the Customizer Logo on the wp-admin login screen
+	 * Replace the WordPress Logo with the Customizer Logo on the wp-admin login screen
 	 *
 	 * @return void
 	 */
-	public function add_login_logo() {
+	public function add_login_logo(): void {
 		if ( $logo = \esc_url( \get_theme_mod( 'logo' ) ) ) : ?>
-			<style type="text/css">
+			<style>
 				.login h1 a {
 					background-image: url(<?php echo $logo; ?>) !important;
 					width: 100% !important;
