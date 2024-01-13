@@ -26,7 +26,7 @@ class AdminLogo {
 		$logo = \get_theme_mod( 'logo' ) ?? \get_theme_mod( 'logo-svg' );
 
 		if ( $logo ) {
-			echo $this->generate_login_logo_css( \esc_url( $logo ) );
+			echo $this->generate_login_logo_css( $logo );
 		}
 	}
 
@@ -38,6 +38,9 @@ class AdminLogo {
 	 * @return string CSS code for the custom login logo.
 	 */
 	protected function generate_login_logo_css( string $logo_url ): string {
+
+		$logo_url = \esc_url( $logo_url );
+
 		return "
             <style>
                 .login h1 a {
