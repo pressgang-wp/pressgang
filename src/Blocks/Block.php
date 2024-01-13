@@ -28,7 +28,7 @@ class Block {
 	 */
 	public static function render( array $block ): void {
 		$slug    = substr( $block['name'], strpos( $block['name'], '/' ) + 1 );
-		$context = self::get_context( $block );
+		$context = static::get_context( $block );
 
 		Timber::render( "blocks/{$slug}.twig", $context );
 	}
