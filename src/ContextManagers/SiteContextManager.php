@@ -25,7 +25,7 @@ class SiteContextManager implements ContextManagerInterface {
 	 *
 	 * @return array Modified context array with additional data.
 	 */
-	public function add_to_context( $context ): array {
+	public function add_to_context( array $context ): array {
 		$site             = new Site();
 		$stylesheet       = $this->get_stylesheet( 'styles.css' );
 		$site->stylesheet = \apply_filters( 'pressgang_stylesheet', $stylesheet );
