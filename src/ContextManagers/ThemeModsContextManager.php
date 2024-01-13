@@ -25,14 +25,16 @@ class ThemeModsContextManager implements ContextManagerInterface {
 	 *
 	 * @param array $context The Timber context array that is passed to templates.
 	 *
-	 * @return void
+	 * @return array
 	 */
-	public function add_to_context( $context ) {
+	public function add_to_context( array $context ): array {
 		if ( $theme_mods = \get_theme_mods() ) {
 			foreach ( $theme_mods as $key => $value ) {
 				$context[ $key ] = \apply_filters( "pressgang_theme_mod_$key", $value );
 			}
 		}
+
+		return $context;
 	}
 
 }
