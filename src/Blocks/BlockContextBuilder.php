@@ -44,7 +44,7 @@ class BlockContextBuilder {
 			foreach ( $fields as $field ) {
 				// Add each field's value to the context array, using the field's name as the key
 				// This makes all ACF custom fields accessible in the block's Twig template
-				$context[ $field['name'] ] = TimberMapper::map_field( $field['value'] );
+				$context[ $field['name'] ] = TimberMapper::map_field( $field );
 			}
 		}
 

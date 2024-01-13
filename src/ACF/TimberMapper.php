@@ -43,8 +43,8 @@ class TimberMapper {
 				// Handle nested fields
 				if ( is_array( $field['value'] ) ) {
 					$nestedItems = [];
-					foreach ( $field['value'] as $subKey => $subValue ) {
-						$nestedItems[ $subKey ] = self::map_field( $subValue );
+					foreach ( $field['value'] as $sub_key => $sub_value ) {
+						$nestedItems[ $sub_key ] = self::map_field( $sub_value );
 					}
 
 					return $nestedItems;
