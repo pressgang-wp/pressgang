@@ -5,10 +5,11 @@
  *
  * @param $text
  * @param bool $to_nearest_minute
+ * @param int $speed
  *
  * @return string
  */
-function reading_time( $text, $to_nearest_minute = false, $speed = 200 ) {
+function reading_time( $text, bool $to_nearest_minute = false, int $speed = 200 ): string {
 	$words = str_word_count( strip_tags( $text ) );
 
 	$seconds = 0;
