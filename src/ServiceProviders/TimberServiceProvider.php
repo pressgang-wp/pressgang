@@ -4,7 +4,7 @@ namespace PressGang\ServiceProviders;
 
 use PressGang\ContextManagers\AcfOptionsContextManager;
 use PressGang\ContextManagers\ContextManagerInterface;
-use PressGang\ContextManagers\GeneralContextManager;
+use PressGang\ContextManagers\SiteContextManager;
 use PressGang\ContextManagers\MenuContextManager;
 use PressGang\ContextManagers\ThemeModsContextManager;
 use PressGang\ContextManagers\WooCommerceContextManager;
@@ -28,7 +28,7 @@ class TimberServiceProvider {
 	 */
 	public function boot(): void {
 		// Register context managers
-		$this->register_context_manager( new GeneralContextManager() );
+		$this->register_context_manager( new SiteContextManager() );
 		$this->register_context_manager( new MenuContextManager() );
 
 		// Register Theme Mods
@@ -73,7 +73,7 @@ class TimberServiceProvider {
 	 *
 	 * @return array The modified Timber context array.
 	 */
-	public function add_to_context( $context ) {
+	public function add_to_context( array $context ): array {
 		foreach ( $this->contextManagers as $manager ) {
 			$context = $manager->add_to_context( $context );
 		}

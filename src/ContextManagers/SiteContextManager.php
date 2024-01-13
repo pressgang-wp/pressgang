@@ -2,8 +2,10 @@
 
 namespace PressGang\ContextManagers;
 
+use Timber\Site;
+
 /**
- * Class GeneralContextManager
+ * Class SiteContextManager
  *
  * Manages the general context for the PressGang framework by adding general data
  * to the context array, which can be used across various templates. Implements
@@ -11,7 +13,7 @@ namespace PressGang\ContextManagers;
  *
  * @package PressGang\ContextManagers
  */
-class GeneralContextManager implements ContextManagerInterface {
+class SiteContextManager implements ContextManagerInterface {
 
 	/**
 	 * Adds general data to the context array.
@@ -23,12 +25,12 @@ class GeneralContextManager implements ContextManagerInterface {
 	 *
 	 * @return array Modified context array with additional data.
 	 */
-	public function add_to_context( $context ) {
+	public function add_to_context( $context ): array {
+		$site             = new Site();
+		$stylesheet       = $this->get_stylesheet( 'styles.css' );
+		$site->stylesheet = \apply_filters( 'pressgang_stylesheet', $stylesheet );
 
-		$stylesheet = $this->get_stylesheet( 'styles.css' );
-		$stylesheet = \apply_filters( 'pressgang_stylesheet', $stylesheet );
-
-		$context['stylesheet'] = $stylesheet;
+		$context['site'] = $site;
 
 		return $context;
 	}
@@ -43,7 +45,7 @@ class GeneralContextManager implements ContextManagerInterface {
 	 *
 	 * @return string The URL for the stylesheet with versioning.
 	 */
-	protected function get_stylesheet( $stylesheet ) {
+	protected function get_stylesheet( string $stylesheet ): string {
 		$stylesheetPath    = "/css/$stylesheet";
 		$stylesheetVersion = filemtime( \get_stylesheet_directory() . $stylesheetPath );
 
