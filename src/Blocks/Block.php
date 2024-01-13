@@ -43,7 +43,7 @@ class Block {
 	 *
 	 * @return array An array representing the context for the specified block.
 	 */
-	protected static function get_context( $block ): array {
+	protected static function get_context( mixed $block ): array {
 		return BlockContextBuilder::build_context( $block );
 	}
 }
