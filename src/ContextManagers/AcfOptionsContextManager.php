@@ -29,7 +29,7 @@ class AcfOptionsContextManager implements ContextManagerInterface {
 	 *
 	 * @return array The modified context with added ACF options data.
 	 */
-	public function add_to_context( $context ) {
+	public function add_to_context( array $context ): array {
 
 		if ( function_exists( 'get_fields' ) ) {
 

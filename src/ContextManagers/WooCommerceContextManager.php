@@ -27,7 +27,7 @@ class WooCommerceContextManager implements ContextManagerInterface {
 	 *
 	 * @return array The modified context with added WooCommerce data.
 	 */
-	public function add_to_context( $context ) {
+	public function add_to_context( array $context ): array {
 		$account_page_id = \get_option( 'woocommerce_myaccount_page_id' );
 
 		$context['my_account_link']     = \get_permalink( $account_page_id );

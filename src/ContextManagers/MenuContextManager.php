@@ -28,7 +28,7 @@ class MenuContextManager implements ContextManagerInterface {
 	 *
 	 * @return array The modified context array with navigation menus added.
 	 */
-	public function add_to_context( $context ) {
+	public function add_to_context( array $context ): array {
 		$registered_menus = \get_registered_nav_menus();
 
 		foreach ( $registered_menus as $location => $description ) {
