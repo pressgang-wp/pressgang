@@ -16,6 +16,8 @@ use Timber\Timber;
 class MetaDescriptionService {
 
 	/**
+	 * The Meta Description
+	 *
 	 * @var string
 	 */
 	private static string $meta_description = '';
@@ -28,7 +30,7 @@ class MetaDescriptionService {
 	 *
 	 * @return string The sanitized and possibly shortened meta description.
 	 */
-	public static function get_meta_description() {
+	public static function get_meta_description(): string {
 		if ( ! empty( self::$meta_description ) ) {
 			return self::$meta_description;
 		}
@@ -63,7 +65,7 @@ class MetaDescriptionService {
 	 * @param mixed $object The queried object (post, term, etc.).
 	 * @return string The generated meta description.
 	 */
-	private static function generate_description( $object ) {
+	private static function generate_description( mixed $object ): string {
 		if ( \is_single() || \is_page() ) {
 			return self::get_description_for_post( $object ) ?: self::get_default_description();
 		} elseif ( \is_tax() ) {
