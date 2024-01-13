@@ -28,11 +28,16 @@ class ThemeModsContextManager implements ContextManagerInterface {
 	 * @return array
 	 */
 	public function add_to_context( array $context ): array {
+
+		$theme = $context['theme'];
+
 		if ( $theme_mods = \get_theme_mods() ) {
 			foreach ( $theme_mods as $key => $value ) {
-				$context[ $key ] = \apply_filters( "pressgang_theme_mod_$key", $value );
+				$theme[ $key ] = \apply_filters( "pressgang_theme_mod_$key", $value );
 			}
 		}
+
+		$context['theme'] = $theme;
 
 		return $context;
 	}
