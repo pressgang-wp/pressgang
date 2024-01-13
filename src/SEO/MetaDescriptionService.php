@@ -5,9 +5,29 @@ namespace PressGang\SEO;
 use Timber\TextHelper;
 use Timber\Timber;
 
+/**
+ * Class MetaDescriptionService
+ *
+ * Provides services to generate and cache meta descriptions for various WordPress content types.
+ * It supports posts, pages, taxonomies, and post type archives, with support for Yoast SEO plugin data.
+ *
+ * @package PressGang\SEO
+ */
 class MetaDescriptionService {
+
+	/**
+	 * @var string
+	 */
 	private static string $meta_description = '';
 
+	/**
+	 * Retrieves the meta description for the current queried object.
+	 *
+	 * This method uses caching to avoid regenerating the meta description.
+	 * It checks for descriptions from Yoast SEO, custom fields, or generates from content if necessary.
+	 *
+	 * @return string The sanitized and possibly shortened meta description.
+	 */
 	public static function get_meta_description() {
 		if ( ! empty( self::$meta_description ) ) {
 			return self::$meta_description;
@@ -27,10 +47,22 @@ class MetaDescriptionService {
 		return self::sanitize_and_shorten_description( self::$meta_description );
 	}
 
+	/**
+	 * Generates a unique cache key based on the queried object.
+	 *
+	 * @param mixed $object The queried object (post, term, etc.).
+	 * @return string The generated cache key.
+	 */
 	private static function generate_cache_key( $object ): string {
 		return sprintf( "meta_description_%s_%s", strtolower( get_class( $object ) ), $object->ID ?? $object->name );
 	}
 
+	/**
+	 * Generates a meta description based on the type of queried object.
+	 *
+	 * @param mixed $object The queried object (post, term, etc.).
+	 * @return string The generated meta description.
+	 */
 	private static function generate_description( $object ) {
 		if ( \is_single() || \is_page() ) {
 			return self::get_description_for_post( $object ) ?: self::get_default_description();
@@ -43,20 +75,38 @@ class MetaDescriptionService {
 		return self::get_default_description();
 	}
 
-	private static function get_description_for_post( $post ) {
+	/**
+	 * Retrieves the meta description for a post or page.
+	 *
+	 * Tries to get description from Yoast SEO, custom fields, post excerpt, or post content.
+	 *
+	 * @param \WP_Post $post The post object.
+	 *
+	 * @return string The meta description for the post.
+	 */
+	private static function get_description_for_post( \WP_Post $post ): string {
 		// Try Yoast SEO first
 		$description = \get_post_meta( $post->ID, '_yoast_wpseo_metadesc', true );
 
 		if ( empty( $description ) ) {
-			// Check for custom field
-			$timberPost  = Timber::get_post( $post->ID );
-			$description = \wptexturize( $timberPost->meta( 'meta_description' ) ) ?: $timberPost->post_excerpt ?: strip_shortcodes( $timberPost->post_content );
+			// Check for custom field, then expert, then content
+			$post  = Timber::get_post( $post->ID );
+			$description = \wptexturize( $post->meta( 'meta_description' ) ) ?: $post->post_excerpt ?: \strip_shortcodes( $post->post_content );
 		}
 
 		return $description;
 	}
 
-	private static function get_description_for_taxonomy( $term ) {
+	/**
+	 * Retrieves the meta description for a taxonomy term.
+	 *
+	 * Tries to get description from Yoast SEO or default term description.
+	 *
+	 * @param \WP_Term $term The term object.
+	 *
+	 * @return string The meta description for the taxonomy term.
+	 */
+	private static function get_description_for_taxonomy( \WP_Term $term ): string {
 		// Try Yoast SEO for taxonomy
 		$yoast_meta = \get_option( 'wpseo_taxonomy_meta' );
 		if ( ! empty( $yoast_meta[ $term->taxonomy ][ $term->term_id ]['wpseo_desc'] ) ) {
@@ -66,11 +116,25 @@ class MetaDescriptionService {
 		return \term_description( $term, \get_query_var( 'taxonomy' ) );
 	}
 
-	private static function get_default_description() {
+	/**
+	 * Retrieves the default meta description for the site.
+	 *
+	 * @return string The site's default meta description.
+	 */
+	private static function get_default_description(): string {
 		return \get_bloginfo( 'description', 'raw' );
 	}
 
-	private static function sanitize_and_shorten_description( $description ) {
+	/**
+	 * Sanitizes and shortens the meta description to an appropriate length.
+	 *
+	 * Ensures the description is not longer than 155 characters and is properly escaped.
+	 *
+	 * @param string $description The meta description to be sanitized and shortened.
+	 *
+	 * @return string The sanitized and shortened meta description.
+	 */
+	private static function sanitize_and_shorten_description( string $description ): string {
 		$description = \esc_attr( \wp_strip_all_tags( $description ) );
 
 		if ( strlen( $description ) > 155 ) {
