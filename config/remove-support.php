@@ -14,50 +14,29 @@
  *     ... additional theme support features ...
  * ];
  *
- * Core values include:
+ * Values can include:
  *
- * 'admin-bar'
- * 'align-wide'
  * 'automatic-feed-links'
- * 'core-block-patterns'
- * 'custom-background'
- * 'custom-header'
- * 'custom-line-height'
- * 'custom-logo'
- * 'customize-selective-refresh-widgets'
- * 'custom-spacing'
- * 'custom-units'
- * 'dark-editor-style'
- * 'disable-custom-colors'
- * 'disable-custom-font-sizes'
- * 'editor-color-palette'
- * 'editor-gradient-presets'
- * 'editor-font-sizes'
- * 'editor-styles'
- * 'featured-content'
- * 'html5'
- * 'menus'
+ * 'title-tag'
  * 'post-formats'
  * 'post-thumbnails'
- * 'responsive-embeds'
+ * 'custom-background'
+ * 'custom-header'
+ * 'custom-logo'
+ * 'html5'
+ * 'editor-style'
+ * 'editor-styles'
  * 'starter-content'
- * 'title-tag'
+ * 'responsive-embeds'
  * 'wp-block-styles'
- * 'widgets'
- * 'widgets-block-editor'
+ * 'align-wide'
+ * 'woocommerce'
+ * 'wc-product-gallery-zoom'
+ * 'wc-product-gallery-lightbox'
+ * 'wc-product-gallery-slider'
  *
  * @var array
  */
 return [
-	'title-tag',
-	'post-thumbnails',
-	'html5' => [
-		'comment-list',
-		'comment-form',
-		'search-form',
-		'gallery',
-		'caption',
-	],
+	'core-block-patterns',
 ];
-
-remove_theme_support('core-block-patterns');
