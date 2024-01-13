@@ -13,7 +13,7 @@ class ACFToTimberMapper {
 	 *
 	 * @return mixed The corresponding Timber object or the original value if no mapping is defined.
 	 */
-	public static function mapFieldToTimber( array $field ) {
+	public static function map_field_to_timber( array $field ) {
 		switch ( $field['type'] ) {
 			case 'repeater':
 			case 'flexible_content':
@@ -21,7 +21,7 @@ class ACFToTimberMapper {
 				foreach ( $field['value'] as $subField ) {
 					$mappedSubField = [];
 					foreach ( $subField as $key => $value ) {
-						$mappedSubField[ $key ] = self::mapFieldToTimber( $value );
+						$mappedSubField[ $key ] = self::map_field_to_timber( $value );
 					}
 					$items[] = $mappedSubField;
 				}
@@ -44,7 +44,7 @@ class ACFToTimberMapper {
 				if ( is_array( $field['value'] ) ) {
 					$nestedItems = [];
 					foreach ( $field['value'] as $subKey => $subValue ) {
-						$nestedItems[ $subKey ] = self::mapFieldToTimber( $subValue );
+						$nestedItems[ $subKey ] = self::map_field_to_timber( $subValue );
 					}
 
 					return $nestedItems;

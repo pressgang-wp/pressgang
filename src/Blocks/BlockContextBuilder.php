@@ -29,7 +29,7 @@ class BlockContextBuilder {
 	 *
 	 * @return array An associative array of context data to be used in rendering the block's template.
 	 */
-	public static function build_context( $block ) {
+	public static function build_context( array $block ): array {
 		$context         = [];
 		$context['post'] = Timber::get_post();
 		$context['id']   = $block['id'];
@@ -44,7 +44,7 @@ class BlockContextBuilder {
 			foreach ( $fields as $field ) {
 				// Add each field's value to the context array, using the field's name as the key
 				// This makes all ACF custom fields accessible in the block's Twig template
-				$context[ $field['name'] ] = ACFToTimberMapper::map_acf_to_timber( $field['value'] );
+				$context[ $field['name'] ] = ACFToTimberMapper::map_field_to_timber( $field['value'] );
 			}
 		}
 
