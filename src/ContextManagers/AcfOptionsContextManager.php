@@ -2,7 +2,7 @@
 
 namespace PressGang\ContextManagers;
 
-use PressGang\ACF\ACFToTimberMapper;
+use PressGang\ACF\TimberMapper;
 
 /**
  * Class AcfOptionsContextManager
@@ -40,7 +40,7 @@ class AcfOptionsContextManager implements ContextManagerInterface {
 
 				// Map the field objects to values and Timber objects where appropriate
 				foreach ( $fields as $key => &$field ) {
-					$field = ACFToTimberMapper::mapFieldToTimber( $field );
+					$field = TimberMapper::mapFieldToTimber( $field );
 				}
 
 				\wp_cache_set( 'theme_options', $fields );

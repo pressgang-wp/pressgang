@@ -2,7 +2,7 @@
 
 namespace PressGang\Blocks;
 
-use PressGang\ACF\ACFToTimberMapper;
+use PressGang\ACF\TimberMapper;
 use \Timber\Timber;
 
 /**
@@ -44,7 +44,7 @@ class BlockContextBuilder {
 			foreach ( $fields as $field ) {
 				// Add each field's value to the context array, using the field's name as the key
 				// This makes all ACF custom fields accessible in the block's Twig template
-				$context[ $field['name'] ] = ACFToTimberMapper::map_field_to_timber( $field['value'] );
+				$context[ $field['name'] ] = TimberMapper::map_field( $field['value'] );
 			}
 		}
 
