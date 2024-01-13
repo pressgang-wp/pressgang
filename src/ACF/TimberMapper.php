@@ -4,7 +4,7 @@ namespace PressGang\ACF;
 
 use Timber\Timber;
 
-class ACFToTimberMapper {
+class TimberMapper {
 
 	/**
 	 * Maps ACF fields to corresponding Timber objects.
@@ -13,7 +13,7 @@ class ACFToTimberMapper {
 	 *
 	 * @return mixed The corresponding Timber object or the original value if no mapping is defined.
 	 */
-	public static function map_field_to_timber( array $field ) {
+	public static function map_field( array $field ): mixed {
 		switch ( $field['type'] ) {
 			case 'repeater':
 			case 'flexible_content':
@@ -21,7 +21,7 @@ class ACFToTimberMapper {
 				foreach ( $field['value'] as $subField ) {
 					$mappedSubField = [];
 					foreach ( $subField as $key => $value ) {
-						$mappedSubField[ $key ] = self::map_field_to_timber( $value );
+						$mappedSubField[ $key ] = self::map_field( $value );
 					}
 					$items[] = $mappedSubField;
 				}
@@ -44,7 +44,7 @@ class ACFToTimberMapper {
 				if ( is_array( $field['value'] ) ) {
 					$nestedItems = [];
 					foreach ( $field['value'] as $subKey => $subValue ) {
-						$nestedItems[ $subKey ] = self::map_field_to_timber( $subValue );
+						$nestedItems[ $subKey ] = self::map_field( $subValue );
 					}
 
 					return $nestedItems;
