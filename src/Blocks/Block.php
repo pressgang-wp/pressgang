@@ -26,10 +26,24 @@ class Block {
 	 *                     necessary information about the block, including its name
 	 *                     and other attributes.
 	 */
-	public static function render( $block ) {
+	public static function render( array $block ): void {
 		$slug    = substr( $block['name'], strpos( $block['name'], '/' ) + 1 );
-		$context = BlockContextBuilder::build_context( $block );
+		$context = self::get_context( $block );
 
 		Timber::render( "blocks/{$slug}.twig", $context );
+	}
+
+	/**
+	 * Provides a get_context method allowing subclasses to override it for custom context generation.
+	 *
+	 * This method is used to build the context for a given block.
+	 *
+	 * @param mixed $block The block for which the context is to be built.
+	 *                     This could be any type depending on how the context is structured.
+	 *
+	 * @return array An array representing the context for the specified block.
+	 */
+	protected static function get_context( $block ): array {
+		return BlockContextBuilder::build_context( $block );
 	}
 }
