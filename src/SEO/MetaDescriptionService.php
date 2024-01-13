@@ -17,11 +17,11 @@ class MetaDescriptionService {
 			$key = self::generate_cache_key( $object );
 
 			if ( ! self::$meta_description = \wp_cache_get( $key ) ) {
-				self::$meta_description = self::get_default_description( $object );
+				self::$meta_description = self::generate_description( $object );
 				\wp_cache_set( $key, self::$meta_description );
 			}
 		} else {
-			self::$meta_description = \get_bloginfo( 'description', 'raw' );
+			self::$meta_description = self::get_default_description();
 		}
 
 		return self::sanitize_and_shorten_description( self::$meta_description );
