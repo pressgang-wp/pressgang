@@ -9,6 +9,7 @@ namespace PressGang\Configuration;
  * This class allows for configuring various WordPress theme support options,
  * such as post thumbnails, HTML5 support, custom logo, etc.
  *
+ * @see https://developer.wordpress.org/reference/functions/add_theme_support/
  * @package PressGang
  */
 class Support extends ConfigurationSingleton {
