@@ -23,7 +23,7 @@ class AdminLogo {
 	 */
 	public function add_login_logo(): void {
 
-		$logo = \get_theme_mod( 'logo' ) ?? \get_theme_mod( 'logo-svg' );
+		$logo = \get_theme_mod( 'logo' ) ?: \get_theme_mod( 'logo_svg' );
 
 		if ( $logo ) {
 			echo $this->generate_login_logo_css( $logo );
