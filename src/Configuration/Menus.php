@@ -39,9 +39,8 @@ class Menus extends ConfigurationSingleton {
 			// allow filtering of the menu in child themes and plugins if required
 			$menu = \apply_filters( "pressgang_menu_{$location}", [ $location => $description, ] );
 
-			// remove any invalid items
-			if ( empty( $menu ) ) {
-				unset( $menus[ $location ] );
+			if ( ! empty( $menu ) ) {
+				$menus[ $location ] = $description;
 			}
 		}
 
