@@ -1,10 +1,10 @@
 <a href="/" aria-label="{{ __("Return to the %s homepage", THEMENAME)|format(site.name|e('html_attr')) }}"
    title="{{ __("Return to the %s homepage", THEMENAME)|format(site.name|e('html_attr')) }}" rel="home"
    class="brand {{ classes|e('html_attr') }}">
-	{% if site.logo_svg %}
-		{{ site.logo_svg }}
-	{% elseif site.logo %}
-		<img src="{{ site.logo|relative }}" alt="{{ __("%s Logo", THEMENAME)|format(site.name)|e('html_attr') }}>"
+	{% if theme.logo_svg %}
+		{{ theme.logo_svg }}
+	{% elseif theme.logo %}
+		<img src="{{ theme.logo|relative }}" alt="{{ __("%s Logo", THEMENAME)|format(site.name)|e('html_attr') }}>"
 	{% else %}
 		{{ site.name|e }}
 	{% endif %}
