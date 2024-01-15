@@ -2,7 +2,8 @@
    title="{{ __("Return to the %s homepage", THEMENAME)|format(site.name|e('html_attr')) }}" rel="home"
    class="brand {{ classes|e('html_attr') }}">
 	{% if theme.logo or theme.logo_svg %}
-		<img src="{{ theme.logo_svg|default(theme.logo)|relative }}" alt="{{ __("%s Logo", THEMENAME)|format(site.name)|e('html_attr') }}>"
+		<img src="{{ theme.logo_svg|default(theme.logo)|relative|e('html_attr') }}"
+			 alt="{{ __("%s Logo", THEMENAME)|format(site.name)|e('html_attr') }}>"
 	{% else %}
 		{{ site.name|e }}
 	{% endif %}
