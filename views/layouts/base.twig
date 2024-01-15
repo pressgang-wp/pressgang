@@ -1,7 +1,7 @@
 <!doctype html>
 <html {{ site.language_attributes }}>
 {% block head %}
-	{% include 'head.twig' %}
+	{% include 'scaffold/head.twig' %}
 {% endblock %}
 <body class="{{ body_class }}">
 {% do action('wp_body_open') %}
@@ -12,7 +12,7 @@
 		</noscript>
 		{% block header %}
 			<header id="header">
-				{% include 'header.twig' %}
+				{% include 'globals/header.twig' %}
 			</header>
 		{% endblock %}
 		{% block main %}
@@ -25,7 +25,7 @@
 	</div>
 	{% block footer %}
 		<footer id="footer">
-			{% include 'footer.twig' %}
+			{% include 'globals/footer.twig' %}
 		</footer>
 	{% endblock %}
 {% endblock %}
