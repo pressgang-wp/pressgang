@@ -60,7 +60,7 @@ class Adsense {
 	 */
 	public function script() {
 		if ( $google_adsense_id = get_theme_mod( 'google-adsense-id' ) ) {
-			\Timber\Timber::render( 'google-adsense.twig', [
+			\Timber\Timber::render( 'snippets/google-adsense.twig', [
 				'google_adsense_id'   => $google_adsense_id,
 				'show-page-level-ads' => ! ! get_theme_mod( 'show-page-level-ads' ),
 			] );

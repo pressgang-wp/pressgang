@@ -25,7 +25,7 @@ class OpenGraph {
 	 * Gathers all necessary data and uses Timber to render the Open Graph meta tags.
 	 */
 	public function add_meta_tags() {
-		Timber::render( 'partials/open-graph.twig', [
+		Timber::render( 'snippets/open-graph.twig', [
 			'site_name'   => \apply_filters( 'pressgang_og_site_name', \get_bloginfo() ),
 			'title'       => \apply_filters( 'pressgang_og_title', $this->get_title() ),
 			'description' => \apply_filters( 'pressgang_og_description', $this->get_description() ),

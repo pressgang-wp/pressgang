@@ -99,7 +99,7 @@ class GoogleConversionTracking {
 
 			}
 
-			\Timber\Timber::render( 'google-conversion-tracking.twig', $data );
+			\Timber\Timber::render( 'snippets/google-conversion-tracking.twig', $data );
 
 		}
 	}

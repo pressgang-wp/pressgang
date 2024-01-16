@@ -62,7 +62,7 @@ class GoogleRecaptcha {
 	 *
 	 */
 	public static function script() {
-		\Timber\Timber::render( 'google-recaptcha.twig' );
+		\Timber\Timber::render( 'snippets/google-recaptcha.twig' );
 	}
 
 }

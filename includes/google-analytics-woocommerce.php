@@ -50,7 +50,7 @@ class GoogleAnalyticsWooCommerce {
 						];
 					}
 
-					\Timber\Timber::render( 'google-analytics-ecommerce.twig', [
+					\Timber\Timber::render( 'snippets/google-analytics-ecommerce.twig', [
 						'transaction_id'          => $order->get_order_key(),
 						'transaction_affiliation' => 'WooCommerce',
 						'transaction_total'       => $order->get_total(),
