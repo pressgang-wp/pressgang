@@ -42,9 +42,11 @@ class PressGang {
 	 * This method is a convenience wrapper around the ControllerFactory's render method.
 	 * It allows for easy rendering of pages using the specified parameters.
 	 *
-	 * @param array $params An associative array of parameters which can include the template, controller class, and twig template.
+	 * @param string|null $template
+	 * @param string|null $controller
+	 * @param string|null $twig
 	 */
-	public static function render( ?string $template = null, ?string $controller = null, ?string $twig = null ) {
+	public static function render( ?string $template = null, ?string $controller = null, ?string $twig = null ): void {
 		ControllerFactory::render( $template, $controller, $twig );
 	}
 }
