@@ -28,7 +28,7 @@ class TimberMapper {
 				foreach ( $field['value'] as $sub_field ) {
 					$mapped_sub_field = [];
 					foreach ( $sub_field as $key => $value ) {
-						$mapped_sub_field[ $key ] = self::map_field( $value );
+						$mapped_sub_field[ $key ] = self::map_field( \get_sub_field_object( $key ) );
 					}
 					$items[] = $mapped_sub_field;
 				}
@@ -48,7 +48,7 @@ class TimberMapper {
 				if ( is_array( $field['value'] ) ) {
 					$nested_items = [];
 					foreach ( $field['value'] as $sub_key => $sub_value ) {
-						$nested_items[ $sub_key ] = self::map_field( $sub_value );
+						$nested_items[ $sub_key ] = self::map_field( \get_sub_field_object( $sub_key )  );
 					}
 
 					return $nested_items;
