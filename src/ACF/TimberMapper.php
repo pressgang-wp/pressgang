@@ -4,26 +4,33 @@ namespace PressGang\ACF;
 
 use Timber\Timber;
 
+/**
+ * Class TimberMapper
+ *
+ * Maps ACF fields to corresponding Timber objects.
+ *
+ * @package PressGang\ACF
+ */
 class TimberMapper {
 
 	/**
-	 * Maps ACF fields to corresponding Timber objects.
+	 * Maps an ACF field to a corresponding Timber object.
 	 *
 	 * @param array $field The ACF field array.
 	 *
-	 * @return mixed The corresponding Timber object or the original value if no mapping is defined.
+	 * @return mixed The corresponding Timber object, nested array of objects, or the original value.
 	 */
 	public static function map_field( array $field ): mixed {
 		switch ( $field['type'] ) {
 			case 'repeater':
 			case 'flexible_content':
 				$items = [];
-				foreach ( $field['value'] as $subField ) {
-					$mappedSubField = [];
-					foreach ( $subField as $key => $value ) {
-						$mappedSubField[ $key ] = self::map_field( $value );
+				foreach ( $field['value'] as $sub_field ) {
+					$mapped_sub_field = [];
+					foreach ( $sub_field as $key => $value ) {
+						$mapped_sub_field[ $key ] = self::map_field( $value );
 					}
-					$items[] = $mappedSubField;
+					$items[] = $mapped_sub_field;
 				}
 
 				return $items;
@@ -37,17 +44,14 @@ class TimberMapper {
 			case 'image':
 				return Timber::get_image( $field['value'] );
 
-			// Add additional mappings for other ACF field types if needed
-
 			default:
-				// Handle nested fields
 				if ( is_array( $field['value'] ) ) {
-					$nestedItems = [];
+					$nested_items = [];
 					foreach ( $field['value'] as $sub_key => $sub_value ) {
-						$nestedItems[ $sub_key ] = self::map_field( $sub_value );
+						$nested_items[ $sub_key ] = self::map_field( $sub_value );
 					}
 
-					return $nestedItems;
+					return $nested_items;
 				}
 
 				return $field['value'];
