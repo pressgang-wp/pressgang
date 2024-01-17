@@ -20,7 +20,7 @@ class Blocks extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for Gutenberg blocks.
 	 */
-	public function initialize( array $config ) {
+	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_action( 'init', [ $this, 'register_block_types' ] );
 	}
