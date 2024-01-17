@@ -12,8 +12,8 @@
  *
  * Example configuration array:
  * return [
- *     'timber-library/timber.php',
- *     'woocommerce/woocommerce.php'
+ *     'timber-library/timber.php' => "The Timber plugin must be active to use this theme.",
+ *     'woocommerce/woocommerce.php' => '' // Default message
  *     ... additional required plugins ...
  * ];
  *
