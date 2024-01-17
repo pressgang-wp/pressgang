@@ -3,25 +3,28 @@
 class Gallery {
 
 	public function __construct() {
-		add_theme_support( 'gallery' );
-		add_filter( 'post_gallery', [ 'PressGang\Libarary\Gallery', 'setup' ], 10, 2 );
+		\add_theme_support( 'gallery' );
+		\add_filter( 'post_gallery', [ $this, 'setup' ], 10, 2 );
 
-		// add scripts to loader queue
-		Scripts::$scripts['magnific'] = [
-			'src'       => get_template_directory_uri() . '/js/src/vendor/magnific-popup/jquery.magnific-popup.js',
-			'deps'      => [ 'jquery' ],
-			'ver'       => '1.0.1',
-			'in_footer' => true
-		];
+		\wp_register_script(
+			'magnific',
+			\get_template_directory_uri() . '/js/src/vendor/magnific-popup/jquery.magnific-popup.js',
+			[ 'jquery' ], // Dependencies
+			'1.0.1', // Version
+			true // In footer
+		);
 
-		// load pressgang.js which inits the magnific popup
-		Scripts::$scripts['magnific-gallery'] = [
-			'src'       => get_template_directory_uri() . '/js/src/custom/gallery.js',
-			'deps'      => [ 'magnific' ],
-			'ver'       => '0.1',
-			'in_footer' => true
-		];
+		\wp_enqueue_script( 'magnific' );
 
+		\wp_register_script(
+			'magnific-gallery',
+			\get_template_directory_uri() . '/js/src/custom/gallery.js',
+			[ 'magnific' ], // Dependencies
+			'0.1', // Version
+			true // In footer
+		);
+
+		\wp_enqueue_script( 'magnific-gallery' );
 	}
 
 	public function setup( $output, $attr ) {
