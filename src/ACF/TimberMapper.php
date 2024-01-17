@@ -24,16 +24,7 @@ class TimberMapper {
 		switch ( $field['type'] ) {
 			case 'repeater':
 			case 'flexible_content':
-				$items = [];
-				foreach ( $field['value'] as $sub_field ) {
-					$mapped_sub_field = [];
-					foreach ( $sub_field as $key => $value ) {
-						$mapped_sub_field[ $key ] = self::map_field( \get_sub_field_object( $key ) );
-					}
-					$items[] = $mapped_sub_field;
-				}
-
-				return $items;
+				return self::map_sub_fields( $field['value'] );
 
 			case 'post_object':
 				return Timber::get_post( $field['value'] );
@@ -46,15 +37,25 @@ class TimberMapper {
 
 			default:
 				if ( is_array( $field['value'] ) ) {
-					$nested_items = [];
-					foreach ( $field['value'] as $sub_key => $sub_value ) {
-						$nested_items[ $sub_key ] = self::map_field( \get_sub_field_object( $sub_key )  );
-					}
-
-					return $nested_items;
+					return self::map_sub_fields( $field['value'] );;
 				}
 
 				return $field['value'];
 		}
+	}
+
+	/**
+	 * Map ACF Sub Fields
+	 * @see https://www.advancedcustomfields.com/resources/get_sub_field_object/
+	 * @param array $sub_fields
+	 *
+	 * @return array
+	 */
+	public static function map_sub_fields( array $sub_fields ): array {
+		foreach ( $sub_fields as &$sub_field ) {
+			$sub_field['value'] = self::map_field( \get_sub_field_object( $sub_field['key'] ) );
+		}
+
+		return $sub_fields;
 	}
 }
