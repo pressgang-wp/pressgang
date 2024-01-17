@@ -33,16 +33,16 @@ class Blocks extends ConfigurationSingleton {
 	 */
 	public function register_block_types(): void {
 
-		foreach ( $this->config as $path => $settings ) {
+		foreach ( $this->config as $block_path => $args ) {
 
 			// Check for block definition in child theme
-			$child_theme_path  = \get_stylesheet_directory() . $path;
-			$parent_theme_path = \get_template_directory() . $path;
+			$child_theme_path  = \get_stylesheet_directory() . $block_path;
+			$parent_theme_path = \get_template_directory() . $block_path;
 
 			// Determine the correct path to use
 			$block_path = file_exists( $child_theme_path ) ? $child_theme_path : $parent_theme_path;
 
-			\register_block_type( $block_path );
+			\register_block_type( $block_path, $args );
 		}
 	}
 
