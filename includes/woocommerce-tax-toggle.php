@@ -24,11 +24,11 @@ class WooCommerceTaxToggle {
 		add_filter( 'timber/twig', [ $this, 'add_to_twig' ], 100, 2 );
 
 		add_filter( 'option_woocommerce_tax_display_shop', [
-			'\PressGang\Libarary\WooCommerceTaxToggle',
+			$this,
 			'woocommerce_tax_display_shop'
 		], 10, 2 );
 		add_filter( 'option_woocommerce_tax_display_cart', [
-			'\PressGang\Libarary\WooCommerceTaxToggle',
+			$this,
 			'woocommerce_tax_display_shop'
 		], 10, 2 );
 
