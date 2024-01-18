@@ -59,7 +59,7 @@ class TimberMapper {
 
 	/**
 	 * Map ACF Sub Fields
-	 * 
+	 *
 	 * @see https://www.advancedcustomfields.com/resources/get_sub_field_object/
 	 *
 	 * @param array $key
