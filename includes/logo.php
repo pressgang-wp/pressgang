@@ -25,7 +25,7 @@ class Logo {
 	 *
 	 * @param \WP_Customize_Manager $wp_customize The WP_Customize_Manager instance.
 	 */
-	protected function add_to_customizer( $wp_customize ): void {
+	public function add_to_customizer( WP_Customize_Manager $wp_customize ): void {
 
 		if ( ! $wp_customize->get_section( 'logo' ) ) {
 			// Add a new section for Logo settings
