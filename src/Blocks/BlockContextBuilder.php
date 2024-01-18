@@ -39,7 +39,6 @@ class BlockContextBuilder {
 
 		$context['block'] = $block;
 
-		/*
 		// Retrieve all ACF custom fields for the Block
 		if ( $fields = \get_field_objects() ) {
 			foreach ( $fields as $field ) {
@@ -48,7 +47,6 @@ class BlockContextBuilder {
 				$context[ $field['name'] ] = TimberMapper::map_field( $field );
 			}
 		}
-		*/
 
 		return $context;
 	}

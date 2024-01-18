@@ -22,9 +22,6 @@ class TimberMapper {
 	 */
 	public static function map_field( array $field ): mixed {
 		switch ( $field['type'] ) {
-			case 'repeater':
-			case 'flexible_content':
-				return self::map_sub_fields( $field['value'] );
 
 			case 'post_object':
 				return Timber::get_post( $field['value'] );
@@ -35,9 +32,25 @@ class TimberMapper {
 			case 'image':
 				return Timber::get_image( $field['value'] );
 
+			case 'repeater':
+			case 'flexible_content':
+				foreach ( $field['value'] as &$row ) {
+					foreach ( $row as $key => &$sub_field ) {
+						var_dump( $sub_field );
+						// $sub_field['value'] = self::map_field( $sub_field );
+					}
+				}
+
+				return $field['value'];
+
 			default:
-				if ( is_array( $field['value'] ) ) {
-					return self::map_sub_fields( $field['value'] );
+
+				var_dump( $field['type'] );
+
+				return $field['value'];
+
+				if ( isset( $field['key'] ) && is_string( $field['key'] ) ) {
+					return self::map_sub_fields( $field['key'] );
 				}
 
 				return $field['value'];
@@ -46,16 +59,19 @@ class TimberMapper {
 
 	/**
 	 * Map ACF Sub Fields
+	 * 
 	 * @see https://www.advancedcustomfields.com/resources/get_sub_field_object/
-	 * @param array $sub_fields
 	 *
-	 * @return array
+	 * @param array $key
+	 *
+	 * @return mixed
 	 */
-	public static function map_sub_fields( array $sub_fields ): array {
-		foreach ( $sub_fields as &$sub_field ) {
-			$sub_field['value'] = self::map_field( \get_sub_field_object( $sub_field['key'] ) );
+	public static function map_sub_fields( string $key ): mixed {
+		if ( $sub_field_object = \get_sub_field_object( $key ) ) {
+			return self::map_field( $sub_field_object );
 		}
 
-		return $sub_fields;
+		return $sub_field_object;
+
 	}
 }
