@@ -34,24 +34,19 @@ class TimberMapper {
 
 			case 'repeater':
 			case 'flexible_content':
-				foreach ( $field['value'] as &$row ) {
-					foreach ( $row as $key => &$sub_field ) {
-						var_dump( $sub_field );
-						// $sub_field['value'] = self::map_field( $sub_field );
-					}
-				}
+				// foreach ( $field['value'] as &$row ) {
+				// foreach ( $row as $key => &$sub_field ) {
+				// $sub_field['value'] = self::map_field( $sub_field );
+				// }
+				// }
 
 				return $field['value'];
 
 			default:
 
-				var_dump( $field['type'] );
-
-				return $field['value'];
-
-				if ( isset( $field['key'] ) && is_string( $field['key'] ) ) {
-					return self::map_sub_fields( $field['key'] );
-				}
+				// if ( isset( $field['key'] ) && is_string( $field['key'] ) ) {
+				// return self::map_sub_fields( $field['key'] );
+				// }
 
 				return $field['value'];
 		}
@@ -62,7 +57,7 @@ class TimberMapper {
 	 *
 	 * @see https://www.advancedcustomfields.com/resources/get_sub_field_object/
 	 *
-	 * @param array $key
+	 * @param string $key
 	 *
 	 * @return mixed
 	 */
