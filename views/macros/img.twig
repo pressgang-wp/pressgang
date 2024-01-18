@@ -1,6 +1,6 @@
 {% macro picture(thumbnail, sizes=[1920], lqip_size=40, alt, class, quality=100, img_styles=[]) %}
 
-	{% set pathinfo = thumbnail.get_pathinfo() %}
+	{% set pathinfo = thumbnail.pathinfo %}
 
 	{% set sizes = sizes is iterable ? sizes|sort : sizes %}
 
