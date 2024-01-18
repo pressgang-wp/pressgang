@@ -3,80 +3,68 @@
 namespace PressGang\Controllers;
 
 use Doctrine\Inflector\InflectorFactory;
+use Timber\Pagination;
 use Timber\PostQuery;
 
 /**
  * Class PostsController
  *
+ * Controller for handling post listings in a WordPress theme.
+ * Extends the AbstractController to add specific functionalities for post archives, categories, taxonomies, and custom post types.
+ *
  * @package PressGang
  */
 class PostsController extends AbstractController {
 
-	/**
-	 * @var
-	 */
-	protected $posts;
-	protected $post_type;
-	protected $page_title;
-	protected $pagination;
+	protected string $post_type;
+	protected string $page_title;
+	protected PostQuery $posts;
+	protected Pagination $pagination;
 
 	/**
-	 * __construct
+	 * PostsController constructor.
 	 *
-	 * PostsController constructor
+	 * Initializes the controller for handling posts with a specified template and post type.
+	 * Dynamically determines the appropriate template based on the current query context.
 	 *
-	 * @param string $template
+	 * @see https://developer.wordpress.org/themes/basics/template-hierarchy/
+	 *
+	 * @param string|null $template The template file to use for rendering the posts. Defaults to null, which triggers automatic template determination.
+	 * @param string|null $post_type The specific post type to handle. Defaults to null, which uses the current queried post type.
 	 */
-	public function __construct( $template = null, $post_type = null ) {
+	public function __construct( $template = null, string $post_type = null ) {
 
 		global $wp_query;
 
-		if ( ! $post_type && isset( $wp_query->query['post_type'] ) ) {
-			$post_type = $wp_query->query['post_type'];
-		}
-
-		if ( ! $post_type && $temp = \get_post_type() ) {
-			$post_type = $temp;
-		}
-
-		$this->post_type = $post_type;
+		// Set post_type from the parameter, or fall back to the global query or current post type
+		$this->post_type = $post_type ?: ( $wp_query->query['post_type'] ?? \get_post_type() );
 
 		if ( ! $template ) {
-			// try to guess the view for custom post types
-
+			// Try to guess the template
 			if ( \is_category() ) {
 				$template = 'category.twig';
 			} else if ( \is_tax() ) {
-
-				$obj      = \get_queried_object();
-				$template = sprintf( "taxonomy-%s.twig", $obj->taxonomy );
-
-				// check template exits
-				$caller = \Timber\LocationManager::get_calling_script_dir( 1 );
-				$loader = new \Timber\Loader( $caller );
-				$file   = $loader->choose_template( $template );
-
-				if ( ! $file ) {
-					$template = 'taxonomy.twig';
-				}
-
-			} else if ( is_search() ) {
+				$taxonomy = \get_queried_object()->taxonomy;
+				$template = sprintf( "taxonomy%s.twig", $taxonomy === 'tag' ? '' : "-{$taxonomy}" );
+			} else if ( \is_search() ) {
 				$template = 'search.twig';
 			} else {
 				$template = sprintf( "archive%s.twig", $this->post_type === 'post' ? '' : "-{$this->post_type}" );
 			}
-
 		}
 
 		parent::__construct( $template );
 	}
 
 	/**
-	 * get_posts
+	 * Get the posts for the current query.
 	 *
-	 * @return mixed
+	 * Retrieves the posts based on the current WordPress query and caches them for later use.
+	 *
+	 * @see https://timber.github.io/docs/v2/reference/timber-postquery/
+	 * @return PostQuery The Timber PostQuery object representing the current set of posts.
 	 */
-	protected function get_posts() {
+	protected function get_posts(): PostQuery {
 		if ( empty( $this->posts ) ) {
 			global $wp_query;
 			$this->posts = new PostQuery( $wp_query );
@@ -86,15 +74,19 @@ class PostsController extends AbstractController {
 	}
 
 	/**
-	 * get_context
+	 * Get the context for the template rendering.
 	 *
-	 * @return mixed
+	 * Extends the base get_context method from AbstractController, adding posts, page title, and pagination data
+	 * to the context for use in the template.
+	 *
+	 * @return array The context array with additional data for the posts.
 	 */
 	protected function get_context(): array {
 		$this->context['page_title'] = $this->get_page_title();
 
-		$this->context['posts']      = $this->get_posts();
 		$this->context['pagination'] = $this->get_pagination();
+		$this->context['posts']      = $this->get_posts();
+		
 
 		if ( $this->post_type ) {
 			$inflector = InflectorFactory::create()->build();
@@ -107,11 +99,13 @@ class PostsController extends AbstractController {
 	}
 
 	/**
-	 * get_page_title
+	 * Get the page title for the current archive.
 	 *
-	 * @return string|void
+	 * Retrieves and caches the title for the current post archive, category, taxonomy, or custom post type.
+	 *
+	 * @return string The page title for the current archive view.
 	 */
-	protected function get_page_title() {
+	protected function get_page_title(): string {
 
 		if ( empty( $this->page_title ) ) {
 			$this->page_title = \get_the_archive_title();
@@ -121,11 +115,14 @@ class PostsController extends AbstractController {
 	}
 
 	/**
-	 * get_pagination
+	 * Get the pagination data for the current posts query.
 	 *
-	 * @return mixed
+	 * Retrieves and caches the pagination data based on the current post query.
+	 *
+	 * @see https://timber.github.io/docs/v2/guides/pagination/
+	 * @return Pagination Pagination data for the current set of posts.
 	 */
-	protected function get_pagination() {
+	protected function get_pagination(): Pagination {
 
 		if ( empty( $this->pagination ) ) {
 			$this->pagination = $this->get_posts()->pagination();
