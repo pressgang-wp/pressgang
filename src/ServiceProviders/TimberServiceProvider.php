@@ -42,7 +42,7 @@ class TimberServiceProvider {
 		\add_filter( 'timber/context', [ $this, 'add_to_context' ] );
 
 		// Add to Twig functions
-		\add_filter( 'timber/twig', [ $this, 'add_twig_extensions' ] );
+		\add_filter( 'timber/twig', [ $this, 'add_to_twig' ] );
 	}
 
 	/**
