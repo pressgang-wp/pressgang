@@ -13,11 +13,13 @@ use Twig\TwigFunction;
  * Implements the TwigExtensionManagerInterface to add single post related functions to the Twig environment.
  * This class focuses on providing functionalities specific to single post pages in a WordPress context.
  *
+ * @see https://timber.github.io/docs/v2/guides/extending-twig/#adding-functionality-with-the-twig-environment-filter
  * @package PressGang\TwigExtensions
  */
 class SinglePostExtensionManager implements TwigExtensionManagerInterface {
 
 	use HasNoGlobals;
+	use HasNoFilters;
 
 	/**
 	 * Adds functions related to single posts to the Twig environment.
@@ -33,8 +35,8 @@ class SinglePostExtensionManager implements TwigExtensionManagerInterface {
 		if ( \is_single() ) {
 			$post = Timber::get_post();
 			if ( is_a( $post, Post::class ) ) {
-				$twig->add_function( new TwigFunction( 'get_latest_posts', [ $post, 'get_latest_posts' ] ) );
-				$twig->add_function( new TwigFunction( 'get_related_posts', [ $post, 'get_related_posts' ] ) );
+				$twig->addFunction( new TwigFunction( 'get_latest_posts', [ $post, 'get_latest_posts' ] ) );
+				$twig->addFunction( new TwigFunction( 'get_related_posts', [ $post, 'get_related_posts' ] ) );
 			}
 		}
 	}

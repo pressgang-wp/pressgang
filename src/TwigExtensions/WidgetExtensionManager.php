@@ -11,11 +11,13 @@ use Twig\TwigFunction;
  * Implements TwigExtensionManagerInterface to add widget-related Twig functions to the Twig environment.
  * This class is responsible for dynamically adding functions for each registered and active sidebar (widget area) in WordPress.
  *
+ * @see https://timber.github.io/docs/v2/guides/extending-twig/#adding-functionality-with-the-twig-environment-filter
  * @package PressGang\TwigExtensions
  */
 class WidgetExtensionManager implements TwigExtensionManagerInterface {
 
 	use HasNoGlobals;
+	use HasNoFilters;
 
 	/**
 	 * This method iterates through all registered sidebars and adds a Twig function for each active sidebar.
