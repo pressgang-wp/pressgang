@@ -40,7 +40,7 @@ class AcfOptionsContextManager implements ContextManagerInterface {
 
 				// Map the field objects to values and Timber objects where appropriate
 				foreach ( $fields as $key => &$field ) {
-					$field = TimberMapper::mapFieldToTimber( $field );
+					$field['value'] = TimberMapper::map_field( $field );
 				}
 
 				\wp_cache_set( 'theme_options', $fields );
