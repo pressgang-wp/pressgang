@@ -29,12 +29,9 @@ class WidgetExtensionManager implements TwigExtensionManagerInterface {
 		global $wp_registered_sidebars;
 
 		foreach ( $wp_registered_sidebars as $sidebar_id => $sidebar ) {
-
-			if ( \is_active_sidebar( $sidebar_id ) ) {
-				$twig->addFunction( new TwigFunction( "widget_{$sidebar_id}", function () use ( $sidebar_id ) {
-					return \Timber::get_widgets( $sidebar_id );
-				} ) );
-			}
+			$twig->addFunction( new TwigFunction( "widget_{$sidebar_id}", function () use ( $sidebar_id ) {
+				return \Timber::get_widgets( $sidebar_id );
+			} ) );
 		}
 
 	}
