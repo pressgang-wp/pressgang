@@ -65,7 +65,7 @@ abstract class AbstractController implements ControllerInterface {
 	 * Applies filters to the template path and context, executes an action before rendering,
 	 * and then renders the template using Timber.
 	 */
-	public function render() {
+	public function render(): void {
 
 		$this->context = $this->get_context();
 
