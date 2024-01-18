@@ -29,9 +29,9 @@ class ControllerFactory {
 	 *
 	 * @param string $template The filename of the template.
 	 *
-	 * @return object An instance of the inferred controller class.
+	 * @return ControllerInterface An instance of the inferred controller class.
 	 */
-	public static function infer_controller_class( string $template ) {
+	public static function infer_controller_class( string $template ): ControllerInterface {
 		$template         = basename( $template, '.php' );
 		$controller_class = self::to_filename( $template ) . 'Controller';
 
@@ -66,7 +66,7 @@ class ControllerFactory {
 	 * @param string|null $controller The controller class to use.
 	 * @param string|null $twig The Twig template to use.
 	 */
-	public static function render( ?string $template = null, ?string $controller = null, ?string $twig = null ) {
+	public static function render( ?string $template = null, ?string $controller = null, ?string $twig = null ): void {
 		$controller = $controller ?? self::infer_controller_class( $template );
 
 		$controller = self::make( $controller, $twig );
