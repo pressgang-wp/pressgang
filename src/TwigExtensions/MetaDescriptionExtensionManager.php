@@ -11,11 +11,13 @@ use Twig\TwigFunction;
  *
  * Implements the TwigExtensionManagerInterface to add meta description related functions to the Twig environment.
  *
+ * @see https://timber.github.io/docs/v2/guides/extending-twig/#adding-functionality-with-the-twig-environment-filter
  * @package PressGang\TwigExtensions
  */
 class MetaDescriptionExtensionManager implements TwigExtensionManagerInterface {
 
 	use HasNoGlobals;
+	use HasNoFilters;
 
 	/**
 	 * Adds a meta description function to the Twig environment.

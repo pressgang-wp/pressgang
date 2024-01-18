@@ -3,6 +3,7 @@
 namespace PressGang\TwigExtensions;
 
 use Twig\Environment;
+use Twig\TwigFunction;
 
 /**
  * Class WooCommerceExtensionManager
@@ -10,11 +11,13 @@ use Twig\Environment;
  * Implements TwigExtensionManagerInterface to add WooCommerce-specific Twig functions to the Twig environment.
  * This class checks for WooCommerce's existence and adds relevant Twig functions accordingly.
  *
+ * @see https://timber.github.io/docs/v2/guides/extending-twig/#adding-functionality-with-the-twig-environment-filter
  * @package PressGang\TwigExtensions
  */
 class WooCommerceExtensionManager implements TwigExtensionManagerInterface {
 
 	use HasNoGlobals;
+	use HasNoFilters;
 
 	/**
 	 * Adds WooCommerce specific functions to the Twig environment.
@@ -26,7 +29,7 @@ class WooCommerceExtensionManager implements TwigExtensionManagerInterface {
 	 */
 	public function add_twig_functions( Environment $twig ): void {
 		if ( class_exists( 'WooCommerce' ) ) {
-			$twig->add_function( [ $this, 'timber_set_product' ] );
+			$twig->addFunction( new TwigFunction( 'timber_set_product', [ $this, 'timber_set_product' ] ) );
 		}
 	}
 
@@ -46,8 +49,8 @@ class WooCommerceExtensionManager implements TwigExtensionManagerInterface {
 	public function timber_set_product( $post ): void {
 		global $product;
 
-		if ( is_woocommerce() ) {
-			$product = wc_get_product( $post->ID );
+		if ( \is_woocommerce() ) {
+			$product = \wc_get_product( $post->ID );
 		}
 	}
 
