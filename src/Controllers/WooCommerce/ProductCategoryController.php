@@ -21,7 +21,7 @@ class ProductCategoryController extends TaxonomyController {
 	 *
 	 * @param string $template The template file to use for rendering the product category archive. Defaults to 'woocommerce/archive.twig'.
 	 */
-	public function __construct( $template = 'woocommerce/product-categories.twig' ) {
+	public function __construct( $template = 'woocommerce/archive.twig' ) {
 		parent::__construct( $template );
 	}
 
