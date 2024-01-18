@@ -17,17 +17,17 @@ class Scripts extends ConfigurationSingleton {
 	 *
 	 * @var array
 	 */
-	public $scripts = [];
+	public array $scripts = [];
 
 	/**
 	 * @var array
 	 */
-	public $async = [];
+	public array $async = [];
 
 	/**
 	 * @var array
 	 */
-	public $defer = [];
+	public array $defer = [];
 
 	/**
 	 * Initializes the Scripts class with configuration data.
