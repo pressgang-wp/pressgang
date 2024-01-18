@@ -64,7 +64,7 @@ class TimberServiceProvider {
 	 * Registers Twig extension managers for adding functions and globals to the Twig environment.
 	 *
 	 * Adds various Twig extension managers to the internal collection.
-	 * 
+	 *
 	 * TODO should be defined in Config
 	 */
 	protected function register_twig_extension_managers(): void {
