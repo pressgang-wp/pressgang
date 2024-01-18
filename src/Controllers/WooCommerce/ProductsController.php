@@ -2,90 +2,47 @@
 
 namespace PressGang\Controllers\WooCommerce;
 
-use PressGang\Controllers\AbstractController;
+use PressGang\Controllers\PostsController;
 use Timber\Timber;
 
 /**
  * Class ProductsController
  *
+ * Controller for handling WooCommerce product archive pages.
+ * Extends the PostsController to add specific functionalities for WooCommerce product listings.
+ *
  * @package PressGang
  */
-class ProductsController extends AbstractController {
+class ProductsController extends PostsController {
 
-	protected $product_categories = [];
+	use HasShopSidebar;
+	use HasProducts;
 
 	/**
-	 * __construct
+	 * ProductsController constructor.
 	 *
-	 * WCProductController constructor
+	 * Initializes the controller for handling WooCommerce product archives with a specified template.
 	 *
-	 * @param string $template
+	 * @param string $template The template file to use for rendering the product archive. Defaults to 'woocommerce/archive.twig'.
 	 */
 	public function __construct( $template = 'woocommerce/archive.twig' ) {
 		parent::__construct( $template );
 	}
 
 	/**
-	 * get_product_categories
+	 * Get the context for the template rendering.
 	 *
-	 * @return array
-	 */
-	public function get_product_categories() {
-
-		if ( empty( $this->product_categories ) ) {
-
-			$term      = get_queried_object();
-			$parent_id = empty( $term->term_id ) ? 0 : $term->term_id;
-
-			$product_categories = get_categories( apply_filters( 'woocommerce_product_subcategories_args', [
-				'parent'       => $parent_id,
-				'menu_order'   => 'ASC',
-				'hide_empty'   => true,
-				'hierarchical' => 1,
-				'taxonomy'     => 'product_cat',
-				'pad_counts'   => 1
-			] ) );
-
-			foreach ( $product_categories as &$category ) {
-				$category = Timber::get_term( $category );
-				$meta     = get_term_meta( $category->term_id );
-				if ( isset( $meta['thumbnail_id'][0] ) ) {
-					$category->thumbnail = Timber::get_image( $meta['thumbnail_id'][0] );
-				}
-			}
-
-			$this->product_categories = $product_categories;
-
-		}
-
-		return $this->product_categories;
-	}
-
-	/**
-	 * get_posts
+	 * Extends the base get_context method from AbstractController, adding specific data
+	 * like products, widget sidebar, and shop page display options to the context for rendering in the template.
 	 *
-	 * @return mixed
+	 * @return array The context array with additional data for the product archive page.
 	 */
-	protected function get_posts() {
-		if ( empty( $this->posts ) ) {
-			$this->posts = \Timber::get_posts();
-		}
-
-		return $this->posts;
-	}
-
-	/**
-	 * get_context
-	 *
-	 */
-	public function get_context() {
+	protected function get_context(): array {
 		parent::get_context();
 
-		$this->context['products']          = $this->context['posts'] = $this->get_posts();
-		$this->context['widget_sidebar']    = Timber::get_widgets( 'shop_sidebar' );
-		$this->context['shop_page_display'] = get_option( 'woocommerce_shop_page_display' );
-
-		// $this->context['product_categories'] = $this->get_product_categories();
+		$this->context['products']          = $this->get_products();
+		$this->context['shop_sidebar']      = $this->get_sidebar();
+		$this->context['shop_page_display'] = \get_option( 'woocommerce_shop_page_display' );
 
 		return $this->context;
 	}
