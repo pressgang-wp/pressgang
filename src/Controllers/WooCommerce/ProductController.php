@@ -3,8 +3,6 @@
 namespace PressGang\Controllers\WooCommerce;
 
 use PressGang\Controllers\PostController;
-use Timber\Post;
-use Timber\Timber;
 
 /**
  * Class ProductController
