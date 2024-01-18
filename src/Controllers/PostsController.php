@@ -86,7 +86,6 @@ class PostsController extends AbstractController {
 
 		$this->context['pagination'] = $this->get_pagination();
 		$this->context['posts']      = $this->get_posts();
-		
 
 		if ( $this->post_type ) {
 			$inflector = InflectorFactory::create()->build();
