@@ -36,7 +36,7 @@ class Loader {
 	 * Iterates through configuration, dynamically loads each component,
 	 * and initializes it if the component class implements the ConfigurationInterface.
 	 */
-	protected function load_components( ConfigLoaderInterface $config_loader ) {
+	protected function load_components( ConfigLoaderInterface $config_loader ): void {
 
 		Config::set_loader( $config_loader );
 
@@ -58,7 +58,7 @@ class Loader {
 	 *
 	 * @return string The fully qualified class name.
 	 */
-	protected function config_key_to_configuration_class( $key ) {
+	protected function config_key_to_configuration_class( $key ): string {
 		$studlyCase = u( $key )->camel()->title( true );
 
 		return "PressGang\\Configuration\\" . $studlyCase;
