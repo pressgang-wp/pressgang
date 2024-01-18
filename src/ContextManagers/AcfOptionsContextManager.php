@@ -31,7 +31,7 @@ class AcfOptionsContextManager implements ContextManagerInterface {
 	 */
 	public function add_to_context( array $context ): array {
 
-		if ( function_exists( 'get_fields' ) ) {
+		if ( function_exists( 'get_fields' ) && config( 'acf-options' ) ) {
 
 			$fields = \wp_cache_get( 'theme_options' );
 
