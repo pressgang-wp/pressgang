@@ -37,7 +37,7 @@ class TimberMapper {
 
 			default:
 				if ( is_array( $field['value'] ) ) {
-					return self::map_sub_fields( $field['value'] );;
+					return self::map_sub_fields( $field['value'] );
 				}
 
 				return $field['value'];
