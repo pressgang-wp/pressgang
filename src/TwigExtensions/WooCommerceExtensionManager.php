@@ -46,14 +46,19 @@ class WooCommerceExtensionManager implements TwigExtensionManagerInterface {
 	 *
 	 * @param $post
 	 *
-	 * @return \WC_Product
+	 * @return \WC_Product|null
 	 */
-	public function timber_set_product( $post ): \WC_Product {
+	public function timber_set_product( $post ): \WC_Product|null {
+		// Check if the post object is valid and its post type is 'product'
+		if ( ! $post || ! isset( $post->ID ) || get_post_type( $post->ID ) !== 'product' ) {
+			return null;
+		}
+
+		// Set the global product
 		global $product;
 
-		if ( \is_woocommerce() ) {
-			$product = \wc_get_product( $post->ID );
-		}
+		// Retrieve and return the WC_Product object
+		$product = \wc_get_product( $post->ID );
 
 		return $product;
 	}
