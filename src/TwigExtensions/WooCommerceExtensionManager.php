@@ -44,14 +44,17 @@ class WooCommerceExtensionManager implements TwigExtensionManagerInterface {
 	 *
 	 * @see https://timber.github.io/docs/v2/guides/woocommerce/#tease-product
 	 *
-	 * @param $post The post object to set the WooCommerce product for.
+	 * @param $post
+	 *
+	 * @return \WC_Product
 	 */
-	public function timber_set_product( $post ): void {
+	public function timber_set_product( $post ): \WC_Product {
 		global $product;
 
 		if ( \is_woocommerce() ) {
 			$product = \wc_get_product( $post->ID );
 		}
-	}
 
+		return $product;
+	}
 }
