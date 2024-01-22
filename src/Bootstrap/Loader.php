@@ -73,9 +73,20 @@ class Loader {
 		foreach ( self::INCLUDE_FOLDERS as $folder ) {
 			if ( $files = Config::get( $folder ) ) {
 				foreach ( $files as $file ) {
-					$filePath = \get_template_directory() . "/{$folder}/{$file}.php";
-					if ( file_exists( $filePath ) ) {
-						require_once $filePath;
+					// Define the directories to search in
+					$directories = [
+						\get_stylesheet_directory(),
+						\get_template_directory()
+					];
+
+					$directories = \apply_filters( "pressgang_include_directories", $directories, $folder, $file );
+
+					foreach ( $directories as $directory ) {
+						$filePath = "{$directory}/{$folder}/{$file}.php";
+						if ( file_exists( $filePath ) ) {
+							require_once $filePath;
+							break; // Break out of the loop once the file is found and included
+						}
 					}
 				}
 			}
