@@ -97,14 +97,16 @@ class Styles extends ConfigurationSingleton {
 	/**
 	 * Adds 'preconnect' attribute to the style tag if specified.
 	 *
-	 * @param string $html The HTML of the style tag.
+	 * @see https://developer.wordpress.org/reference/hooks/style_loader_tag/
+	 * @hooked style_loader_tag
+	 * @param string $tag The HTML of the style tag.
 	 * @param string $handle The style's handle.
 	 * @param string $href The stylesheet's href attribute.
 	 * @param string $media The stylesheet's media attribute.
 	 *
 	 * @return string The modified HTML of the style tag.
 	 */
-	public function add_style_attrs( string $html, string $handle, string $href, string $media ): string {
+	public function add_style_attrs( string $tag, string $handle, string $href, string $media ): string {
 
 		if ( isset( $this->preconnect[ $handle ] ) ) {
 			$url = $this->preconnect[ $handle ];
@@ -113,12 +115,13 @@ class Styles extends ConfigurationSingleton {
 			$escaped_url = \esc_url( $url );
 
 			// Check if 'preconnect' already exists in the HTML
-			if ( strpos( $html, 'preconnect' ) === false ) {
+			if ( strpos( $tag, 'preconnect' ) === false ) {
 				// Insert the 'preconnect' attribute into the HTML
-				$html = str_replace( ' href', ' preconnect="' . $escaped_url . '" href', $html );
+				$tag = str_replace( ' href', ' preconnect="' . $escaped_url . '" href', $tag );
 			}
+
 		}
 
-		return $html;
+		return $tag;
 	}
 }
