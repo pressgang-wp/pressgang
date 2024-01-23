@@ -10,7 +10,7 @@ namespace PressGang\Bootstrap;
  * Each PHP file in the specified configuration directory should return an associative array of settings.
  */
 class FileConfigLoader implements ConfigLoaderInterface {
-	private $configPath;
+	private string $config_path;
 
 	/**
 	 * Constructor for FileConfigLoader.
@@ -18,10 +18,10 @@ class FileConfigLoader implements ConfigLoaderInterface {
 	 * Initializes a new instance of the FileConfigLoader with a specified path to configuration files.
 	 * The path is relative to the root of the theme directories (both parent and child themes).
 	 *
-	 * @param string $configPath The relative path to the configuration files within the theme directories.
+	 * @param string $config_path The relative path to the configuration files within the theme directories.
 	 */
-	public function __construct( string $configPath = '/config/' ) {
-		$this->configPath = $configPath;
+	public function __construct( string $config_path = '/config/' ) {
+		$this->config_path = $config_path;
 	}
 
 	/**
@@ -36,18 +36,18 @@ class FileConfigLoader implements ConfigLoaderInterface {
 		$settings = [];
 
 		// List of directories to load settings from
-		$themePaths = [
-			\get_template_directory() . $this->configPath, // Parent theme path
-			\get_stylesheet_directory() . $this->configPath // Child theme path
+		$theme_paths = [
+			\get_template_directory() . $this->config_path, // Parent theme path
+			\get_stylesheet_directory() . $this->config_path // Child theme path
 		];
 
 		// Apply a filter to allow modification of the config directories
-		$themePaths = \apply_filters( 'pressgang_config_directories', $themePaths );
+		$theme_paths = \apply_filters( 'pressgang_config_directories', $theme_paths );
 
 		// Loop through each directory and load settings
-		foreach ( $themePaths as $path ) {
-			$pathSettings = $this->load_from_directory( $path );
-			$settings     = array_merge( $settings, $pathSettings );
+		foreach ( $theme_paths as $path ) {
+			$path_settings = $this->load_from_directory( $path );
+			$settings      = array_merge( $settings, $path_settings );
 		}
 
 		return $settings;
@@ -63,25 +63,25 @@ class FileConfigLoader implements ConfigLoaderInterface {
 	 *
 	 * Each configuration file should return an associative array of settings.
 	 *
-	 * @param string $directoryPath The path to the directory from which to load the settings.
+	 * @param string $directory_path The path to the directory from which to load the settings.
 	 *
 	 * @return array The array of settings loaded from the specified directory.
 	 */
-	private function load_from_directory( string $directoryPath ): array {
-		$loadedSettings = [];
+	private function load_from_directory( string $directory_path ): array {
+		$loaded_settings = [];
 
-		if ( is_dir( $directoryPath ) ) {
-			$configFiles = glob( $directoryPath . '*.php' );
+		if ( is_dir( $directory_path ) ) {
+			$config_files = glob( $directory_path . '*.php' );
 
-			foreach ( $configFiles as $file ) {
-				$settingKey = basename( $file, '.php' );
-				$config     = require $file;
+			foreach ( $config_files as $file ) {
+				$setting_key = basename( $file, '.php' );
+				$config      = require $file;
 				if ( is_array( $config ) ) {
-					$loadedSettings[ $settingKey ] = $config;
+					$loaded_settings[ $setting_key ] = $config;
 				}
 			}
 		}
 
-		return $loadedSettings;
+		return $loaded_settings;
 	}
 }
