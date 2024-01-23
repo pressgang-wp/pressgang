@@ -57,7 +57,7 @@ class Snippets extends ConfigurationSingleton {
 			}
 
 			if ( $class && in_array( SnippetInterface::class, class_implements( $class ) ) ) {
-				( new $class( $args ) );
+				new $class( $args );
 			}
 		}
 	}
