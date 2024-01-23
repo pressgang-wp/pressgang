@@ -40,5 +40,4 @@ class MenuContextManager implements ContextManagerInterface {
 
 		return $context;
 	}
-
 }
