@@ -7,8 +7,6 @@ use PressGang\Snippets\SnippetInterface;
 
 class Snippets extends ConfigurationSingleton {
 
-	const SNIPPETS_CONFIG = 'snippets';
-
 	/**
 	 * @param array $config
 	 *
@@ -47,7 +45,7 @@ class Snippets extends ConfigurationSingleton {
 
 		$child_theme_namespace = get_child_theme_namespace();
 
-		foreach ( Config::get( self::SNIPPETS_CONFIG ) as $snippet => $args ) {
+		foreach ( $this->config as $snippet => $args ) {
 			// Check if a fully qualified namespace is provided in the config
 			if ( str_contains( $snippet, '\\' ) ) {
 				$class = $snippet;
@@ -59,7 +57,7 @@ class Snippets extends ConfigurationSingleton {
 			}
 
 			if ( $class && in_array( SnippetInterface::class, class_implements( $class ) ) ) {
-				( new $class($args) );
+				( new $class( $args ) );
 			}
 		}
 	}
