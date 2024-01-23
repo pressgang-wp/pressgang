@@ -37,6 +37,7 @@ class TimberServiceProvider {
 
 		$this->register_context_managers();
 		$this->register_twig_extension_managers();
+		$this->register_snippets_template_locations();
 
 		// Add context filters
 		\add_filter( 'timber/context', [ $this, 'add_to_context' ] );
@@ -98,6 +99,7 @@ class TimberServiceProvider {
 	 * Iterates through each registered context manager and applies its modifications to the Timber context.
 	 *
 	 * @param array $context The current Timber context array.
+	 *
 	 * @return array The modified Timber context array.
 	 */
 	public function add_to_context( array $context ): array {
@@ -114,6 +116,7 @@ class TimberServiceProvider {
 	 * Iterates through each registered Twig extension manager and applies its additions of functions and globals to the Twig environment.
 	 *
 	 * @param Environment $twig The Twig environment.
+	 *
 	 * @return Environment The Twig environment with added extensions.
 	 */
 	public function add_to_twig( Environment $twig ): Environment {
@@ -123,5 +126,33 @@ class TimberServiceProvider {
 		}
 
 		return $twig;
+	}
+
+	/**
+	 * Registers the template locations for PressGang Snippets in Timber.
+	 *
+	 * This function adds a custom path to the Timber template locations, allowing Timber to locate
+	 * and use Twig templates stored in the PressGang Snippets repository. It dynamically constructs
+	 * the path to the 'views' directory of the PressGang Snippets, located in the child theme's
+	 * 'vendor' directory, and adds it to Timber's recognized paths.
+	 *
+	 * The function checks if the directory exists before adding it to Timber's paths to ensure
+	 * that only valid directories are used, thereby preventing errors from non-existent paths.
+	 *
+	 * @return void
+	 */
+	public function register_snippets_template_locations(): void {
+
+		\add_filter( 'timber/locations', function ( $paths ) {
+			$snippets_views_path = get_stylesheet_directory() . '/vendor/pressgang-wp/pressgang-snippets/views';
+
+			// Check if the directory exists before adding it to the paths
+			if ( is_dir( $snippets_views_path ) ) {
+				$paths[] = $snippets_views_path;
+			}
+
+			return $paths;
+		} );
+
 	}
 }
