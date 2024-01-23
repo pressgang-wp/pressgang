@@ -30,14 +30,12 @@ class PostsController extends AbstractController {
 	 * @see https://developer.wordpress.org/themes/basics/template-hierarchy/
 	 *
 	 * @param string|null $template The template file to use for rendering the posts. Defaults to null, which triggers automatic template determination.
-	 * @param string|null $post_type The specific post type to handle. Defaults to null, which uses the current queried post type.
 	 */
-	public function __construct( $template = null, string $post_type = null ) {
+	public function __construct( string|null $template = null ) {
 
 		global $wp_query;
 
-		// Set post_type from the parameter, or fall back to the global query or current post type
-		$this->post_type = $post_type ?: ( $wp_query->query['post_type'] ?? \get_post_type() );
+		$this->post_type = $wp_query->query['post_type'] ?? \get_post_type();
 
 		if ( ! $template ) {
 			// Try to guess the template

@@ -15,7 +15,7 @@ class PostController extends PageController {
 	/**
 	 * @var string
 	 */
-	protected $post_type;
+	protected string $post_type;
 
 	/**
 	 * PostController constructor.
@@ -28,9 +28,9 @@ class PostController extends PageController {
 	 *                              Defaults to a template based on the post type.
 	 * @param string|null $post_type Optional post type. Defaults to the current post type.
 	 */
-	public function __construct( string $template = null, string $post_type = null ) {
+	public function __construct( string|null $template = 'single.twig' ) {
 
-		$this->post_type = $post_type ?? \get_post_type();
+		$this->post_type = \get_post_type();
 
 		if ( ! $template ) {
 			$post_type_slug = str_replace( '_', '-', $this->post_type );

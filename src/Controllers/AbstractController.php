@@ -34,7 +34,7 @@ abstract class AbstractController implements ControllerInterface {
 	 *
 	 * @var bool|int
 	 */
-	protected $expires = false;
+	protected int|bool $expires = false;
 
 	/**
 	 * Constructor for the AbstractController class.
@@ -43,7 +43,7 @@ abstract class AbstractController implements ControllerInterface {
 	 *
 	 * @param string|null $template Optional. The path or name of the Twig template.
 	 */
-	public function __construct( $template = null ) {
+	public function __construct( string|null $template = null ) {
 		$this->template = $template;
 		$this->context  = Timber::context();
 	}

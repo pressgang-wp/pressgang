@@ -19,7 +19,7 @@ interface ControllerInterface {
 	 *
 	 * @param string|null $template Optional Twig template file name to be used with the controller.
 	 */
-	public function __construct( $template = null );
+	public function __construct( string|null $template = null );
 
 	/**
 	 * Render the view associated with this controller.

@@ -23,9 +23,9 @@ class ProductController extends PostController {
 	 *
 	 * Initializes the controller for handling single product pages with a specified template.
 	 *
-	 * @param string $template The template file to use for rendering the single product. Defaults to 'woocommerce/single-product.twig'.
+	 * @param string|null $template The template file to use for rendering the single product. Defaults to 'woocommerce/single-product.twig'.
 	 */
-	public function __construct( $template = 'woocommerce/single-product.twig' ) {
+	public function __construct( string|null $template = 'woocommerce/single-product.twig' ) {
 		parent::__construct( $template );
 	}
 

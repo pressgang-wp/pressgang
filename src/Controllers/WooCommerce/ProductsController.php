@@ -22,9 +22,9 @@ class ProductsController extends PostsController {
 	 *
 	 * Initializes the controller for handling WooCommerce product archives with a specified template.
 	 *
-	 * @param string $template The template file to use for rendering the product archive. Defaults to 'woocommerce/archive.twig'.
+	 * @param string|null $template The template file to use for rendering the product archive. Defaults to 'woocommerce/archive.twig'.
 	 */
-	public function __construct( $template = 'woocommerce/archive.twig' ) {
+	public function __construct( string|null $template = 'woocommerce/archive.twig' ) {
 		parent::__construct( $template );
 	}
 

@@ -14,9 +14,9 @@ class SearchController extends PostsController {
 	 *
 	 * Adds a default $template 'search.twig'
 	 *
-	 * @param string $template
+	 * @param string|null $template
 	 */
-	public function __construct( $template = 'search.twig' ) {
+	public function __construct( string|null $template = 'search.twig' ) {
 		parent::__construct( $template );
 	}
 
