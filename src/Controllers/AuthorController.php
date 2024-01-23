@@ -11,15 +11,15 @@ use Timber\Timber;
  */
 class AuthorController extends AbstractController {
 
-	protected $author;
-	protected $posts;
+	protected mixed $author;
+	protected mixed $posts;
 
 	/**
 	 * AuthorController constructor
 	 *
-	 * @param string $template
+	 * @param string|null $template
 	 */
-	public function __construct( $template = 'author.twig' ) {
+	public function __construct( string|null $template = 'author.twig' ) {
 		parent::__construct( $template );
 	}
 

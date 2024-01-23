@@ -26,9 +26,9 @@ class PageController extends AbstractController {
 	 *
 	 * Initializes the controller with the specified Twig template, or defaults to 'page.twig'.
 	 *
-	 * @param string $template The path or name of the Twig template to be rendered. Defaults to 'page.twig'.
+	 * @param string|null $template The path or name of the Twig template to be rendered. Defaults to 'page.twig'.
 	 */
-	public function __construct( $template = 'page.twig' ) {
+	public function __construct( string|null $template = 'page.twig' ) {
 		parent::__construct( $template );
 	}
 

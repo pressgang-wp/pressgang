@@ -27,11 +27,10 @@ class TaxonomyController extends PostsController {
 	 *
 	 * Initializes the controller for handling taxonomies with a specified template and post type.
 	 *
-	 * @param string $template The template file to use for rendering the taxonomy. Defaults to 'taxonomy.twig'.
-	 * @param string|null $post_type The post type associated with the taxonomy. Defaults to null.
+	 * @param string|null $template The template file to use for rendering the taxonomy. Defaults to 'taxonomy.twig'.
 	 */
-	public function __construct( $template = 'taxonomy.twig', $post_type = null ) {
-		parent::__construct( $template, $post_type );
+	public function __construct( string|null $template = 'taxonomy.twig' ) {
+		parent::__construct( $template );
 	}
 
 	/**

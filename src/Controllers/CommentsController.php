@@ -16,9 +16,9 @@ class CommentsController extends AbstractController {
 	/**
 	 * CommentsController constructor
 	 *
-	 * @param string $template
+	 * @param string|null $template
 	 */
-	public function __construct( $template = 'comments.twig' ) {
+	public function __construct( string|null $template = 'comments.twig' ) {
 		parent::__construct( $template );
 
 		// allow comment replies, see https://codex.wordpress.org/Function_Reference/comment_reply_link

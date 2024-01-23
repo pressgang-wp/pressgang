@@ -17,9 +17,9 @@ class NotFoundController extends PageController {
 	 *
 	 * Initializes a NotFoundController with a default template for 404 pages.
 	 *
-	 * @param string $template Optional Twig template file name for rendering the 404 page. Defaults to '404.twig'.
+	 * @param string|null $template Optional Twig template file name for rendering the 404 page. Defaults to '404.twig'.
 	 */
-	public function __construct( $template = '404.twig' ) {
+	public function __construct( string|null $template = '404.twig' ) {
 		parent::__construct( $template );
 	}
 
