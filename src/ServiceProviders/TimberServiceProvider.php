@@ -148,7 +148,7 @@ class TimberServiceProvider {
 
 			// Check if the directory exists before adding it to the paths
 			if ( is_dir( $snippets_views_path ) ) {
-				$paths[] = $snippets_views_path;
+				$paths['snippets'] = [ $snippets_views_path ];
 			}
 
 			return $paths;
