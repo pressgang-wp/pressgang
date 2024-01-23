@@ -144,7 +144,7 @@ class TimberServiceProvider {
 	public function register_snippets_template_locations(): void {
 
 		\add_filter( 'timber/locations', function ( $paths ) {
-			$snippets_views_path = get_stylesheet_directory() . '/vendor/pressgang-wp/pressgang-snippets/views';
+			$snippets_views_path = \get_stylesheet_directory() . '/vendor/pressgang-wp/pressgang-snippets/views';
 
 			// Check if the directory exists before adding it to the paths
 			if ( is_dir( $snippets_views_path ) ) {
