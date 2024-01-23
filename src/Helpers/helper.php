@@ -48,14 +48,13 @@ function get_child_theme_namespace(): ?string {
 	if ( defined( 'THEMENAMESPACE' ) ) {
 		return THEMENAMESPACE;
 	} else {
-		$composerJsonPath = \get_stylesheet_directory() . '/composer.json';
-		if ( file_exists( $composerJsonPath ) ) {
-			$composerConfig = json_decode( file_get_contents( $composerJsonPath ), true );
-			if ( isset( $composerConfig['autoload']['psr-4'] ) && is_array( $composerConfig['autoload']['psr-4'] ) ) {
+		$composer_json_path = \get_stylesheet_directory() . '/composer.json';
+		if ( file_exists( $composer_json_path ) ) {
+			$composer_config = json_decode( file_get_contents( $composer_json_path ), true );
+			if ( isset( $composer_config['autoload']['psr-4'] ) && is_array( $composer_config['autoload']['psr-4'] ) ) {
 				// Assuming the first key is the namespace you need
-				$namespaces = array_keys( $composerConfig['autoload']['psr-4'] );
-
-				return reset( $namespaces ); // Returns the first namespace
+				$namespaces = array_keys( $composer_config['autoload']['psr-4'] );
+				return rtrim( reset( $namespaces ), '\\' ); // Returns the first namespace trims and slashes
 			}
 		}
 	}
