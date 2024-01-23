@@ -33,7 +33,8 @@ class MenuContextManager implements ContextManagerInterface {
 
 		foreach ( $registered_menus as $location => $description ) {
 			if ( \has_nav_menu( $location ) ) {
-				$context["menu_{$location}"] = Timber::get_menu( $location );
+				$menu = \apply_filters( "pressgang_context_menu_{$location}", Timber::get_menu( $location ) );
+				$context["menu_{$location}"] = $menu;
 			}
 		}
 
