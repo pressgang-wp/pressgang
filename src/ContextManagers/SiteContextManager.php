@@ -46,9 +46,17 @@ class SiteContextManager implements ContextManagerInterface {
 	 * @return string The URL for the stylesheet with versioning.
 	 */
 	protected function get_stylesheet( string $stylesheet ): string {
-		$stylesheetPath    = "/css/$stylesheet";
-		$stylesheetVersion = filemtime( \get_stylesheet_directory() . $stylesheetPath );
+		$stylesheet_path = "/css/$stylesheet";
+		$full_path       = \get_stylesheet_directory() . $stylesheet_path;
 
-		return \get_stylesheet_directory_uri() . $stylesheetPath . "?v=" . $stylesheetVersion;
+		$stylesheet_version = file_exists( $full_path ) ? filemtime( $full_path ) : null;
+
+		$stylesheet_uri = \get_stylesheet_directory_uri() . $stylesheet_path;
+
+		if ( file_exists( $full_path ) ) {
+			$stylesheet_uri .= "?v={$stylesheet_version}";
+		}
+
+		return $stylesheet_uri;
 	}
 }
