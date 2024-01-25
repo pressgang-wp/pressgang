@@ -16,7 +16,7 @@ class ProductController extends PostController {
 
 	use HasShopSidebar;
 
-	protected WC_Product $product;
+	protected \WC_Product $product;
 
 	/**
 	 * ProductController constructor.
@@ -36,9 +36,9 @@ class ProductController extends PostController {
 	 * See WooCommerce documentation for more details on wc_get_product.
 	 *
 	 * @see https://woocommerce.github.io/code-reference/files/woocommerce-includes-wc-product-functions.html#function_wc_get_product
-	 * @return WC_Product The WooCommerce product object.
+	 * @return \WC_Product The WooCommerce product object.
 	 */
-	protected function get_product(): WC_Product {
+	protected function get_product(): \WC_Product {
 		if ( empty( $this->product ) ) {
 			$this->product = \wc_get_product( $this->get_post()->id );
 		}
