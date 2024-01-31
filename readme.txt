@@ -1,4 +1,4 @@
-=== PrimeTools Theme ===
+=== PressGang Parent Theme ===
 Contributors: benedict-w
 Requires at least: WordPress 6.4
 Tested up to: WordPress 6.4.3
