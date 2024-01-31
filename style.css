@@ -1,7 +1,10 @@
 /*
  * Theme Name:   PressGang
  * Theme URI:    https://github.com/pressgang-wp/pressgang
- * Description:  Parent theme framework for WordPress projects using Timber (Twig) templating, and "Convention Over Configuration" principles for rapid WordPress theme prototyping. See - https://github.com/pressgang-wp/pressgang
+ * Description:  PressGang is an advanced parent theme framework for WordPress, now fully compatible with Timber 2.0+ and leveraging Composer for dependency management. Embracing PSR-4 conventions, it offers an efficient and modern approach to class naming and autoloading.
+ 			     This update includes a comprehensive refactor of Snippets, enhancing the development experience.
+ 			     PressGang continues to adhere to the "Convention Over Configuration" philosophy, ensuring rapid prototyping and streamlined theme development. The integration of Timber with Twig templating provides a powerful, yet intuitive toolset for creating sophisticated WordPress sites.
+ 			     Explore more at https://github.com/pressgang-wp/pressgang.
  * Author:       Ben Wallis
  * Author URI:   http://www.benedict-wallis.com
  * Version:      1.0.0
