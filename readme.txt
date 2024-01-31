@@ -7,7 +7,7 @@ Version: 1.0.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 Tags: responsive-layout, accessibility-ready, custom-background, custom-logo, custom-menu, featured-images, theme-options, threaded-comments, translation-ready
-Text Domain: PrimeTools
+Text Domain: PressGang
 
 == Description ==
 PressGang is an advanced parent theme framework for WordPress, now fully compatible with Timber 2.0+ and leveraging Composer for dependency management.
