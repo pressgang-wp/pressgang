@@ -5,23 +5,24 @@ namespace PressGang\Controllers\WooCommerce;
 use PressGang\Controllers\PostsController;
 
 /**
- * Class ProductCategoriesController
+ * Class ProductCategoriesAndProductsController
  *
- * Controller for WooCommerce product categories, extending the base TaxonomyController.
+ * Controller for WooCommerce products and product categories, extending the base PostsController.
  * Provides functionality for rendering category archives with specific enhancements for product categories,
  * such as thumbnail images and sidebar inclusion.
  *
  * @package PressGang
  */
-class ProductCategoriesController extends PostsController {
+class ProductCategoriesAndProductsController extends PostsController {
 
 	use HasShopSidebar;
 	use HasProductCategories;
+	use HasProducts;
 
 	/**
-	 * ProductCategoriesController constructor.
+	 * ProductCategoriesAndProductsController constructor.
 	 *
-	 * Initializes the controller for WooCommerce product categories with a specified template.
+	 * Initializes the controller for WooCommerce products and product categories with a specified template.
 	 *
 	 * @param string|null $template The template file to use for rendering the product category archive. Defaults to 'woocommerce/archive.twig'.
 	 */
@@ -40,6 +41,7 @@ class ProductCategoriesController extends PostsController {
 	protected function get_context(): array {
 		parent::get_context();
 
+		$this->context['products']           = $this->get_products();
 		$this->context['product_categories'] = $this->get_product_categories();
 		$this->context['shop_sidebar']       = $this->get_sidebar();
 		$this->context['shop_page_display']  = \get_option( 'woocommerce_shop_page_display' );

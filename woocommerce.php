@@ -1,26 +1,37 @@
 <?php
 
 use PressGang\Controllers\WooCommerce\{
+	ProductCategoriesAndProductsController,
 	ProductCategoriesController,
 	ProductCategoryController,
+	ProductsController,
 	ProductController,
-	ProductsController
 };
 
-$is_singular_product = \is_singular( 'product' );
-$is_product_category = \is_product_category();
-$shop_display        = \get_option( 'woocommerce_shop_page_display' );
+// Default to ProductsController or handle 'both' case
+$controller = ProductsController::class;
 
 // Determine the controller based on the current page and shop display settings
-if ( $is_singular_product ) {
+if ( \is_singular( 'product' ) ) {
 	$controller = ProductController::class;
-} elseif ( $is_product_category ) {
-	$controller = ProductCategoryController::class;
-} elseif ( $shop_display === 'subcategories' ) {
-	$controller = ProductCategoriesController::class;
-} else {
-	// Default to ProductsController or handle 'both' case here
-	$controller = ProductsController::class;
+} elseif ( \is_product_category() ) {
+	switch (\get_option( 'woocommerce_category_archive_display' ) ) {
+		case 'subcategories':
+			$controller = ProductCategoryController::class;
+			break;
+		case 'both':
+			$controller = ProductCategoriesAndProductsController::class;
+			break;
+	}
+} elseif ( is_shop() ) {
+	switch (\get_option( 'woocommerce_shop_page_display' )) {
+		case 'subcategories':
+			$controller = ProductCategoriesController::class;
+			break;
+		case 'both':
+			$controller = ProductCategoriesAndProductsController::class;
+			break;
+	}
 }
 
 PressGang\PressGang::render( controller: $controller );
