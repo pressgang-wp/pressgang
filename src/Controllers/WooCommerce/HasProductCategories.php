@@ -11,7 +11,7 @@ use Timber\Timber;
  */
 trait HasProductCategories {
 
-	protected array $product_categories = [];
+	protected $product_categories = [];
 
 	/**
 	 * Get the product categories.
@@ -37,12 +37,10 @@ trait HasProductCategories {
 				'pad_counts'   => 1,
 			] );
 
-			$product_categories = \get_categories( $args );
+			$product_categories = Timber::get_terms( $args );
 
 			foreach ( $product_categories as &$category ) {
-				$category     = Timber::get_term( $category->term_id, 'product_cat' );
-				$thumbnail_id = \get_term_meta( $category->term_id, 'thumbnail_id', true );
-				if ( $thumbnail_id ) {
+				if ( $thumbnail_id = $category->meta( 'thumbnail_id' ) ) {
 					$category->thumbnail = Timber::get_image( $thumbnail_id );
 				}
 			}
