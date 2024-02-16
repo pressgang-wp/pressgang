@@ -2,7 +2,7 @@
 
 namespace PressGang\Controllers\WooCommerce;
 
-use PressGang\Controllers\PostsController;
+use PressGang\Controllers\AbstractController;
 
 /**
  * Class ProductCategoriesController
@@ -13,7 +13,7 @@ use PressGang\Controllers\PostsController;
  *
  * @package PressGang
  */
-class ProductCategoriesController extends PostsController {
+class ProductCategoriesController extends AbstractController {
 
 	use HasShopSidebar;
 	use HasProductCategories;
