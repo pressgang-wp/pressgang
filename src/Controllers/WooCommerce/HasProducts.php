@@ -17,8 +17,6 @@ trait HasProducts {
 	 * Retrieves and caches an array of product objects based on the current WordPress query.
 	 * This method iterates over each post obtained from get_posts() and converts them to WooCommerce product objects.
 	 *
-	 * TODO is Posts enough? Is this performing extra DB queries?
-	 *
 	 * @see https://woocommerce.github.io/code-reference/files/woocommerce-includes-wc-product-functions.html#function_wc_get_product
 	 * @return array An array of WooCommerce product objects.
 	 */
