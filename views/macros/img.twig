@@ -66,6 +66,8 @@
 		{% set w = sizes|last is iterable ? sizes|last[0] : sizes|last %}
 		{% set h = sizes|last is iterable ? sizes|last[1] : 0 %}
 
+		{% set alt = fn('html_entity_decode', alt) %}
+
 		<img
 			src="{{ 'https://via.placeholder.com/%dx%d/333/fff?text=%s'|format(w, h, alt|upper|url_encode) }}"
 			alt="{{ alt|default(img.alt)|e('html_attr') }}"
