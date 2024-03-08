@@ -23,7 +23,7 @@ trait HasGoogleAnalyticsEvent {
 	 * @param string $ga_action The event action (e.g., 'submit').
 	 * @param string $ga_label Optional. The event label for additional categorization.
 	 */
-	public static function maybe_init_ga_event_tracking( string $form_action, string $ga_category, string $ga_action, string $ga_label = '' ): void {
+	public static function maybe_init_ga_event_tracking( string $form_action, string $ga_category = 'Form Submission', string $ga_action = 'submit', string $ga_label = '' ): void {
 		if ( isset( $_POST['action'] ) && $_POST['action'] === $form_action ) {
 			self::$ga_category = $ga_category;
 			self::$ga_action   = $ga_action;
