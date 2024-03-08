@@ -8,23 +8,23 @@ namespace PressGang\Form;
  * Provides reCAPTCHA validation functionality for form submissions.
  * Utilizes Google's reCAPTCHA API to verify user responses.
  *
- * @package PressGang\Contact
+ * @package PressGang\Form
  */
-trait Recaptcha {
+trait HasRecaptcha {
 
 	/**
 	 * Google's reCAPTCHA verification URL.
 	 *
 	 * @var string
 	 */
-	protected static $recaptcha_verify_url = 'https://www.google.com/recaptcha/api/siteverify';
+	protected static string $recaptcha_verify_url = 'https://www.google.com/recaptcha/api/siteverify';
 
 	/**
 	 * Minimum score threshold for reCAPTCHA v3 verification to pass.
 	 *
 	 * @var float
 	 */
-	protected static $min_score = 0.8;
+	protected static float $min_score = 0.8;
 
 	/**
 	 * Verifies the reCAPTCHA response with Google's reCAPTCHA API.
