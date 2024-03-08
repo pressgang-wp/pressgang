@@ -2,17 +2,38 @@
 
 namespace PressGang\Form\Validators;
 
-use PressGang\Form\Recaptcha;
+use PressGang\Form\HasRecaptcha;
 
+/**
+ *
+ */
 class RecaptchaValidator implements ValidatorInterface {
-	use Recaptcha;
+	use HasRecaptcha;
 
+	protected mixed $recaptcha_path;
+
+	/**
+	 * Construct the RecaptchaValidator
+	 *
+	 * @param array|string $recaptcha_path
+	 */
+	public function __construct( array|string $recaptcha_path = 'recaptcha' ) {
+		$this->recaptcha_path = $recaptcha_path;
+	}
+
+	/**
+	 * @return array
+	 */
 	public function validate(): array {
-		if ( ! self::verify_recaptcha( $_POST['recaptcha'] ) ) {
-			return [ \__( "Failed reCAPTCHA verification. Please try again.", THEMENAME ) ];
+
+		$errors    = [];
+		$recaptcha = $this->get_post_data( $this->recaptcha_path );
+
+		if ( ! self::verify_recaptcha( $recaptcha ) ) {
+			$errors[] = \__( "Failed reCAPTCHA verification. Please try again.", THEMENAME );
 		}
 
-		return [];
+		return $errors;
 	}
 }
 
