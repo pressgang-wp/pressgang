@@ -10,7 +10,7 @@ use PressGang\Util\Flash;
  *
  * Handles contact form submissions, including validation, sanitization, and response management.
  *
- * @package PressGang
+ * @package PressGang\Form
  */
 class Contact {
 
