@@ -61,7 +61,7 @@ class Contact {
 
 		\add_action( 'init', [ $this, 'register_hooks' ] );
 		\add_action( 'pressgang_contact_after_successful_submission', [ $this, 'set_success_flash_message' ], 10, 2 );
-		\dd_action( 'pressgang_contact_submission_error', [ $this, 'set_error_flash_message' ], 10, 2 );
+		\add_action( 'pressgang_contact_submission_error', [ $this, 'set_error_flash_message' ], 10, 2 );
 	}
 
 	/**
