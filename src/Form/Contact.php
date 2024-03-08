@@ -1,7 +1,8 @@
 <?php
 
-namespace PressGang\Contact;
+namespace PressGang\Form;
 
+use PressGang\Form\Validators\ValidatorInterface;
 use PressGang\Util\Flash;
 
 /**
@@ -42,6 +43,13 @@ class Contact {
 	protected string $errorMessage;
 
 	/**
+	 * Array to hold validators
+	 *
+	 * @var array
+	 */
+	protected array $validators = [];
+
+	/**
 	 * @param array $args
 	 */
 	public function __construct( array $args ) {
@@ -49,6 +57,7 @@ class Contact {
 		$this->template       = $args['template'] ?? null;
 		$this->successMessage = $args['successMessage'] ?? __( "Thanks for your message. We'll be in touch shortly.", THEMENAME );
 		$this->errorMessage   = $args['errorMessage'] ?? __( "Please correct the errors and try again.", THEMENAME );
+		$this->validators     = $args['validators'] ?? [];
 
 		\add_action( 'init', [ $this, 'register_hooks' ] );
 		\add_action( 'pressgang_contact_after_successful_submission', [ $this, 'set_success_flash_message' ], 10, 2 );
@@ -73,9 +82,6 @@ class Contact {
 
 		\do_action( 'pressgang_contact_before_submission' );
 
-		// Initialize an array to hold potential validation errors
-		$errors = [];
-
 		$to      = \apply_filters( 'pressgang_contact_to_email', \sanitize_email( \get_option( 'admin_email' ) ) );
 		$subject = \apply_filters( 'pressgang_contact_subject', __( "New Contact Message", THEMENAME ) );
 
@@ -85,20 +91,11 @@ class Contact {
 		// Any extra form parameters
 		$params = [];
 
-		if ( isset( $_POST['contact'] ) && is_array( $_POST['contact'] ) ) {
+		if ( ! isset( $_POST['contact'] ) || ! is_array( $_POST['contact'] ) ) {
 			foreach ( $_POST['contact'] as $key => $val ) {
 				switch ( $key ) {
 					case 'email':
 						$email = filter_var( $val, FILTER_SANITIZE_EMAIL );
-						if ( ! $email ) {
-							$errors[ $key ] = 'Invalid email address provided.';
-						}
-						break;
-					case 'message':
-						if ( empty( trim( $val ) ) ) {
-							$errors[ $key ] = ucfirst( $key ) . ' is required.';
-						}
-						$message = \sanitize_text_field( $val );
 						break;
 					default:
 						$params[ $key ] = \sanitize_text_field( $val );
@@ -113,6 +110,11 @@ class Contact {
 			return false;
 		}
 
+		// Initialize an array to hold potential validation errors
+		$errors = $this->run_validators();
+
+		\do_action_ref_array( 'pressgang_contact_form_custom_validation', [ &$errors ] );
+
 		if ( empty( $errors ) ) {
 			$prepared_message = $this->prepare_message( $email, $message, $params );
 			$success          = $this->send_email( $to, $subject, $prepared_message, $email );
@@ -126,6 +128,20 @@ class Contact {
 		}
 
 		$this->redirect_to_referrer();
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function run_validators(): array {
+		$errors = [];
+		foreach ( $this->validators as $validator ) {
+			if ( $validator instanceof ValidatorInterface ) {
+				$errors = array_merge( $errors, $validator->validate() );
+			}
+		}
+
+		return $errors;
 	}
 
 	/**

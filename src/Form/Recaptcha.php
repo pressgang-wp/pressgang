@@ -1,6 +1,6 @@
 <?php
 
-namespace PressGang\Contact;
+namespace PressGang\Form;
 
 /**
  * Trait Recaptcha
@@ -29,34 +29,42 @@ trait Recaptcha {
 	/**
 	 * Verifies the reCAPTCHA response with Google's reCAPTCHA API.
 	 *
+	 * @param $value - the reCAPTCHA form value to validate.
+	 *
 	 * @return bool Returns true if the reCAPTCHA verification is successful and meets the minimum score threshold.
 	 */
-	public static function verify_recaptcha(): bool {
-		$query    = self::build_recatpcha_query();
-		$response = self::get_recaptcha_response( $query );
+	public static function verify_recaptcha( $value ): bool {
+		$secret   = self::get_recaptcha_secret();
+		$response = self::get_recaptcha_response( $secret, $value );
 
 		return self::determine_recaptcha_success( $response );
 	}
 
 	/**
-	 * Retrieves the reCAPTCHA secret key from theme settings.
+	 * Retrieves the sanitized reCAPTCHA secret key from theme settings.
 	 *
-	 * @return string The reCAPTCHA secret key.
+	 * Designed to work with PressGang\Snippets\GoogleRecaptcha for storing the key.
+	 * Override as needed.
+	 *
+	 * @return string The sanitized reCAPTCHA secret key
 	 */
 	protected static function get_recaptcha_secret(): string {
-		return filter_var( \get_theme_mod( 'google-recaptcha-secret', FILTER_SANITIZE_STRING ) );
+		return \sanitize_text_field( \get_theme_mod( 'google-recaptcha-secret' ) );
 	}
 
 	/**
 	 * Sends the verification request to Google's reCAPTCHA API and retrieves the response.
 	 *
+	 * @param $secret - the reCAPTCHA API Secret
+	 * @param $value - the reCAPTCHA Form Value
+	 *
 	 * @return object The decoded JSON response from the reCAPTCHA API.
 	 */
-	protected static function get_recaptcha_response(): object {
+	protected static function get_recaptcha_response( $secret, $value ): object {
 		$response = \wp_remote_post( self::$recaptcha_verify_url, [
 			'body' => [
-				'secret'   => self::get_recaptcha_secret(),
-				'response' => $_POST['recaptcha'],
+				'secret'   => $secret,
+				'response' => $value,
 				'remoteip' => $_SERVER['REMOTE_ADDR']
 			]
 		] );
