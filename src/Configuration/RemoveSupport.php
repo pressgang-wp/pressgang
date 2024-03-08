@@ -20,8 +20,8 @@ class RemoveSupport extends ConfigurationSingleton {
 	 * @param array $config Configuration array for theme support options to remove.
 	 */
 	public function initialize( array $config ): void {
-		foreach ( $config as $key => $args ) {
-			\remove_theme_support( $key, $args );
+		foreach ( $config as $key ) {
+			\remove_theme_support( $key );
 		}
 	}
 }
