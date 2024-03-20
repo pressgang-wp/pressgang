@@ -37,15 +37,22 @@ class AcfOptionsContextManager implements ContextManagerInterface {
 
 			if ( false === $fields ) {
 
-				$fields        = [];
-				$field_objects = \get_field_objects( 'option' );
+				$fields = \wp_cache_get( 'theme_options' );
 
-				// Map the field objects to values and Timber objects where appropriate
-				foreach ( $field_objects as $key => &$field ) {
-					$fields[ $key ] = TimberMapper::map_field( $field );
+				if ( false === $fields ) {
+
+					$fields = [];
+
+					if ( $field_objects = \get_field_objects( 'option' ) ) {
+
+						// Map the field objects to values and Timber objects where appropriate
+						foreach ( $field_objects as $key => &$field ) {
+							$fields[ $key ] = TimberMapper::map_field( $field );
+						}
+
+						\wp_cache_set( 'theme_options', $fields );
+					}
 				}
-
-				\wp_cache_set( 'theme_options', $fields );
 			}
 
 			$context['options'] = $fields;
