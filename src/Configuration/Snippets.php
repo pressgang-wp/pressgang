@@ -53,7 +53,7 @@ class Snippets extends ConfigurationSingleton {
 				// Guess the namespace if not provided
 				$child_class  = $child_theme_namespace ? "$child_theme_namespace\\Snippets\\$snippet" : null;
 				$parent_class = "PressGang\\Snippets\\$snippet";
-				$class        = class_exists( $child_class ) ? $child_class : $parent_class;
+				$class        = ($child_class !== null && class_exists($child_class)) ? $child_class : $parent_class;
 			}
 
 			if ( $class && in_array( SnippetInterface::class, class_implements( $class ) ) ) {
