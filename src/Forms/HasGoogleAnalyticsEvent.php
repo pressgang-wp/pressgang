@@ -1,6 +1,6 @@
 <?php
 
-namespace PressGang\Form;
+namespace PressGang\Forms;
 
 /**
  * Trait HasGoogleAnalyticsEvent

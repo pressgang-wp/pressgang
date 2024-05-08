@@ -1,6 +1,6 @@
 <?php
 
-namespace PressGang\Form\Validators;
+namespace PressGang\Forms\Validators;
 
 interface ValidatorInterface {
 	public function validate(): array;

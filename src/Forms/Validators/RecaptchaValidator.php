@@ -1,8 +1,8 @@
 <?php
 
-namespace PressGang\Form\Validators;
+namespace PressGang\Forms\Validators;
 
-use PressGang\Form\HasRecaptcha;
+use PressGang\Forms\HasRecaptcha;
 
 /**
  *
