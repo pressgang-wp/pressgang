@@ -99,8 +99,7 @@ class MetaDescriptionService {
 	 */
 	private static function get_description_for_post( \WP_Post $post ): string {
 		// Try Yoast SEO first
-		$description = \get_post_meta( $post->ID, '_yoast_wpseo_metadesc',
-			true );
+		$description = \get_post_meta( $post->ID, '_yoast_wpseo_metadesc', true );
 
 		if ( empty( $description ) ) {
 			// Check for custom field, then expert, then content
@@ -122,12 +121,11 @@ class MetaDescriptionService {
 	 *
 	 * @return string The meta description for the taxonomy term.
 	 */
-	private static function get_description_for_taxonomy( \WP_Term $term
-	): string {
+	private static function get_description_for_taxonomy( \WP_Term $term ): string {
 		// Try Yoast SEO for taxonomy
 		$yoast_meta = \get_option( 'wpseo_taxonomy_meta' );
 		if ( ! empty( $yoast_meta[ $term->taxonomy ][ $term->term_id ]['wpseo_desc'] ) ) {
-			return $yoast_meta[ $term->taxonomy ][ $term->term_id ]['wpseo_desc'];
+			return $yoast_meta[ $term->taxonomy ][ $term->term_id ]['wpseo_desc'] ?? '';
 		}
 
 		return \term_description( $term, \get_query_var( 'taxonomy' ) );
