@@ -1,6 +1,6 @@
 <?php
 
-namespace PressGang\Form\Validators;
+namespace PressGang\Forms\Validators;
 
 trait PostDataAccessor {
 
