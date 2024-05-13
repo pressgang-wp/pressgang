@@ -38,6 +38,9 @@ class PostsController extends AbstractController {
 		$this->post_type = $wp_query->query['post_type'] ?? \get_post_type();
 
 		if ( ! $template ) {
+
+			$template = 'archive.twig';
+
 			// Try to guess the template
 			if ( \is_category() ) {
 				$template = 'category.twig';
@@ -47,7 +50,9 @@ class PostsController extends AbstractController {
 			} else if ( \is_search() ) {
 				$template = 'search.twig';
 			} else {
-				$template = sprintf( "archive%s.twig", $this->post_type === 'post' ? '' : "-{$this->post_type}" );
+				if ( $this->post_type && $this->post_type !== 'post' ) {
+					$template = sprintf( "archive-%s.twig", $this->post_type );
+				}
 			}
 		}
 
