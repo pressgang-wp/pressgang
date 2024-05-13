@@ -12,6 +12,9 @@ namespace PressGang\Bootstrap;
 class FileConfigLoader implements ConfigLoaderInterface {
 	private string $config_path;
 
+	const CACHE_KEY = 'pressgang_config_settings';
+	const CACHE_GROUP = 'config_settings';
+
 	/**
 	 * Constructor for FileConfigLoader.
 	 *
@@ -36,17 +39,42 @@ class FileConfigLoader implements ConfigLoaderInterface {
 	 * @return array The array of loaded settings, either from the cache or from the file system if not cached.
 	 */
 	public function load(): array {
-		$cache_key   = 'pressgang_config_settings';
-		$cache_group = 'config_settings';
-
-		$settings = \wp_cache_get( $cache_key, $cache_group );
+		$settings = $this->get_cached_settings();
 
 		if ( $settings === false ) {
-			$settings = $this->load_configurations();
-			\wp_cache_set( $cache_key, $settings, $cache_group );
+			$settings = $this->load_config();
+			$this->set_cached_settings( $settings );
 		}
 
 		return $settings;
+	}
+
+	/**
+	 * Get the config settings from cache based on the defined caching method.
+	 *
+	 * @return mixed The settings from cache or false if not cached.
+	 */
+	private function get_cached_settings(): mixed {
+		if ( defined( 'PRESSGANG_CONFIG_CACHE' ) && PRESSGANG_CONFIG_CACHE_SECONDS ) {
+			return \get_transient( self::CACHE_KEY );
+		} else {
+			return \wp_cache_get( self::CACHE_KEY, self::CACHE_GROUP );
+		}
+	}
+
+	/**
+	 * Store the config settings in the appropriate cache based on the defined method.
+	 *
+	 * @param array $settings The configuration settings to cache.
+	 *
+	 * @return void
+	 */
+	private function set_cached_settings( array $settings ): void {
+		if ( defined( 'PRESSGANG_CONFIG_CACHE_SECONDS' ) && PRESSGANG_CONFIG_CACHE_SECONDS ) {
+			\set_transient( self::CACHE_KEY, $settings, PRESSGANG_CONFIG_CACHE_SECONDS );
+		} else {
+			\wp_cache_set( self::CACHE_KEY, $settings, self::CACHE_GROUP );
+		}
 	}
 
 	/**
