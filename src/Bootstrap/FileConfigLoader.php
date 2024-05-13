@@ -25,6 +25,31 @@ class FileConfigLoader implements ConfigLoaderInterface {
 	}
 
 	/**
+	 * Loads configuration settings utilizing object caching.
+	 *
+	 * This method attempts to retrieve the configuration settings from the WordPress object cache.
+	 *
+	 * If the settings are not available in the cache, it loads them from the file system,
+	 * specifically from the configuration files located under the parent and child theme directories.
+	 * Once the settings are loaded from the files, they are stored in the cache for future requests.
+	 *
+	 * @return array The array of loaded settings, either from the cache or from the file system if not cached.
+	 */
+	public function load(): array {
+		$cache_key   = 'pressgang_config_settings';
+		$cache_group = 'config_settings';
+
+		$settings = \wp_cache_get( $cache_key, $cache_group );
+
+		if ( $settings === false ) {
+			$settings = $this->load_configurations();
+			\wp_cache_set( $cache_key, $settings, $cache_group );
+		}
+
+		return $settings;
+	}
+
+	/**
 	 * Load configuration settings from theme directories.
 	 *
 	 * This method loads configuration files from the parent theme directory first,
@@ -32,7 +57,7 @@ class FileConfigLoader implements ConfigLoaderInterface {
 	 *
 	 * @return array The array of loaded settings.
 	 */
-	public function load(): array {
+	private function load_config(): array {
 		$settings = [];
 
 		// List of directories to load settings from
