@@ -2,17 +2,9 @@
 
 namespace PressGang\ServiceProviders;
 
-use PressGang\ContextManagers\AcfOptionsContextManager;
+use PressGang\Bootstrap\Config;
 use PressGang\ContextManagers\ContextManagerInterface;
-use PressGang\ContextManagers\SiteContextManager;
-use PressGang\ContextManagers\MenuContextManager;
-use PressGang\ContextManagers\ThemeModsContextManager;
-use PressGang\ContextManagers\WooCommerceContextManager;
-use PressGang\TwigExtensions\GeneralExtensionManager;
-use PressGang\TwigExtensions\MetaDescriptionExtensionManager;
 use PressGang\TwigExtensions\TwigExtensionManagerInterface;
-use PressGang\TwigExtensions\WidgetExtensionManager;
-use PressGang\TwigExtensions\WooCommerceExtensionManager;
 use Twig\Environment;
 
 /**
@@ -27,52 +19,56 @@ use Twig\Environment;
  */
 class TimberServiceProvider {
 	protected array $context_managers = [];
-	protected array $extension_managers = [];
+	protected array $twig_extensions = [];
 
 	/**
 	 * Bootstraps the service provider by registering context managers and Twig extension managers.
-	 *
 	 */
 	public function boot(): void {
-
+		$this->load_config();
 		$this->register_context_managers();
 		$this->register_twig_extension_managers();
 		$this->register_snippets_template_locations();
 
 		// Add context filters
-		\add_filter( 'timber/context', [ $this, 'add_to_context' ] );
+		\add_filter('timber/context', [$this, 'add_to_context']);
 
 		// Add to Twig functions
-		\add_filter( 'timber/twig', [ $this, 'add_to_twig' ] );
+		\add_filter('timber/twig', [$this, 'add_to_twig']);
+	}
+
+	/**
+	 * Loads the configuration files.
+	 */
+	protected function load_config(): void {
+		$this->context_managers = Config::get('context_managers');
+		$this->twig_extensions = Config::get('twig_extensions');
 	}
 
 	/**
 	 * Registers context managers for adding data to the Timber context.
 	 *
 	 * Adds various context managers to the internal collection.
-	 *
-	 * TODO should be defined in Config
 	 */
 	protected function register_context_managers(): void {
-		$this->register_context_manager( new SiteContextManager() );
-		$this->register_context_manager( new MenuContextManager() );
-		$this->register_context_manager( new ThemeModsContextManager() );
-		$this->register_context_manager( new AcfOptionsContextManager() );
-		$this->register_context_manager( new WooCommerceContextManager() );
+		foreach ($this->context_managers as $manager_class) {
+			if (class_exists($manager_class)) {
+				$this->register_context_manager(new $manager_class());
+			}
+		}
 	}
 
 	/**
 	 * Registers Twig extension managers for adding functions and globals to the Twig environment.
 	 *
 	 * Adds various Twig extension managers to the internal collection.
-	 *
-	 * TODO should be defined in Config
 	 */
 	protected function register_twig_extension_managers(): void {
-		$this->register_twig_extension_manager( new GeneralExtensionManager() );
-		$this->register_twig_extension_manager( new MetaDescriptionExtensionManager() );
-		$this->register_twig_extension_manager( new WidgetExtensionManager() );
-		$this->register_twig_extension_manager( new WooCommerceExtensionManager() );
+		foreach ($this->twig_extensions as $manager_class) {
+			if (class_exists($manager_class)) {
+				$this->register_twig_extension_manager(new $manager_class());
+			}
+		}
 	}
 
 	/**
@@ -80,7 +76,7 @@ class TimberServiceProvider {
 	 *
 	 * @param ContextManagerInterface $manager The context manager to be registered.
 	 */
-	protected function register_context_manager( ContextManagerInterface $manager ): void {
+	protected function register_context_manager(ContextManagerInterface $manager): void {
 		$this->context_managers[] = $manager;
 	}
 
@@ -89,8 +85,8 @@ class TimberServiceProvider {
 	 *
 	 * @param TwigExtensionManagerInterface $manager The Twig extension manager to be registered.
 	 */
-	protected function register_twig_extension_manager( TwigExtensionManagerInterface $manager ): void {
-		$this->extension_managers[] = $manager;
+	protected function register_twig_extension_manager(TwigExtensionManagerInterface $manager): void {
+		$this->twig_extensions[] = $manager;
 	}
 
 	/**
@@ -102,9 +98,9 @@ class TimberServiceProvider {
 	 *
 	 * @return array The modified Timber context array.
 	 */
-	public function add_to_context( array $context ): array {
-		foreach ( $this->context_managers as $manager ) {
-			$context = $manager->add_to_context( $context );
+	public function add_to_context(array $context): array {
+		foreach ($this->context_managers as $manager) {
+			$context = $manager->add_to_context($context);
 		}
 
 		return $context;
@@ -119,10 +115,10 @@ class TimberServiceProvider {
 	 *
 	 * @return Environment The Twig environment with added extensions.
 	 */
-	public function add_to_twig( Environment $twig ): Environment {
-		foreach ( $this->extension_managers as $manager ) {
-			$manager->add_twig_functions( $twig );
-			$manager->add_twig_globals( $twig );
+	public function add_to_twig(Environment $twig): Environment {
+		foreach ($this->twig_extensions as $manager) {
+			$manager->add_twig_functions($twig);
+			$manager->add_twig_globals($twig);
 		}
 
 		return $twig;
@@ -142,17 +138,15 @@ class TimberServiceProvider {
 	 * @return void
 	 */
 	public function register_snippets_template_locations(): void {
-
-		\add_filter( 'timber/locations', function ( $paths ) {
+		\add_filter('timber/locations', function ($paths) {
 			$snippets_views_path = \get_stylesheet_directory() . '/vendor/pressgang-wp/pressgang-snippets/views';
 
 			// Check if the directory exists before adding it to the paths
-			if ( is_dir( $snippets_views_path ) ) {
-				$paths[] = [ $snippets_views_path ];
+			if (is_dir($snippets_views_path)) {
+				$paths[] = [$snippets_views_path];
 			}
 
 			return $paths;
-		} );
-
+		});
 	}
 }
