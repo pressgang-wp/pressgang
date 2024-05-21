@@ -41,7 +41,7 @@ class Config {
 	 */
 	public static function get( string $key = null, $default = [] ) {
 		if ( self::$settings === null && self::$loader ) {
-			self::$settings = apply_filters( 'pressgang_get_settings', self::$loader->load() );
+			self::$settings = \apply_filters( 'pressgang_get_settings', self::$loader->load() );
 		}
 
 		if ( $key !== null ) {
