@@ -28,12 +28,13 @@ class PressGang {
 		// Initialize Timber
 		Timber::init();
 
-		// Initialize the Timber service provider
-		$timberServiceProvider = new TimberServiceProvider();
-		$timberServiceProvider->boot();
-
 		// Initialize the Loader to load theme settings
 		new Loader( new FileConfigLoader() );
+
+		// Initialize the Timber service provider
+		// TODO needs mechanism for registering service providers
+		$timberServiceProvider = new TimberServiceProvider();
+		$timberServiceProvider->boot();
 	}
 
 	/**
