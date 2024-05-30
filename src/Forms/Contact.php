@@ -55,7 +55,7 @@ class Contact extends FormSubmission {
 	 */
 	public static function init( array $args ): void {
 		$instance = new self( $args );
-		add_action( 'init', [ $instance, 'register_hooks' ] );
+		\add_action( 'init', [ $instance, 'register_hooks' ] );
 	}
 
 	/**
@@ -63,19 +63,19 @@ class Contact extends FormSubmission {
 	 * Handles the preparation and sending of the contact email.
 	 */
 	protected function process_submission(): void {
-		$to      = apply_filters( 'pressgang_contact_to_email', sanitize_email( get_option( 'admin_email' ) ) );
-		$subject = apply_filters( 'pressgang_contact_subject', __( "New Contact Message", THEMENAME ) );
-		$email   = sanitize_email( $_POST['contact']['email'] ?? '' );
-		$message = sanitize_text_field( $_POST['contact']['message'] ?? '' );
+		$to      = \apply_filters( 'pressgang_contact_to_email', \sanitize_email( \get_option( 'admin_email' ) ) );
+		$subject = \apply_filters( 'pressgang_contact_subject', \__( "New Contact Message", THEMENAME ) );
+		$email   = \sanitize_email( $_POST['contact']['email'] ?? '' );
+		$message = \sanitize_text_field( $_POST['contact']['message'] ?? '' );
 
 		$prepared_message = $this->prepare_message( $email, $message );
 		$success          = $this->send_email( $to, $subject, $prepared_message );
 
 		if ( $success ) {
-			do_action( 'pressgang_contact_after_successful_submission', $email );
+			\do_action( 'pressgang_contact_after_successful_submission', $email );
 			Flash::add( 'contact_form_success', $this->success_message );
 		} else {
-			do_action( 'pressgang_contact_submission_error', 'email_send_failure' );
+			\do_action( 'pressgang_contact_submission_error', 'email_send_failure' );
 			Flash::add( 'contact_form_errors', $this->error_message );
 		}
 	}
@@ -106,8 +106,6 @@ class Contact extends FormSubmission {
 	 * @return bool True if the email was successfully sent, false otherwise.
 	 */
 	protected function send_email( string $to, string $subject, string $message ): bool {
-		$headers = [ 'From: No Reply <noreply@yourdomain.com>' ];
-
-		return wp_mail( $to, $subject, $message, $headers );
+		return \wp_mail( $to, $subject, $message );
 	}
 }
