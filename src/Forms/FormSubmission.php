@@ -3,6 +3,7 @@
 namespace PressGang\Forms;
 
 use PressGang\Forms\Validators\ValidatorInterface;
+use PressGang\Util\Flash;
 
 /**
  * Abstract class FormSubmission
@@ -58,8 +59,34 @@ abstract class FormSubmission {
 			return;
 		}
 
+		$this->flash_input_vars( $_POST );
+		$this->handle_errors( $errors );
+
 		$this->process_submission();
 		$this->redirect_to_referrer();
+	}
+
+	/**
+	 * Recursively sanitizes and flashes input variables with dot notation keys.
+	 *
+	 * This function iterates through the provided input array, sanitizes each value, and stores it in a session flash
+	 * message with keys in dot notation format to preserve the nested structure. The sanitized data is stored using the
+	 * Flash::add method.
+	 *
+	 * @param array $input The input data array, typically $_POST, to be sanitized and flashed.
+	 * @param string $prefix The prefix for dot notation keys, used for nested arrays. Defaults to an empty string.
+	 *
+	 * @return void
+	 */
+	protected function flash_input_vars( array $input, string $prefix = '' ): void {
+		foreach ( $input as $key => $value ) {
+			$full_key = $prefix ? "{$prefix}.{$key}" : $key;
+			if ( is_array( $value ) ) {
+				$this->flash_input_vars( $value, $full_key );
+			} else {
+				Flash::add( $full_key, filter_var( $value, FILTER_SANITIZE_FULL_SPECIAL_CHARS ) );
+			}
+		}
 	}
 
 	/**
