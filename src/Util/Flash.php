@@ -39,18 +39,13 @@ class Flash {
 	 *
 	 * @param string $key The key for the flash message.
 	 * @param mixed|null $default The default value to return if the key does not exist.
-	 * @param bool $clear Whether to clear the flash message after accessing it.
 	 *
 	 * @return mixed The flash message if it exists, or $default if not.
 	 */
-	public static function get( string $key, mixed $default = null, bool $clear = true ): mixed {
+	public static function get( string $key, mixed $default = null ): mixed {
 		self::session();
-
 		$value = $_SESSION['flash'][ $key ] ?? $default;
-
-		if ( $clear && isset( $_SESSION['flash'][ $key ] ) ) {
-			unset( $_SESSION['flash'][ $key ] ); // clear the message after it's been accessed
-		}
+		self::schedule_flash_clear( $key );
 
 		return $value;
 	}
@@ -63,8 +58,18 @@ class Flash {
 	 */
 	public static function add( string $key, mixed $value ): void {
 		self::session();
-
 		$_SESSION['flash'][ $key ] = $value;
+	}
+
+	/**
+	 * Schedules the clearing of a specific flash message.
+	 *
+	 * @param string $key The key of the flash message to clear.
+	 */
+	protected static function schedule_flash_clear( string $key ): void {
+		\add_action( 'shutdown', function () use ( $key ) {
+			self::delete( $key );
+		} );
 	}
 
 	/**
@@ -74,7 +79,6 @@ class Flash {
 	 */
 	public static function delete( string $key ): void {
 		self::session();
-
 		if ( isset( $_SESSION['flash'][ $key ] ) ) {
 			unset( $_SESSION['flash'][ $key ] );
 		}
@@ -85,7 +89,6 @@ class Flash {
 	 */
 	public static function clear(): void {
 		self::session();
-
 		if ( isset( $_SESSION['flash'] ) ) {
 			unset( $_SESSION['flash'] );
 		}
