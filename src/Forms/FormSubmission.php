@@ -52,15 +52,14 @@ abstract class FormSubmission {
 			\wp_die( 'Nonce verification failed', 'Security Check', [ 'response' => 403 ] );
 		}
 
+		$this->flash_input_vars( $_POST );
+		
 		$errors = $this->run_validators();
 		if ( ! empty( $errors ) ) {
 			$this->handle_errors( $errors );
 
 			return;
 		}
-
-		$this->flash_input_vars( $_POST );
-		$this->handle_errors( $errors );
 
 		$this->process_submission();
 		$this->redirect_to_referrer();
