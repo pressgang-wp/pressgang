@@ -87,6 +87,11 @@ class MetaDescriptionService {
 	 * @return string The generated meta description.
 	 */
 	private static function generate_description( $object ): string {
+
+		if ( \is_front_page() ) {
+			return self::get_default_description();
+		}
+
 		if ( \is_single() || \is_page() ) {
 			return self::get_description_for_post( $object ) ?: self::get_default_description();
 		}
