@@ -45,8 +45,17 @@ class ContactSubmission extends FormSubmission {
 		$this->template        = $args['template'] ?? null;
 		$this->success_message = $args['success_message'] ?? __( "Thanks for your message. We'll be in touch shortly.", THEMENAME );
 		$this->error_message   = $args['error_message'] ?? __( "Please correct the errors and try again.", THEMENAME );
+	}
 
-		\add_action( 'init', [ $this, 'register_hooks' ] );
+	/**
+	 * Initializes and registers the class instance into the WordPress lifecycle.
+	 * Should be called from the WordPress theme or plugin setup file.
+	 *
+	 * @param array $args Configuration parameters for setting up the class.
+	 */
+	public static function init( array $args ): void {
+		$instance = new self( $args );
+		\add_action( 'init', [ $instance, 'register_hooks' ] );
 	}
 
 	/**
