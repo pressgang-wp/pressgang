@@ -39,16 +39,16 @@ abstract class FormSubmission {
 	 * Registers hooks for handling form submissions, accessible to logged-in and logged-out users.
 	 */
 	public function register_hooks(): void {
-		add_action( sprintf( 'admin_post_%s', $this->action ), [ $this, 'handle_form_submission' ] );
-		add_action( sprintf( 'admin_post_nopriv_%s', $this->action ), [ $this, 'handle_form_submission' ] );
+		\add_action( sprintf( 'admin_post_%s', $this->action ), [ $this, 'handle_form_submission' ] );
+		\add_action( sprintf( 'admin_post_nopriv_%s', $this->action ), [ $this, 'handle_form_submission' ] );
 	}
 
 	/**
 	 * Handles the form submission, checking the nonce, running validators, and processing the form.
 	 */
 	public function handle_form_submission() {
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], $this->action ) ) {
-			wp_die( 'Nonce verification failed', 'Security Check', [ 'response' => 403 ] );
+		if ( ! \wp_verify_nonce( $_POST['_wpnonce'], $this->action ) ) {
+			\wp_die( 'Nonce verification failed', 'Security Check', [ 'response' => 403 ] );
 		}
 
 		$errors = $this->run_validators();
@@ -83,8 +83,8 @@ abstract class FormSubmission {
 	 */
 	protected function redirect_to_referrer(): void {
 		$query_args   = [ 'submitted' => '1' ];
-		$redirect_url = add_query_arg( $query_args, wp_get_referer() );
-		wp_redirect( $redirect_url );
+		$redirect_url = \add_query_arg( $query_args, \wp_get_referer() );
+		\wp_redirect( $redirect_url );
 		exit;
 	}
 
@@ -94,8 +94,8 @@ abstract class FormSubmission {
 	 * @param array $errors Errors from the form validation.
 	 */
 	protected function handle_errors( array $errors ) {
-		do_action( 'form_submission_error', $errors );
-		wp_die( 'Form submission errors.', 'Form Error', [ 'response' => 400 ] );
+		\do_action( 'form_submission_error', $errors );
+		\wp_die( 'Form submission errors.', 'Form Error', [ 'response' => 400 ] );
 	}
 
 	/**
