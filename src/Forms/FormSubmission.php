@@ -53,7 +53,7 @@ abstract class FormSubmission {
 		}
 
 		$this->flash_input_vars( $_POST );
-		
+
 		$errors = $this->run_validators();
 		if ( ! empty( $errors ) ) {
 			$this->handle_errors( $errors );
