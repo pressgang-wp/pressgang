@@ -3,7 +3,6 @@
 namespace PressGang\SEO;
 
 use Timber\TextHelper;
-use Timber\Timber;
 
 /**
  * Class MetaDescriptionService
@@ -43,14 +42,18 @@ class MetaDescriptionService {
 		}
 
 		$object = \get_queried_object();
+
 		if ( ! $object ) {
 			self::$meta_description = self::get_default_description();
 		} else {
-			$key                    = self::generate_cache_key( $object );
-			self::$meta_description = \wp_cache_get( $key ) ?: self::generate_and_cache_description( $object, $key );
+			$key = self::generate_cache_key( $object );
+
+			if ( ! self::$meta_description = \wp_cache_get( $key ) ) {
+				self::$meta_description = self::generate_and_cache_description( $object, $key );
+			}
 		}
 
-		return \esc_attr( self::sanitize_and_shorten_description( self::$meta_description ) );
+		return self::$meta_description;
 	}
 
 	/**
@@ -74,6 +77,7 @@ class MetaDescriptionService {
 	 */
 	private static function generate_and_cache_description( $object, string $key ): string {
 		$description = self::generate_description( $object );
+		$description = self::sanitize_and_shorten_description( $description );
 		\wp_cache_set( $key, $description );
 
 		return $description;
@@ -123,9 +127,11 @@ class MetaDescriptionService {
 			return $description;
 		}
 
-		$post = Timber::get_post( $post->ID );
+		$description = \get_post_meta( $post->ID, 'meta_description' )
+			?: \get_the_excerpt( $post->ID )
+				?: \apply_filters( 'the_content', \get_the_content( null, false, $post->ID ) );
 
-		return \wptexturize( $post->meta( 'meta_description' ) ) ?: $post->post_excerpt ?: apply_filters( 'the_content', \strip_shortcodes( $post->post_content ) );
+		return $description;
 	}
 
 	/**
