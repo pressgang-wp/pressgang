@@ -122,7 +122,22 @@ abstract class FormSubmission {
 	 */
 	protected function handle_errors( array $errors ) {
 		\do_action( 'form_submission_error', $errors );
-		\wp_die( 'Form submission errors.', 'Form Error', [ 'response' => 400 ] );
+
+		// Flash the errors
+		Flash::add( 'error', $errors );
+
+		// Redirect back to the referrer with an error flag
+		$this->redirect_to_referrer_with_errors();
+	}
+
+	/**
+	 * Redirects the user back to the referring page after encountering errors.
+	 */
+	protected function redirect_to_referrer_with_errors(): void {
+		$query_args   = [ 'submitted' => '0', 'errors' => '1' ];
+		$redirect_url = \add_query_arg( $query_args, \wp_get_referer() );
+		\wp_redirect( $redirect_url );
+		exit;
 	}
 
 	/**
