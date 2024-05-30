@@ -8,7 +8,9 @@ use PressGang\Forms\HasRecaptcha;
  *
  */
 class RecaptchaValidator implements ValidatorInterface {
+
 	use HasRecaptcha;
+	use PostDataAccessor;
 
 	protected mixed $recaptcha_path;
 
