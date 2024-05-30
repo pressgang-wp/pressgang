@@ -23,26 +23,26 @@ class BlockStyleManager {
 	 *
 	 * @return array An array of CSS style strings ready to be used in the block's view.
 	 */
-	public static function get_styles( $block ) {
+	public static function get_styles( array $block ): array {
 
 		$styles = [];
 
 		// Loop through spacing attributes: margin and padding
-		foreach (['margin', 'padding'] as $spacing) {
-			foreach (['top', 'right', 'bottom', 'left'] as $position) {
+		foreach ( [ 'margin', 'padding' ] as $spacing ) {
+			foreach ( [ 'top', 'right', 'bottom', 'left' ] as $position ) {
 
 				// Check if the spacing attribute is set for the current position
-				if (isset($block['style']['spacing'][$spacing][$position])) {
-					$var = $block['style']['spacing'][$spacing][$position];
+				if ( isset( $block['style']['spacing'][ $spacing ][ $position ] ) ) {
+					$var = $block['style']['spacing'][ $spacing ][ $position ];
 
 					// Handle WordPress preset spacing, converting them to CSS variables
-					if (substr($var, 0, 4) === 'var:') {
-						$var = explode('|', $var);
-						$var = sprintf('var(--wp--preset--spacing--%s)', end($var));
+					if ( str_starts_with( $var, 'var:' ) ) {
+						$var = explode( '|', $var );
+						$var = sprintf( 'var(--wp--preset--spacing--%s)', end( $var ) );
 					}
 
 					// Format the style string and add to the styles array
-					$styles[] = sprintf("%s-%s: %s;", $spacing, $position, $var);
+					$styles[] = sprintf( "%s-%s: %s;", $spacing, $position, $var );
 				}
 			}
 		}
