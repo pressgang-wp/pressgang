@@ -73,10 +73,10 @@ class ContactSubmission extends FormSubmission {
 
 		if ( $success ) {
 			\do_action( 'pressgang_contact_after_successful_submission', $email );
-			Flash::add( 'contact_form_success', $this->success_message );
+			Flash::add( 'success', $this->success_message );
 		} else {
 			\do_action( 'pressgang_contact_submission_error', 'email_send_failure' );
-			Flash::add( 'contact_form_errors', $this->error_message );
+			Flash::add( 'error', $this->error_message );
 		}
 	}
 
