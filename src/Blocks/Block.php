@@ -28,11 +28,11 @@ class Block {
 	 *                     necessary information about the block, including its name
 	 *                     and other attributes.
 	 *
-	 * @param $content (string) The block inner HTML (empty).
-	 * @param $is_preview (boolean) True during backend preview render, i.e., when rendering inside the block editor’s content, or rendered inside the block editor when adding a new block, showing a preview when hovering over the new block. This variable is only set to true when is_admin() and current screen is_block_editor() both return true.
-	 * @param $post_id (integer) The Post ID of the current context. This will be the page/post a block is saved against, or if the block is used in a template, synced pattern or query loop block, it will be the post_id of the currently displayed item.
+	 * @param string $content The block inner HTML (empty).
+	 * @param boolean $is_preview True during backend preview render, i.e., when rendering inside the block editor’s content, or rendered inside the block editor when adding a new block, showing a preview when hovering over the new block. This variable is only set to true when is_admin() and current screen is_block_editor() both return true.
+	 * @param integer $post_id The Post ID of the current context. This will be the page/post a block is saved against, or if the block is used in a template, synced pattern or query loop block, it will be the post_id of the currently displayed item.
 	 * @param $wp_block
-	 * @param $context (array) The context provided to the block by the post or its parent block.
+	 * @param array $context The context provided to the block by the post or its parent block.
 	 */
 	public static function render( array $block, string $content, bool $is_preview, int $post_id, $wp_block, array $context ): void {
 		$slug    = substr( $block['name'], strpos( $block['name'], '/' ) + 1 );
