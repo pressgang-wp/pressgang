@@ -42,9 +42,9 @@ class Loader {
 		Config::set_loader( $config_loader );
 
 		foreach ( Config::get() as $key => $config ) {
-			$className = $this->config_key_to_configuration_class( $key );
-			if ( class_exists( $className ) && class_implements( $className, ConfigurationInterface::class ) ) {
-				$instance = $className::get_instance();
+			$class_name = $this->config_key_to_configuration_class( $key );
+			if ( class_exists( $class_name ) && class_implements( $class_name, ConfigurationInterface::class ) ) {
+				$instance = $class_name::get_instance();
 				if ( method_exists( $instance, 'initialize' ) ) {
 					$instance->initialize( $config );
 				}
