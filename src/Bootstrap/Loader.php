@@ -3,31 +3,45 @@
 namespace PressGang\Bootstrap;
 
 use PressGang\Configuration\ConfigurationInterface;
-use function Symfony\Component\String\u;
+use Symfony\Component\String\u;
 
 /**
  * Class Loader
  *
  * Responsible for dynamically loading and initializing theme components based on configuration.
- * It also includes additional files such as 'inc', 'shortcodes', and 'widgets'.
+ * It also includes additional files such as 'shortcodes' and 'widgets'.
  *
  * @package PressGang\Bootstrap
  */
 class Loader {
 
 	/**
-	 * Folders to include additional files from.
+	 * @var ConfigLoaderInterface
 	 */
-	const SHORTCODES_FOLDER = 'shortcodes';
-	const WIDGETS_FOLDER = 'widgets';
+	private ConfigLoaderInterface $configLoader;
+
+	/**
+	 * @var array
+	 */
+	private array $include_folders = [
+		'shortcodes',
+		'widgets',
+	];
 
 	/**
 	 * Loader constructor.
 	 *
-	 * Initializes the loading of components and inclusion of files.
+	 * @param ConfigLoaderInterface $configLoader
 	 */
-	public function __construct( ConfigLoaderInterface $config_loader ) {
-		$this->load_components( $config_loader );
+	public function __construct( ConfigLoaderInterface $configLoader ) {
+		$this->configLoader = $configLoader;
+	}
+
+	/**
+	 * Initialize the loading of components and inclusion of files.
+	 */
+	public function initialize(): void {
+		$this->load_components();
 		$this->include_files();
 	}
 
@@ -37,13 +51,12 @@ class Loader {
 	 * Iterates through configuration, dynamically loads each component,
 	 * and initializes it if the component class implements the ConfigurationInterface.
 	 */
-	protected function load_components( ConfigLoaderInterface $config_loader ): void {
-
-		Config::set_loader( $config_loader );
+	protected function load_components(): void {
+		Config::set_loader( $this->configLoader );
 
 		foreach ( Config::get() as $key => $config ) {
 			$class_name = $this->config_key_to_configuration_class( $key );
-			if ( class_exists( $class_name ) && class_implements( $class_name, ConfigurationInterface::class ) ) {
+			if ( class_exists( $class_name ) && in_array( ConfigurationInterface::class, class_implements( $class_name ) ) ) {
 				$instance = $class_name::get_instance();
 				if ( method_exists( $instance, 'initialize' ) ) {
 					$instance->initialize( $config );
@@ -59,10 +72,10 @@ class Loader {
 	 *
 	 * @return string The fully qualified class name.
 	 */
-	protected function config_key_to_configuration_class( $key ): string {
-		$studly_case = u( $key )->camel()->title( true );
+	protected function config_key_to_configuration_class( string $key ): string {
+		$studlyCase = u( $key )->camel()->title( true );
 
-		return "PressGang\\Configuration\\$studly_case";
+		return "PressGang\\Configuration\\$studlyCase";
 	}
 
 	/**
@@ -71,31 +84,32 @@ class Loader {
 	 * This typically includes files from the 'shortcodes', and 'widgets' directories.
 	 */
 	protected function include_files(): void {
-
-		$includes = [
-			self::SHORTCODES_FOLDER,
-			self::WIDGETS_FOLDER,
-		];
-
-		foreach ( $includes as $folder ) {
+		foreach ( $this->include_folders as $folder ) {
 			if ( $files = Config::get( $folder ) ) {
 				foreach ( $files as $file ) {
-					// Define the directories to search in
-					$directories = [
-						\get_stylesheet_directory(),
-						\get_template_directory()
-					];
-
-					$directories = \apply_filters( "pressgang_include_directories", $directories, $folder, $file );
-
-					foreach ( $directories as $directory ) {
-						$filePath = "{$directory}/{$folder}/{$file}.php";
-						if ( file_exists( $filePath ) ) {
-							require_once $filePath;
-							break; // Break out of the loop once the file is found and included
-						}
-					}
+					$this->include_file( $folder, $file );
 				}
+			}
+		}
+	}
+
+	/**
+	 * Includes a specific file from the specified folder.
+	 *
+	 * @param string $folder
+	 * @param string $file
+	 */
+	protected function include_file( string $folder, string $file ): void {
+		$directories = \apply_filters( "pressgang_include_directories", [
+			\get_stylesheet_directory(),
+			\get_template_directory(),
+		], $folder, $file );
+
+		foreach ( $directories as $directory ) {
+			$filePath = "{$directory}/{$folder}/{$file}.php";
+			if ( file_exists( $filePath ) ) {
+				require_once $filePath;
+				break;
 			}
 		}
 	}
