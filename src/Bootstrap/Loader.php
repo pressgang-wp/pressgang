@@ -3,7 +3,7 @@
 namespace PressGang\Bootstrap;
 
 use PressGang\Configuration\ConfigurationInterface;
-use Symfony\Component\String\u;
+use function Symfony\Component\String\u;
 
 /**
  * Class Loader
