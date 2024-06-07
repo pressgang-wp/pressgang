@@ -24,7 +24,7 @@ class PressGang {
 	 * This method is responsible for setting up various components of the theme, such as Timber,
 	 * service providers, and other necessary initializations for the theme to function correctly.
 	 */
-	public function boot() {
+	public function boot(): void {
 		// Initialize Timber
 		Timber::init();
 
@@ -32,7 +32,6 @@ class PressGang {
 		new Loader( new FileConfigLoader() );
 
 		// Initialize the Timber service provider
-		// TODO needs mechanism for registering service providers
 		$timberServiceProvider = new TimberServiceProvider();
 		$timberServiceProvider->boot();
 	}
