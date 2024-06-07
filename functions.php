@@ -1,5 +1,9 @@
 <?php
 
+use PressGang\Bootstrap\FileConfigLoader;
+use PressGang\Bootstrap\Loader;
+use PressGang\ServiceProviders\TimberServiceProvider;
+
 if ( ! defined( 'THEMENAME' ) ) {
 	define( 'THEMENAME', 'pressgang' );
 }
@@ -10,4 +14,4 @@ if ( file_exists( $autoload_path ) ) {
 }
 
 // Initialize the PressGang theme
-( new PressGang\PressGang() )->boot();
+( new PressGang\PressGang(new Loader(new FileConfigLoader()), new TimberServiceProvider()) )->boot();
