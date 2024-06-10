@@ -33,11 +33,12 @@ class BlockContextBuilder {
 		$context         = [];
 		$context['post'] = Timber::get_post();
 		$context['id']   = $block['id'];
+		$context['block'] = $block;
 
 		$context['classes'] = BlockClassManager::get_css_classes( $block );
 		$context['styles']  = BlockStyleManager::get_styles( $block );
 
-		$context['block'] = $block;
+		$context['anchor'] = $block['anchor'] ?? '';
 
 		// Retrieve all ACF custom fields for the Block
 		if ( $fields = \get_field_objects() ) {
