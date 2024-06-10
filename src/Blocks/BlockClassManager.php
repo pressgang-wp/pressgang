@@ -24,7 +24,7 @@ class BlockClassManager {
 	 *
 	 * @return array An array of CSS class names derived from the block's properties.
 	 */
-	public static function get_css_classes( $block ) {
+	public static function get_css_classes( array $block ): array {
 
 		$classes = [];
 
