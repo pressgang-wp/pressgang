@@ -2,6 +2,8 @@
 
 namespace PressGang\Configuration;
 
+use PressGang\Helpers\ScriptLoader;
+
 /**
  * Class Scripts
  *
@@ -13,23 +15,6 @@ namespace PressGang\Configuration;
 class Scripts extends ConfigurationSingleton {
 
 	/**
-	 * scripts
-	 *
-	 * @var array
-	 */
-	public array $scripts = [];
-
-	/**
-	 * @var array
-	 */
-	public array $async = [];
-
-	/**
-	 * @var array
-	 */
-	public array $defer = [];
-
-	/**
 	 * Initializes the Scripts class with configuration data.
 	 *
 	 * Registers scripts based on provided configuration to be enqueued on the given hooks ( default = 'wp_enqueue_scripts' )
@@ -38,8 +23,8 @@ class Scripts extends ConfigurationSingleton {
 	 */
 	public function initialize( array $config ): void {
 		$this->config = $config;
-		\add_action( 'init', [ $this, 'register_scripts' ] );
-		\add_filter( 'script_loader_tag', [ $this, 'add_script_attrs' ], 10, 3 );
+		\add_action( 'init', [ $this, 'handle_scripts' ] );
+		\add_filter( 'script_loader_tag', [ ScriptLoader::class, 'add_script_attrs' ], 10, 3 );
 	}
 
 	/**
@@ -51,78 +36,10 @@ class Scripts extends ConfigurationSingleton {
 	 *
 	 * @see https://codex.wordpress.org/Function_Reference/wp_register_script
 	 */
-	public function register_scripts(): void {
-		foreach ( $this->config as $key => $args ) {
-
-			$defaults = [
-				'handle'    => $key,
-				'src'       => '',
-				'deps'      => [],
-				'ver'       => null,
-				'in_footer' => false,
-				'hook'      => 'wp_enqueue_scripts',
-				'defer'     => false,
-				'async'     => false,
-			];
-
-			// If $args is a string, treat it as the 'src' of the script
-			if ( is_string( $args ) ) {
-				$args = [ 'src' => $args ];
-			}
-
-			// Merge provided arguments with defaults
-			$args = \wp_parse_args( $args, $defaults );
-
-			if ( isset( $args['src'] ) && $args['src'] ) {
-				// Check if the script source is an absolute URL
-				if ( filter_var( $args['src'], FILTER_VALIDATE_URL ) ) {
-					// Absolute URL, likely an external script
-					$ver = $args['ver'];
-				} else {
-					// Relative path, script is local to the child theme
-					$srcPath = \get_stylesheet_directory() . '/' . ltrim( $args['src'], '/' );
-					$ver     = $args['ver'] ?: ( file_exists( $srcPath ) ? filemtime( $srcPath ) : null );
-				}
-
-				// Register and enqueue scripts
-				\add_action( 'wp_loaded', function () use ( $args, $ver ) {
-					\wp_register_script( $args['handle'], $args['src'], $args['deps'], $ver, $args['in_footer'] );
-				} );
-
-				\add_action( $args['hook'], function () use ( $args ) {
-					\wp_enqueue_script( $args['handle'] );
-				}, 20 );
-			}
-
-			// Track scripts that need 'defer' or 'async' attributes
-			if ( $args['defer'] ) {
-				$this->defer[] = $key;
-			}
-
-			if ( $args['async'] ) {
-				$this->async[] = $key;
-			}
-
+	public function handle_scripts(): void {
+		foreach ( $this->config as $handle => $args ) {
+			ScriptLoader::register_script( $handle, $args );
 		}
 	}
 
-	/**
-	 * Adds 'defer' or 'async' attributes to script tags.
-	 *
-	 * @param string $tag The HTML tag for the script.
-	 * @param string $handle The script's handle.
-	 *
-	 * @return string The modified HTML tag.
-	 */
-	public function add_script_attrs( string $tag, string $handle ): string {
-		if ( in_array( $handle, $this->defer ) ) {
-			$tag = str_replace( ' src', ' defer="defer" src', $tag );
-		}
-
-		if ( in_array( $handle, $this->async ) ) {
-			$tag = str_replace( ' src', ' async="async" src', $tag );
-		}
-
-		return $tag;
-	}
 }
