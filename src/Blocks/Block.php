@@ -2,6 +2,8 @@
 
 namespace PressGang\Blocks;
 
+use PressGang\Helpers\ScriptLoader;
+use PressGang\Helpers\StyleLoader;
 use \Timber\Timber;
 
 /**
@@ -13,6 +15,20 @@ use \Timber\Timber;
  * It is designed to abstract and simplify the process of rendering a block's associated Twig template.
  */
 class Block {
+
+	/**
+	 * Scripts to be registered for the block
+	 *
+	 * @var array
+	 */
+	protected static array $scripts = [];
+
+	/**
+	 * Styles to be registered for the block
+	 *
+	 * @var array
+	 */
+	protected static array $styles = [];
 
 	/**
 	 * Renders a WordPress Block using Timber.
@@ -54,4 +70,64 @@ class Block {
 	protected static function get_context( mixed $block ): array {
 		return BlockContextBuilder::build_context( $block );
 	}
+
+	/**
+	 * Static method called when the block is registered in PressGang via Configuration/Blocks.php.
+	 *
+	 * Checks the static Block class for any scripts which can be registered according to the config pattern,
+	 * as seen in  PressGang\Configuration\Scripts.
+	 *
+	 * @param array $block_settings The settings from the block.json file.
+	 */
+	public static function on_register( array $block_settings ): void {
+
+		foreach ( static::$scripts as $handle => $args ) {
+
+			if ( empty( $args['hook'] ) ) {
+				$args['hook'] = self::get_enqueue_action( $block_settings );
+			}
+
+			ScriptLoader::register_script( $handle, $args );
+		}
+
+		foreach ( static::$styles as $handle => $args ) {
+
+			if ( empty( $args['hook'] ) ) {
+				$args['hook'] = self::get_enqueue_action( $block_settings );
+			}
+
+			StyleLoader::register_style( $handle, $args );
+		}
+
+		if ( ! empty( static::$scripts ) ) {
+			\add_action( 'wp_enqueue_scripts', function () use ( $block_settings ) {
+				self::enqueue_block_assets( $block_settings );
+			} );
+		}
+	}
+
+	/**
+	 * Conditionally enqueues block assets.
+	 *
+	 * This method checks if the block is present in the current post and enqueues the corresponding scripts.
+	 *
+	 * @param array $block_settings The settings from the block.json file.
+	 */
+	public static function enqueue_block_assets( array $block_settings ): void {
+		if ( has_block( $block_settings['name'] ) ) {
+			\do_action( self::get_enqueue_action( $block_settings ) );
+		}
+	}
+
+	/**
+	 * Generate the name for conditionally enqueuing the script when the block is rendered
+	 *
+	 * @param array $block_settings
+	 *
+	 * @return string
+	 */
+	private static function get_enqueue_action( array $block_settings ): string {
+		return sprintf( "pressgang_enqueue_block_scripts_%s", $block_settings['name'] );
+	}
+
 }

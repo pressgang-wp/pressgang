@@ -47,7 +47,7 @@ class Blocks extends ConfigurationSingleton {
 			$block_path = $this->resolve_block_path( $block_path );
 
 			// Register the block type
-			\register_block_type( $block_path, $args );
+			$this->register_block( $block_path, $args );
 		}
 	}
 
@@ -75,5 +75,35 @@ class Blocks extends ConfigurationSingleton {
 		}
 
 		return $resolved_path;
+	}
+
+	/**
+	 * Registers a single block type and triggers a custom action for additional setup.
+	 *
+	 * @param string $block_path The path to the block's registration file (block.json).
+	 * @param array $args Additional arguments for block registration (if any).
+	 */
+	private function register_block( string $block_path, array $args = [] ): void {
+		// Read and decode the block.json file
+		$block_settings = json_decode( file_get_contents( $block_path ), true );
+
+		if ( json_last_error() !== JSON_ERROR_NONE ) {
+			// Handle JSON parse error if necessary
+			return;
+		}
+
+		// Register the block type using the block.json file and any additional arguments
+		\register_block_type( $block_path, $args );
+
+		$block_name = $block_settings['name'];
+
+		// Trigger the on_register method for the block
+		$block_class = $block_settings['acf']['renderCallback'][0];
+		if ( class_exists( $block_class ) && method_exists( $block_class, 'on_register' ) ) {
+			call_user_func( [ $block_class, 'on_register' ], $block_settings );
+		}
+
+		// Trigger custom action based on the block name
+		\do_action( "pressgang_block_registered_{$block_name}", $block_settings );
 	}
 }
