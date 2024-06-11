@@ -1,5 +1,7 @@
 <?php
 
+use PressGang\Util\Flash;
+
 /**
  * Adds a flash message.
  *
@@ -9,8 +11,8 @@
  * @param string $key The key under which to store the message.
  * @param string $message The message content.
  */
-function add_flash_message( $key, $message ) {
-	PressGang\Classes\Flash::add( $key, $message );
+function add_flash_message( string $key, string $message ): void {
+	Flash::add( $key, $message );
 }
 
 /**
@@ -24,8 +26,8 @@ function add_flash_message( $key, $message ) {
  *
  * @return mixed The message if found; otherwise, null.
  */
-function get_flash_message( $key, $clear = true ) {
-	return PressGang\Classes\Flash::get( $key, null, $clear );
+function get_flash_message( string $key, bool $clear = true ): mixed {
+	return Flash::get( $key, null, $clear );
 }
 
 /**
@@ -36,8 +38,8 @@ function get_flash_message( $key, $clear = true ) {
  *
  * @param string $key The key of the message to delete.
  */
-function delete_flash_message( $key ) {
-	PressGang\Classes\Flash::delete( $key );
+function delete_flash_message( string $key ): void {
+	Flash::delete( $key );
 }
 
 /**
@@ -46,6 +48,6 @@ function delete_flash_message( $key ) {
  * Use this function to remove all messages from the session at once,
  * typically done at the start or end of a request lifecycle.
  */
-function clear_flash_messages() {
-	PressGang\Classes\Flash::clear();
+function clear_flash_messages(): void {
+	Flash::clear();
 }
