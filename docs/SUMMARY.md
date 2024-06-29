@@ -1,7 +1,7 @@
 # Table of contents
 
-* [PressGang](README.md)
-* [Config](config.md)
-* [Controllers](controllers.md)
-* [Views](views.md)
-* [Snippets](snippets.md)
+* [PressGang](HOME.md)
+* [Config](CONFIG.md)
+* [Controllers](CONTROLLERS.md)
+* [Views](VIEWS.md)
+* [Snippets](SNIPPETS.md)
