@@ -1,6 +1,14 @@
-# PressGang: A WordPress Parent Theme Framework
+---
+description: >-
+  PressGang anchors your workflow in modern development practices. Build
+  cleaner, faster, smarter themes and navigate your development course to
+  calmers seas!
+---
+
+# PressGang
 
 ## Overview
+
 PressGang is a powerful and flexible WordPress parent theme framework designed to streamline theme development and enhance customization capabilities. As a parent theme framework, PressGang serves as a foundation upon which child themes can be built, allowing developers to create custom themes more efficiently while inheriting the robust features and structure of the PressGang parent theme.
 
 ### Key Features
@@ -15,7 +23,9 @@ PressGang is a powerful and flexible WordPress parent theme framework designed t
 By leveraging these features, PressGang empowers developers to create sophisticated, performant, and maintainable WordPress themes with greater ease and efficiency.
 
 ### Prerequisites
+
 To make the most out of PressGang, familiarity with the following tools is recommended:
+
 * [Timber](http://upstatement.com/timber/)
 * [Twig](http://twig.sensiolabs.org/documentation)
 * [Composer](https://getcomposer.org/)
@@ -23,7 +33,7 @@ To make the most out of PressGang, familiarity with the following tools is recom
 
 ## Getting Started
 
-PressGang is designed as a WordPress _parent theme_ that acts as a library for your [_child theme_](https://codex.wordpress.org/Child_Themes). To get started, you will need to create a child theme.
+PressGang is designed as a WordPress _parent theme_ that acts as a library for your [_child theme_](https://codex.wordpress.org/Child\_Themes). To get started, you will need to create a child theme.
 
 ### Quick Start with PressGang-Child
 
@@ -31,38 +41,38 @@ The fastest way to get up and running is by using our [pressgang-child](https://
 
 To get started:
 
-1. Clone the pressgang-child repository:
+1.  Clone the pressgang-child repository:
+
     ```bash
     git clone https://github.com/pressgang-wp/pressgang-child your-theme-name
     ```
+2.  Navigate into your new theme directory:
 
-2. Navigate into your new theme directory:
     ```bash
     cd your-theme-name
     ```
-
 3. Follow the instructions in the README to set up your environment and start developing your child theme.
 
 ### Manual Setup
 
 If you prefer to start from scratch, you can manually set up your PressGang environment.
 
-1. Clone the PressGang repository:
+1.  Clone the PressGang repository:
+
     ```bash
     git clone https://github.com/pressgang-wp/pressgang
     ```
-
-2. Create your own child theme by following the [WordPress guidelines for child themes](https://codex.wordpress.org/Child_Themes).
+2. Create your own child theme by following the [WordPress guidelines for child themes](https://codex.wordpress.org/Child\_Themes).
 
 ### Composer Installation
 
 You can also include PressGang as a dependency in your project using Composer.
 
-1. Require the PressGang package via Composer:
+1.  Require the PressGang package via Composer:
+
     ```bash
     composer require pressgang-wp/pressgang
     ```
-
 2. Create and configure your child theme to extend the PressGang parent theme.
 
 For detailed instructions on setting up and configuring your child theme, refer to the [PressGang documentation](https://github.com/pressgang-wp/pressgang).
