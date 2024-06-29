@@ -24,7 +24,9 @@ By leveraging these features, PressGang empowers developers to create sophistica
 
 ### Prerequisites
 
-To make the most out of PressGang, familiarity with the following tools is recommended:
+{% hint style="info" %}
+To make the most out of PressGang, familiarity with the following tools is recommended
+{% endhint %}
 
 * [Timber](http://upstatement.com/timber/)
 * [Twig](http://twig.sensiolabs.org/documentation)
@@ -33,7 +35,11 @@ To make the most out of PressGang, familiarity with the following tools is recom
 
 ## Getting Started
 
-PressGang is designed as a WordPress _parent theme_ that acts as a library for your [_child theme_](https://codex.wordpress.org/Child\_Themes). To get started, you will need to create a child theme.
+PressGang is designed as a WordPress _parent theme_ that acts as a library for your [_child theme_](https://codex.wordpress.org/Child\_Themes).
+
+{% hint style="info" %}
+To get started, you will need to create a child theme.
+{% endhint %}
 
 ### Quick Start with PressGang-Child
 
