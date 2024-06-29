@@ -3,6 +3,7 @@
 ## Overview
 
 In PressGang, controllers manage the display logic for different types of pages and templates, often reflecting the WordPress template hierarchy, e.g., `PageController`. Conventionally, they use singular names (e.g., `PostController`) to represent single pages, and plural names (e.g., `PostsController`) to represent archive pages. Essentially, these classes apply the logic to build the Timber context as passed to the views (Twig templates).
+
 ### AbstractController Base Class
 
 The AbstractController class provides common functionalities for all controllers, including context management and template rendering.
@@ -86,3 +87,13 @@ class ChildPageController extends PageController {
 ```
 
 This setup allows the child theme to inherit and extend the logic defined in the parent theme controllers, promoting code reuse and maintainability. 
+
+### Note on MVC Abstraction
+
+While these controllers are named and used similarly to traditional MVC Controllers, they function more closely to View Models. In classic MVC:
+
+- **Model:** Handles data and business logic.
+- **View:** Manages the display of information.
+- **Controller:** Acts as an intermediary, handling user input, updating the Model, and refreshing the View.
+
+In PressGang, the Controllers primarily prepare and manage context data for the View (Twig templates), aligning more with the View Model pattern. They focus on preparing data for the View without directly handling user input or business logic.

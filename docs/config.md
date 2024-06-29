@@ -105,3 +105,29 @@ Configures Twig extensions for Timber.
 
 `widgets.php`  
 Manages widget registrations.
+
+## Example usage:
+
+Here is an example of registering a custom post type via the config. The associative array arguments match the `register_post_type` args.
+
+### `custom-post-types.php`
+```php
+
+return [
+    'event' => [
+        'label' => 'Events',
+        'description' => 'A custom post type for events.',
+        'public' => true,
+        'has_archive' => true,
+        'menu_icon' => 'dashicons-calendar',
+        'supports' => ['title', 'editor', 'excerpt', 'custom-fields'],
+        'taxonomies' => ['category', 'post_tag'],
+        'rewrite' => [
+            'slug' => 'events',
+            'with_front' => false
+        ],
+        'show_in_rest' => true,
+    ],
+];
+
+```
