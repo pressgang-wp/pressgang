@@ -1,4 +1,7 @@
 <?php
 
-$page_controller = new PressGang\PageController( 'front-page.twig' );
-$page_controller->render();
+use PressGang\Controllers\PageController;
+
+PressGang\PressGang::render(
+	controller: PageController::class, twig: 'front-page.twig'
+);

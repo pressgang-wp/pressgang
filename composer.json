@@ -11,9 +11,11 @@
 	],
 	"minimum-stability": "stable",
 	"require": {
-		"php": "^7.3|^8.0",
+		"php": "^8.0",
 		"timber/timber": "^2.0",
-		"doctrine/inflector": "^2.0"
+		"doctrine/inflector": "^2.0",
+		"symfony/string": "7.0",
+		"upstatement/routes": "^0.9.1"
 	},
 	"extra": {
 		"installer-paths": {
@@ -32,9 +34,12 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"PressGang\\": "Controllers/",
-			"PressGang\\Core\\": "Core/",
-			"PressGang\\Classes\\": "Classes/"
-		}
+			"PressGang\\": "src/"
+		},
+		"files": [
+			"src/Helpers/config.php",
+			"src/Helpers/helper.php",
+			"src/Helpers/woocommerce.php"
+		]
 	}
 }
