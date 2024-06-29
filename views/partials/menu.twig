@@ -1,18 +1,22 @@
 {% set dropdown = dropdown|default(true) %}
-<ul class="menu {{ class }}">
+<ul class="menu {{ class|e('html_attr') }}">
 	{% for item in menu.get_items %}
-		<li class="{{ item.classes|join(' ') }}{% if item.current %} active{% endif %}{% if item.children %} dropdown{% endif %}">
-			<a href="{{ item.link }}" target="{{ item.is_external ? '_blank' : '_self' }}" class="{% if item.children %} dropdown-toggle{% endif %}" {% if item.children %} data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" {% endif %} title="{{ item.title|e('html_attr') }}">
-				{{ item.title }}
-				{% if item.children and has_dropdown %}
-					<span class="caret"></span>
-				{% endif %}
+		<li class="{{ item.classes|join(' ')|e('html_attr') }}{% if item.current %} active{% endif %}{% if item.children and dropdown %} dropdown{% endif %}">
+			<a href="{{ item.link|e('html_attr') }}" target="{{ item.is_external ? '_blank' : '_self' }}"
+			   class="{% if item.children and dropdown %} dropdown-toggle{% endif %}" {% if item.children and dropdown %} data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" {% endif %}
+			   title="{{ item.title|e('html_attr') }}">
+					{{ item.title }}
 			</a>
 			{% if item.children %}
-				<ul class="sub-menu{% if 'nav' in class and dropdown %} dropdown-menu{% endif %}">
+				<ul class="sub-menu {% if dropdown %}dropdown-menu{% endif %}">
 					{% for child in item.children %}
-						<li class="{{ child.classes | join(' ') }}">
-							<a href="{{ child.link }}" target="{{ item.is_external ? '_blank' : '_self' }}" title="{{ child.title|e('html_attr') }}" class="dropdown-item">{{ child.title }}</a>
+						<li class="{{ child.classes|join(' ')|e('html_attr') }}">
+							<a href="{{ child.link|e('html_attr') }}"
+							   target="{{ item.is_external ? '_blank' : '_self' }}"
+							   title="{{ child.title|e('html_attr') }}"
+							   {% if dropdown %}class="dropdown-item"{% endif %}>
+									{{ child.title }}
+							</a>
 						</li>
 					{% endfor %}
 				</ul>

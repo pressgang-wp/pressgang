@@ -1,0 +1,160 @@
+<?php
+
+namespace PressGang\Widgets;
+
+use function Symfony\Component\String\u;
+
+/**
+ * Class Widget
+ *
+ * @package PressGang
+ */
+class Widget extends \WP_Widget {
+	protected $classname;
+	protected $description;
+	protected $view;
+	protected $title;
+	protected $fields = [
+		'title' => [
+			'view'  => 'admin.text.twig',
+			'class' => 'widefat',
+			'label' => "Title",
+		],
+	];
+	protected $defaults = [
+		'title' => "Title",
+	];
+
+	/**
+	 * __construct
+	 *
+	 */
+	public function __construct() {
+		$class     = new \ReflectionClass( get_called_class() );
+		$classname = ( new UnicodeString( $class->getShortName() ) )->camel()->snake();
+
+		if ( ! $this->classname ) {
+			$this->classname = sprintf( "widget-%s", $classname );
+		}
+
+		if ( ! $this->view ) {
+			$this->view = sprintf( "%s.twig", $classname );
+		}
+
+		if ( ! $this->title ) {
+			$this->title = __( ucwords( preg_replace( '/-/', ' ', $classname ) ), THEMENAME );
+		}
+
+		if ( ! $this->description ) {
+			$this->description = sprintf( "%s Widget", $this->title );
+		}
+
+		$widget_ops = [
+			'classname'   => $this->classname,
+			'description' => $this->description,
+		];
+
+		parent::__construct( $classname, $this->title, $widget_ops );
+	}
+
+	/**
+	 * widget
+	 *
+	 * @param array $args
+	 * @param array $instance
+	 */
+	public function widget( $args, $instance ) {
+		$instance = $this->get_instance( $args, $instance );
+
+		$class     = new \ReflectionClass( get_called_class() );
+		$classname = $class->getShortName();
+		$name      = u( $classname )->snake()->replace( '_', '-' );
+
+		do_action( "render_widget_{$name}" );
+
+		\Timber::render( $this->view, $instance );
+	}
+
+	/**
+	 * get_instance
+	 *
+	 * override for context in descendant classes
+	 *
+	 * @param $args
+	 * @param $instance
+	 *
+	 * @return array
+	 */
+	protected function get_instance( $args, $instance ) {
+
+		extract( $args );
+
+		$instance = array_merge( $instance, [
+			'before_widget' => $before_widget,
+			'after_widget'  => $after_widget,
+			'before_title'  => $before_title,
+			'after_title'   => $after_title,
+		], $this->get_acf_fields( $widget_id ) );
+
+		return $instance;
+	}
+
+	/**
+	 * update
+	 *
+	 * @param array $new_instance
+	 * @param array $old_instance
+	 *
+	 * @return array
+	 */
+	public function update( $new_instance, $old_instance ) {
+		$instance = $old_instance;
+
+		foreach ( $this->fields as $field => &$config ) {
+			$instance[ $field ] = filter_var( $new_instance[ $field ], FILTER_SANITIZE_STRING );
+		}
+
+		return $instance;
+	}
+
+	/**
+	 * form
+	 *
+	 * Override and render other form components
+	 *
+	 * @param array $instance
+	 *
+	 * @return void
+	 */
+	public function form( $instance ) {
+		$instance = wp_parse_args( (array) $instance, $this->defaults );
+
+		foreach ( $this->fields as $field => &$config ) {
+			\Timber::render( $config['view'], [
+				'label' => __( $config['label'], THEMENAME ),
+				'id'    => $this->get_field_id( $field ),
+				'name'  => $this->get_field_name( $field ),
+				'value' => isset( $instance[ $field ] ) ? esc_attr( $instance[ $field ] ) : '',
+				'class' => $config['class'],
+			] );
+
+		}
+	}
+
+	/**
+	 * get_acf_fields
+	 *
+	 * NB - widget_id is available as $widget_id = $args['widget_id'];
+	 *
+	 */
+	protected function get_acf_fields( $widget_id ) {
+
+		if ( function_exists( 'get_fields' ) ) {
+			if ( $fields = get_fields( "widget_{$widget_id}" ) ) {
+				return $fields;
+			}
+		}
+
+		return [];
+	}
+}

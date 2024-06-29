@@ -1,13 +1,17 @@
 <?php
 
+use PressGang\Bootstrap\FileConfigLoader;
+use PressGang\Bootstrap\Loader;
+use PressGang\ServiceProviders\TimberServiceProvider;
+
 if ( ! defined( 'THEMENAME' ) ) {
 	define( 'THEMENAME', 'pressgang' );
 }
 
-// require __DIR__ . '/vendor/autoload.php';
+$autoload_path = \get_stylesheet_directory() . '/vendor/autoload.php';
+if ( file_exists( $autoload_path ) ) {
+	require_once $autoload_path;
+}
 
-/**
- * Go!
- *
- */
-require_once( __DIR__ . '/Core/Site.php' );
+// Initialize the PressGang theme
+( new PressGang\PressGang(new Loader(new FileConfigLoader()), new TimberServiceProvider()) )->boot();
