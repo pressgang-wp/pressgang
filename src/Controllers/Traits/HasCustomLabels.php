@@ -1,6 +1,6 @@
 <?php
 
-namespace PressGang\Traits;
+namespace PressGang\Controllers\Traits;
 
 use Doctrine\Inflector\InflectorFactory;
 use function Symfony\Component\String\u;

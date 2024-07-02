@@ -2,7 +2,7 @@
 
 namespace PressGang\Configuration;
 
-use PressGang\Traits\HasCustomLabels;
+use PressGang\Controllers\Traits\HasCustomLabels;
 
 /**
  * Class CustomPostTypes
