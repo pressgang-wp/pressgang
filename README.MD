@@ -1,6 +1,6 @@
 <img src="https://github.com/pressgang-wp/pressgang/blob/master/img/pressgang-banner.png" alt="PressGang">
 
-# PressGang: Hijack Your WordPress Development Workflow
+# PressGang: Hijacking Your WordPress Development Workflow
 
 **Modernize your WordPress development and ship your WordPress themes faster than ever. PressGang anchors your workflow in modern development practices. Build cleaner, faster, smarter themes and navigate your development course to calmers seas!**
 
