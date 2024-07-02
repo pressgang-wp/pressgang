@@ -1,6 +1,6 @@
 <?php
 
-namespace PressGang\Classes;
+namespace PressGang\Metaboxes;
 
 use \Timber\Timber;
 
