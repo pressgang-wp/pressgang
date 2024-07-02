@@ -2,7 +2,7 @@
 
 # Hijacking Your WordPress Development Workflow
 
-**Ahoy matey! Modernize your WordPress development and ship your WordPress themes faster than ever. PressGang anchors your workflow in modern development practices. Build cleaner, faster, smarter themes and navigate your development course to calmers seas!**
+**Ahoy matey! Modernize your WordPress development and ship your WordPress themes faster than ever. PressGang anchors your workflow in modern development practices. Build cleaner, faster, smarter themes and navigate your development course to calmers seas.**
 
 ## Overview
 
