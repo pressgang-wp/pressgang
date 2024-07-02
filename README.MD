@@ -20,11 +20,11 @@ PressGang is a powerful and flexible WordPress parent theme framework designed t
 By leveraging these features, PressGang empowers developers to create sophisticated, performant, and maintainable WordPress themes with greater ease and efficiency.
 
 ### Shiver Me Timber: Prerequisites
-To make the most out of PressGang, familiarity with the following tools is recommended:
-* [Timber](http://upstatement.com/timber/)
-* [Twig](http://twig.sensiolabs.org/documentation)
-* [Composer](https://getcomposer.org/)
-* [Grunt](http://gruntjs.com/)
+To chart a course for success with PressGang, it helps to be familiar with these trusty tools:
+
+* [Timber](http://upstatement.com/timber/) -  Just like a seasoned shipwright uses the best timber, PressGang is built on the Timber library to craft clean, powerful themes.
+* [Composer](https://getcomposer.org/) - Manage your dependencies and keep everything shipshape with Composer.
+* [Grunt](http://gruntjs.com/) -  Ensure plain sailing with task automation.
 
 ## Getting Started
 
