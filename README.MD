@@ -74,6 +74,10 @@ You can also include PressGang as a dependency in your project using Composer.
 
 For detailed instructions on setting up and configuring your child theme, refer to the [PressGang documentation](https://github.com/pressgang-wp/pressgang).
 
+## Documentation
+
+Uncover the buried treasure at: https://docs.pressgang.dev/
+
 ## License
 
 PressGang is open-sourced software licensed under the [MIT license](LICENSE.md).
