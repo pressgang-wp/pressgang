@@ -4,6 +4,8 @@
 
 **Ahoy matey! Modernize your WordPress development and ship your WordPress themes faster than ever. PressGang anchors your workflow in modern development practices. Build cleaner, faster, smarter themes and navigate your development course to calmers seas.**
 
+https://docs.pressgang.dev/
+
 ## Overview
 
 PressGang is a powerful and flexible WordPress parent theme framework designed to streamline theme development and enhance customization capabilities. As a parent theme framework, PressGang serves as a foundation upon which child themes can be built, allowing developers to create custom themes more efficiently while inheriting the robust features and structure of the PressGang parent theme.
