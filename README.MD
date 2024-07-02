@@ -1,6 +1,10 @@
-# PressGang: A WordPress Parent Theme Framework
+<img src="https://github.com/pressgang-wp/pressgang/blob/master/img/pressgang-banner.png" alt="PressGang">
 
-Modernize your WordPress development and ship your WordPress themes faster than ever. PressGang anchors your workflow in modern development practices. Build cleaner, faster, smarter themes and navigate your development course to calmers seas!
+# Hijacking Your WordPress Development Workflow
+
+**Ahoy matey! Modernize your WordPress development and ship your WordPress themes faster than ever. PressGang anchors your workflow in modern development practices. Build cleaner, faster, smarter themes and navigate your development course to calmers seas.**
+
+https://docs.pressgang.dev/
 
 ## Overview
 
@@ -17,12 +21,12 @@ PressGang is a powerful and flexible WordPress parent theme framework designed t
 
 By leveraging these features, PressGang empowers developers to create sophisticated, performant, and maintainable WordPress themes with greater ease and efficiency.
 
-### Prerequisites
-To make the most out of PressGang, familiarity with the following tools is recommended:
-* [Timber](http://upstatement.com/timber/)
-* [Twig](http://twig.sensiolabs.org/documentation)
-* [Composer](https://getcomposer.org/)
-* [Grunt](http://gruntjs.com/)
+### Shiver Me Timber: Prerequisites
+To chart a course for success with PressGang, it helps to be familiar with these trusty tools:
+
+* [Timber](http://upstatement.com/timber/) -  Just like a seasoned shipwright uses the best timber, PressGang is built on the Timber library to craft clean, powerful themes.
+* [Composer](https://getcomposer.org/) - Manage your dependencies and keep everything shipshape with Composer.
+* [Grunt](http://gruntjs.com/) -  Ensure plain sailing with task automation.
 
 ## Getting Started
 
@@ -69,6 +73,10 @@ You can also include PressGang as a dependency in your project using Composer.
 2. Create and configure your child theme to extend the PressGang parent theme.
 
 For detailed instructions on setting up and configuring your child theme, refer to the [PressGang documentation](https://github.com/pressgang-wp/pressgang).
+
+## Documentation
+
+Uncover the buried treasure at: https://docs.pressgang.dev/
 
 ## License
 
