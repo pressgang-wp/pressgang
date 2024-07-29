@@ -46,12 +46,14 @@ class PostsController extends AbstractController {
 				$template = 'category.twig';
 			} else if ( \is_tax() ) {
 				$taxonomy = \get_queried_object()->taxonomy;
+				$taxonomy = str_replace( '_', '-', $taxonomy );
 				$template = sprintf( "taxonomy%s.twig", $taxonomy === 'tag' ? '' : "-{$taxonomy}" );
 			} else if ( \is_search() ) {
 				$template = 'search.twig';
 			} else {
 				if ( $this->post_type && $this->post_type !== 'post' ) {
-					$template = sprintf( "archive-%s.twig", $this->post_type );
+					$post_type_slug = str_replace( '_', '-', $this->post_type );
+					$template       = sprintf( "archive-%s.twig", $post_type_slug );
 				}
 			}
 		}
