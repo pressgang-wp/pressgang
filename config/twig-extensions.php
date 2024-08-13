@@ -23,6 +23,7 @@
 return [
 	\PressGang\TwigExtensions\GeneralExtensionManager::class,
 	\PressGang\TwigExtensions\MetaDescriptionExtensionManager::class,
+	\PressGang\TwigExtensions\SinglePostExtensionManager::class,
 	\PressGang\TwigExtensions\WidgetExtensionManager::class,
 	\PressGang\TwigExtensions\WooCommerceExtensionManager::class,
 ];
