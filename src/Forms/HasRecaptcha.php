@@ -41,15 +41,27 @@ trait HasRecaptcha {
 	}
 
 	/**
-	 * Retrieves the sanitized reCAPTCHA secret key from theme settings.
+	 * Retrieves the sanitized reCAPTCHA secret from theme settings.
 	 *
 	 * Designed to work with PressGang\Snippets\GoogleRecaptcha for storing the key.
 	 * Override as needed.
 	 *
-	 * @return string The sanitized reCAPTCHA secret key
+	 * @return string The sanitized reCAPTCHA secret
 	 */
 	protected static function get_recaptcha_secret(): string {
 		return \sanitize_text_field( \get_theme_mod( 'google-recaptcha-secret' ) );
+	}
+
+	/**
+	 * Retrieves the sanitized reCAPTCHA site key from theme settings.
+	 *
+	 * Designed to work with PressGang\Snippets\GoogleRecaptcha for storing the key.
+	 * Override as needed.
+	 *
+	 * @return string The sanitized reCAPTCHA site key
+	 */
+	protected static function get_recaptcha_site_key(): string {
+		return \sanitize_text_field( \get_theme_mod( 'google-recaptcha-site-key' ) );
 	}
 
 	/**
