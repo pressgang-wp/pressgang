@@ -171,10 +171,10 @@ class Post extends \Timber\Post {
 			$key = sprintf( "pressgang_latest_posts_%d", $this->id );
 
 			// Try to get the cached posts
-			$this->latest_posts = \wp_cache_get( $key, 'latest_posts', true );
+			$latest_posts = \wp_cache_get( $key, 'latest_posts', true );
 
 			// If cache is empty, fetch the latest posts
-			if ( empty( $this->latest_posts ) ) {
+			if ( empty( $latest_posts ) ) {
 				$args = [
 					'post_type'           => $this->post_type,
 					'orderby'             => 'date',
@@ -185,11 +185,13 @@ class Post extends \Timber\Post {
 				];
 
 				// Fetch the latest posts
-				$this->latest_posts = Timber::get_posts( $args );
+				$latest_posts = Timber::get_posts( $args )->to_array();
 
 				// Cache the result for future requests
-				\wp_cache_add( $key, $this->latest_posts, 'latest_posts', $this->cache_time );
+				\wp_cache_add( $key, $latest_posts, 'latest_posts', $this->cache_time );
 			}
+
+			$this->latest_posts = $latest_posts;
 		}
 
 		return $this->latest_posts;
