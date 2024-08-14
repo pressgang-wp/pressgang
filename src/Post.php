@@ -9,7 +9,17 @@ class Post extends \Timber\Post {
 	protected array $latest_posts = [];
 
 	// Define CACHE_TIME as the value from wp-config.php or default to 1 day
-	const CACHE_TIME = defined( 'PRESSGANG_CACHE_TIME' ) ? PRESSGANG_CACHE_TIME : 24 * 60 * 60;
+	protected int $cache_time = 24 * 60 * 60;
+
+	/**
+	 * __construct
+	 */
+	protected function __construct() {
+		// Set cache time when the class is instantiated
+		$this->cache_time = defined( 'PRESSGANG_CACHE_TIME' ) ? PRESSGANG_CACHE_TIME : 24 * 60 * 60;
+
+		parent::__construct();
+	}
 
 	/**
 	 * get_related_posts
@@ -27,7 +37,7 @@ class Post extends \Timber\Post {
 
 			if ( empty( $related_posts ) ) {
 				$related_posts = $this->fetch_related_posts( $posts_per_page );
-				\wp_cache_add( $key, $related_posts, 'related_posts', self::CACHE_TIME );
+				\wp_cache_add( $key, $related_posts, 'related_posts', $this->cache_time );
 			}
 
 			$this->related_posts = $related_posts;
@@ -178,7 +188,7 @@ class Post extends \Timber\Post {
 				$this->latest_posts = Timber::get_posts( $args );
 
 				// Cache the result for future requests
-				\wp_cache_add( $key, $this->latest_posts, 'latest_posts', self::CACHE_TIME );
+				\wp_cache_add( $key, $this->latest_posts, 'latest_posts', $this->cache_time );
 			}
 		}
 
