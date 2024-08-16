@@ -2,52 +2,37 @@
 
 namespace PressGang\Widgets;
 
-use function Symfony\Component\String\u;
+use Timber\Timber;
+use ReflectionClass;
+use WP_Widget;
 
 /**
- * Class Widget
+ * Abstract Class Widget
  *
- * @package PressGang
+ * Base class for creating widgets in WordPress.
+ *
+ * @package PressGang\Widgets
  */
-class Widget extends \WP_Widget {
-	protected $classname;
-	protected $description;
-	protected $view;
-	protected $title;
-	protected $fields = [
-		'title' => [
-			'view'  => 'admin.text.twig',
-			'class' => 'widefat',
-			'label' => "Title",
-		],
-	];
-	protected $defaults = [
-		'title' => "Title",
-	];
+abstract class Widget extends WP_Widget {
+
+	protected string $classname;
+	protected string $description;
+	protected string $view;
+	protected string $title;
+	protected array $fields = [];
+	protected array $defaults = [];
 
 	/**
-	 * __construct
-	 *
+	 * Constructor to initialize the widget.
 	 */
 	public function __construct() {
-		$class     = new \ReflectionClass( get_called_class() );
-		$classname = ( new UnicodeString( $class->getShortName() ) )->camel()->snake();
+		$class     = new ReflectionClass( get_called_class() );
+		$classname = $this->convert_to_snake_case( $class->getShortName() );
 
-		if ( ! $this->classname ) {
-			$this->classname = sprintf( "widget-%s", $classname );
-		}
-
-		if ( ! $this->view ) {
-			$this->view = sprintf( "%s.twig", $classname );
-		}
-
-		if ( ! $this->title ) {
-			$this->title = __( ucwords( preg_replace( '/-/', ' ', $classname ) ), THEMENAME );
-		}
-
-		if ( ! $this->description ) {
-			$this->description = sprintf( "%s Widget", $this->title );
-		}
+		$this->classname   = $this->classname ?? sprintf( "widget-%s", $classname );
+		$this->view        = $this->view ?? sprintf( "%s.twig", $classname );
+		$this->title       = $this->title ?? __( ucwords( str_replace( '_', ' ', $classname ) ), THEMENAME );
+		$this->description = $this->description ?? sprintf( "%s Widget", $this->title );
 
 		$widget_ops = [
 			'classname'   => $this->classname,
@@ -58,7 +43,18 @@ class Widget extends \WP_Widget {
 	}
 
 	/**
-	 * widget
+	 * Convert a string to snake_case.
+	 *
+	 * @param string $string
+	 *
+	 * @return string
+	 */
+	protected function convert_to_snake_case( string $string ): string {
+		return strtolower( preg_replace( '/(?<!^)[A-Z]/', '_$0', $string ) );
+	}
+
+	/**
+	 * Display the widget content on the frontend.
 	 *
 	 * @param array $args
 	 * @param array $instance
@@ -66,27 +62,24 @@ class Widget extends \WP_Widget {
 	public function widget( $args, $instance ) {
 		$instance = $this->get_instance( $args, $instance );
 
-		$class     = new \ReflectionClass( get_called_class() );
+		$class     = new ReflectionClass( get_called_class() );
 		$classname = $class->getShortName();
-		$name      = u( $classname )->snake()->replace( '_', '-' );
+		$name      = $this->convert_to_snake_case( $classname );
 
 		do_action( "render_widget_{$name}" );
 
-		\Timber::render( $this->view, $instance );
+		Timber::render( $this->view, $instance );
 	}
 
 	/**
-	 * get_instance
+	 * Get the instance data for the widget.
 	 *
-	 * override for context in descendant classes
-	 *
-	 * @param $args
-	 * @param $instance
+	 * @param array $args
+	 * @param array $instance
 	 *
 	 * @return array
 	 */
-	protected function get_instance( $args, $instance ) {
-
+	protected function get_instance( $args, $instance ): array {
 		extract( $args );
 
 		$instance = array_merge( $instance, [
@@ -94,20 +87,20 @@ class Widget extends \WP_Widget {
 			'after_widget'  => $after_widget,
 			'before_title'  => $before_title,
 			'after_title'   => $after_title,
-		], $this->get_acf_fields( $widget_id ) );
+		], $this->get_acf_fields( $args['widget_id'] ) );
 
 		return $instance;
 	}
 
 	/**
-	 * update
+	 * Update the widget options.
 	 *
 	 * @param array $new_instance
 	 * @param array $old_instance
 	 *
 	 * @return array
 	 */
-	public function update( $new_instance, $old_instance ) {
+	public function update( $new_instance, $old_instance ): array {
 		$instance = $old_instance;
 
 		foreach ( $this->fields as $field => &$config ) {
@@ -118,37 +111,32 @@ class Widget extends \WP_Widget {
 	}
 
 	/**
-	 * form
-	 *
-	 * Override and render other form components
+	 * Display the widget form in the admin area.
 	 *
 	 * @param array $instance
-	 *
-	 * @return void
 	 */
 	public function form( $instance ) {
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 
 		foreach ( $this->fields as $field => &$config ) {
-			\Timber::render( $config['view'], [
+			Timber::render( $config['view'], [
 				'label' => __( $config['label'], THEMENAME ),
 				'id'    => $this->get_field_id( $field ),
 				'name'  => $this->get_field_name( $field ),
 				'value' => isset( $instance[ $field ] ) ? esc_attr( $instance[ $field ] ) : '',
 				'class' => $config['class'],
 			] );
-
 		}
 	}
 
 	/**
-	 * get_acf_fields
+	 * Get ACF fields for the widget.
 	 *
-	 * NB - widget_id is available as $widget_id = $args['widget_id'];
+	 * @param string $widget_id
 	 *
+	 * @return array
 	 */
-	protected function get_acf_fields( $widget_id ) {
-
+	protected function get_acf_fields( $widget_id ): array {
 		if ( function_exists( 'get_fields' ) ) {
 			if ( $fields = get_fields( "widget_{$widget_id}" ) ) {
 				return $fields;
@@ -156,5 +144,32 @@ class Widget extends \WP_Widget {
 		}
 
 		return [];
+	}
+
+	/**
+	 * Define the default attributes for this widget.
+	 *
+	 * @return array
+	 */
+	abstract protected function define_defaults(): array;
+
+	/**
+	 * Define the fields for the widget form.
+	 *
+	 * @return array
+	 */
+	abstract protected function define_fields(): array;
+
+	/**
+	 * Register the widget with WordPress.
+	 *
+	 * This static method can be used by child classes to register themselves.
+	 *
+	 * @param string $widget_class The class name of the widget to register.
+	 */
+	public static function register( string $widget_class ): void {
+		add_action( 'widgets_init', function () use ( $widget_class ) {
+			register_widget( $widget_class );
+		} );
 	}
 }
