@@ -105,19 +105,28 @@ class Loader {
 			\get_template_directory(),
 		], $folder, $file );
 
+		// Get the child theme's primary namespace or fall back to "PressGang"
+		$namespace = get_child_theme_namespace() ?: 'PressGang';
+
 		foreach ( $directories as $directory ) {
-			$folder    = u( $folder )->camel()->title( true );
-			$file_path = "{$directory}/src/{$folder}/{$file}.php";
+			$folder_name = u( $folder )->camel()->title( true );
+			$file_path   = "{$directory}/src/{$folder_name}/{$file}.php";
 
 			if ( file_exists( $file_path ) ) {
 				require_once $file_path;
 
-				// After including the file, attempt to register the widget
-				$class_name = "PressGang\\{$folder}\\{$file}";
+				// Construct the full class name using the namespace
+				$class_name = "{$namespace}\\{$folder_name}\\{$file}";
 
 				if ( class_exists( $class_name ) ) {
+					// Register widgets
 					if ( is_subclass_of( $class_name, \PressGang\Widgets\Widget::class ) ) {
 						$class_name::register( $class_name );
+					}
+
+					// Register shortcodes
+					if ( is_subclass_of( $class_name, \PressGang\Shortcodes\Shortcode::class ) ) {
+						new $class_name(); // This assumes the constructor handles registration
 					}
 				}
 			}
