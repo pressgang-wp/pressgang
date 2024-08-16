@@ -13,18 +13,15 @@ use Timber\Timber;
  */
 abstract class Shortcode {
 
-	protected ?string $template;
+	protected ?string $template = null;
 	protected array $context = [];
 	protected array $defaults = [];
 	protected string $view_folder = 'shortcodes';
 
 	/**
 	 * Constructor to initialize the shortcode.
-	 *
-	 * @param string|null $template Path to the template file.
-	 * @param array|null $context Context data for rendering the template.
 	 */
-	public function __construct( ?string $template = null, ?array $context = null ) {
+	public function __construct() {
 
 		$class     = new \ReflectionClass( get_called_class() );
 		$classname = $class->getShortName();
@@ -32,12 +29,10 @@ abstract class Shortcode {
 		// Dynamically generate the shortcode name
 		$shortcode = $this->generate_shortcode_name( $classname );
 
-		if ( $template === null ) {
-			$template = $this->generate_template_name( $classname );
+		// If the template is not explicitly set, generate it based on the class name
+		if ( $this->template === null ) {
+			$this->template = $this->generate_template_name( $classname );
 		}
-
-		$this->template = $template;
-		$this->context  = $context ?? [];
 
 		\add_shortcode( $shortcode, [ $this, 'do_shortcode' ] );
 	}
