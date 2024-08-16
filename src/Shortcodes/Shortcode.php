@@ -2,73 +2,123 @@
 
 namespace PressGang\Shortcodes;
 
-use function Symfony\Component\String\u;
+use Timber\Timber;
 
 /**
- * Class Clients
+ * Abstract Class Shortcode
+ *
+ * Base class for creating shortcodes in PressGang.
  *
  * @package PressGang
  */
-class Shortcode {
+abstract class Shortcode {
 
-	protected $template = null;
-	protected $context = [];
-	protected $defaults = [];
+	protected ?string $template;
+	protected array $context = [];
+	protected array $defaults = [];
+	protected string $view_folder = 'shortcodes';
 
 	/**
-	 * __construct
+	 * Constructor to initialize the shortcode.
 	 *
+	 * @param string|null $template Path to the template file.
+	 * @param array|null $context Context data for rendering the template.
 	 */
-	public function __construct( $template = null, $context = null ) {
+	public function __construct( ?string $template = null, ?array $context = null ) {
+
 		$class     = new \ReflectionClass( get_called_class() );
 		$classname = $class->getShortName();
 
-		$shortcode = u( $classname )->snake();
+		// Dynamically generate the shortcode name
+		$shortcode = $this->generate_shortcode_name( $classname );
 
 		if ( $template === null ) {
-			$name     = u( $class->getShortName() )->snake( '-' );
-			$template = sprintf( "%s.twig", $name );
+			$template = $this->generate_template_name( $classname );
 		}
 
 		$this->template = $template;
-		$this->context  = $context;
+		$this->context  = $context ?? [];
 
-		add_shortcode( $shortcode, [ $this, 'do_shortcode' ] );
+		\add_shortcode( $shortcode, [ $this, 'do_shortcode' ] );
 	}
 
 	/**
-	 * get_defaults
+	 * Generate a shortcode name based on the class name.
 	 *
-	 * Override to fill dynamic default values
+	 * @param string $classname The class name.
+	 *
+	 * @return string The generated shortcode name.
+	 */
+	protected function generate_shortcode_name( string $classname ): string {
+		return strtolower( preg_replace( '/(?<!^)[A-Z]/', '_$0', $classname ) );
+	}
+
+	/**
+	 * Generate a template name based on the class name.
+	 *
+	 * @param string $classname The class name.
+	 *
+	 * @return string The generated template name.
+	 */
+	protected function generate_template_name( string $classname ): string {
+		$name = strtolower( preg_replace( '/(?<!^)[A-Z]/', '-$0', $classname ) );
+
+		return sprintf( "%s/%s.twig", $this->view_folder, $name );
+	}
+
+	/**
+	 * Get the default attributes for the shortcode.
+	 *
+	 * Override to provide dynamic default values.
 	 *
 	 * @return array
 	 */
-	protected function get_defaults() {
-		return $this->defaults;
+	protected function get_defaults(): array {
+		return array_merge( $this->defaults, $this->define_defaults() );
 	}
 
 	/**
-	 * get_context
+	 * Get the context data for rendering the template.
 	 *
-	 * Override to provide custom context
+	 * Override to provide custom context.
 	 *
-	 * @param $atts
+	 * @param array $args Shortcode attributes.
+	 *
+	 * @return array Modified context array.
 	 */
-	protected function get_context( $args ) {
-		return $this->context = $args;
+	protected function get_context( array $args ): array {
+		$context = array_merge( $this->context, $args );
+
+		return $this->define_context( $context );
 	}
 
 	/**
-	 * do_shortcode
+	 * Render the shortcode template.
 	 *
-	 * Render the shortcode template
+	 * @param array $atts Shortcode attributes.
+	 * @param string|null $content The enclosed content (if any).
 	 *
-	 * @return string
+	 * @return string The rendered template output.
 	 */
-	public function do_shortcode( $atts, $content = null ) {
+	public function do_shortcode( array $atts, ?string $content = null ): string {
 		$args = \shortcode_atts( $this->get_defaults(), $atts );
 
-		return \Timber::compile( $this->template, $this->get_context( $args ) );
+		return Timber::compile( $this->template, $this->get_context( $args ) );
 	}
 
+	/**
+	 * Abstract method to define the shortcode's default attributes.
+	 *
+	 * @return array
+	 */
+	abstract protected function define_defaults(): array;
+
+	/**
+	 * Abstract method to define the context data for the shortcode template.
+	 *
+	 * @param array $args Shortcode attributes.
+	 *
+	 * @return array
+	 */
+	abstract protected function define_context( array $args ): array;
 }
