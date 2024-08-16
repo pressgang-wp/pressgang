@@ -73,9 +73,9 @@ class Loader {
 	 * @return string The fully qualified class name.
 	 */
 	protected function config_key_to_configuration_class( string $key ): string {
-		$studlyCase = u( $key )->camel()->title( true );
+		$studly_case = u( $key )->camel()->title( true );
 
-		return "PressGang\\Configuration\\$studlyCase";
+		return "PressGang\\Configuration\\$studly_case";
 	}
 
 	/**
@@ -106,10 +106,20 @@ class Loader {
 		], $folder, $file );
 
 		foreach ( $directories as $directory ) {
-			$filePath = "{$directory}/{$folder}/{$file}.php";
-			if ( file_exists( $filePath ) ) {
-				require_once $filePath;
-				break;
+			$folder    = u( $folder )->camel()->title( true );
+			$file_path = "{$directory}/src/{$folder}/{$file}.php";
+
+			if ( file_exists( $file_path ) ) {
+				require_once $file_path;
+
+				// After including the file, attempt to register the widget
+				$class_name = "PressGang\\{$folder}\\{$file}";
+
+				if ( class_exists( $class_name ) ) {
+					if ( is_subclass_of( $class_name, \PressGang\Widgets\Widget::class ) ) {
+						$class_name::register( $class_name );
+					}
+				}
 			}
 		}
 	}

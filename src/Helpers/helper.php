@@ -36,7 +36,7 @@ function reading_time( $text, bool $to_nearest_minute = false, int $speed = 200 
  * This method reads the child theme's composer.json file to extract the PSR-4
  * namespace, following the PSR-4 autoloading standard for PHP classes.
  *
- * It first checks if a THEMENAMESPACE constant is defined and returns its value if so, if not
+ * It first checks if a THEMENAMESPACE constant is defined and returns its value if so. If not,
  * the method looks for the 'autoload.psr-4' key in the composer.json file of the child theme
  * and returns the first namespace found, which is typically the primary namespace
  * used by the child theme.
@@ -44,20 +44,24 @@ function reading_time( $text, bool $to_nearest_minute = false, int $speed = 200 
  * @return string|null The primary PSR-4 namespace of the child theme if found, or null if not.
  */
 function get_child_theme_namespace(): ?string {
+	static $namespace = null;
+
+	if ( $namespace !== null ) {
+		return $namespace;
+	}
 
 	if ( defined( 'THEMENAMESPACE' ) ) {
-		return THEMENAMESPACE;
+		$namespace = THEMENAMESPACE;
 	} else {
 		$composer_json_path = \get_stylesheet_directory() . '/composer.json';
 		if ( file_exists( $composer_json_path ) ) {
 			$composer_config = json_decode( file_get_contents( $composer_json_path ), true );
 			if ( isset( $composer_config['autoload']['psr-4'] ) && is_array( $composer_config['autoload']['psr-4'] ) ) {
-				// Assuming the first key is the namespace you need
 				$namespaces = array_keys( $composer_config['autoload']['psr-4'] );
-				return rtrim( reset( $namespaces ), '\\' ); // Returns the first namespace trims and slashes
+				$namespace  = rtrim( reset( $namespaces ), '\\' ); // Returns the first namespace, trimmed of trailing slashes
 			}
 		}
 	}
 
-	return null;
+	return $namespace;
 }
