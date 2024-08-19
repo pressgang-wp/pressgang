@@ -2,7 +2,7 @@
 <ul class="menu {{ class|e('html_attr') }}">
 	{% for item in menu.get_items %}
 		<li class="{{ item.classes|join(' ')|e('html_attr') }}{% if item.current %} active{% endif %}{% if item.children and dropdown %} dropdown{% endif %}">
-			<a href="{{ item.link|e('html_attr') }}" target="{{ item.is_external ? '_blank' : '_self' }}"
+			<a href="{{ item.link }}" target="{{ item.is_external ? '_blank' : '_self' }}"
 			   class="{% if item.children and dropdown %} dropdown-toggle{% endif %}" {% if item.children and dropdown %} data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" {% endif %}
 			   title="{{ item.title|e('html_attr') }}">
 					{{ item.title }}
@@ -11,7 +11,7 @@
 				<ul class="sub-menu {% if dropdown %}dropdown-menu{% endif %}">
 					{% for child in item.children %}
 						<li class="{{ child.classes|join(' ')|e('html_attr') }}">
-							<a href="{{ child.link|e('html_attr') }}"
+							<a href="{{ child.link }}"
 							   target="{{ item.is_external ? '_blank' : '_self' }}"
 							   title="{{ child.title|e('html_attr') }}"
 							   {% if dropdown %}class="dropdown-item"{% endif %}>
