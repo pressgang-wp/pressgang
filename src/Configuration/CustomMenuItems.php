@@ -22,19 +22,18 @@ class CustomMenuItems extends ConfigurationSingleton {
 	public function initialize( array $config ): void {
 
 		// Don't do anything in the admin area
-		if ( \is_admin() ) {
-			return;
-		}
+		if ( ! \is_admin() ) {
 
-		// Index the menus by slug
-		foreach ( $config as $slug => $menu_args ) {
-			$this->menus[ $slug ] = [
-				'parent_object_id' => $menu_args['parent_object_id'] ?? 0,
-				'subitems'         => $menu_args['subitems'] ?? [],
-			];
-		}
+			// Index the menus by slug
+			foreach ( $config as $slug => $menu_args ) {
+				$this->menus[ $slug ] = [
+					'parent_object_id' => $menu_args['parent_object_id'] ?? 0,
+					'subitems'         => $menu_args['subitems'] ?? [],
+				];
+			}
 
-		\add_filter( 'wp_get_nav_menu_items', [ $this, 'filter_nav_menu_items' ], 10, 2 );
+			\add_filter( 'wp_get_nav_menu_items', [ $this, 'filter_nav_menu_items' ], 10, 2 );
+		}
 	}
 
 	/**
@@ -42,7 +41,7 @@ class CustomMenuItems extends ConfigurationSingleton {
 	 *
 	 * Adds custom items to a navigation menu
 	 *
-	 * @see http://teleogistic.net/2013/02/dynamically-add-items-to-a-wp_nav_menu-list/
+	 * @link http://teleogistic.net/2013/02/dynamically-add-items-to-a-wp_nav_menu-list/
 	 * @link https://github.com/timber/timber/issues/200
 	 *
 	 * @param array $items
@@ -71,7 +70,7 @@ class CustomMenuItems extends ConfigurationSingleton {
 
 		foreach ( $menu_config['subitems'] as $subitem ) {
 			$menu_item_data = (object) [
-				'ID'                    => uniqid( '', true ),
+				'ID'                    => mt_rand( 100000, 999999 ), // Generate a numeric ID
 				'post_title'            => $subitem['text'],
 				'post_name'             => sanitize_title( $subitem['text'] ),
 				'guid'                  => $subitem['url'],
@@ -114,5 +113,6 @@ class CustomMenuItems extends ConfigurationSingleton {
 		}
 
 		return $items;
+
 	}
 }
