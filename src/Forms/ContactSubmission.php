@@ -54,7 +54,7 @@ class ContactSubmission extends FormSubmission {
 	 * @param array $args Configuration parameters for setting up the class.
 	 */
 	public static function init( array $args ): void {
-		$instance = new self( $args );
+		$instance = new static( $args );
 		\add_action( 'init', [ $instance, 'register_hooks' ] );
 	}
 
