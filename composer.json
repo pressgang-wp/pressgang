@@ -15,7 +15,8 @@
 		"timber/timber": "^2.0",
 		"doctrine/inflector": "^2.0",
 		"symfony/string": "7.0",
-		"upstatement/routes": "^0.9.1"
+		"upstatement/routes": "^0.9.1",
+		"cweagans/composer-patches": "^1.7"
 	},
 	"extra": {
 		"installer-paths": {
@@ -34,7 +35,8 @@
 	},
 	"config": {
 		"allow-plugins": {
-			"composer/installers": true
+			"composer/installers": true,
+			"cweagans/composer-patches": true
 		}
 	},
 	"autoload": {
