@@ -25,6 +25,11 @@
 			"../themes/{$name}/": [
 				"type:wordpress-theme"
 			]
+		},
+		"patches": {
+			"upstatement/routes": {
+				"Fix change due to altorouter/altorouter": "patches/upstatement-routes.patch"
+			}
 		}
 	},
 	"config": {

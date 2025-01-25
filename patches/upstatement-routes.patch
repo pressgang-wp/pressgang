@@ -1,0 +1,15 @@
+diff --git a/Routes.php b/Routes.php
+index bb508b5..5af84fc 100644
+--- a/Routes.php
++++ b/Routes.php
+@@ -68,8 +68,8 @@
+     $upstatement_routes->router->setBasePath($base_path);
+    }
+    $route = self::convert_route($route);
+-   $upstatement_routes->router->map('GET|POST|PUT|DELETE', trailingslashit($route), $callback, $args);
+-   $upstatement_routes->router->map('GET|POST|PUT|DELETE', untrailingslashit($route), $callback, $args);
++   $upstatement_routes->router->map('GET|POST|PUT|DELETE', trailingslashit($route), $callback);
++   $upstatement_routes->router->map('GET|POST|PUT|DELETE', untrailingslashit($route), $callback);
+    }
+
+    /**
