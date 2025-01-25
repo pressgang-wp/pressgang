@@ -15,8 +15,7 @@
 		"timber/timber": "^2.0",
 		"doctrine/inflector": "^2.0",
 		"symfony/string": "7.0",
-		"upstatement/routes": "^0.9.1",
-		"cweagans/composer-patches": "^1.7"
+		"upstatement/routes": "^0.9.1"
 	},
 	"extra": {
 		"installer-paths": {
@@ -26,17 +25,11 @@
 			"../themes/{$name}/": [
 				"type:wordpress-theme"
 			]
-		},
-		"patches": {
-			"upstatement/routes": {
-				"Fix change due to altorouter/altorouter": "patches/upstatement-routes.patch"
-			}
 		}
 	},
 	"config": {
 		"allow-plugins": {
-			"composer/installers": true,
-			"cweagans/composer-patches": true
+			"composer/installers": true
 		}
 	},
 	"autoload": {
