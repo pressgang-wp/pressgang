@@ -4,14 +4,14 @@ namespace PressGang\Metaboxes;
 
 use \Timber\Timber;
 
-class MetaBox {
+class Metabox {
 	protected $meta_name = '';
 	protected $post_type = '';
 	protected $title = '';
-	protected $fields = array();
+	protected $fields = [];
 	protected $context = 'advanced';
 	protected $priority = 'default';
-	protected $callback_args = array();
+	protected $callback_args = [];
 
 	/**
 	 * __construct
@@ -21,7 +21,7 @@ class MetaBox {
 	 * @param $title
 	 * @param array $fields array(array('id', 'name', 'label', 'type', 'class'), ...)
 	 */
-	public function __construct( $meta_name, $post_type, $title, $fields = array(), $context = 'advanced', $priority = 'default', $callback_args = array() ) {
+	public function __construct( $meta_name, $post_type, $title, $fields = [], $context = 'advanced', $priority = 'default', $callback_args = [] ) {
 		$this->post_type     = $post_type;
 		$this->meta_name     = $meta_name;
 		$this->fields        = $fields;
@@ -31,10 +31,10 @@ class MetaBox {
 		$this->callback_args = $callback_args;
 
 		// hook to add metabox
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
+		add_action( 'add_meta_boxes', [ $this, 'add_meta_box' ] );
 
 		// hook to save post meta
-		add_action( 'save_post', array( $this, 'save_post_meta' ), 10, 2 );
+		add_action( 'save_post', [ $this, 'save_post_meta' ], 10, 2 );
 	}
 
 	/**
@@ -48,10 +48,10 @@ class MetaBox {
 	 */
 	public function add_meta_box( $post_type ) {
 		if ( $post_type === $this->post_type ) {
-			add_meta_box( sprintf( "metabox_%s_%s", $this->post_type, $this->meta_name ), $this->title, array(
+			add_meta_box( sprintf( "metabox_%s_%s", $this->post_type, $this->meta_name ), $this->title, [
 				$this,
 				'render_meta_box_content'
-			), $this->post_type, $this->context, $this->priority, $this->callback_args );
+			], $this->post_type, $this->context, $this->priority, $this->callback_args );
 		}
 	}
 
@@ -142,7 +142,7 @@ class MetaBox {
 	 */
 	protected function get_field_values( $post ) {
 
-		$values = array();
+		$values = [];
 
 		foreach ( $this->fields as &$field ) {
 			$values[ $field['name'] ] = get_post_meta( $post->ID, $field['name'], true );
@@ -160,7 +160,7 @@ class MetaBox {
 	 */
 	protected function sanitize_custom_input() {
 
-		$values = array();
+		$values = [];
 
 		foreach ( $this->fields as &$field ) {
 			switch ( $field['type'] ) {
