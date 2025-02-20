@@ -24,7 +24,7 @@ class ProductsController extends PostsController {
 	 *
 	 * @param string|null $template The template file to use for rendering the product archive. Defaults to 'woocommerce/archive.twig'.
 	 */
-	public function __construct( string|null $template = 'woocommerce/archive.twig' ) {
+	public function __construct( string|null $template = 'woocommerce/archive-product.twig' ) {
 		parent::__construct( $template );
 	}
 
