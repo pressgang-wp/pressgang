@@ -24,5 +24,5 @@
  * @var array
  */
 return [
-	'primary' => 'Primary Navigation',
+	'primary' => "Primary Navigation",
 ];
