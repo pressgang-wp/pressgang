@@ -14,8 +14,8 @@
  * e.g.
  *
  *  'site-option' => [
- *      'page_title' => __( "Site Options", THEMENAME ),
- *      'menu_title' => __( "Site Options", THEMENAME ),
+ *      'page_title' => "Site Options",
+ *      'menu_title' => "Site Options",
  *      'menu_slug' => 'site-options',
  *      'capability' => 'edit_posts',
  *      'redirect' => false,
@@ -30,6 +30,6 @@
  */
 return [
 	'site-option' => [
-		'page_title' => __( "Site Options", THEMENAME ),
+		'page_title' => "Site Options",
 	],
 ];
