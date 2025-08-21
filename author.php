@@ -1,3 +1,5 @@
 <?php
 
-PressGang\PressGang::render( template: __FILE__ );
+use PressGang\Controllers\AuthorController;
+
+PressGang\PressGang::render( controller: AuthorController::class );
