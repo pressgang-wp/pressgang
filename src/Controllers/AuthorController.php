@@ -64,7 +64,7 @@ class AuthorController extends AbstractController {
 	 *
 	 * @return mixed
 	 */
-	protected function get_context() {
+	protected function get_context(): array {
 		$this->context['author'] = $this->get_author();
 		$this->context['posts']  = $this->get_posts();
 
