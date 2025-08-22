@@ -43,7 +43,7 @@ abstract class AbstractController implements ControllerInterface {
 	 *
 	 * @param string|null $template Optional. The path or name of the Twig template.
 	 */
-	public function __construct( string|null $template = null ) {
+	public function __construct( ?string $template = null ) {
 		$this->template = $template;
 		$this->context  = Timber::context();
 	}
