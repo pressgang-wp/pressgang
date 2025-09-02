@@ -35,11 +35,11 @@ class Config {
 	 * otherwise returns all settings. If the key does not exist, returns the default value.
 	 *
 	 * @param string|null $key The key of the configuration setting to retrieve.
-	 * @param mixed $default The default value to return if the setting key is not found.
+	 * @param array $default The default value to return if the setting key is not found.
 	 *
 	 * @return mixed The configuration setting value or the default value.
 	 */
-	public static function get( string $key = null, $default = [] ) {
+	public static function get( ?string $key = null, mixed $default = [] ): mixed {
 		if ( self::$settings === null && self::$loader ) {
 			self::$settings = \apply_filters( 'pressgang_get_config', self::$loader->load() );
 		}
