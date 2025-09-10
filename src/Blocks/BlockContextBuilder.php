@@ -30,9 +30,9 @@ class BlockContextBuilder {
 	 * @return array An associative array of context data to be used in rendering the block's template.
 	 */
 	public static function build_context( array $block ): array {
-		$context         = [];
-		$context['post'] = Timber::get_post();
-		$context['id']   = $block['id'];
+		$context = Timber::context();
+		$context['post']  = Timber::get_post();
+		$context['id']    = $block['id'];
 		$context['block'] = $block;
 
 		$context['classes'] = BlockClassManager::get_css_classes( $block );
