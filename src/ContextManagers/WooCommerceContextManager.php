@@ -34,9 +34,11 @@ class WooCommerceContextManager implements ContextManagerInterface {
 
 			$context['my_account_link']     = \get_permalink( $account_page_id );
 			$context['logout_link']         = \wp_logout_url( \get_permalink( $account_page_id ) );
-			$context['cart_link']           = \wc_get_cart_url();
-			$context['checkout_link']       = \wc_get_checkout_url();
-			$context['cart_contents_count'] = \WC()->cart->get_cart_contents_count();
+			$context['cart_link']           = \function_exists( 'wc_get_cart_url' ) ? \wc_get_cart_url() : null;
+			$context['checkout_link']       = \function_exists( 'wc_get_checkout_url' ) ? \wc_get_checkout_url() : null;
+			$context['cart_contents_count'] = ( \function_exists( 'WC' ) && \WC()->cart )
+				? \WC()->cart->get_cart_contents_count()
+				: 0;
 		}
 
 		return $context;
