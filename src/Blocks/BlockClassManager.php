@@ -17,8 +17,8 @@ class BlockClassManager {
 	 * Retrieves and compiles CSS class names for a WordPress Block.
 	 *
 	 * This method inspects the block's array for specific attributes and formats them into CSS class names.
-	 * It handles standard block properties like className, backgroundColor, textColor, and align, formatting them
-	 * into appropriate CSS class names to be applied to the block's HTML structure.
+	 * It handles standard block properties like className, backgroundColor, textColor, align, and text alignment,
+	 * formatting them into appropriate CSS class names to be applied to the block's HTML structure.
 	 *
 	 * @param array $block The array representation of a Gutenberg block, containing its properties and attributes.
 	 *
@@ -44,9 +44,16 @@ class BlockClassManager {
 			$classes[] = sprintf( "has-%s-color", $block['textColor'] );
 		}
 
-		// Add alignment class if set
+		// Add alignment class if set (block alignment: full, wide, etc.)
 		if ( ! empty( $block['align'] ) ) {
 			$classes[] = sprintf( "align-%s", $block['align'] );
+		}
+
+		// Add text alignment class if set
+		// ACF blocks store at $block['alignText'], core blocks at $block['style']['typography']['textAlign']
+		$text_align = $block['alignText'] ?? $block['style']['typography']['textAlign'] ?? null;
+		if ( $text_align ) {
+			$classes[] = sprintf( "has-text-align-%s", $text_align );
 		}
 
 		return $classes;
