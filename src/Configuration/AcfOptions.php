@@ -22,7 +22,7 @@ class AcfOptions extends ConfigurationSingleton {
 	 */
 	public function initialize( array $config ): void {
 		$this->config = $config;
-		add_action( 'init', [ $this, 'add_options_pages' ] );
+		add_action( 'acf/init', [ $this, 'add_options_pages' ] );
 	}
 
 	/**
