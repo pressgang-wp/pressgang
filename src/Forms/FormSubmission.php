@@ -48,7 +48,7 @@ abstract class FormSubmission {
 	 * Handles the form submission, checking the nonce, running validators, and processing the form.
 	 */
 	public function handle_form_submission(): void {
-		if ( ! \wp_verify_nonce( $_POST['_wpnonce'], $this->action ) ) {
+		if ( ! \wp_verify_nonce( \sanitize_text_field( $_POST['_wpnonce'] ?? '' ), $this->action ) ) {
 			\wp_die( 'Nonce verification failed', 'Security Check', [ 'response' => 403 ] );
 		}
 
