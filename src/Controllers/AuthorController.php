@@ -47,9 +47,14 @@ class AuthorController extends AbstractController {
 	protected function get_posts() {
 
 		if ( empty( $this->posts ) ) {
+			$author = $this->get_author();
+
+			if ( ! $author ) {
+				return [];
+			}
 
 			$args = [
-				'author' => $this->get_author()->id,
+				'author' => $author->id,
 				'paged'  => get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1,
 			];
 
