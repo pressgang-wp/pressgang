@@ -165,7 +165,7 @@ class Metabox {
 		foreach ( $this->fields as &$field ) {
 			switch ( $field['type'] ) {
 				case ( 'text' ) :
-					$values[ $field['name'] ] = filter_input( INPUT_POST, $field['name'], FILTER_SANITIZE_STRING );
+					$values[ $field['name'] ] = \sanitize_text_field( $_POST[ $field['name'] ] ?? '' );
 					break;
 				case ( 'number' ) :
 					$values[ $field['name'] ] = filter_input( INPUT_POST, $field['name'], FILTER_SANITIZE_NUMBER_INT );

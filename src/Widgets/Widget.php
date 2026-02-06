@@ -104,7 +104,7 @@ abstract class Widget extends WP_Widget {
 		$instance = $old_instance;
 
 		foreach ( $this->fields as $field => &$config ) {
-			$instance[ $field ] = filter_var( $new_instance[ $field ], FILTER_SANITIZE_STRING );
+			$instance[ $field ] = \sanitize_text_field( $new_instance[ $field ] ?? '' );
 		}
 
 		return $instance;
