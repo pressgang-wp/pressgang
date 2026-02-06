@@ -1,7 +1,6 @@
 {% macro picture(thumbnail, sizes=[1920], lqip_size=40, alt, class, quality=100, img_styles=[]) %}
 
 	{% set pathinfo = thumbnail.pathinfo %}
-
 	{% set sizes = sizes is iterable ? sizes|sort : sizes %}
 
 	{% if pathinfo.extension|lower == 'svg' %}
@@ -11,27 +10,29 @@
 			class="{{ class|e('html_attr') }} {{ class|e('html_attr') }}--svg"
 			{% if img_styles %}
 				style="{{ img_styles|join(';') }};"
-			{% endif %} >
-
+			{% endif %}
+		>
 	{% else %}
-
 		<picture class="{{ class|e('html_attr') }}--picture">
 			{% if thumbnail.src %}
-				<source type="image/webp"
-						srcset="{{ (lqip_size is iterable ? thumbnail.src|resize(lqip_size[0], lqip_size[1]) : thumbnail.src|resize(lqip_size))|towebp(quality)|relative }}"
-						class="blur-up lazyload {{ class|e('html_attr') }}"
-						data-srcset="
-                {% for size in sizes %}
-                    {% if size is iterable %}{{ thumbnail.src|resize(size[0], size[1])|towebp(quality)|relative }} {{ size[0] }}w{% if not loop.last %},{% endif %}{% else %}{{ thumbnail.src|resize(size)|towebp(quality)|relative }} {{ size }}w{% if not loop.last %},{% endif %}{% endif %}
-                {% endfor %}
-                "
+				<source
+					type="image/webp"
+					srcset="{{ (lqip_size is iterable ? thumbnail.src|resize(lqip_size[0], lqip_size[1]) : thumbnail.src|resize(lqip_size))|towebp(quality)|relative }}"
+					class="blur-up lazyload {{ class|e('html_attr') }}"
+					data-srcset="
+					{% for size in sizes %}
+						{% if size is iterable %}
+							{{ thumbnail.src|resize(size[0], size[1])|towebp(quality)|relative }} {{ size[0] }}w{% if not loop.last %},{% endif %}
+						{% else %}
+							{{ thumbnail.src|resize(size)|towebp(quality)|relative }} {{ size }}w{% if not loop.last %},{% endif %}
+						{% endif %}
+					{% endfor %}
+					"
 				>
 			{% endif %}
 
 			{{ _self.img(thumbnail, sizes, lqip_size, alt, class, quality, img_styles) }}
-
 		</picture>
-
 	{% endif %}
 {% endmacro %}
 
@@ -39,23 +40,52 @@
 
 	{% if thumbnail.src %}
 
-		{% set width = (sizes|last is iterable ? sizes|last[0] : sizes|last) / 2 %}
-		{% set height = (sizes|last is iterable ? sizes|last[1] : sizes|last * thumbnail.width ? thumbnail.height / thumbnail.width : 1 ) / 2 %}
+		{# Determine target output width/height from the last 'sizes' entry #}
+		{% set last_size = sizes|last %}
+		{% set target_w = last_size is iterable ? last_size[0] : last_size %}
+		{% set target_h = last_size is iterable ? last_size[1] : null %}
+
+		{# We output intrinsic dimensions at 1x, using your existing "/ 2" convention #}
+		{% set width = (target_w / 2)|round %}
+
+		{# Compute height safely:
+		   - If target_h is provided, use it
+		   - Else derive from image metadata (thumbnail.width/thumbnail.height)
+		   - Clamp to at least 1 so we never emit height="0"
+		#}
+		{% if target_h %}
+			{% set height = (target_h / 2)|round %}
+		{% else %}
+			{% if thumbnail.width and thumbnail.height and thumbnail.width > 0 %}
+				{% set ratio = thumbnail.height / thumbnail.width %}
+				{% set height = (width * ratio)|round %}
+			{% else %}
+				{% set height = 1 %}
+			{% endif %}
+		{% endif %}
+
+		{% if height < 1 %}
+			{% set height = 1 %}
+		{% endif %}
 
 		<img
-			width="{{ width|round }}"
-			height="{{ height|round }}"
-			src="{{ (sizes|last is iterable ? thumbnail.src|resize(sizes|last[0], sizes|last[1]) : thumbnail.src|resize(sizes|last))|relative }}"
+			width="{{ width }}"
+			height="{{ height }}"
+			src="{{ (last_size is iterable ? thumbnail.src|resize(last_size[0], last_size[1]) : thumbnail.src|resize(last_size))|relative }}"
 			srcset="{{ (lqip_size is iterable ? thumbnail.src|resize(lqip_size[0], lqip_size[1]) : thumbnail.src|resize(lqip_size))|relative }}"
 			alt="{{ alt|default(img.alt)|e('html_attr') }}"
 			class="blur-up lazyload {{ class|e('html_attr') }}"
 			data-sizes="auto"
-			data-src="{{ (sizes|last is iterable ? thumbnail.src|resize(sizes|last[0], sizes|last[1]) : thumbnail.src|resize(sizes|last))|relative }}"
+			data-src="{{ (last_size is iterable ? thumbnail.src|resize(last_size[0], last_size[1]) : thumbnail.src|resize(last_size))|relative }}"
 			data-srcset="
-            {% for size in sizes %}
-                {% if size is iterable %}{{ thumbnail.src|resize(size[0], size[1])|relative }} {{ size[0] }}w{% if not loop.last %},{% endif %}{% else %}{{ thumbnail.src|resize(size)|relative }} {{ size }}w{% if not loop.last %},{% endif %}{% endif %}
-            {% endfor %}
-            "
+			{% for size in sizes %}
+				{% if size is iterable %}
+					{{ thumbnail.src|resize(size[0], size[1])|relative }} {{ size[0] }}w{% if not loop.last %},{% endif %}
+				{% else %}
+					{{ thumbnail.src|resize(size)|relative }} {{ size }}w{% if not loop.last %},{% endif %}
+				{% endif %}
+			{% endfor %}
+			"
 			{% if img_styles %}
 				style="{{ img_styles|join(';') }};"
 			{% endif %}
@@ -63,9 +93,9 @@
 
 	{% else %}
 
-		{% set w = sizes|last is iterable ? sizes|last[0] : sizes|last %}
-		{% set h = sizes|last is iterable ? sizes|last[1] : 0 %}
-
+		{% set last_size = sizes|last %}
+		{% set w = last_size is iterable ? last_size[0] : last_size %}
+		{% set h = last_size is iterable ? last_size[1] : 0 %}
 		{% set alt = fn('html_entity_decode', alt) %}
 
 		<img
