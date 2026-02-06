@@ -81,6 +81,15 @@ Require PressGang as a dependency in your child theme:
 composer require pressgang-wp/pressgang
 ```
 
+## 🧪 Testing
+
+```bash
+composer install          # install dev dependencies
+composer test             # run the unit test suite
+```
+
+Tests use PHPUnit + BrainMonkey — no WordPress installation required. See the [Testing docs](https://docs.pressgang.dev/TESTING) for details on writing new tests.
+
 ## 📖 Documentation
 
 Uncover the buried treasure at: **[docs.pressgang.dev](https://docs.pressgang.dev/)**

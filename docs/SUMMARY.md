@@ -11,3 +11,4 @@
 * [Snippets](SNIPPETS.md)
 * [Forms and Validation](FORMS.md)
 * [SEO](SEO.md)
+* [Testing](TESTING.md)
