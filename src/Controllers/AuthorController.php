@@ -10,11 +10,10 @@ use Timber\Timber;
  */
 class AuthorController extends AbstractController {
 
-	/** @var \Timber\User|null */
-	protected mixed $author;
+	protected ?\Timber\User $author = null;
 
-	/** @var \Timber\Post[]|null */
-	protected mixed $posts;
+	/** @var \Timber\PostQuery|\Timber\Post[]|null */
+	protected mixed $posts = null;
 
 	/**
 	 * @param string|null $template
@@ -28,11 +27,11 @@ class AuthorController extends AbstractController {
 	 *
 	 * @return \Timber\User|null
 	 */
-	protected function get_author() {
+	protected function get_author(): ?\Timber\User {
 		if ( empty( $this->author ) ) {
-			if ( $id = get_queried_object_id() ) {
+			$id = get_queried_object_id();
+			if ( $id ) {
 				$this->author = Timber::get_user( $id );
-				// $this->author->thumbnail = Timber::get_image( get_avatar_url( $this->author->id ) );
 			}
 		}
 
@@ -44,8 +43,7 @@ class AuthorController extends AbstractController {
 	 *
 	 * @return \Timber\Post[]|null
 	 */
-	protected function get_posts() {
-
+	protected function get_posts(): mixed {
 		if ( empty( $this->posts ) ) {
 			$author = $this->get_author();
 
@@ -55,7 +53,7 @@ class AuthorController extends AbstractController {
 
 			$args = [
 				'author' => $author->id,
-				'paged'  => get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1,
+				'paged'  => get_query_var( 'paged' ) ?: 1,
 			];
 
 			$this->posts = Timber::get_posts( $args );
