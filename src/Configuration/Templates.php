@@ -96,7 +96,7 @@ class Templates extends ConfigurationSingleton {
 		if ( $post ) {
 			$custom_template_slug = \get_post_meta( $post->ID, '_wp_page_template', true );
 
-			if ( isset( $this->templates[ $custom_template_slug ] ) ) {
+			if ( isset( $this->config[ $custom_template_slug ] ) ) {
 				$file = \get_template_directory() . '/' . self::TEMPLATES_FOLDER . '/' . $custom_template_slug;
 
 				if ( file_exists( $file ) ) {
