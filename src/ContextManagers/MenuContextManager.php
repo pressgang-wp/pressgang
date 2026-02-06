@@ -21,11 +21,22 @@ class MenuContextManager implements ContextManagerInterface {
 
 		foreach ( $registered_menus as $location => $description ) {
 			if ( \has_nav_menu( $location ) ) {
-				$menu = \apply_filters( "pressgang_context_menu_{$location}", Timber::get_menu( $location ) );
+				$menu = \apply_filters( "pressgang_context_menu_{$location}", $this->get_menu( $location ) );
 				$context["menu_{$location}"] = $menu;
 			}
 		}
 
 		return $context;
+	}
+
+	/**
+	 * Retrieves a Timber menu for the given location.
+	 *
+	 * @param string $location
+	 *
+	 * @return \Timber\Menu|null
+	 */
+	protected function get_menu( string $location ): ?object {
+		return Timber::get_menu( $location );
 	}
 }

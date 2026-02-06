@@ -42,5 +42,12 @@ abstract class ConfigurationSingleton implements ConfigurationInterface {
 	private function __clone() {
 	}
 
+	/**
+	 * Clears all singleton instances. Intended for test isolation only.
+	 */
+	public static function reset_instances(): void {
+		self::$instances = [];
+	}
+
 	abstract public function initialize( array $config ): void;
 }

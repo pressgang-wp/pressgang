@@ -14,14 +14,10 @@ use Yoast\WPTestUtils\BrainMonkey\YoastTestCase;
 abstract class TestCase extends YoastTestCase {
 
 	/**
-	 * Clears the ConfigurationSingleton::$instances map via reflection,
-	 * preventing singleton state from leaking between tests.
+	 * Clears all ConfigurationSingleton instances, preventing state leakage between tests.
 	 */
 	protected function resetSingletonInstances(): void {
-		$reflection = new \ReflectionClass( ConfigurationSingleton::class );
-		$property   = $reflection->getProperty( 'instances' );
-		$property->setAccessible( true );
-		$property->setValue( null, [] );
+		ConfigurationSingleton::reset_instances();
 	}
 
 	/**

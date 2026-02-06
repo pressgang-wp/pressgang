@@ -18,7 +18,7 @@ class AcfOptionsContextManager implements ContextManagerInterface {
 	#[\Override]
 	public function add_to_context( array $context ): array {
 
-		if ( function_exists( 'get_fields' ) && config( 'acf-options' ) ) {
+		if ( $this->is_acf_active() ) {
 
 			$fields = \wp_cache_get( 'theme_options' );
 
@@ -30,7 +30,7 @@ class AcfOptionsContextManager implements ContextManagerInterface {
 
 					// Map the field objects to values and Timber objects where appropriate
 					foreach ( $field_objects as $key => &$field ) {
-						$fields[ $key ] = TimberMapper::map_field( $field );
+						$fields[ $key ] = $this->map_field( $field );
 					}
 
 					\wp_cache_set( 'theme_options', $fields );
@@ -42,6 +42,26 @@ class AcfOptionsContextManager implements ContextManagerInterface {
 		}
 
 		return $context;
+	}
+
+	/**
+	 * Checks whether ACF is active and acf-options config is present.
+	 *
+	 * @return bool
+	 */
+	protected function is_acf_active(): bool {
+		return function_exists( 'get_fields' ) && config( 'acf-options' );
+	}
+
+	/**
+	 * Maps an ACF field to a Timber object where appropriate.
+	 *
+	 * @param array $field
+	 *
+	 * @return mixed
+	 */
+	protected function map_field( array $field ): mixed {
+		return TimberMapper::map_field( $field );
 	}
 
 }

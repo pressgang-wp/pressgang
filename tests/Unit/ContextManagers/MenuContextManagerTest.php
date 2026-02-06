@@ -10,13 +10,28 @@ use PressGang\Tests\Unit\TestCase;
  * Tests MenuContextManager: populating context with nav menus,
  * skipping unassigned locations, and applying per-location filters.
  *
- * Note: Timber::get_menu() is a static call on an already-loaded class,
- * so we run each test in a separate process to allow Mockery aliasing.
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
+ * Uses an anonymous subclass to override get_menu(), avoiding the need
+ * for separate-process execution to mock Timber::get_menu().
  */
 class MenuContextManagerTest extends TestCase {
+
+	/**
+	 * Creates a testable MenuContextManager whose get_menu() returns from a lookup map.
+	 *
+	 * @param array<string, mixed> $menuMap location => menu object
+	 *
+	 * @return MenuContextManager
+	 */
+	private function makeManager( array $menuMap ): MenuContextManager {
+		return new class( $menuMap ) extends MenuContextManager {
+			public function __construct( private readonly array $menuMap ) {
+			}
+
+			protected function get_menu( string $location ): ?object {
+				return $this->menuMap[ $location ] ?? null;
+			}
+		};
+	}
 
 	/** @test */
 	public function adds_assigned_menus_to_context(): void {
@@ -27,21 +42,22 @@ class MenuContextManagerTest extends TestCase {
 
 		Functions\expect( 'has_nav_menu' )->andReturn( true );
 
-		$timber = \Mockery::mock( 'alias:Timber\Timber' );
-		$timber->shouldReceive( 'get_menu' )->with( 'primary' )->andReturn( (object) [ 'id' => 'primary' ] );
-		$timber->shouldReceive( 'get_menu' )->with( 'footer' )->andReturn( (object) [ 'id' => 'footer' ] );
+		$primaryMenu = (object) [ 'id' => 'primary' ];
+		$footerMenu  = (object) [ 'id' => 'footer' ];
 
 		Functions\expect( 'apply_filters' )->andReturnUsing( function () {
 			return func_get_args()[1];
 		} );
 
-		$manager = new MenuContextManager();
+		$manager = $this->makeManager( [
+			'primary' => $primaryMenu,
+			'footer'  => $footerMenu,
+		] );
+
 		$context = $manager->add_to_context( [] );
 
-		$this->assertArrayHasKey( 'menu_primary', $context );
-		$this->assertArrayHasKey( 'menu_footer', $context );
-		$this->assertSame( 'primary', $context['menu_primary']->id );
-		$this->assertSame( 'footer', $context['menu_footer']->id );
+		$this->assertSame( $primaryMenu, $context['menu_primary'] );
+		$this->assertSame( $footerMenu, $context['menu_footer'] );
 	}
 
 	/** @test */
@@ -55,14 +71,13 @@ class MenuContextManagerTest extends TestCase {
 			return $location === 'primary';
 		} );
 
-		$timber = \Mockery::mock( 'alias:Timber\Timber' );
-		$timber->shouldReceive( 'get_menu' )->with( 'primary' )->andReturn( (object) [ 'id' => 'primary' ] );
+		$primaryMenu = (object) [ 'id' => 'primary' ];
 
 		Functions\expect( 'apply_filters' )->andReturnUsing( function () {
 			return func_get_args()[1];
 		} );
 
-		$manager = new MenuContextManager();
+		$manager = $this->makeManager( [ 'primary' => $primaryMenu ] );
 		$context = $manager->add_to_context( [] );
 
 		$this->assertArrayHasKey( 'menu_primary', $context );
@@ -73,7 +88,7 @@ class MenuContextManagerTest extends TestCase {
 	public function no_registered_menus_returns_context_unchanged(): void {
 		Functions\expect( 'get_registered_nav_menus' )->once()->andReturn( [] );
 
-		$manager  = new MenuContextManager();
+		$manager  = $this->makeManager( [] );
 		$original = [ 'site' => 'test' ];
 		$context  = $manager->add_to_context( $original );
 
@@ -88,17 +103,17 @@ class MenuContextManagerTest extends TestCase {
 
 		Functions\expect( 'has_nav_menu' )->andReturn( true );
 
-		$timber = \Mockery::mock( 'alias:Timber\Timber' );
-		$timber->shouldReceive( 'get_menu' )->with( 'primary' )->andReturn( (object) [ 'name' => 'Original' ] );
+		$originalMenu = (object) [ 'name' => 'Original' ];
+		$filteredMenu = (object) [ 'name' => 'Filtered' ];
 
 		Functions\expect( 'apply_filters' )
-			->with( 'pressgang_context_menu_primary', \Mockery::any() )
-			->andReturn( (object) [ 'name' => 'Filtered' ] );
+			->with( 'pressgang_context_menu_primary', $originalMenu )
+			->andReturn( $filteredMenu );
 
-		$manager = new MenuContextManager();
+		$manager = $this->makeManager( [ 'primary' => $originalMenu ] );
 		$context = $manager->add_to_context( [] );
 
-		$this->assertSame( 'Filtered', $context['menu_primary']->name );
+		$this->assertSame( $filteredMenu, $context['menu_primary'] );
 	}
 
 	/** @test */
@@ -109,17 +124,16 @@ class MenuContextManagerTest extends TestCase {
 
 		Functions\expect( 'has_nav_menu' )->andReturn( true );
 
-		$timber = \Mockery::mock( 'alias:Timber\Timber' );
-		$timber->shouldReceive( 'get_menu' )->with( 'main' )->andReturn( (object) [ 'id' => 'main' ] );
+		$menu = (object) [ 'id' => 'main' ];
 
 		Functions\expect( 'apply_filters' )->andReturnUsing( function () {
 			return func_get_args()[1];
 		} );
 
-		$manager = new MenuContextManager();
+		$manager = $this->makeManager( [ 'main' => $menu ] );
 		$context = $manager->add_to_context( [ 'site' => 'existing' ] );
 
 		$this->assertSame( 'existing', $context['site'] );
-		$this->assertSame( 'main', $context['menu_main']->id );
+		$this->assertSame( $menu, $context['menu_main'] );
 	}
 }

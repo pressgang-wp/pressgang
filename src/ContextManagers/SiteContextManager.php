@@ -17,13 +17,22 @@ class SiteContextManager implements ContextManagerInterface {
 	 */
 	#[\Override]
 	public function add_to_context( array $context ): array {
-		$site             = new Site();
+		$site             = $this->make_site();
 		$stylesheet       = $this->get_stylesheet( 'styles.css' );
 		$site->stylesheet = \apply_filters( 'pressgang_stylesheet', $stylesheet );
 
 		$context['site'] = $site;
 
 		return $context;
+	}
+
+	/**
+	 * Creates a new Timber Site instance.
+	 *
+	 * @return Site
+	 */
+	protected function make_site(): object {
+		return new Site();
 	}
 
 	/**
