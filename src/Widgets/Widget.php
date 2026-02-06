@@ -134,7 +134,8 @@ abstract class Widget extends WP_Widget {
 	 */
 	protected function get_acf_fields( $widget_id ): array {
 		if ( function_exists( 'get_fields' ) ) {
-			if ( $fields = get_fields( "widget_{$widget_id}" ) ) {
+			$fields = get_fields( "widget_{$widget_id}" );
+			if ( $fields ) {
 				return $fields;
 			}
 		}
