@@ -70,9 +70,9 @@ trait HasRecaptcha {
 	 * @param $secret - the reCAPTCHA API Secret
 	 * @param $value - the reCAPTCHA Form Value
 	 *
-	 * @return object The decoded JSON response from the reCAPTCHA API.
+	 * @return object|null The decoded JSON response from the reCAPTCHA API, or null on failure.
 	 */
-	protected static function get_recaptcha_response( $secret, $value ): object {
+	protected static function get_recaptcha_response( $secret, $value ): ?object {
 		$response = \wp_remote_post( self::$recaptcha_verify_url, [
 			'body' => [
 				'secret'   => $secret,
@@ -84,16 +84,18 @@ trait HasRecaptcha {
 		if ( ! \is_wp_error( $response ) ) {
 			return json_decode( \wp_remote_retrieve_body( $response ) );
 		}
+
+		return null;
 	}
 
 	/**
 	 * Determines if the reCAPTCHA verification is successful based on the API response.
 	 *
-	 * @param object $result
+	 * @param object|null $result
 	 *
 	 * @return bool Returns true if the reCAPTCHA verification is successful and meets the minimum score threshold.
 	 */
-	protected static function determine_recaptcha_success( object $result ): bool {
+	protected static function determine_recaptcha_success( ?object $result ): bool {
 		return $result && $result->success && $result->score > self::$min_score;
 	}
 
