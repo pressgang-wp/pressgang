@@ -119,7 +119,7 @@ abstract class FormSubmission {
 	 *
 	 * @param array $errors Errors from the form validation.
 	 */
-	protected function handle_errors( array $errors ) {
+	protected function handle_errors( array $errors ): void {
 		\do_action( 'form_submission_error', $errors );
 
 		// Flash the errors
@@ -143,5 +143,5 @@ abstract class FormSubmission {
 	 * Processes the form submission.
 	 * Must be implemented by derived classes to handle specific form actions.
 	 */
-	abstract protected function process_submission();
+	abstract protected function process_submission(): void;
 }

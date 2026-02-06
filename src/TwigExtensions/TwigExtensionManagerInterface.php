@@ -22,23 +22,19 @@ interface TwigExtensionManagerInterface {
 	 *
 	 * @param Environment $twig The Twig environment to which functions will be added.
 	 */
-	public function add_twig_functions( Environment $twig );
+	public function add_twig_functions( Environment $twig ): void;
 
 	/**
 	 * Adds custom filters to the Twig environment.
 	 *
-	 * Implement this method to register new custom filter that can be accessed in Twig templates.
-	 *
 	 * @param Environment $twig The Twig environment to which filters will be added.
 	 */
-	public function add_twig_filters( Environment $twig );
+	public function add_twig_filters( Environment $twig ): void;
 
 	/**
 	 * Adds global variables to the Twig environment.
 	 *
-	 * Implement this method to register new global variables that can be accessed in Twig templates.
-	 *
 	 * @param Environment $twig The Twig environment to which global variables will be added.
 	 */
-	public function add_twig_globals( Environment $twig );
+	public function add_twig_globals( Environment $twig ): void;
 }

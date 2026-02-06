@@ -22,7 +22,7 @@ trait HasNoFilters {
 	 *
 	 * @param Environment $twig The Twig environment.
 	 */
-	public function add_twig_filters( Environment $twig ) {
+	public function add_twig_filters( Environment $twig ): void {
 		// Default implementation (empty) if not overridden
 	}
 }

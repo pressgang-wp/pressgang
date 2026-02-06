@@ -23,7 +23,7 @@ trait HasCustomLabels {
 	 *
 	 * @retun $args - array used for registering the Custom Post Type or Custom Taxonomy
 	 */
-	protected function parse_labels( $key, $args ) {
+	protected function parse_labels( string $key, array $args ): array {
 
 		$name = isset( $args['name'] ) ? $args['name'] : $key;
 		$name = u( $name )

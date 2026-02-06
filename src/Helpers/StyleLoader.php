@@ -26,7 +26,7 @@ class StyleLoader {
 	 *
 	 * @return array
 	 */
-	public static function register_style( $handle, $args ): array {
+	public static function register_style( string $handle, array|string $args ): array {
 
 		$defaults = [
 			'handle'     => $handle,

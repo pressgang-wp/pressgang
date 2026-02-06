@@ -28,7 +28,7 @@ class Customizer extends ConfigurationSingleton {
 	 *
 	 * @param array $config Configuration array defining the customizer settings and controls.
 	 */
-	public function initialize( $config ): void {
+	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_action( 'customize_register', [ $this, 'add_to_customizer' ], 100 );
 	}
@@ -63,7 +63,7 @@ class Customizer extends ConfigurationSingleton {
 	 *
 	 * @param \WP_Customize_Manager $wp_customize WordPress Customizer Manager object.
 	 */
-	public function add_to_customizer( \WP_Customize_Manager $wp_customize ) {
+	public function add_to_customizer( \WP_Customize_Manager $wp_customize ): void {
 		$this->add_customizer_sections( $wp_customize );
 		$this->add_customizer_settings( $wp_customize );
 	}

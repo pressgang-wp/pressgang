@@ -20,7 +20,7 @@ class Menus extends ConfigurationSingleton {
 	 * Register Menus
 	 *
 	 */
-	public function initialize( $config ): void {
+	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_action( 'init', [ $this, 'register_nav_menus' ] );
 	}

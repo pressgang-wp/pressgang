@@ -22,7 +22,7 @@ trait HasNoGlobals {
 	 *
 	 * @param Environment $twig The Twig environment.
 	 */
-	public function add_twig_globals( Environment $twig ) {
+	public function add_twig_globals( Environment $twig ): void {
 		// Default implementation (empty) if not overridden
 	}
 }

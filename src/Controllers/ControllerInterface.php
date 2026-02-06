@@ -26,5 +26,5 @@ interface ControllerInterface {
 	 *
 	 * This method should handle the logic required to prepare and display the view for this controller.
 	 */
-	public function render();
+	public function render(): void;
 }

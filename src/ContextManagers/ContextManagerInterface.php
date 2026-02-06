@@ -24,5 +24,5 @@ interface ContextManagerInterface {
 	 *
 	 * @param array $context The context array that is passed to templates.
 	 */
-	public function add_to_context( array $context );
+	public function add_to_context( array $context ): array;
 }

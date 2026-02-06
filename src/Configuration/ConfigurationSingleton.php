@@ -23,7 +23,7 @@ abstract class ConfigurationSingleton implements ConfigurationInterface {
 	 *
 	 * @return static The Singleton instance.
 	 */
-	public static function get_instance(): mixed {
+	public static function get_instance(): static {
 		$class = static::class;
 		if ( ! isset( self::$instances[ $class ] ) ) {
 			self::$instances[ $class ] = new static();
@@ -36,6 +36,5 @@ abstract class ConfigurationSingleton implements ConfigurationInterface {
 	private function __clone() {
 	}
 
-	// Implement the 'initialize' method from ConfigurationInterface
-	abstract public function initialize( array $config );
+	abstract public function initialize( array $config ): void;
 }

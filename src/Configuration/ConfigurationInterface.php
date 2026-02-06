@@ -7,11 +7,12 @@ interface ConfigurationInterface {
 	/**
 	 * Initialize configuration settings, typically from config files.
 	 */
-	public function initialize( array $config );
+	public function initialize( array $config ): void;
 
 	/**
-	 * Get a Singleton instance of the Configuration class
-	 * @return mixed
+	 * Get a Singleton instance of the Configuration class.
+	 *
+	 * @return static
 	 */
-	public static function get_instance(): mixed;
+	public static function get_instance(): static;
 }

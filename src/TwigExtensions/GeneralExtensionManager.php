@@ -40,7 +40,7 @@ class GeneralExtensionManager implements TwigExtensionManagerInterface {
 	 *
 	 * @param Environment $twig The Twig environment where the global variable will be added.
 	 */
-	public function add_twig_globals( Environment $twig ) {
+	public function add_twig_globals( Environment $twig ): void {
 		$twig->addGlobal( 'THEMENAME', defined( 'THEMENAME' ) ? THEMENAME : 'pressgang' );
 	}
 }

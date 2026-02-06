@@ -24,7 +24,7 @@ class Config {
 	 *
 	 * @param ConfigLoaderInterface $loader The loader to be used for loading configuration settings.
 	 */
-	public static function set_loader( ConfigLoaderInterface $loader ) {
+	public static function set_loader( ConfigLoaderInterface $loader ): void {
 		self::$loader = $loader;
 	}
 
@@ -56,7 +56,7 @@ class Config {
 	 *
 	 * Useful if you need to force a reload of the settings, for example, after changing configuration files.
 	 */
-	public static function clear_cache() {
+	public static function clear_cache(): void {
 		self::$settings = null;
 	}
 }

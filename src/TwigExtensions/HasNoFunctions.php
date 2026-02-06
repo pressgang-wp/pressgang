@@ -22,7 +22,7 @@ trait HasNoFunctions {
 	 *
 	 * @param Environment $twig The Twig environment.
 	 */
-	public function add_twig_functions( Environment $twig ) {
+	public function add_twig_functions( Environment $twig ): void {
 		// Default implementation (empty) if not overridden
 	}
 }

@@ -20,7 +20,7 @@ class ControllerFactory {
 	 *
 	 * @return object An instance of the specified controller class.
 	 */
-	public static function make( string $controller_class, string $twig_template = null ): object {
+	public static function make( string $controller_class, ?string $twig_template = null ): ControllerInterface {
 		// Use the splat operator to unpack filtered arguments (removes null values)
 		// i.e. Honours controller default template args.
 		return new $controller_class( ...array_filter( [ $twig_template ] ) );
