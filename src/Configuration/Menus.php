@@ -34,10 +34,10 @@ class Menus extends ConfigurationSingleton {
 
 		foreach ( $this->config as $location => $description ) {
 			// allow filtering of the menu in child themes and plugins if required
-			$menu = \apply_filters( "pressgang_register_menu_{$location}", [ $location => $description, ] );
+			$menu = \apply_filters( "pressgang_register_menu_{$location}", [ $location => $description ] );
 
 			if ( ! empty( $menu ) ) {
-				$menus[ $location ] = $description;
+				$menus = array_merge( $menus, $menu );
 			}
 		}
 
