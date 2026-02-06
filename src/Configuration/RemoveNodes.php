@@ -18,7 +18,7 @@ class RemoveNodes extends ConfigurationSingleton {
 	 * Sets up the configuration for toolbar nodes removal and adds an action hook
 	 * to remove nodes from the admin toolbar.
 	 *
-	 * @par\am array $config The configuration array for nodes to be removed.
+	 * @param array $config The configuration array for nodes to be removed.
 	 */
 	public function initialize( array $config ): void {
 		$this->config = $config;
