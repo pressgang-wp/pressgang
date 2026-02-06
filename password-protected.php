@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * The template for displaying password-protected content.
+ *
+ * @package PressGang
+ */
 
 use PressGang\Controllers\PageController;
 
