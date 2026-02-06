@@ -10,23 +10,24 @@ use \Timber\Timber;
  * and input sanitisation automatically.
  */
 class Metabox {
-	protected $meta_name = '';
-	protected $post_type = '';
-	protected $title = '';
-	protected $fields = [];
-	protected $context = 'advanced';
-	protected $priority = 'default';
-	protected $callback_args = [];
+	protected string $meta_name;
+	protected string $post_type;
+	protected string $title;
+	protected array $fields;
+	protected string $context;
+	protected string $priority;
+	protected array $callback_args;
 
 	/**
-	 * __construct
-	 *
-	 * @param $meta_name
-	 * @param $post_type
-	 * @param $title
+	 * @param string $meta_name
+	 * @param string $post_type
+	 * @param string $title
 	 * @param array $fields array(array('id', 'name', 'label', 'type', 'class'), ...)
+	 * @param string $context
+	 * @param string $priority
+	 * @param array $callback_args
 	 */
-	public function __construct( $meta_name, $post_type, $title, $fields = [], $context = 'advanced', $priority = 'default', $callback_args = [] ) {
+	public function __construct( string $meta_name, string $post_type, string $title, array $fields = [], string $context = 'advanced', string $priority = 'default', array $callback_args = [] ) {
 		$this->post_type     = $post_type;
 		$this->meta_name     = $meta_name;
 		$this->fields        = $fields;
@@ -120,7 +121,7 @@ class Metabox {
 
 		foreach ( $old as $key => $old_value ) {
 			if ( isset( $new[ $key ] ) ) {
-				if ( $new[ $key ] && $new[ $key ] != $old_value ) {
+				if ( $new[ $key ] && $new[ $key ] !== $old_value ) {
 					update_post_meta( $post_id, $key, $new[ $key ] );
 				}
 			}
