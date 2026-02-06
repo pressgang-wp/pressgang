@@ -10,13 +10,6 @@ use \Timber\Timber;
  * and input sanitisation automatically.
  */
 class Metabox {
-	protected string $meta_name;
-	protected string $post_type;
-	protected string $title;
-	protected array $fields;
-	protected string $context;
-	protected string $priority;
-	protected array $callback_args;
 
 	/**
 	 * @param string $meta_name
@@ -27,14 +20,15 @@ class Metabox {
 	 * @param string $priority
 	 * @param array $callback_args
 	 */
-	public function __construct( string $meta_name, string $post_type, string $title, array $fields = [], string $context = 'advanced', string $priority = 'default', array $callback_args = [] ) {
-		$this->post_type     = $post_type;
-		$this->meta_name     = $meta_name;
-		$this->fields        = $fields;
-		$this->title         = $title;
-		$this->context       = $context;
-		$this->priority      = $priority;
-		$this->callback_args = $callback_args;
+	public function __construct(
+		protected string $meta_name,
+		protected string $post_type,
+		protected string $title,
+		protected array $fields = [],
+		protected string $context = 'advanced',
+		protected string $priority = 'default',
+		protected array $callback_args = [],
+	) {
 
 		// hook to add metabox
 		add_action( 'add_meta_boxes', [ $this, 'add_meta_box' ] );
@@ -102,7 +96,7 @@ class Metabox {
 		}
 
 		$nonce = sprintf( "%s_nonce", $this->meta_name );
-		if ( ! isset( $_POST[ $nonce ] ) || ! wp_verify_nonce( $_POST[ $nonce ], $this->meta_name ) ) {
+		if ( ! wp_verify_nonce( $_POST[ $nonce ] ?? '', $this->meta_name ) ) {
 			return $post_id;
 		}
 

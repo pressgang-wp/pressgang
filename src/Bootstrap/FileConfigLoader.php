@@ -8,7 +8,6 @@ namespace PressGang\Bootstrap;
  * the merged result via wp_cache or transients.
  */
 class FileConfigLoader implements ConfigLoaderInterface {
-	private string $config_path;
 
 	const CACHE_KEY = 'pressgang_config_settings';
 	const CACHE_GROUP = 'config_settings';
@@ -16,8 +15,7 @@ class FileConfigLoader implements ConfigLoaderInterface {
 	/**
 	 * @param string $config_path Relative path to config directory within themes.
 	 */
-	public function __construct( string $config_path = '/config/' ) {
-		$this->config_path = $config_path;
+	public function __construct( private readonly string $config_path = '/config/' ) {
 	}
 
 	/**

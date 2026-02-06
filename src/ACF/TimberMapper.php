@@ -19,24 +19,13 @@ class TimberMapper {
 	 * @return mixed The corresponding Timber object, nested array of objects, or the original value.
 	 */
 	public static function map_field( array $field ): mixed {
-		switch ( $field['type'] ) {
-
-			case 'post_object':
-				return Timber::get_post( $field['value'] );
-
-			case 'term':
-				return Timber::get_term( $field['value'] );
-
-			case 'image':
-				return Timber::get_image( $field['value'] );
-
-			case 'repeater':
-			case 'flexible_content':
-				return $field['value'];
-
-			default:
-				return $field['value'];
-		}
+		return match ( $field['type'] ) {
+			'post_object'                => Timber::get_post( $field['value'] ),
+			'term'                       => Timber::get_term( $field['value'] ),
+			'image'                      => Timber::get_image( $field['value'] ),
+			'repeater', 'flexible_content' => $field['value'],
+			default                      => $field['value'],
+		};
 	}
 
 	/**

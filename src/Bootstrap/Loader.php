@@ -12,9 +12,6 @@ use function Symfony\Component\String\u;
  */
 class Loader {
 
-	/** @var ConfigLoaderInterface */
-	private ConfigLoaderInterface $configLoader;
-
 	/** @var string[] Folders under src/ to include via config. */
 	private array $include_folders = [
 		'shortcodes',
@@ -24,8 +21,7 @@ class Loader {
 	/**
 	 * @param ConfigLoaderInterface $configLoader
 	 */
-	public function __construct( ConfigLoaderInterface $configLoader ) {
-		$this->configLoader = $configLoader;
+	public function __construct( private readonly ConfigLoaderInterface $configLoader ) {
 	}
 
 	/**
