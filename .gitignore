@@ -2,4 +2,6 @@
 /vendor/*
 /node_modules/*
 /release/*
+/build/*
 .DS_Store
+phpunit.xml
