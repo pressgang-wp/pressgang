@@ -32,6 +32,9 @@ abstract class Widget extends WP_Widget {
 		$this->title       = $this->title ?? __( ucwords( str_replace( '_', ' ', $classname ) ), THEMENAME );
 		$this->description = $this->description ?? sprintf( "%s Widget", $this->title );
 
+		$this->defaults = $this->define_defaults();
+		$this->fields   = $this->define_fields();
+
 		$widget_ops = [
 			'classname'   => $this->classname,
 			'description' => $this->description,
