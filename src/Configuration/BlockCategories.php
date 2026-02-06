@@ -14,11 +14,6 @@ namespace PressGang\Configuration;
 class BlockCategories extends ConfigurationSingleton {
 
 	/**
-	 * @var array
-	 */
-	protected array $config = [];
-
-	/**
 	 * Sets up the configuration and adds action hooks for block category registration.
 	 *
 	 * @see https://developer.wordpress.org/reference/hooks/block_categories_all/
