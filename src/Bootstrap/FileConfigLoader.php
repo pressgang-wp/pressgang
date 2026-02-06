@@ -40,7 +40,7 @@ class FileConfigLoader implements ConfigLoaderInterface {
 	 * @return mixed Settings from cache or false if not cached.
 	 */
 	private function get_cached_settings(): mixed {
-		if ( defined( 'PRESSGANG_CONFIG_CACHE' ) && PRESSGANG_CONFIG_CACHE_SECONDS ) {
+		if ( defined( 'PRESSGANG_CONFIG_CACHE_SECONDS' ) && PRESSGANG_CONFIG_CACHE_SECONDS ) {
 			return \get_transient( self::CACHE_KEY );
 		} else {
 			return \wp_cache_get( self::CACHE_KEY, self::CACHE_GROUP );
