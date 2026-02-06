@@ -20,7 +20,7 @@ class Plugins extends ConfigurationSingleton {
 	 */
 	public function initialize( array $config ): void {
 		$this->config = $config;
-		\add_filter( 'admin_init', [ $this, 'check_plugins_active' ] );
+		\add_action( 'admin_init', [ $this, 'check_plugins_active' ] );
 	}
 
 	/**
