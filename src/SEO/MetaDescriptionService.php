@@ -123,7 +123,7 @@ class MetaDescriptionService {
 			return $description;
 		}
 
-		$description = \get_post_meta( $post->ID, 'meta_description' )
+		$description = \get_post_meta( $post->ID, 'meta_description', true )
 			?: \get_the_excerpt( $post->ID )
 				?: \apply_filters( 'the_content', \get_the_content( null, false, $post->ID ) );
 
