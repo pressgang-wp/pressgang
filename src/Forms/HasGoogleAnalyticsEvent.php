@@ -24,12 +24,12 @@ trait HasGoogleAnalyticsEvent {
 	 * @param string $ga_label Optional. The event label for additional categorization.
 	 */
 	public static function maybe_init_ga_event_tracking( string $form_action, string $ga_category = 'Form Submission', string $ga_action = 'submit', string $ga_label = '' ): void {
-		if ( isset( $_POST['action'] ) && $_POST['action'] === $form_action ) {
+		if ( \sanitize_text_field( $_POST['action'] ?? '' ) === $form_action ) {
 			self::$ga_category = $ga_category;
 			self::$ga_action   = $ga_action;
 			self::$ga_label    = $ga_label;
 
-			if ( isset( $_GET['submitted'] ) && $_GET['submitted'] === '1' ) {
+			if ( \sanitize_text_field( $_GET['submitted'] ?? '' ) === '1' ) {
 				self::register_ga_event_handler();
 			}
 		}
