@@ -44,7 +44,8 @@ class MetaDescriptionService {
 		} else {
 			$key = self::generate_cache_key( $object );
 
-			if ( ! self::$meta_description = \wp_cache_get( $key ) ) {
+			self::$meta_description = \wp_cache_get( $key );
+			if ( ! self::$meta_description ) {
 				self::$meta_description = self::generate_and_cache_description( $object, $key );
 			}
 		}
