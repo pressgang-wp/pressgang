@@ -49,11 +49,11 @@ class TimberMapper {
 	 * @return mixed
 	 */
 	public static function map_sub_fields( string $key ): mixed {
-		if ( $sub_field_object = \get_sub_field_object( $key ) ) {
+		$sub_field_object = \get_sub_field_object( $key );
+		if ( $sub_field_object ) {
 			return self::map_field( $sub_field_object );
 		}
 
 		return $sub_field_object;
-
 	}
 }
