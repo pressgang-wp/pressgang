@@ -45,22 +45,24 @@ class ColorPalette extends ConfigurationSingleton {
 
 		$palette = [];
 
-		foreach ( $this->config as $key => $palette ) {
+		foreach ( $this->config as $key => $entry ) {
 
-			if ( ! empty( $palette ) ) {
-				if ( ! is_array( $palette ) ) {
+			if ( ! empty( $entry ) ) {
+				if ( ! is_array( $entry ) ) {
 					$readableName = u( $key )->replace( '-', ' ' )->title( true );
 
-					$palette = [
+					$entry = [
 						'slug'  => $key,
 						'name'  => $readableName->toString(),
-						'color' => $palette
+						'color' => $entry,
 					];
 				}
 
-				if ( ! isset( $palette['slug'] ) ) {
-					$palette['slug'] = $key;
+				if ( ! isset( $entry['slug'] ) ) {
+					$entry['slug'] = $key;
 				}
+
+				$palette[] = $entry;
 			}
 		}
 
