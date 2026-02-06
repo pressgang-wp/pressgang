@@ -26,38 +26,36 @@ class ControllerFactory {
 	}
 
 	/**
-	 * Infers a controller class from a WP template filename, falling back to PostController.
+	 * Infers a controller FQCN from a WP template filename, falling back to PostController.
 	 *
 	 * @param string $template
 	 *
-	 * @return ControllerInterface
+	 * @return string Fully qualified controller class name.
 	 */
-	public static function infer_controller_class( string $template ): ControllerInterface {
+	public static function infer_controller_class( string $template ): string {
 		$template         = basename( $template, '.php' );
-		$controller_class = self::to_filename( $template ) . 'Controller';
+		$controller_class = __NAMESPACE__ . '\\' . self::to_studly_case( $template ) . 'Controller';
 
 		if ( class_exists( $controller_class ) ) {
-			return new $controller_class();
+			return $controller_class;
 		}
 
 		// Fallback to a default controller if needed
-		return new PostController();
+		return PostController::class;
 	}
 
 	/**
-	 * Converts a template slug (e.g. 'single-product') to a StudlyCase controller class name.
+	 * Converts a template slug (e.g. 'single-product') to StudlyCase (e.g. 'SingleProduct').
 	 *
 	 * @param string $string
 	 *
 	 * @return string
 	 */
-	protected static function to_filename( string $string ): string {
+	protected static function to_studly_case( string $string ): string {
 		$string = str_replace( [ '-', '_' ], ' ', $string );
 		$string = ucwords( $string );
-		$string = str_replace( ' ', '', $string );
-		$string .= 'Controller';
 
-		return $string;
+		return str_replace( ' ', '', $string );
 	}
 
 	/**
