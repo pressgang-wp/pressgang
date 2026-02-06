@@ -96,6 +96,7 @@ class TimberServiceProvider {
 	public function add_to_twig( Environment $twig ): Environment {
 		foreach ( $this->twig_extensions as $manager ) {
 			$manager->add_twig_functions( $twig );
+			$manager->add_twig_filters( $twig );
 			$manager->add_twig_globals( $twig );
 		}
 
