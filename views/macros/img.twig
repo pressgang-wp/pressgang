@@ -6,7 +6,7 @@
 	{% if pathinfo.extension|lower == 'svg' %}
 		<img
 			src="{{ (sizes|last is iterable ? thumbnail.src|resize(sizes|last[0], sizes|last[1]) : thumbnail.src|resize(sizes|last))|relative }}"
-			alt="{{ alt|default(img.alt)|e('html_attr') }}"
+			alt="{{ alt|default(thumbnail.alt)|e('html_attr') }}"
 			class="{{ class|e('html_attr') }} {{ class|e('html_attr') }}--svg"
 			{% if img_styles %}
 				style="{{ img_styles|join(';') }};"
@@ -73,7 +73,7 @@
 			height="{{ height }}"
 			src="{{ (last_size is iterable ? thumbnail.src|resize(last_size[0], last_size[1]) : thumbnail.src|resize(last_size))|relative }}"
 			srcset="{{ (lqip_size is iterable ? thumbnail.src|resize(lqip_size[0], lqip_size[1]) : thumbnail.src|resize(lqip_size))|relative }}"
-			alt="{{ alt|default(img.alt)|e('html_attr') }}"
+			alt="{{ alt|default(thumbnail.alt)|e('html_attr') }}"
 			class="blur-up lazyload {{ class|e('html_attr') }}"
 			data-sizes="auto"
 			data-src="{{ (last_size is iterable ? thumbnail.src|resize(last_size[0], last_size[1]) : thumbnail.src|resize(last_size))|relative }}"
@@ -100,7 +100,7 @@
 
 		<img
 			src="{{ 'https://via.placeholder.com/%dx%d/333/fff?text=%s'|format(w, h, alt|upper|url_encode) }}"
-			alt="{{ alt|default(img.alt)|e('html_attr') }}"
+			alt="{{ alt|default(thumbnail.alt)|e('html_attr') }}"
 			class="{{ class|e('html_attr') }}"
 			{% if img_styles %}
 				style="{{ img_styles|join(';') }};"
