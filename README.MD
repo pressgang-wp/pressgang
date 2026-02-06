@@ -2,82 +2,89 @@
 
 # Hijacking Your WordPress Development Workflow
 
-**Ahoy there! Modernize your WordPress development and ship your WordPress themes faster than ever. PressGang anchors your workflow in modern development practices. Build cleaner, faster, smarter themes and navigate your development course to calmers seas.**
+**Ahoy there! Modernize your WordPress development and ship your WordPress themes faster than ever. PressGang anchors your workflow in modern development practices. Build cleaner, faster, smarter themes and navigate your development course to calmer seas.**
 
-https://docs.pressgang.dev/
+📖 **[Read the full documentation at docs.pressgang.dev](https://docs.pressgang.dev/)**
 
 ## Overview
 
-PressGang is a powerful and flexible WordPress parent theme framework designed to streamline theme development and enhance customization capabilities. As a parent theme framework, PressGang serves as a foundation upon which child themes can be built, allowing developers to create custom themes more efficiently while inheriting the robust features and structure of the PressGang parent theme.
+PressGang is a WordPress parent theme framework that gives you the architecture of a modern PHP application — Composer autoloading, Twig templating via Timber, config-driven bootstrapping, and a clear separation of concerns — without leaving the WordPress ecosystem. Build child themes on a solid, opinionated foundation and spend your time on features, not plumbing.
 
-### Key Features
+## ✨ Key Features
 
-1. **Rapid Development:** Engineered for quickly building WordPress themes with clean and modern coding standards, accelerating the development process by providing a solid foundation and tools.
-2. **Timber Integration:** Utilizes the [Timber library](https://upstatement.com/timber/), separating template code from PHP logic through the Twig templating engine, resulting in cleaner, more maintainable code.
-3. **MVC-inspired Architecture:** Introduces the concept of Controllers to WordPress theme development, expanding on the Model-View-Controller (MVC) approach for better organization and separation of concerns.
-4. **Modern PHP Practices:** Emphasizes Configuration over Convention, inspired by frameworks like Laravel, allowing for bootstrapping repetitive WordPress tasks via configuration files, reducing boilerplate code, and increasing developer productivity.
-5. **Composer and PSR-4:** Utilizes Composer for dependency management and adheres to PSR-4 coding standards for autoloading, ensuring a consistent and modern code structure.
-6. **Flexibility and Customization:** Maintains the core WordPress structure, allowing developers to leverage their existing WordPress knowledge while benefiting from additional features. It provides powerful tools and conventions but remains flexible for direct interaction with WordPress as needed.
+- 🚀 **Rapid Development** — A solid foundation and conventions that accelerate theme development with clean, modern PHP.
+- 🌲 **Timber + Twig** — Built on [Timber](https://timber.github.io/docs/v2/) to separate template markup from PHP logic through the [Twig](https://twig.symfony.com/) templating engine.
+- 🎮 **Controller Architecture** — MVC-inspired controllers act as view models, preparing context for templates with a clear separation of concerns.
+- ⚓ **Convention over Configuration** — Inspired by frameworks like Laravel, repetitive WordPress tasks are bootstrapped via declarative config files — less boilerplate, more building.
+- 📦 **Composer & PSR-4** — Dependency management via [Composer](https://getcomposer.org/) and PSR-4 autoloading for a consistent, modern codebase.
+- 🔧 **Flexible by Design** — Keeps the core WordPress structure intact. Leverage everything you already know while gaining powerful tools and conventions.
 
-By leveraging these features, PressGang empowers developers to create sophisticated, performant, and maintainable WordPress themes with greater ease and efficiency.
+## 🧭 Core Concepts
 
-### Shiver Me Timber: Prerequisites
-To chart a course for success with PressGang, it helps to be familiar with these trusty tools:
+### ⚙️ Config-Driven Bootstrapping
 
-* [Timber](http://upstatement.com/timber/) -  Just like a seasoned shipwright uses the best timber, PressGang is built on the Timber library to craft clean, powerful themes.
-* [Composer](https://getcomposer.org/) - Manage your dependencies and keep everything shipshape with Composer.
-* [Grunt](http://gruntjs.com/) -  Ensure plain sailing with task automation.
+Everything in PressGang starts with a config file. Arrays in `config/` declare what gets registered — post types, taxonomies, sidebars, blocks, scripts, styles, and more. Each config file maps to a class in `src/Configuration/` by convention (e.g. `config/sidebars.php` → `Sidebars`). No queries, no side effects — just declarative registration.
 
-## Getting Started
+### 🎮 Controllers
 
-PressGang is designed as a WordPress _parent theme_ that acts as a library for your [_child theme_](https://codex.wordpress.org/Child_Themes). To get started, you will need to create a child theme.
+Controllers live in `src/Controllers/` and are **view models**, not request handlers. Each controller extends `AbstractController`, gathers data via Timber, builds a context array, and selects a template. They must be side-effect free — no writes, no remote requests, no direct rendering.
+
+### 🌍 Context Managers
+
+Context managers enrich the global `Timber::context()` with data needed across many templates — menus, site info, theme mods, ACF option pages. They implement `ContextManagerInterface`, are registered via `config/context-managers.php`, and must be safe to run on every request (frontend, admin, AJAX, CLI).
+
+### 🧩 Twig Extensions
+
+All custom Twig functions, filters, and globals are registered through extension managers configured in `config/twig-extensions.php`. Twig remains a presentation-only layer — no database queries, no mutations, no business logic.
+
+### 🧱 Blocks & Snippets
+
+Gutenberg blocks are declared in `config/blocks.php` and live under `blocks/<block-name>/` with a `block.json` and Twig template. Snippets are reusable view partials registered via `config/snippets.php` — self-contained, explicitly parameterised UI components.
+
+## 📋 Requirements
+
+- **PHP** 8.3+
+- **WordPress** 6.4+
+- **Timber** 2.0+
+- **Composer**
+
+## 🚀 Getting Started
+
+PressGang is a WordPress _parent theme_ that acts as a framework for your [child theme](https://developer.wordpress.org/themes/advanced-topics/child-themes/).
 
 ### Quick Start with PressGang-Child
 
-The fastest way to get up and running is by using our [pressgang-child](https://github.com/pressgang-wp/pressgang-child) repository, which includes a [grunt-init template](http://gruntjs.com/project-scaffolding) for creating a PressGang-ready child theme.
+The fastest way to weigh anchor is with the [pressgang-child](https://github.com/pressgang-wp/pressgang-child) starter repo:
 
-To get started:
+```bash
+git clone https://github.com/pressgang-wp/pressgang-child your-theme-name
+cd your-theme-name
+composer install
+```
 
-1. Clone the pressgang-child repository:
-    ```bash
-    git clone https://github.com/pressgang-wp/pressgang-child your-theme-name
-    ```
-
-2. Navigate into your new theme directory:
-    ```bash
-    cd your-theme-name
-    ```
-
-3. Follow the instructions in the README to set up your environment and start developing your child theme.
+Then follow the instructions in that repo's README to configure your child theme.
 
 ### Manual Setup
 
-If you prefer to start from scratch, you can manually set up your PressGang environment.
-
-1. Clone the PressGang repository:
+1. Clone PressGang into your `wp-content/themes/` directory:
     ```bash
     git clone https://github.com/pressgang-wp/pressgang
     ```
 
-2. Create your own child theme by following the [WordPress guidelines for child themes](https://codex.wordpress.org/Child_Themes).
+2. Create your own [child theme](https://developer.wordpress.org/themes/advanced-topics/child-themes/) that extends PressGang.
 
 ### Composer Installation
 
-You can also include PressGang as a dependency in your project using Composer.
+Require PressGang as a dependency in your child theme:
 
-1. Require the PressGang package via Composer:
-    ```bash
-    composer require pressgang-wp/pressgang
-    ```
+```bash
+composer require pressgang-wp/pressgang
+```
 
-2. Create and configure your child theme to extend the PressGang parent theme.
+## 📖 Documentation
 
-For detailed instructions on setting up and configuring your child theme, refer to the [PressGang documentation](https://github.com/pressgang-wp/pressgang).
+Uncover the buried treasure at: **[docs.pressgang.dev](https://docs.pressgang.dev/)**
 
-## Documentation
+## 📄 License
 
-Uncover the buried treasure at: https://docs.pressgang.dev/
-
-## License
-
-PressGang is open-sourced software licensed under the [MIT license](LICENSE.md).
+PressGang is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
