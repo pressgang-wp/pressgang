@@ -1,9 +1,6 @@
 <?php
 
 /**
-<?php
-
-/**
  * Custom Taxonomies Configuration
  *
  * This configuration file defines settings for custom taxonomies used within the WordPress theme.
