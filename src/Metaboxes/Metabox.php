@@ -91,39 +91,32 @@ class Metabox {
 	 * @param $post
 	 */
 	public function save_post_meta( $post_id, $post ) {
-		// check post type
-		if ( get_post_type_object( $post->post_type ) !== $this->post_type ) {
-			// verify nonce
-			$nonce = sprintf( "%s_nonce", $this->meta_name );
-			if ( isset( $_POST[ $nonce ] ) && wp_verify_nonce( $_POST[ $nonce ], $this->meta_name ) ) {
-				// check user can edit
-				if ( current_user_can( 'edit_posts', $post_id ) ) {
+		if ( $post->post_type !== $this->post_type ) {
+			return $post_id;
+		}
 
-					// get the existing data
-					$old = $this->get_field_values( $post );
+		$nonce = sprintf( "%s_nonce", $this->meta_name );
+		if ( ! isset( $_POST[ $nonce ] ) || ! wp_verify_nonce( $_POST[ $nonce ], $this->meta_name ) ) {
+			return $post_id;
+		}
 
-					// get the new data
-					$new = $this->sanitize_custom_input();
+		if ( ! current_user_can( 'edit_posts', $post_id ) ) {
+			return $post_id;
+		}
 
-					// add new values that did not previously exist
-					foreach ( $new as $key => $new_value ) {
-						if ( $new_value && ( ! isset( $old[ $key ] ) || ! $old[ $key ] ) ) {
-							add_post_meta( $post_id, $key, $new_value );
-						}
-					}
+		$old = $this->get_field_values( $post );
+		$new = $this->sanitize_custom_input();
 
-					foreach ( $old as $key => $old_value ) {
-						// update existing value where the data has changed
-						if ( isset( $new[ $key ] ) ) {
-							if ( $new[ $key ] && $new[ $key ] != $old_value ) {
-								update_post_meta( $post_id, $key, $new[ $key ] );
-							}
-						} // delete existing value where it is no longer present
-						else {
-							// TODO delete removed fields
-							// delete_post_meta($post_id,  "_{$key}", $old_value);
-						}
-					}
+		foreach ( $new as $key => $new_value ) {
+			if ( $new_value && ( ! isset( $old[ $key ] ) || ! $old[ $key ] ) ) {
+				add_post_meta( $post_id, $key, $new_value );
+			}
+		}
+
+		foreach ( $old as $key => $old_value ) {
+			if ( isset( $new[ $key ] ) ) {
+				if ( $new[ $key ] && $new[ $key ] != $old_value ) {
+					update_post_meta( $post_id, $key, $new[ $key ] );
 				}
 			}
 		}
