@@ -33,11 +33,16 @@ class SinglePostExtensionManager implements TwigExtensionManagerInterface {
 	 */
 	public function add_twig_functions( Environment $twig ): void {
 		if ( \is_single() ) {
-			$post = Timber::get_post();
-			if ( is_a( $post, Post::class ) ) {
-				$twig->addFunction( new TwigFunction( 'get_latest_posts', [ $post, 'get_latest_posts' ] ) );
-				$twig->addFunction( new TwigFunction( 'get_related_posts', [ $post, 'get_related_posts' ] ) );
-			}
+			$twig->addFunction( new TwigFunction( 'get_latest_posts', function ( ?int $posts_per_page = null ): array {
+				$post = Timber::get_post();
+
+				return is_a( $post, Post::class ) ? $post->get_latest_posts( $posts_per_page ) : [];
+			} ) );
+			$twig->addFunction( new TwigFunction( 'get_related_posts', function ( ?int $posts_per_page = null ): array {
+				$post = Timber::get_post();
+
+				return is_a( $post, Post::class ) ? $post->get_related_posts( $posts_per_page ) : [];
+			} ) );
 		}
 	}
 }
