@@ -4,6 +4,14 @@ namespace PressGang\Configuration;
 
 use PressGang\Snippets\SnippetInterface;
 
+/**
+ * Includes and initialises snippet classes from config/snippets.php. Resolves
+ * snippet classes from child theme, parent theme, and fully qualified namespaces,
+ * then instantiates each SnippetInterface implementation.
+ *
+ * Why: provides a declarative way to register reusable UI components (snippets).
+ * Extend via: child theme config override or child theme namespace overrides.
+ */
 class Snippets extends ConfigurationSingleton {
 	/**
 	 * @param array $config

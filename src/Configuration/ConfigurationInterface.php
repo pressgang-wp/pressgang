@@ -2,16 +2,19 @@
 
 namespace PressGang\Configuration;
 
+/**
+ * Contract for config-driven registration classes. Each implementation maps to a
+ * config file (e.g. config/sidebars.php → Sidebars) and is instantiated as a
+ * singleton by the Loader during boot.
+ */
 interface ConfigurationInterface {
 
 	/**
-	 * Initialize configuration settings, typically from config files.
+	 * @param array<string|int, mixed> $config
 	 */
 	public function initialize( array $config ): void;
 
 	/**
-	 * Get a Singleton instance of the Configuration class.
-	 *
 	 * @return static
 	 */
 	public static function get_instance(): static;

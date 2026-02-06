@@ -5,12 +5,11 @@ namespace PressGang\Configuration;
 use PressGang\Helpers\ScriptLoader;
 
 /**
- * Class Scripts
+ * Registers and enqueues JavaScript scripts from config/scripts.php. Delegates to
+ * ScriptLoader for versioning, enqueueing, and async/defer attribute injection.
  *
- * Manages the registration and de-registration of JavaScript scripts in WordPress.
- * It allows for scripts to be added and modified with attributes like async and defer.
- *
- * @package PressGang
+ * Why: keeps script registration declarative with automatic cache-busting.
+ * Extend via: child theme config override.
  */
 class Scripts extends ConfigurationSingleton {
 

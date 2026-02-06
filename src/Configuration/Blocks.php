@@ -3,13 +3,14 @@
 namespace PressGang\Configuration;
 
 /**
- * Class Blocks
+ * Registers WordPress block types from config/blocks.php. Each entry points to a
+ * block.json file; the class resolves child/parent theme paths, registers the block,
+ * and invokes any on_register callback defined in the block's ACF renderCallback.
  *
- * Handles the registration of WordPress `Blocks`.
- * It reads the block configuration and registers each block type.
+ * Why: keeps block registration declarative with automatic child/parent theme resolution.
+ * Extend via: child theme config override or pressgang_block_registered_{name} action.
  *
  * @link https://developer.wordpress.org/block-editor/tutorials/block-tutorial/writing-your-first-block-type/
- * @package PressGang
  */
 class Blocks extends ConfigurationSingleton {
 

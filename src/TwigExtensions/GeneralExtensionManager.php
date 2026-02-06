@@ -6,25 +6,18 @@ use Twig\Environment;
 use Twig\TwigFunction;
 
 /**
- * Class GeneralExtensionManager
+ * Registers general-purpose Twig functions that expose common WordPress settings
+ * (get_option, get_theme_mod, get_search_query) and the THEMENAME global for
+ * use in translation filters.
  *
- * Implements TwigExtensionManagerInterface to add general-purpose Twig functions and global variables to the Twig environment.
- * This class provides basic utility functions and global variables commonly used in Twig templates.
- *
- * @see https://timber.github.io/docs/v2/guides/extending-twig/#adding-functionality-with-the-twig-environment-filter
- * @package PressGang\TwigExtensions
+ * @see https://timber.github.io/docs/v2/guides/extending-twig/
  */
 class GeneralExtensionManager implements TwigExtensionManagerInterface {
 
 	use HasNoFilters;
 
 	/**
-	 * Adds general utility functions to the Twig environment.
-	 *
-	 * Registers functions like 'get_search_query', 'get_option', and 'get_theme_mod' to the Twig environment,
-	 * enabling their use within Twig templates for various purposes such as retrieving WordPress options and theme modifications.
-	 *
-	 * @param Environment $twig The Twig environment where the functions will be added.
+	 * @param Environment $twig
 	 */
 	public function add_twig_functions( Environment $twig ): void {
 		$twig->addFunction( new TwigFunction( 'get_search_query', 'get_search_query' ) );
@@ -33,12 +26,9 @@ class GeneralExtensionManager implements TwigExtensionManagerInterface {
 	}
 
 	/**
-	 * Adds global variables to the Twig environment.
+	 * Exposes the THEMENAME constant as a Twig global for translation text domains.
 	 *
-	 * Registers a global variable 'THEMENAME' to the Twig environment, which can be used in Twig templates often for namespacing translations.
-	 * The value of 'THEMENAME' is determined by whether the constant THEMENAME is defined; if not, it defaults to 'pressgang'.
-	 *
-	 * @param Environment $twig The Twig environment where the global variable will be added.
+	 * @param Environment $twig
 	 */
 	public function add_twig_globals( Environment $twig ): void {
 		$twig->addGlobal( 'THEMENAME', defined( 'THEMENAME' ) ? THEMENAME : 'pressgang' );

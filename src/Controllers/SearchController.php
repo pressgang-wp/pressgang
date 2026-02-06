@@ -3,17 +3,12 @@
 namespace PressGang\Controllers;
 
 /**
- * Extends the PostsController class and overrides the title
- *
- * @package PressGang
+ * Controller for search results. Extends PostsController and overrides the page
+ * title to include the search query (e.g. "Search results for 'foo'").
  */
 class SearchController extends PostsController {
 
 	/**
-	 * SearchController constructor
-	 *
-	 * Adds a default $template 'search.twig'
-	 *
 	 * @param string|null $template
 	 */
 	public function __construct( string|null $template = 'search.twig' ) {
@@ -21,7 +16,7 @@ class SearchController extends PostsController {
 	}
 
 	/**
-	 * Automatically generates the search page title
+	 * Generates a "Search results for '...'" page title.
 	 *
 	 * @return string
 	 */

@@ -3,15 +3,14 @@
 namespace PressGang\Configuration;
 
 /**
- * Class Routes
+ * Registers custom URL routes from config/routes.php using the Upstatement Routes
+ * library. Each entry maps a route pattern to a template that Routes::load() will render.
  *
- * Manages custom routing in WordPress using Timber's routing capabilities see https://github.com/Upstatement/routes.
- * This class uses a configuration array to define custom routes and the corresponding templates.
- * It extends ConfigurationSingleton to ensure that it is only instantiated once.
+ * Why: provides declarative routing outside of WordPress's template hierarchy.
+ * Extend via: child theme config override.
  *
  * @see https://timber.github.io/docs/v2/guides/routing/
  * @see https://github.com/Upstatement/routes
- * @package PressGang
  */
 class Routes extends ConfigurationSingleton {
 

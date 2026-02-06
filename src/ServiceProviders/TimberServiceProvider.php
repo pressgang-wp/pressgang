@@ -8,21 +8,16 @@ use PressGang\TwigExtensions\TwigExtensionManagerInterface;
 use Twig\Environment;
 
 /**
- * Class TimberServiceProvider
- *
- * Manages the setup and provisioning of services related to the Timber library in PressGang.
- *
- * It handles the registration of various context managers and Twig extension managers,
- * thereby enhancing the functionality of Timber's context and Twig environment.
- *
- * @package PressGang\ServiceProviders
+ * Bridges PressGang's config-driven context managers and Twig extensions into
+ * Timber's filter system. Hooks into timber/context and timber/twig to apply all
+ * registered managers, and adds the pressgang-snippets views directory to Timber's paths.
  */
 class TimberServiceProvider {
 	protected array $context_managers = [];
 	protected array $twig_extensions = [];
 
 	/**
-	 * Bootstraps the service provider by registering context managers and Twig extension managers.
+	 * Registers all managers and hooks into timber/context and timber/twig filters.
 	 */
 	public function boot(): void {
 		$this->register_context_managers();
@@ -37,9 +32,7 @@ class TimberServiceProvider {
 	}
 
 	/**
-	 * Registers context managers for adding data to the Timber context.
-	 *
-	 * Adds various context managers to the internal collection.
+	 * Instantiates context managers listed in config/context-managers.php.
 	 */
 	protected function register_context_managers(): void {
 		foreach ( Config::get( 'context-managers' ) as $manager_class ) {
@@ -50,9 +43,7 @@ class TimberServiceProvider {
 	}
 
 	/**
-	 * Registers Twig extension managers for adding functions and globals to the Twig environment.
-	 *
-	 * Adds various Twig extension managers to the internal collection.
+	 * Instantiates Twig extension managers listed in config/twig-extensions.php.
 	 */
 	protected function register_twig_extension_managers(): void {
 		foreach ( Config::get( 'twig-extensions' ) as $manager_class ) {
@@ -81,13 +72,11 @@ class TimberServiceProvider {
 	}
 
 	/**
-	 * Adds additional data to the Timber context using the registered context managers.
+	 * Applies all registered context managers to the Timber context.
 	 *
-	 * Iterates through each registered context manager and applies its modifications to the Timber context.
+	 * @param array<string, mixed> $context
 	 *
-	 * @param array $context The current Timber context array.
-	 *
-	 * @return array The modified Timber context array.
+	 * @return array<string, mixed>
 	 */
 	public function add_to_context( array $context ): array {
 		foreach ( $this->context_managers as $manager ) {
@@ -98,13 +87,11 @@ class TimberServiceProvider {
 	}
 
 	/**
-	 * Adds extensions to the Twig environment using the registered Twig extension managers.
+	 * Applies all registered Twig extension managers to the Twig environment.
 	 *
-	 * Iterates through each registered Twig extension manager and applies its additions of functions and globals to the Twig environment.
+	 * @param Environment $twig
 	 *
-	 * @param Environment $twig The Twig environment.
-	 *
-	 * @return Environment The Twig environment with added extensions.
+	 * @return Environment
 	 */
 	public function add_to_twig( Environment $twig ): Environment {
 		foreach ( $this->twig_extensions as $manager ) {
@@ -116,17 +103,7 @@ class TimberServiceProvider {
 	}
 
 	/**
-	 * Registers the template locations for PressGang Snippets in Timber.
-	 *
-	 * This function adds a custom path to the Timber template locations, allowing Timber to locate
-	 * and use Twig templates stored in the PressGang Snippets repository. It dynamically constructs
-	 * the path to the 'views' directory of the PressGang Snippets, located in the child theme's
-	 * 'vendor' directory, and adds it to Timber's recognized paths.
-	 *
-	 * The function checks if the directory exists before adding it to Timber's paths to ensure
-	 * that only valid directories are used, thereby preventing errors from non-existent paths.
-	 *
-	 * @return void
+	 * Adds the pressgang-snippets vendor views directory to Timber's template paths.
 	 */
 	public function register_snippets_template_locations(): void {
 		\add_filter( 'timber/locations', function ( $paths ) {

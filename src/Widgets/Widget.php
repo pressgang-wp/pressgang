@@ -7,11 +7,9 @@ use ReflectionClass;
 use WP_Widget;
 
 /**
- * Abstract Class Widget
- *
- * Base class for creating widgets in WordPress.
- *
- * @package PressGang\Widgets
+ * Base class for PressGang widgets. Derives the widget ID, title, and Twig template
+ * from the class name, and merges ACF fields into the instance data automatically.
+ * Subclasses define fields/defaults and are registered via config/widgets.php.
  */
 abstract class Widget extends WP_Widget {
 

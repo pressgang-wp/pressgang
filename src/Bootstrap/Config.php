@@ -3,41 +3,32 @@
 namespace PressGang\Bootstrap;
 
 /**
- * Class Config
- *
- * Provides a central access point to retrieve theme configuration settings.
+ * Static facade for accessing merged parent/child theme configuration. Lazy-loads
+ * settings from the ConfigLoaderInterface on first access and exposes them via
+ * Config::get(). Settings are filterable through 'pressgang_get_config'.
  */
 class Config {
 
-	/**
-	 * @var array|null The array of configuration settings.
-	 */
+	/** @var array<string, mixed>|null */
 	private static ?array $settings = null;
 
-	/**
-	 * @var ConfigLoaderInterface|null The loader responsible for fetching configuration settings.
-	 */
+	/** @var ConfigLoaderInterface|null */
 	private static ?ConfigLoaderInterface $loader = null;
 
 	/**
-	 * Sets the configuration loader.
-	 *
-	 * @param ConfigLoaderInterface $loader The loader to be used for loading configuration settings.
+	 * @param ConfigLoaderInterface $loader
 	 */
 	public static function set_loader( ConfigLoaderInterface $loader ): void {
 		self::$loader = $loader;
 	}
 
 	/**
-	 * Retrieves a configuration setting.
+	 * Returns a single config key or all settings. Lazy-loads from the loader on first call.
 	 *
-	 * If a key is provided, returns the specific setting associated with that key,
-	 * otherwise returns all settings. If the key does not exist, returns the default value.
+	 * @param string|null $key
+	 * @param mixed $default
 	 *
-	 * @param string|null $key The key of the configuration setting to retrieve.
-	 * @param array $default The default value to return if the setting key is not found.
-	 *
-	 * @return mixed The configuration setting value or the default value.
+	 * @return mixed
 	 */
 	public static function get( ?string $key = null, mixed $default = [] ): mixed {
 		if ( self::$settings === null && self::$loader ) {
@@ -52,9 +43,7 @@ class Config {
 	}
 
 	/**
-	 * Clears the cached settings.
-	 *
-	 * Useful if you need to force a reload of the settings, for example, after changing configuration files.
+	 * Forces a reload of settings on the next get() call.
 	 */
 	public static function clear_cache(): void {
 		self::$settings = null;

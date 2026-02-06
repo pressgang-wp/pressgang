@@ -3,21 +3,14 @@
 namespace PressGang\Bootstrap;
 
 /**
- * Interface ConfigLoaderInterface
- *
- * Defines the contract for configuration loaders in the application.
- * Implementations of this interface are responsible for loading configuration settings,
- * typically from various sources like files, databases, or external services.
+ * Contract for configuration loaders. The default implementation is FileConfigLoader,
+ * which reads PHP files from config/ directories; alternative implementations could
+ * load config from a database or remote source.
  */
 interface ConfigLoaderInterface {
 
 	/**
-	 * Loads configuration settings.
-	 *
-	 * This method should retrieve an array of configuration settings from the implemented source.
-	 * The exact source and method of loading these settings are determined by the implementing class.
-	 *
-	 * @return array An associative array of configuration settings.
+	 * @return array<string, mixed>
 	 */
 	public function load(): array;
 }

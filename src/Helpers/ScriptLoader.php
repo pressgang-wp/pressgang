@@ -3,11 +3,9 @@
 namespace PressGang\Helpers;
 
 /**
- * Class ScriptLoader
- *
- * Handles the registration of scripts and manages script attributes like async and defer.
- *
- * @package PressGang
+ * Registers and enqueues JavaScript scripts with WordPress, supporting cache-busted
+ * versioning for local files and optional async/defer attribute injection. Called by
+ * the Scripts configuration class for each entry in config/scripts.php.
  */
 class ScriptLoader {
 

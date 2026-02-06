@@ -3,12 +3,12 @@
 namespace PressGang\Configuration;
 
 /**
- * Class Remove Support
+ * Calls remove_theme_support() for each feature listed in config/remove-support.php.
  *
- * Handles the removal of default features in a WordPress theme.
+ * Why: allows child themes to declaratively disable parent theme features.
+ * Extend via: child theme config override.
  *
  * @see https://developer.wordpress.org/reference/functions/remove_theme_support/
- * @package PressGang
  */
 class RemoveSupport extends ConfigurationSingleton {
 

@@ -6,38 +6,25 @@ use Timber\Post;
 use Timber\Timber;
 
 /**
- * PageController class responsible for handling the display logic of a standard WordPress page.
- *
- * Extends the AbstractController to utilize common functionalities like context management
- * and rendering of Twig templates using the Timber library. This controller specifically
- * handles the retrieval and preparation of page-related data for rendering.
+ * Controller for standard WordPress pages. Retrieves the current post via Timber
+ * and adds it to the context as both 'page' and 'post'. Defaults to page.twig.
  */
 class PageController extends AbstractController {
 
-	/**
-	 * The current post object.
-	 *
-	 * @var Post
-	 */
+	/** @var Post */
 	protected Post $post;
 
 	/**
-	 * Constructor for the PageController class.
-	 *
-	 * Initializes the controller with the specified Twig template, or defaults to 'page.twig'.
-	 *
-	 * @param string|null $template The path or name of the Twig template to be rendered. Defaults to 'page.twig'.
+	 * @param string|null $template
 	 */
 	public function __construct( string|null $template = 'page.twig' ) {
 		parent::__construct( $template );
 	}
 
 	/**
-	 * Retrieves the current post object using Timber.
+	 * Returns the current post, lazily initialised via Timber.
 	 *
-	 * Lazily loads and stores the post object for use in the context.
-	 *
-	 * @return Post The current post object.
+	 * @return Post
 	 */
 	protected function get_post(): Post {
 		if ( empty( $this->post ) ) {
@@ -48,12 +35,9 @@ class PageController extends AbstractController {
 	}
 
 	/**
-	 * Retrieves the context for rendering the page.
+	 * Adds the current post to context as both 'page' and 'post'.
 	 *
-	 * Overrides the base get_context method to add the current post object to the context.
-	 * Ensures that the page and post data are available in the Twig template.
-	 *
-	 * @return array The modified context array with page and post data.
+	 * @return array<string, mixed>
 	 */
 	protected function get_context(): array {
 		$post                  = $this->get_post();

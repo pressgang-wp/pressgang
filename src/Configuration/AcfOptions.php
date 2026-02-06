@@ -3,13 +3,14 @@
 namespace PressGang\Configuration;
 
 /**
- * Class AcfOptions
+ * Creates ACF options pages from config/acf-options.php. Each entry is passed to
+ * acf_add_options_page() on the acf/init hook, making the fields available globally
+ * through AcfOptionsContextManager.
  *
- * Handles the creation of Advanced Custom Fields (ACF) options pages based on a provided configuration array.
- * This class extends ConfigurationSingleton to ensure that it is instantiated only once.
+ * Why: keeps ACF options page registration declarative and consistent.
+ * Extend via: child theme config override.
  *
  * @see https://www.advancedcustomfields.com/resources/acf_add_options_page/
- * @package PressGang\Configuration
  */
 class AcfOptions extends ConfigurationSingleton {
 

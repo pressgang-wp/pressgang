@@ -3,13 +3,9 @@
 namespace PressGang\Helpers;
 
 /**
- * Class StyleLoader
- *
- * Handles the registration of styles.
- *
- * Supports adding 'preconnect' attribute to styles for performance optimization.
- *
- * @package PressGang
+ * Registers and enqueues CSS stylesheets with WordPress, supporting cache-busted
+ * versioning for local files and optional preconnect link injection for external
+ * resources. Called by the Styles configuration class for each entry in config/styles.php.
  */
 class StyleLoader {
 

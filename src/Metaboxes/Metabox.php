@@ -4,6 +4,11 @@ namespace PressGang\Metaboxes;
 
 use \Timber\Timber;
 
+/**
+ * Provides a metabox with nonce-protected save logic and Twig-rendered admin fields.
+ * Hooks into add_meta_boxes and save_post on construction, handling capability checks
+ * and input sanitisation automatically.
+ */
 class Metabox {
 	protected $meta_name = '';
 	protected $post_type = '';

@@ -3,13 +3,12 @@
 namespace PressGang\Configuration;
 
 /**
- * Class RemoveNodes
+ * Removes nodes from the WordPress admin toolbar by ID, based on
+ * config/remove-nodes.php. Each entry is a node ID passed to
+ * WP_Admin_Bar::remove_node() on the admin_bar_menu hook.
  *
- * Manages the removal of nodes (items) from the WordPress admin toolbar.
- * This class uses a configuration array to define the IDs of the toolbar nodes that should be removed.
- * It extends ConfigurationSingleton to ensure that it is only instantiated once.
- *
- * @package PressGang
+ * Why: lets themes simplify the admin bar declaratively.
+ * Extend via: child theme config override.
  */
 class RemoveNodes extends ConfigurationSingleton {
 

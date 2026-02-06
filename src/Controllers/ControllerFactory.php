@@ -3,22 +3,21 @@
 namespace PressGang\Controllers;
 
 /**
- * Class ControllerFactory
+ * Factory that resolves and renders PressGang controllers. Given a WordPress template
+ * filename, it infers the appropriate controller class, instantiates it, and calls render().
+ * Used by PressGang::render() as the primary entry point from template files.
  *
- * A factory class for instantiating and managing controllers in the PressGang theme.
- * It provides methods to create controller instances and render views.
- *
- * @package PressGang\Controllers
+ * Extend via: pressgang_{controller}_template and pressgang_{controller}_context filters.
  */
 class ControllerFactory {
 
 	/**
-	 * Create an instance of a controller class with an optional Twig template.
+	 * Creates a controller instance, passing the template only if provided.
 	 *
-	 * @param string $controller_class The class name of the controller to instantiate.
-	 * @param string|null $twig_template Optional Twig template to be used with the controller.
+	 * @param string $controller_class
+	 * @param string|null $twig_template
 	 *
-	 * @return object An instance of the specified controller class.
+	 * @return ControllerInterface
 	 */
 	public static function make( string $controller_class, ?string $twig_template = null ): ControllerInterface {
 		// Use the splat operator to unpack filtered arguments (removes null values)
@@ -27,11 +26,11 @@ class ControllerFactory {
 	}
 
 	/**
-	 * Infer the controller class name based on a given template file name.
+	 * Infers a controller class from a WP template filename, falling back to PostController.
 	 *
-	 * @param string $template The filename of the template.
+	 * @param string $template
 	 *
-	 * @return ControllerInterface An instance of the inferred controller class.
+	 * @return ControllerInterface
 	 */
 	public static function infer_controller_class( string $template ): ControllerInterface {
 		$template         = basename( $template, '.php' );
@@ -46,11 +45,11 @@ class ControllerFactory {
 	}
 
 	/**
-	 * Convert a string to a valid filename format for controllers.
+	 * Converts a template slug (e.g. 'single-product') to a StudlyCase controller class name.
 	 *
-	 * @param string $string The string to convert.
+	 * @param string $string
 	 *
-	 * @return string The formatted string suitable for controller filenames.
+	 * @return string
 	 */
 	protected static function to_filename( string $string ): string {
 		$string = str_replace( [ '-', '_' ], ' ', $string );
@@ -62,11 +61,11 @@ class ControllerFactory {
 	}
 
 	/**
-	 * Render a view using a specified controller and Twig template.
+	 * Resolves a controller and renders it. Infers the controller from the template if not given.
 	 *
-	 * @param string|null $template The name of the template.
-	 * @param string|null $controller The controller class to use.
-	 * @param string|null $twig The Twig template to use.
+	 * @param string|null $template
+	 * @param string|null $controller
+	 * @param string|null $twig
 	 */
 	public static function render( ?string $template = null, ?string $controller = null, ?string $twig = null ): void {
 		$controller = $controller ?? self::infer_controller_class( $template );

@@ -3,22 +3,19 @@
 namespace PressGang\Configuration;
 
 /**
- * Class Menus
+ * Registers navigation menu locations from config/menus.php (location => description
+ * pairs). Each location is filterable via pressgang_register_menu_{location} before
+ * being passed to register_nav_menus().
  *
- * Manages the registration of navigation menus in WordPress.
- * This class uses a configuration array to define the settings for each menu.
- * It extends ConfigurationSingleton to ensure that it is only instantiated once.
+ * Why: keeps menu location registration declarative and filterable.
+ * Extend via: child theme config override or pressgang_register_menu_{location} filter.
  *
  * @see https://developer.wordpress.org/reference/functions/register_nav_menus/
- * @package PressGang
  */
 class Menus extends ConfigurationSingleton {
 
 	/**
-	 * __construct
-	 *
-	 * Register Menus
-	 *
+	 * @param array<string, string> $config Location => description pairs.
 	 */
 	public function initialize( array $config ): void {
 		$this->config = $config;

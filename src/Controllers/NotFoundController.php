@@ -3,21 +3,13 @@
 namespace PressGang\Controllers;
 
 /**
- * Class NotFoundController
- *
- * Controller for handling 404 (Not Found) pages. This controller extends the PageController,
- * customizing it for the specific needs of rendering a 404 page.
- *
- * @package PressGang
+ * Controller for 404 (Not Found) pages. Extends PageController and provides
+ * translatable default title and content values. Defaults to 404.twig.
  */
 class NotFoundController extends PageController {
 
 	/**
-	 * NotFoundController constructor.
-	 *
-	 * Initializes a NotFoundController with a default template for 404 pages.
-	 *
-	 * @param string|null $template Optional Twig template file name for rendering the 404 page. Defaults to '404.twig'.
+	 * @param string|null $template
 	 */
 	public function __construct( string|null $template = '404.twig' ) {
 		parent::__construct( $template );
@@ -25,11 +17,9 @@ class NotFoundController extends PageController {
 
 
 	/**
-	 * Get the context for the 404 page.
+	 * Adds translatable title and content for the 404 page.
 	 *
-	 * Prepares the context array with specific variables for the 404 page, such as title and content.
-	 *
-	 * @return array The context array with 404-specific values.
+	 * @return array<string, mixed>
 	 */
 	protected function get_context(): array {
 		$this->context['title']   = _x( "Not Found", 'Templates', THEMENAME );

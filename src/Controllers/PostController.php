@@ -3,30 +3,18 @@
 namespace PressGang\Controllers;
 
 /**
- * Class PostController
- *
- * Controller for handling single post views in WordPress. It extends the PageController
- * and adds functionalities specific to individual posts.
- *
- * @package PressGang
+ * Controller for single post views. Extends PageController and determines the
+ * Twig template based on the current post type (e.g. single.twig, single-product.twig).
  */
 class PostController extends PageController {
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected string $post_type;
 
 	/**
-	 * PostController constructor.
+	 * Infers the template from the current post type if none is provided.
 	 *
-	 * Initializes the PostController with a specific template and post type.
-	 * Determines the template to use based on the post type and sets up the
-	 * post data for the controller context.
-	 *
-	 * @param string|null $template Optional Twig template file name for rendering the post.
-	 *                              Defaults to a template based on the post type.
-	 * @param string|null $post_type Optional post type. Defaults to the current post type.
+	 * @param string|null $template
 	 */
 	public function __construct( string|null $template = null ) {
 
@@ -41,11 +29,9 @@ class PostController extends PageController {
 	}
 
 	/**
-	 * Retrieves and prepares the context for rendering the post view.
+	 * Adds the post to context under both 'post' and the post type key.
 	 *
-	 * Adds the $post object to 'post' and '$post_type' context variables.
-	 *
-	 * @return array The modified context array with post and related data.
+	 * @return array<string, mixed>
 	 */
 	protected function get_context(): array {
 		$post = $this->get_post();

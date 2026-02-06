@@ -5,11 +5,9 @@ namespace PressGang\Shortcodes;
 use Timber\Timber;
 
 /**
- * Abstract Class Shortcode
- *
- * Base class for creating shortcodes in PressGang.
- *
- * @package PressGang
+ * Base class for PressGang shortcodes. Derives the shortcode tag and Twig template
+ * from the class name, merges attributes with defaults, and renders via Timber::compile().
+ * Subclasses define defaults/context and are registered via config/shortcodes.php.
  */
 abstract class Shortcode {
 

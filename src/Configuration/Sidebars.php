@@ -3,13 +3,13 @@
 namespace PressGang\Configuration;
 
 /**
- * Class Sidebars
+ * Registers WordPress sidebars (widget areas) from config/sidebars.php. Each entry
+ * is filterable via pressgang_widget_{key} before registration.
  *
- * Manages the registration of sidebars (widget areas) in the WordPress theme.
- * Adds sidebar configurations to the theme and integrates them with Timber for rendering in Twig templates.
+ * Why: keeps sidebar registration declarative and consistent across parent/child themes.
+ * Extend via: child theme config override or pressgang_widget_{key} filter.
  *
  * @see https://wordpress.org/documentation/article/manage-wordpress-widgets/
- * @package PressGang
  */
 class Sidebars extends ConfigurationSingleton {
 

@@ -5,18 +5,18 @@ namespace PressGang\Controllers;
 use Timber\Timber;
 
 /**
- * Class AuthorController
- *
- * @package PressGang
+ * Controller for author archive pages. Retrieves the queried author as a Timber
+ * User and their paginated posts, and adds both to the template context.
  */
 class AuthorController extends AbstractController {
 
+	/** @var \Timber\User|null */
 	protected mixed $author;
+
+	/** @var \Timber\Post[]|null */
 	protected mixed $posts;
 
 	/**
-	 * AuthorController constructor
-	 *
 	 * @param string|null $template
 	 */
 	public function __construct( string|null $template = 'author.twig' ) {
@@ -24,9 +24,9 @@ class AuthorController extends AbstractController {
 	}
 
 	/**
-	 * get_author
+	 * Returns the queried author as a Timber User, lazily initialised.
 	 *
-	 * @return mixed
+	 * @return \Timber\User|null
 	 */
 	protected function get_author() {
 		if ( empty( $this->author ) ) {
@@ -40,9 +40,9 @@ class AuthorController extends AbstractController {
 	}
 
 	/**
-	 * get_posts
+	 * Returns the author's posts, lazily initialised.
 	 *
-	 * @return mixed
+	 * @return \Timber\Post[]|null
 	 */
 	protected function get_posts() {
 
@@ -60,9 +60,9 @@ class AuthorController extends AbstractController {
 	}
 
 	/**
-	 * get_context
+	 * Adds the author and their posts to the context.
 	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
 	protected function get_context(): array {
 		$this->context['author'] = $this->get_author();

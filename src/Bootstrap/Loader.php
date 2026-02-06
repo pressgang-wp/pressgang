@@ -6,31 +6,22 @@ use PressGang\Configuration\ConfigurationInterface;
 use function Symfony\Component\String\u;
 
 /**
- * Class Loader
- *
- * Responsible for dynamically loading and initializing theme components based on configuration.
- * It also includes additional files such as 'shortcodes' and 'widgets'.
- *
- * @package PressGang\Bootstrap
+ * Orchestrates the config-driven boot process. Maps each key in the merged config
+ * to a Configuration class (e.g. 'sidebars' → Sidebars) and initialises it, then
+ * includes shortcode and widget files from src/.
  */
 class Loader {
 
-	/**
-	 * @var ConfigLoaderInterface
-	 */
+	/** @var ConfigLoaderInterface */
 	private ConfigLoaderInterface $configLoader;
 
-	/**
-	 * @var array
-	 */
+	/** @var string[] Folders under src/ to include via config. */
 	private array $include_folders = [
 		'shortcodes',
 		'widgets',
 	];
 
 	/**
-	 * Loader constructor.
-	 *
 	 * @param ConfigLoaderInterface $configLoader
 	 */
 	public function __construct( ConfigLoaderInterface $configLoader ) {
@@ -46,10 +37,7 @@ class Loader {
 	}
 
 	/**
-	 * Load and initialize components based on the theme's configuration.
-	 *
-	 * Iterates through configuration, dynamically loads each component,
-	 * and initializes it if the component class implements the ConfigurationInterface.
+	 * Maps each config key to a Configuration class and initialises it.
 	 */
 	protected function load_components(): void {
 		Config::set_loader( $this->configLoader );
@@ -66,11 +54,11 @@ class Loader {
 	}
 
 	/**
-	 * Converts a configuration key to a class name in the Configuration namespace.
+	 * Converts a config key (e.g. 'custom-post-types') to its Configuration class FQCN.
 	 *
-	 * @param string $key The configuration key.
+	 * @param string $key
 	 *
-	 * @return string The fully qualified class name.
+	 * @return string
 	 */
 	protected function config_key_to_configuration_class( string $key ): string {
 		$studly_case = u( $key )->camel()->title( true );
@@ -79,9 +67,7 @@ class Loader {
 	}
 
 	/**
-	 * Includes additional files based on the theme's configuration.
-	 *
-	 * This typically includes files from the 'shortcodes', and 'widgets' directories.
+	 * Includes shortcode and widget files listed in config.
 	 */
 	protected function include_files(): void {
 		foreach ( $this->include_folders as $folder ) {
@@ -94,7 +80,7 @@ class Loader {
 	}
 
 	/**
-	 * Includes a specific file from the specified folder.
+	 * Requires a file from the given folder and registers its class (widget or shortcode).
 	 *
 	 * @param string $folder
 	 * @param string $file

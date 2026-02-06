@@ -3,11 +3,11 @@
 namespace PressGang\Configuration;
 
 /**
- * Class RemoveMenus
+ * Removes admin menu pages listed in config/remove-menus.php. Each entry is a menu
+ * slug passed to remove_menu_page() on the admin_menu hook.
  *
- * Manages the removal of menu items from the WordPress admin panel based on provided configuration.
- *
- * @package PressGang
+ * Why: lets themes declutter the admin for content editors without plugin code.
+ * Extend via: child theme config override.
  */
 class RemoveMenus extends ConfigurationSingleton {
 

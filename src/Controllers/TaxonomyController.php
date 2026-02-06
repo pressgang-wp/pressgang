@@ -6,39 +6,25 @@ use Timber\Term;
 use Timber\Timber;
 
 /**
- * Class TaxonomyController
- *
- * Controller for handling taxonomy-related pages in a WordPress theme.
- * Extends the basic PostsController to add specific functionalities for taxonomies.
- *
- * @package PressGang
+ * Controller for taxonomy archive pages. Extends PostsController to add the
+ * current Timber Term to the context alongside the standard posts/pagination data.
  */
 class TaxonomyController extends PostsController {
 
-	/**
-	 * The cached current Term object.
-	 *
-	 * @var Term
-	 */
+	/** @var Term */
 	protected Term $term;
 
 	/**
-	 * TaxonomyController constructor.
-	 *
-	 * Initializes the controller for handling taxonomies with a specified template and post type.
-	 *
-	 * @param string|null $template The template file to use for rendering the taxonomy. Defaults to 'taxonomy.twig'.
+	 * @param string|null $template
 	 */
 	public function __construct( string|null $template = 'taxonomy.twig' ) {
 		parent::__construct( $template );
 	}
 
 	/**
-	 * Get the current term object.
+	 * Returns the current term, lazily initialised via Timber.
 	 *
-	 * Retrieves the current term object using Timber. Caches the term object after the first retrieval.
-	 *
-	 * @return mixed The term object for the current taxonomy term.
+	 * @return Term
 	 */
 	protected function get_term(): Term {
 		if ( empty( $this->term ) ) {
@@ -49,12 +35,9 @@ class TaxonomyController extends PostsController {
 	}
 
 	/**
-	 * Get the context for the taxonomy template rendering.
+	 * Adds the current term to the parent archive context.
 	 *
-	 * Extends the base get_context method from PostsController, adding the current term object
-	 * to the context for use in the template.
-	 *
-	 * @return array The context array with additional data for the taxonomy term.
+	 * @return array<string, mixed>
 	 */
 	protected function get_context(): array {
 		parent::get_context();

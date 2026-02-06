@@ -5,11 +5,11 @@ namespace PressGang\Configuration;
 use PressGang\Helpers\StyleLoader;
 
 /**
- * Class Styles
+ * Registers and enqueues CSS stylesheets from config/styles.php. Delegates to
+ * StyleLoader for versioning, enqueueing, and optional preconnect link injection.
  *
- * Manages the registration, enqueueing, and additional attributes of CSS stylesheets in the WordPress theme.
- *
- * @package PressGang\Configuration
+ * Why: keeps stylesheet registration declarative with automatic cache-busting.
+ * Extend via: child theme config override.
  */
 class Styles extends ConfigurationSingleton {
 

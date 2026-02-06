@@ -6,13 +6,10 @@ use Twig\Environment;
 use Twig\TwigFunction;
 
 /**
- * Class WidgetExtensionManager
+ * Registers a widget_{sidebar_id}() Twig function for each registered sidebar,
+ * allowing templates to render sidebar widgets dynamically by location.
  *
- * Implements TwigExtensionManagerInterface to add widget-related Twig functions to the Twig environment.
- * This class is responsible for dynamically adding functions for each registered and active sidebar (widget area) in WordPress.
- *
- * @see https://timber.github.io/docs/v2/guides/extending-twig/#adding-functionality-with-the-twig-environment-filter
- * @package PressGang\TwigExtensions
+ * @see https://timber.github.io/docs/v2/guides/extending-twig/
  */
 class WidgetExtensionManager implements TwigExtensionManagerInterface {
 

@@ -7,12 +7,10 @@ use Twig\Environment;
 use Twig\TwigFunction;
 
 /**
- * Class MetaDescriptionExtensionManager
+ * Registers the meta_description() Twig function, which delegates to
+ * MetaDescriptionService to generate SEO-friendly descriptions for the current page.
  *
- * Implements the TwigExtensionManagerInterface to add meta description related functions to the Twig environment.
- *
- * @see https://timber.github.io/docs/v2/guides/extending-twig/#adding-functionality-with-the-twig-environment-filter
- * @package PressGang\TwigExtensions
+ * @see https://timber.github.io/docs/v2/guides/extending-twig/
  */
 class MetaDescriptionExtensionManager implements TwigExtensionManagerInterface {
 

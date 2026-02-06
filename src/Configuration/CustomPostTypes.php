@@ -5,13 +5,11 @@ namespace PressGang\Configuration;
 use PressGang\Controllers\Traits\HasCustomLabels;
 
 /**
- * Class CustomPostTypes
+ * Registers custom post types from config/custom-post-types.php on the init hook.
+ * Labels are auto-generated from the config key via the HasCustomLabels trait.
  *
- * Handles the registration of custom post types in WordPress.
- * This class uses a configuration array to define the settings for each custom post type.
- * It extends ConfigurationSingleton to ensure that it is only instantiated once.
- *
- * @package PressGang
+ * Why: keeps CPT registration declarative and consistent across parent/child themes.
+ * Extend via: child theme config override or pressgang_cpt_{key}_args filter.
  */
 class CustomPostTypes extends ConfigurationSingleton {
 

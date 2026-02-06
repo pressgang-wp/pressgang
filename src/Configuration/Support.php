@@ -3,14 +3,13 @@
 namespace PressGang\Configuration;
 
 /**
- * Class Support
+ * Calls add_theme_support() for each feature listed in config/support.php.
+ * Supports both simple string entries and associative arrays with additional arguments.
  *
- * Handles the addition of theme support features in a WordPress theme.
- * This class allows for configuring various WordPress theme support options,
- * such as post thumbnails, HTML5 support, custom logo, etc.
+ * Why: keeps theme support declarations centralised and overridable.
+ * Extend via: child theme config override.
  *
  * @see https://developer.wordpress.org/reference/functions/add_theme_support/
- * @package PressGang
  */
 class Support extends ConfigurationSingleton {
 

@@ -3,11 +3,9 @@
 namespace PressGang\Bootstrap;
 
 /**
- * FileConfigLoader class
- *
- * Implements a configuration loader that reads settings from PHP files located in theme directories.
- * It is designed to support hierarchical settings where child theme settings can override parent theme settings.
- * Each PHP file in the specified configuration directory should return an associative array of settings.
+ * Default ConfigLoaderInterface implementation. Loads PHP config files from the
+ * parent and child theme config/ directories (child overrides parent), and caches
+ * the merged result via wp_cache or transients.
  */
 class FileConfigLoader implements ConfigLoaderInterface {
 	private string $config_path;
@@ -16,27 +14,16 @@ class FileConfigLoader implements ConfigLoaderInterface {
 	const CACHE_GROUP = 'config_settings';
 
 	/**
-	 * Constructor for FileConfigLoader.
-	 *
-	 * Initializes a new instance of the FileConfigLoader with a specified path to configuration files.
-	 * The path is relative to the root of the theme directories (both parent and child themes).
-	 *
-	 * @param string $config_path The relative path to the configuration files within the theme directories.
+	 * @param string $config_path Relative path to config directory within themes.
 	 */
 	public function __construct( string $config_path = '/config/' ) {
 		$this->config_path = $config_path;
 	}
 
 	/**
-	 * Loads configuration settings utilizing object caching.
+	 * Returns cached settings or loads from disk and caches them.
 	 *
-	 * This method attempts to retrieve the configuration settings from the WordPress object cache.
-	 *
-	 * If the settings are not available in the cache, it loads them from the file system,
-	 * specifically from the configuration files located under the parent and child theme directories.
-	 * Once the settings are loaded from the files, they are stored in the cache for future requests.
-	 *
-	 * @return array The array of loaded settings, either from the cache or from the file system if not cached.
+	 * @return array<string, mixed>
 	 */
 	public function load(): array {
 		$settings = $this->get_cached_settings();
@@ -50,9 +37,7 @@ class FileConfigLoader implements ConfigLoaderInterface {
 	}
 
 	/**
-	 * Get the config settings from cache based on the defined caching method.
-	 *
-	 * @return mixed The settings from cache or false if not cached.
+	 * @return mixed Settings from cache or false if not cached.
 	 */
 	private function get_cached_settings(): mixed {
 		if ( defined( 'PRESSGANG_CONFIG_CACHE' ) && PRESSGANG_CONFIG_CACHE_SECONDS ) {
@@ -63,11 +48,7 @@ class FileConfigLoader implements ConfigLoaderInterface {
 	}
 
 	/**
-	 * Store the config settings in the appropriate cache based on the defined method.
-	 *
-	 * @param array $settings The configuration settings to cache.
-	 *
-	 * @return void
+	 * @param array<string, mixed> $settings
 	 */
 	private function set_cached_settings( array $settings ): void {
 		if ( defined( 'PRESSGANG_CONFIG_CACHE_SECONDS' ) && PRESSGANG_CONFIG_CACHE_SECONDS ) {
@@ -78,12 +59,9 @@ class FileConfigLoader implements ConfigLoaderInterface {
 	}
 
 	/**
-	 * Load configuration settings from theme directories.
+	 * Merges config from parent then child theme directories.
 	 *
-	 * This method loads configuration files from the parent theme directory first,
-	 * and then from the child theme directory, allowing child theme settings to override parent theme settings.
-	 *
-	 * @return array The array of loaded settings.
+	 * @return array<string, mixed>
 	 */
 	private function load_config(): array {
 		$settings = [];
@@ -107,18 +85,11 @@ class FileConfigLoader implements ConfigLoaderInterface {
 	}
 
 	/**
-	 * Load configuration settings from a specific directory.
+	 * Requires each *.php file in a directory and indexes by filename (minus extension).
 	 *
-	 * Loads PHP files located in the configuration path of the parent and child theme directories and interprets each file's name
-	 * (minus the '.php' extension) as the setting key.
+	 * @param string $directory_path
 	 *
-	 * Files in the child theme directory will override those in the parent theme directory if they have the same name.
-	 *
-	 * Each configuration file should return an associative array of settings.
-	 *
-	 * @param string $directory_path The path to the directory from which to load the settings.
-	 *
-	 * @return array The array of settings loaded from the specified directory.
+	 * @return array<string, mixed>
 	 */
 	private function load_from_directory( string $directory_path ): array {
 		$loaded_settings = [];

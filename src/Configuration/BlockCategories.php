@@ -3,11 +3,13 @@
 namespace PressGang\Configuration;
 
 /**
- * Class Block Categories
+ * Registers custom block editor categories from config/block-categories.php.
+ * Each entry is a slug => title pair that appears as a grouping in the block inserter.
  *
- * Handles the registration of custom WordPress Block Categories.
+ * Why: keeps block categorisation declarative and consistent across parent/child themes.
+ * Extend via: child theme config override or block_categories_all filter.
  *
- * @package PressGang
+ * @see https://developer.wordpress.org/reference/hooks/block_categories_all/
  */
 class BlockCategories extends ConfigurationSingleton {
 

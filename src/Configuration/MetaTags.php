@@ -3,14 +3,13 @@
 namespace PressGang\Configuration;
 
 /**
- * Class MetaTags
+ * Outputs HTML meta tags in wp_head from config/meta-tags.php. Each entry is a
+ * name => content pair rendered as a <meta> element in the document head.
  *
- * Manages the addition of HTML meta tags to the head section of the WordPress site.
- * The class uses a configuration array to define the meta tags that should be added.
- * It extends ConfigurationSingleton to ensure that it is only instantiated once.
+ * Why: keeps global meta tag declarations centralised and out of template markup.
+ * Extend via: child theme config override.
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta
- * @package PressGang
  */
 class MetaTags extends ConfigurationSingleton {
 

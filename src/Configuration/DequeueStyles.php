@@ -2,15 +2,17 @@
 
 namespace PressGang\Configuration;
 
+/**
+ * Dequeues CSS stylesheets listed in config/dequeue-styles.php. Used to remove
+ * unwanted default or plugin stylesheets from the frontend.
+ *
+ * Why: keeps stylesheet removal declarative and out of functions.php.
+ * Extend via: child theme config override.
+ */
 class DequeueStyles extends ConfigurationSingleton {
 
 	/**
-	 * initialize
-	 *
-	 * Adds scripts from the settings file to be enqueued on the given hooks (default = 'wp_enqueue_scripts')
-	 *
-	 * See - https://codex.wordpress.org/Plugin_API/Action_Reference/wp_enqueue_scripts
-	 *
+	 * @param array<string, mixed> $config
 	 */
 	public function initialize( array $config ): void {
 		$this->config = $config;
@@ -18,9 +20,7 @@ class DequeueStyles extends ConfigurationSingleton {
 	}
 
 	/**
-	 * dequeue_styles
-	 *
-	 * @return void
+	 * Dequeues each configured style handle.
 	 */
 	public function dequeue_styles(): void {
 		foreach ( $this->config as $style ) {

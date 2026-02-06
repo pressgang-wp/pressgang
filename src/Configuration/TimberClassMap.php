@@ -3,16 +3,13 @@
 namespace PressGang\Configuration;
 
 /**
- * Class TimberClassMap
+ * Registers custom Timber class maps from config/timber-class-map.php, allowing
+ * post types and terms to be mapped to custom classes (e.g. 'post' => PressGang\Post).
  *
- * Registers custom Timber class maps based on the config settings.
+ * Why: enables post-type-specific behaviour (cached queries, custom methods) transparently.
+ * Extend via: child theme config override or timber/{type}/classmap filter.
  *
- * This class allows the addition of custom class mappings to Timber's classmap
- * system through a configuration array, which helps in determining the appropriate
- * class to use for various WordPress elements like posts, terms, comments, menus,
- * and users.
- *
- * @package PressGang\Configuration
+ * @link https://timber.github.io/docs/v2/guides/class-maps/
  */
 class TimberClassMap extends ConfigurationSingleton {
 

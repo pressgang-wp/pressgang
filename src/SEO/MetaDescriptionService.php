@@ -5,13 +5,9 @@ namespace PressGang\SEO;
 use Timber\TextHelper;
 
 /**
- * Class MetaDescriptionService
- *
- * Provides services to generate and cache meta descriptions for various
- * WordPress content types. It supports posts, pages, taxonomies, and post type
- * archives, with support for Yoast SEO plugin data.
- *
- * @package PressGang\SEO
+ * Generates and caches SEO meta descriptions for posts, pages, taxonomies, and
+ * archives. Falls back through Yoast SEO, custom fields, excerpt, then content,
+ * and truncates to 155 characters at a sentence boundary.
  */
 class MetaDescriptionService {
 

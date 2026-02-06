@@ -3,11 +3,12 @@
 namespace PressGang\Configuration;
 
 /**
- * Class CustomMenuItems
+ * Dynamically injects custom sub-items into WordPress nav menus from
+ * config/custom-menu-items.php. Hooks into wp_get_nav_menu_items to append
+ * programmatic menu items (e.g. dynamic links) to specific menu locations.
  *
- * Adds items to a given WordPress menu according to config settings in custom-menu-items.php
- *
- * @package PressGang\Snippets
+ * Why: allows themes to add menu items that depend on runtime state without manual admin entry.
+ * Extend via: child theme config override.
  */
 class CustomMenuItems extends ConfigurationSingleton {
 

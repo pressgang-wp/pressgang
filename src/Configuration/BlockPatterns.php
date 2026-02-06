@@ -5,14 +5,14 @@ namespace PressGang\Configuration;
 use Timber\Timber;
 
 /**
- * Class BlockPatterns
+ * Registers custom block patterns from config/block-patterns.php. If a pattern entry
+ * omits 'content', it is automatically compiled from a matching Twig template in the
+ * block-patterns/ views directory.
  *
- * Manages the registration of custom block patterns for the WordPress block editor.
- * The block patterns are defined in a configuration array and registered on the 'init' hook.
- * This class extends ConfigurationSingleton to ensure that it is instantiated only once.
+ * Why: allows patterns to be defined declaratively, with optional Twig-based content.
+ * Extend via: child theme config override.
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-patterns/
- * @package PressGang
  */
 class BlockPatterns extends ConfigurationSingleton {
 

@@ -6,42 +6,23 @@ use Timber\Timber;
 use function Symfony\Component\String\u;
 
 /**
- * Abstract base class for controllers in the PressGang theme.
- *
- * Provides common functionalities for controllers including context management
- * and rendering of Twig templates using the Timber library.
+ * Base class for all PressGang controllers. Initialises the Timber context,
+ * provides the render() workflow (context → filters → actions → Timber::render),
+ * and applies pressgang_{controller}_template / pressgang_{controller}_context filters.
  */
 abstract class AbstractController implements ControllerInterface {
 
-	/**
-	 * The Timber context array.
-	 *
-	 * Contains data that is passed to the Twig templates for rendering.
-	 *
-	 * @var array
-	 */
+	/** @var array<string, mixed> */
 	public array $context;
 
-	/**
-	 * The path or name of the Twig template to be rendered.
-	 *
-	 * @var string|null
-	 */
+	/** @var string|null */
 	public ?string $template;
 
-	/**
-	 * Cache expiration time for the rendered template.
-	 *
-	 * @var bool|int
-	 */
+	/** @var int|bool */
 	protected int|bool $expires = false;
 
 	/**
-	 * Constructor for the AbstractController class.
-	 *
-	 * Initializes the Timber context and sets the template path.
-	 *
-	 * @param string|null $template Optional. The path or name of the Twig template.
+	 * @param string|null $template
 	 */
 	public function __construct( ?string $template = null ) {
 		$this->template = $template;
@@ -49,21 +30,14 @@ abstract class AbstractController implements ControllerInterface {
 	}
 
 	/**
-	 * Retrieves the current Timber context.
-	 *
-	 * This method can be overridden in child classes to modify the context data.
-	 *
-	 * @return array The Timber context array.
+	 * @return array<string, mixed>
 	 */
 	protected function get_context(): array {
 		return $this->context;
 	}
 
 	/**
-	 * Renders the Twig template with the current context.
-	 *
-	 * Applies filters to the template path and context, executes an action before rendering,
-	 * and then renders the template using Timber.
+	 * Renders the template with context, applying pressgang filters and actions.
 	 */
 	public function render(): void {
 

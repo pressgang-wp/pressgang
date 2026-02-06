@@ -3,14 +3,11 @@
 namespace PressGang\Configuration;
 
 /**
- * Class QueryVars
+ * Registers custom query variables from config/query-vars.php via the query_vars
+ * filter. Registered variables become available through get_query_var() in templates.
  *
- * Registers custom query variables based on a configuration array.
- *
- * This class allows the addition of custom query variables to the WordPress query
- * system through a configuration array.
- *
- * @package PressGang\Configuration
+ * Why: keeps query variable registration declarative and out of functions.php.
+ * Extend via: child theme config override.
  */
 class QueryVars extends ConfigurationSingleton {
 

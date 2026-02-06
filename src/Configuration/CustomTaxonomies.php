@@ -5,14 +5,11 @@ namespace PressGang\Configuration;
 use PressGang\Controllers\Traits\HasCustomLabels;
 
 /**
- * Class CustomTaxonomies
+ * Registers custom taxonomies from config/custom-taxonomies.php on the init hook.
+ * Labels are auto-generated from the config key via the HasCustomLabels trait.
  *
- * Manages the registration of custom taxonomies in WordPress.
- * This class uses a configuration array to define the settings for each custom taxonomy.
- * It extends ConfigurationSingleton to ensure that it is only instantiated once and utilizes
- * the HasCustomLabels trait for generating labels for taxonomies.
- *
- * @package PressGang
+ * Why: keeps taxonomy registration declarative and consistent across parent/child themes.
+ * Extend via: child theme config override or pressgang_taxonomy_{key}_args filter.
  */
 class CustomTaxonomies extends ConfigurationSingleton {
 

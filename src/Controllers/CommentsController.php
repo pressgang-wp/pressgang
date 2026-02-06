@@ -5,17 +5,15 @@ namespace PressGang\Controllers;
 use Timber\Timber;
 
 /**
- * Class CommentsController
- *
- * @package PressGang
+ * Controller for rendering the comments template. Enqueues the comment-reply
+ * script when threaded comments are enabled and adds the current post to context.
  */
 class CommentsController extends AbstractController {
 
+	/** @var \Timber\Post|null */
 	protected $post;
 
 	/**
-	 * CommentsController constructor
-	 *
 	 * @param string|null $template
 	 */
 	public function __construct( string|null $template = 'comments.twig' ) {
@@ -28,9 +26,9 @@ class CommentsController extends AbstractController {
 	}
 
 	/**
-	 * get_post
+	 * Returns the current post, lazily initialised via Timber.
 	 *
-	 * @return mixed
+	 * @return \Timber\Post|null
 	 */
 	protected function get_post() {
 		if ( empty( $this->post ) ) {
@@ -41,9 +39,7 @@ class CommentsController extends AbstractController {
 	}
 
 	/**
-	 * get_context
-	 *
-	 * @return mixed
+	 * @return array<string, mixed>
 	 */
 	protected function get_context() {
 		$this->context['post'] = $this->get_post();

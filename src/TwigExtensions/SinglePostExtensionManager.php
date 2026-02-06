@@ -8,13 +8,10 @@ use Twig\Environment;
 use Twig\TwigFunction;
 
 /**
- * Class SinglePostExtensionManager
+ * Registers get_latest_posts() and get_related_posts() Twig functions on single
+ * post pages. Requires the post to be mapped to PressGang\Post via TimberClassMap.
  *
- * Implements the TwigExtensionManagerInterface to add single post related functions to the Twig environment.
- * This class focuses on providing functionalities specific to single post pages in a WordPress context.
- *
- * @see https://timber.github.io/docs/v2/guides/extending-twig/#adding-functionality-with-the-twig-environment-filter
- * @package PressGang\TwigExtensions
+ * @see https://timber.github.io/docs/v2/guides/extending-twig/
  */
 class SinglePostExtensionManager implements TwigExtensionManagerInterface {
 

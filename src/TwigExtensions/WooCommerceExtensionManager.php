@@ -6,13 +6,10 @@ use Twig\Environment;
 use Twig\TwigFunction;
 
 /**
- * Class WooCommerceExtensionManager
+ * Registers WooCommerce-specific Twig functions when WooCommerce is active. Currently
+ * provides timber_set_product() to set the global $product variable in product loops.
  *
- * Implements TwigExtensionManagerInterface to add WooCommerce-specific Twig functions to the Twig environment.
- * This class checks for WooCommerce's existence and adds relevant Twig functions accordingly.
- *
- * @see https://timber.github.io/docs/v2/guides/extending-twig/#adding-functionality-with-the-twig-environment-filter
- * @package PressGang\TwigExtensions
+ * @see https://timber.github.io/docs/v2/guides/extending-twig/
  */
 class WooCommerceExtensionManager implements TwigExtensionManagerInterface {
 

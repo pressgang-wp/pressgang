@@ -5,15 +5,14 @@ namespace PressGang\Configuration;
 use function Symfony\Component\String\u;
 
 /**
- * Class ColorPalette
+ * Registers a custom Block Editor color palette from config/color-palette.php.
+ * Accepts either simple slug => hex pairs (labels are auto-generated) or full
+ * arrays with slug, name, and color keys.
  *
- * Registers a custom color palette for the Block Editor in WordPress.
- *
- * This class allows defining a set of colors in the theme that can be used within the Block Editor,
- * enhancing the design consistency across the site.
+ * Why: keeps color palette registration declarative with auto-generated labels.
+ * Extend via: child theme config override.
  *
  * @see https://developer.wordpress.org/block-editor/developers/themes/theme-support/#block-color-palettes
- * @package PressGang
  */
 class ColorPalette extends ConfigurationSingleton {
 

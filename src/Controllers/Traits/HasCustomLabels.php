@@ -6,22 +6,17 @@ use Doctrine\Inflector\InflectorFactory;
 use function Symfony\Component\String\u;
 
 /**
- * CustomLabelsTrait
- *
- * This trait is shared between PressGang\CustomTaxonomies and PressGang\CustomTaxonomies
- * It is used to automatically pluralize the singular values provided
- *
- * @package PressGang
+ * Shared by CustomPostTypes and CustomTaxonomies to auto-generate labels from a key.
  */
 trait HasCustomLabels {
 
 	/**
-	 * parse_labels
+	 * Merges auto-generated singular/plural labels into the registration args.
 	 *
-	 * @param $key - this is the Custom Post Type or Custom Taxonomy Key passed from the settings.php array
-	 * @param $args
+	 * @param string $key  The CPT or taxonomy slug from config.
+	 * @param array  $args Registration arguments (may already contain partial labels).
 	 *
-	 * @retun $args - array used for registering the Custom Post Type or Custom Taxonomy
+	 * @return array The args with a complete 'labels' array merged in.
 	 */
 	protected function parse_labels( string $key, array $args ): array {
 

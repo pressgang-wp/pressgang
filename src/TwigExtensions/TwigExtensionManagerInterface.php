@@ -5,36 +5,25 @@ namespace PressGang\TwigExtensions;
 use Twig\Environment;
 
 /**
- * Interface TwigExtensionManagerInterface
+ * Contract for Twig extension managers. Implementations register custom Twig
+ * functions, filters, and globals, and are listed in config/twig-extensions.php.
  *
- * Defines the methods that Twig extension manager classes must implement.
- * These methods are responsible for adding custom functions and global variables to the Twig environment.
- *
- * @see https://timber.github.io/docs/v2/guides/extending-twig/#adding-functionality-with-the-twig-environment-filter
- * @package PressGang\TwigExtensions
+ * @see https://timber.github.io/docs/v2/guides/extending-twig/
  */
 interface TwigExtensionManagerInterface {
 
 	/**
-	 * Adds custom Twig functions to the Twig environment.
-	 *
-	 * Implement this method to register new functions that can be used in Twig templates.
-	 *
-	 * @param Environment $twig The Twig environment to which functions will be added.
+	 * @param Environment $twig
 	 */
 	public function add_twig_functions( Environment $twig ): void;
 
 	/**
-	 * Adds custom filters to the Twig environment.
-	 *
-	 * @param Environment $twig The Twig environment to which filters will be added.
+	 * @param Environment $twig
 	 */
 	public function add_twig_filters( Environment $twig ): void;
 
 	/**
-	 * Adds global variables to the Twig environment.
-	 *
-	 * @param Environment $twig The Twig environment to which global variables will be added.
+	 * @param Environment $twig
 	 */
 	public function add_twig_globals( Environment $twig ): void;
 }

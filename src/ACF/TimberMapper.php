@@ -5,11 +5,9 @@ namespace PressGang\ACF;
 use Timber\Timber;
 
 /**
- * Class TimberMapper
- *
- * Maps ACF fields to corresponding Timber objects.
- *
- * @package PressGang\ACF
+ * Maps ACF field arrays to corresponding Timber objects (Post, Term, Image) by field
+ * type. Used by AcfOptionsContextManager to convert raw ACF option values into
+ * Timber-native objects before they reach templates.
  */
 class TimberMapper {
 

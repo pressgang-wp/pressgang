@@ -8,28 +8,19 @@ use PressGang\ServiceProviders\TimberServiceProvider;
 use Timber\Timber;
 
 /**
- * Class PressGang
- *
- * The foundational class for the PressGang theme. It handles the initialization of the theme components
- * and provides a static method for rendering pages using controllers.
- *
- * @package PressGang
+ * Entry point for the PressGang theme framework. Instantiated in functions.php
+ * with a Loader and TimberServiceProvider, then boot() initialises Timber,
+ * loads config-driven components, and registers context managers and Twig extensions.
  */
 class PressGang {
 
-	/**
-	 * @var Loader
-	 */
+	/** @var Loader */
 	private Loader $loader;
 
-	/**
-	 * @var TimberServiceProvider
-	 */
+	/** @var TimberServiceProvider */
 	private TimberServiceProvider $timberServiceProvider;
 
 	/**
-	 * PressGang constructor.
-	 *
 	 * @param Loader $loader
 	 * @param TimberServiceProvider $timberServiceProvider
 	 */
@@ -39,10 +30,7 @@ class PressGang {
 	}
 
 	/**
-	 * Boot method to initialize theme components.
-	 *
-	 * This method is responsible for setting up various components of the theme, such as Timber,
-	 * service providers, and other necessary initializations for the theme to function correctly.
+	 * Initialises Timber, loads config-driven components, and boots the service provider.
 	 */
 	public function boot(): void {
 		// Initialize Timber
@@ -56,10 +44,7 @@ class PressGang {
 	}
 
 	/**
-	 * Static render method to handle page rendering.
-	 *
-	 * This method is a convenience wrapper around the ControllerFactory's render method.
-	 * It allows for easy rendering of pages using the specified parameters.
+	 * Convenience wrapper around ControllerFactory::render().
 	 *
 	 * @param string|null $template
 	 * @param string|null $controller

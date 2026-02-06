@@ -5,13 +5,12 @@
 namespace PressGang\Configuration;
 
 /**
- * Class Templates
+ * Registers custom page templates from config/templates.php so they appear in the
+ * admin Page Attributes dropdown. Also resolves the correct template file from the
+ * page-templates/ directory at render time.
  *
- * Manages custom page templates within the theme. This class allows for the registration
- * of custom templates specified in the theme's config files and ensures they
- * are recognized and used by WordPress when rendering pages.
- *
- * @package PressGang\Configuration
+ * Why: allows themes to register page templates declaratively without WordPress filename conventions.
+ * Extend via: child theme config override.
  */
 class Templates extends ConfigurationSingleton {
 

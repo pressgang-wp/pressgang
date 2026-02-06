@@ -3,21 +3,16 @@
 namespace PressGang\Configuration;
 
 /**
- * Class Scripts
+ * Deregisters JavaScript scripts listed in config/deregister-scripts.php on the
+ * frontend only. Commonly used to remove default WordPress scripts like jQuery.
  *
- * Manages the  de-registration of JavaScript scripts in WordPress.
- *
- * @package PressGang
+ * Why: keeps script removal declarative and scoped to the frontend.
+ * Extend via: child theme config override.
  */
 class DeregisterScripts extends ConfigurationSingleton {
 
 	/**
-	 * initialize
-	 *
-	 * Adds scripts from the settings file to be enqueued on the given hooks (default = 'wp_enqueue_scripts')
-	 *
-	 * See - https://codex.wordpress.org/Plugin_API/Action_Reference/wp_enqueue_scripts
-	 *
+	 * @param array<string, mixed> $config
 	 */
 	public function initialize( array $config ): void {
 		$this->config = $config;
@@ -25,10 +20,7 @@ class DeregisterScripts extends ConfigurationSingleton {
 	}
 
 	/**
-	 * deregister_scripts
-	 *
-	 * Can be used for unloading jQuery etc.
-	 *
+	 * Deregisters each configured script on the frontend only.
 	 */
 	public function deregister_scripts(): void {
 		if ( ! \is_admin() ) {

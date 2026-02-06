@@ -3,12 +3,11 @@
 namespace PressGang\Configuration;
 
 /**
- * Class Plugins
+ * Checks that required plugins listed in config/plugins.php are active. Displays
+ * an admin notice for each missing plugin, prompting the site administrator to install it.
  *
- * Manages the checking of required plugins for the WordPress theme.
- * It displays an admin warning if certain required plugins are not active.
- *
- * @package PressGang
+ * Why: ensures theme dependencies are visible and actionable in the admin dashboard.
+ * Extend via: child theme config override.
  */
 class Plugins extends ConfigurationSingleton {
 

@@ -3,30 +3,19 @@
 namespace PressGang\Configuration;
 
 /**
- * Class Customizer
+ * Registers WordPress Customizer sections, settings, and controls from
+ * config/customizer.php. Supports grouped sections with multiple settings, each
+ * with its own control type, sanitisation callback, and transport method.
  *
- * Manages the WordPress Theme Customization API, facilitating the addition of new settings and controls to the WordPress theme customizer.
- * It enables the theme to offer customizable options to the user through a coherent and integrated interface in the WordPress admin.
- * This class dynamically reads configuration settings and applies them to the customizer, handling both the creation of new sections and
- * the registration of new settings and controls within those sections.
+ * Why: keeps Customizer registration declarative, consistent, and overridable.
+ * Extend via: child theme config override or customize_register filter.
  *
  * @see https://codex.wordpress.org/Theme_Customization_API
- * @see https://codex.wordpress.org/Plugin_API/Action_Reference/customize_register
- * @see https://codex.wordpress.org/Class_Reference/WP_Customize_Manager/add_setting
- * @see https://codex.wordpress.org/Class_Reference/WP_Customize_Manager/add_control
- * @package PressGang\Configuration
  */
 class Customizer extends ConfigurationSingleton {
 
 	/**
-	 * Initializes the Customizer settings based on the provided configuration.
-	 *
-	 * This method registers the 'customize_register' action hook to customize WordPress Theme Customization options.
-	 * It interprets the provided configuration array to add new sections, settings, and controls to the theme customizer.
-	 *
-	 * @hooked customize_register
-	 *
-	 * @param array $config Configuration array defining the customizer settings and controls.
+	 * @param array<string, mixed> $config Sections containing settings and control definitions.
 	 */
 	public function initialize( array $config ): void {
 		$this->config = $config;

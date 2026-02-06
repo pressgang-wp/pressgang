@@ -4,6 +4,11 @@ namespace PressGang;
 
 use Timber\Timber;
 
+/**
+ * Extended Timber Post that provides cached related-posts and latest-posts queries.
+ * Activated by mapping it to post types via config/timber-class-map.php so Timber
+ * returns PressGang\Post instances instead of the default Timber\Post.
+ */
 class Post extends \Timber\Post {
 	protected array $related_posts = [];
 	protected array $latest_posts = [];
