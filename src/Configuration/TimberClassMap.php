@@ -34,6 +34,7 @@ class TimberClassMap extends ConfigurationSingleton {
 	 *
 	 * @return void
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 
 		$this->config = $config;

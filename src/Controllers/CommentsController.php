@@ -41,6 +41,7 @@ class CommentsController extends AbstractController {
 	/**
 	 * @return array<string, mixed>
 	 */
+	#[\Override]
 	protected function get_context() {
 		$this->context['post'] = $this->get_post();
 

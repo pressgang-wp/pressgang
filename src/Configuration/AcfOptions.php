@@ -21,6 +21,7 @@ class AcfOptions extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for ACF options pages.
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 		$this->config = $config;
 		add_action( 'acf/init', [ $this, 'add_options_pages' ] );

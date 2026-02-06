@@ -28,6 +28,7 @@ abstract class ConfigurationSingleton implements ConfigurationInterface {
 	 *
 	 * @return static The Singleton instance.
 	 */
+	#[\Override]
 	public static function get_instance(): static {
 		$class = static::class;
 		if ( ! isset( self::$instances[ $class ] ) ) {

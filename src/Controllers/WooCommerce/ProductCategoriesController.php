@@ -37,6 +37,7 @@ class ProductCategoriesController extends AbstractController {
 	 *
 	 * @return array The context array with additional data for the product category archive.
 	 */
+	#[\Override]
 	protected function get_context(): array {
 		parent::get_context();
 

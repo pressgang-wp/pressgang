@@ -19,6 +19,7 @@ class GeneralExtensionManager implements TwigExtensionManagerInterface {
 	/**
 	 * @param Environment $twig
 	 */
+	#[\Override]
 	public function add_twig_functions( Environment $twig ): void {
 		$twig->addFunction( new TwigFunction( 'get_search_query', 'get_search_query' ) );
 		$twig->addFunction( new TwigFunction( 'get_option', 'get_option' ) );
@@ -30,6 +31,7 @@ class GeneralExtensionManager implements TwigExtensionManagerInterface {
 	 *
 	 * @param Environment $twig
 	 */
+	#[\Override]
 	public function add_twig_globals( Environment $twig ): void {
 		$twig->addGlobal( 'THEMENAME', defined( 'THEMENAME' ) ? THEMENAME : 'pressgang' );
 	}

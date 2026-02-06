@@ -9,8 +9,8 @@ namespace PressGang\Bootstrap;
  */
 class FileConfigLoader implements ConfigLoaderInterface {
 
-	const CACHE_KEY = 'pressgang_config_settings';
-	const CACHE_GROUP = 'config_settings';
+	const string CACHE_KEY = 'pressgang_config_settings';
+	const string CACHE_GROUP = 'config_settings';
 
 	/**
 	 * @param string $config_path Relative path to config directory within themes.
@@ -23,6 +23,7 @@ class FileConfigLoader implements ConfigLoaderInterface {
 	 *
 	 * @return array<string, mixed>
 	 */
+	#[\Override]
 	public function load(): array {
 		$settings = $this->get_cached_settings();
 

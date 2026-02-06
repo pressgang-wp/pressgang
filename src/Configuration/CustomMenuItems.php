@@ -20,6 +20,7 @@ class CustomMenuItems extends ConfigurationSingleton {
 	/**
 	 * @param array $config
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 
 		// Don't do anything in the admin area

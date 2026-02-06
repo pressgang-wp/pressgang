@@ -2,7 +2,7 @@
 Contributors: benedict-w
 Requires at least: WordPress 6.4
 Tested up to: WordPress 6.4.3
-Requires PHP: 8.2
+Requires PHP: 8.3
 Version: 2.0.0
 License: MIT
 License URI: https://opensource.org/licenses/MIT
@@ -35,7 +35,7 @@ Explore more at https://github.com/pressgang-wp/pressgang.
 3. Click 'Activate' to use your new theme right away.
 
 == Requirements ==
-* PHP: 8.2+
+* PHP: 8.3+
 * WordPress: 6.4+
 * Timber: 2.0+
 

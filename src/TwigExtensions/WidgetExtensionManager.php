@@ -22,6 +22,7 @@ class WidgetExtensionManager implements TwigExtensionManagerInterface {
 	 *
 	 * @param Environment $twig The Twig environment where the functions will be added.
 	 */
+	#[\Override]
 	public function add_twig_functions( Environment $twig ): void {
 		global $wp_registered_sidebars;
 

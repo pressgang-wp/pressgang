@@ -20,6 +20,7 @@ class BlockCategories extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for Gutenberg blocks.
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_filter( 'block_categories_all', [ $this, 'add_custom_categories' ] );

@@ -54,6 +54,7 @@ class ProductController extends PostController {
 	 *
 	 * @return array The context array with additional data for the single product page.
 	 */
+	#[\Override]
 	public function get_context(): array {
 		parent::get_context();
 

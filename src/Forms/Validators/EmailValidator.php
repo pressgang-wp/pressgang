@@ -21,6 +21,7 @@ class EmailValidator implements ValidatorInterface {
 	 *
 	 * @return array
 	 */
+	#[\Override]
 	public function validate(): array {
 		$errors = [];
 		$email  = $this->get_post_data( $this->email_path );

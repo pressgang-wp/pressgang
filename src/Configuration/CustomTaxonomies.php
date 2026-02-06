@@ -23,6 +23,7 @@ class CustomTaxonomies extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for custom taxonomies.
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_action( 'init', [ $this, 'register_custom_taxonomies' ], 5 );

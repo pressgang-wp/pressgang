@@ -19,7 +19,7 @@ class Templates extends ConfigurationSingleton {
 	 *
 	 * @var string
 	 */
-	const TEMPLATES_FOLDER = 'page-templates';
+	const string TEMPLATES_FOLDER = 'page-templates';
 
 	/**
 	 * Initializes the class by setting up WordPress filters for handling custom page templates.
@@ -28,6 +28,7 @@ class Templates extends ConfigurationSingleton {
 	 *
 	 * @param array $config Array of template file names to be registered.
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_filter( 'page_attributes_dropdown_pages_args', [ $this, 'register_templates' ] );

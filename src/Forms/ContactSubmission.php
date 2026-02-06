@@ -62,6 +62,7 @@ class ContactSubmission extends FormSubmission {
 	 * Processes the form submission specific to contact forms.
 	 * Handles the preparation and sending of the contact email.
 	 */
+	#[\Override]
 	protected function process_submission(): void {
 		$to      = \apply_filters( 'pressgang_contact_to_email', \sanitize_email( \get_option( 'admin_email' ) ) );
 		$subject = \apply_filters( 'pressgang_contact_subject', \__( "New Contact Message", THEMENAME ) );

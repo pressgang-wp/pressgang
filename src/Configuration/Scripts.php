@@ -20,6 +20,7 @@ class Scripts extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for scripts.
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_action( 'init', [ $this, 'handle_scripts' ] );

@@ -15,6 +15,7 @@ class MenuContextManager implements ContextManagerInterface {
 	 *
 	 * @return array<string, mixed>
 	 */
+	#[\Override]
 	public function add_to_context( array $context ): array {
 		$registered_menus = \get_registered_nav_menus();
 

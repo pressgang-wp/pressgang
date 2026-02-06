@@ -21,6 +21,7 @@ class NotFoundController extends PageController {
 	 *
 	 * @return array<string, mixed>
 	 */
+	#[\Override]
 	protected function get_context(): array {
 		$this->context['title']   = _x( "Not Found", 'Templates', THEMENAME );
 		$this->context['content'] = _x( "Sorry, we couldn't find what you were looking for!", 'Templates', THEMENAME );

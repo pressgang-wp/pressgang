@@ -14,6 +14,7 @@ class Actions extends ConfigurationSingleton {
 	/**
 	 * @param array<string, callable> $config
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 		foreach ( $config as $key => $args ) {
 			\add_action( $key, $args );

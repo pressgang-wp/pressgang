@@ -18,6 +18,7 @@ class Plugins extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for required plugins.
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_action( 'admin_init', [ $this, 'check_plugins_active' ] );

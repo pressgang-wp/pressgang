@@ -60,6 +60,7 @@ abstract class Widget extends WP_Widget {
 	 * @param array $args
 	 * @param array $instance
 	 */
+	#[\Override]
 	public function widget( $args, $instance ) {
 		$instance = $this->get_instance( $args, $instance );
 
@@ -99,6 +100,7 @@ abstract class Widget extends WP_Widget {
 	 *
 	 * @return array
 	 */
+	#[\Override]
 	public function update( $new_instance, $old_instance ): array {
 		$instance = $old_instance;
 
@@ -114,6 +116,7 @@ abstract class Widget extends WP_Widget {
 	 *
 	 * @param array $instance
 	 */
+	#[\Override]
 	public function form( $instance ) {
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 

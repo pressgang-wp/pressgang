@@ -14,6 +14,7 @@ class DequeueStyles extends ConfigurationSingleton {
 	/**
 	 * @param array<string, mixed> $config
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_action( 'wp_enqueue_scripts', [ $this, 'dequeue_styles' ] );

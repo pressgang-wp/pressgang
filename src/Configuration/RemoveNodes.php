@@ -20,6 +20,7 @@ class RemoveNodes extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for nodes to be removed.
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_action( 'admin_bar_menu', [ $this, 'remove_toolbar_node' ], 999 );

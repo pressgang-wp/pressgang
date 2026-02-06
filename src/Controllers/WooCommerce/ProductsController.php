@@ -36,6 +36,7 @@ class ProductsController extends PostsController {
 	 *
 	 * @return array The context array with additional data for the product archive page.
 	 */
+	#[\Override]
 	protected function get_context(): array {
 		parent::get_context();
 

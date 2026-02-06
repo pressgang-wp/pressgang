@@ -28,6 +28,7 @@ class SinglePostExtensionManager implements TwigExtensionManagerInterface {
 	 *
 	 * @param Environment $twig The Twig environment where the functions will be added.
 	 */
+	#[\Override]
 	public function add_twig_functions( Environment $twig ): void {
 		if ( \is_single() ) {
 			$twig->addFunction( new TwigFunction( 'get_latest_posts', function ( ?int $posts_per_page = null ): array {

@@ -21,6 +21,7 @@ class RemoveMenus extends ConfigurationSingleton {
 	 *
 	 * @param array $config An array of admin menu slugs to be removed.
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_action( 'admin_menu', [ $this, 'remove_menus' ], 999 );

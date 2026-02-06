@@ -21,6 +21,7 @@ class Blocks extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for Gutenberg blocks.
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_action( 'init', [ $this, 'register_block_types' ] );
@@ -86,12 +87,13 @@ class Blocks extends ConfigurationSingleton {
 	 */
 	private function register_block( string $block_path, array $args = [] ): void {
 		// Read and decode the block.json file
-		$block_settings = json_decode( file_get_contents( $block_path ), true );
+		$file_content = file_get_contents( $block_path );
 
-		if ( json_last_error() !== JSON_ERROR_NONE ) {
-			// Handle JSON parse error if necessary
+		if ( ! json_validate( $file_content ) ) {
 			return;
 		}
+
+		$block_settings = json_decode( $file_content, true );
 
 		// Register the block type using the block.json file and any additional arguments
 		\register_block_type( $block_path, $args );

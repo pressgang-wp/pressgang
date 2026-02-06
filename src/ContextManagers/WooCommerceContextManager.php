@@ -13,6 +13,7 @@ class WooCommerceContextManager implements ContextManagerInterface {
 	 *
 	 * @return array<string, mixed>
 	 */
+	#[\Override]
 	public function add_to_context( array $context ): array {
 
 		if ( class_exists( 'WooCommerce' ) ) {

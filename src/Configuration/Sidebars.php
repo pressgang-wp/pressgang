@@ -21,6 +21,7 @@ class Sidebars extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for sidebars.
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_theme_support( 'widgets' );

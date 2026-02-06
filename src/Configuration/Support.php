@@ -22,6 +22,7 @@ class Support extends ConfigurationSingleton {
 	 *
 	 * @param array $config Configuration array for theme support options.
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 		foreach ( $config as $key => $args ) {
 			if ( is_numeric( $key ) ) {

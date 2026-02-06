@@ -15,6 +15,7 @@ class SiteContextManager implements ContextManagerInterface {
 	 *
 	 * @return array<string, mixed>
 	 */
+	#[\Override]
 	public function add_to_context( array $context ): array {
 		$site             = new Site();
 		$stylesheet       = $this->get_stylesheet( 'styles.css' );

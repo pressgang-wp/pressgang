@@ -20,6 +20,7 @@ class SearchController extends PostsController {
 	 *
 	 * @return string
 	 */
+	#[\Override]
 	protected function get_page_title(): string {
 
 		if ( empty( $this->page_title ) ) {

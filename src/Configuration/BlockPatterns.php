@@ -23,6 +23,7 @@ class BlockPatterns extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for block patterns.
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_action( 'init', [ $this, 'register_block_patterns' ] );

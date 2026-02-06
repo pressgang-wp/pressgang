@@ -39,6 +39,7 @@ class PageController extends AbstractController {
 	 *
 	 * @return array<string, mixed>
 	 */
+	#[\Override]
 	protected function get_context(): array {
 		$post                  = $this->get_post();
 		$this->context['page'] = $post;

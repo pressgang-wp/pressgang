@@ -20,6 +20,7 @@ class MetaTags extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for meta tags.
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_action( 'wp_head', [ $this, 'add_meta_tags' ] );

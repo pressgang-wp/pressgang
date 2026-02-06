@@ -24,6 +24,7 @@ class WooCommerceExtensionManager implements TwigExtensionManagerInterface {
 	 *
 	 * @param Environment $twig The Twig environment where the functions will be added.
 	 */
+	#[\Override]
 	public function add_twig_functions( Environment $twig ): void {
 		if ( class_exists( 'WooCommerce' ) ) {
 			$twig->addFunction( new TwigFunction( 'timber_set_product', [ $this, 'timber_set_product' ] ) );

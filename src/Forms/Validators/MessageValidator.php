@@ -21,6 +21,7 @@ class MessageValidator implements ValidatorInterface {
 	 *
 	 * @return array
 	 */
+	#[\Override]
 	public function validate(): array {
 		$errors  = [];
 		$message = $this->get_post_data( $this->message_path );

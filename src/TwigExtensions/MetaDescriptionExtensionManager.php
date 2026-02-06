@@ -22,6 +22,7 @@ class MetaDescriptionExtensionManager implements TwigExtensionManagerInterface {
 	 *
 	 * @param Environment $twig The Twig environment where the function will be added.
 	 */
+	#[\Override]
 	public function add_twig_functions( Environment $twig ): void {
 		$twig->addFunction( new TwigFunction( 'meta_description', [
 			MetaDescriptionService::class,

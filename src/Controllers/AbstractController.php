@@ -39,6 +39,7 @@ abstract class AbstractController implements ControllerInterface {
 	/**
 	 * Renders the template with context, applying pressgang filters and actions.
 	 */
+	#[\Override]
 	public function render(): void {
 
 		$this->context = $this->get_context();

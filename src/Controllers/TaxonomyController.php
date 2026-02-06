@@ -39,6 +39,7 @@ class TaxonomyController extends PostsController {
 	 *
 	 * @return array<string, mixed>
 	 */
+	#[\Override]
 	protected function get_context(): array {
 		$this->context = parent::get_context();
 		$this->context['term'] = $this->get_term();

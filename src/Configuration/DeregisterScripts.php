@@ -14,6 +14,7 @@ class DeregisterScripts extends ConfigurationSingleton {
 	/**
 	 * @param array<string, mixed> $config
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_action( 'init', [ $this, 'deregister_scripts' ] );

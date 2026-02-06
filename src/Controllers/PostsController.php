@@ -75,6 +75,7 @@ class PostsController extends AbstractController {
 	 *
 	 * @return array<string, mixed>
 	 */
+	#[\Override]
 	protected function get_context(): array {
 		$this->context['page_title'] = $this->get_page_title();
 

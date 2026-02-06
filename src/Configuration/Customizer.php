@@ -17,6 +17,7 @@ class Customizer extends ConfigurationSingleton {
 	/**
 	 * @param array<string, mixed> $config Sections containing settings and control definitions.
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_action( 'customize_register', [ $this, 'add_to_customizer' ], 100 );

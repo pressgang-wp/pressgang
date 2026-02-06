@@ -26,6 +26,7 @@ class RecaptchaValidator implements ValidatorInterface {
 	/**
 	 * @return array
 	 */
+	#[\Override]
 	public function validate(): array {
 
 		$errors    = [];

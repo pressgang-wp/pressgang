@@ -22,6 +22,7 @@ class Styles extends ConfigurationSingleton {
 	 *
 	 * @param array $config Configuration array for styles.
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_action( 'init', [ $this, 'handle_styles' ] );

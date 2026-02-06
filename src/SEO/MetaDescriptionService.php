@@ -14,7 +14,7 @@ class MetaDescriptionService {
 	/**
 	 * Set a character limit as recommended for SEO purposes
 	 */
-	const CHAR_LIMIT = 155;
+	const int CHAR_LIMIT = 155;
 
 	/**
 	 * The Meta Description

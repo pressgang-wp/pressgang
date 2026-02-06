@@ -15,6 +15,7 @@ class AcfOptionsContextManager implements ContextManagerInterface {
 	 *
 	 * @return array<string, mixed>
 	 */
+	#[\Override]
 	public function add_to_context( array $context ): array {
 
 		if ( function_exists( 'get_fields' ) && config( 'acf-options' ) ) {

@@ -23,6 +23,7 @@ class CustomPostTypes extends ConfigurationSingleton {
 	 *
 	 * @param array $config The configuration array for custom post types.
 	 */
+	#[\Override]
 	public function initialize( array $config ): void {
 		$this->config = $config;
 		\add_action( 'init', [ $this, 'register_custom_post_types' ] );
