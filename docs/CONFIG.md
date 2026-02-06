@@ -4,115 +4,153 @@
 
 PressGang adopts a centralized approach to configuration, storing settings in dedicated files within the `config` directory. This structure simplifies the management and updating of theme settings, ensuring a clean and organized codebase.
 
+No need to wrestle with tangled `functions.php` files — PressGang lets you chart your course with clean, declarative config.
+
 ### How It Works
 
-1. **Config Files:** Individual PHP files within the `config` directory contain associative arrays that define settings for various theme components.
-2. **Loading and Configuration:** Loading of `config` files is handled in the `Bootstrap` namespace via the `FileConfigLoader` and `ConfigLoaderInterface` used to read and merge the configuration settings, supporting hierarchical overrides (e.g., child theme settings overriding parent theme settings). The `Configuration` namespace provides singleton classes that take the config settings and apply the necessary logic to them.
+1. **Config Files:** Individual PHP files within the `config` directory return associative arrays that define settings for various theme components.
+2. **Loading and Configuration:** Loading of `config` files is handled in the `Bootstrap` namespace. The `FileConfigLoader` (implementing `ConfigLoaderInterface`) reads and merges configuration settings, supporting hierarchical overrides — child theme config always takes precedence over parent theme config. The `Configuration` namespace provides singleton classes that receive the config settings and apply the necessary logic.
 3. **Central Access Point:** The `Config` class provides static methods to retrieve settings, ensuring a single point of access and enabling caching for performance.
+
+### The Config Lifecycle
+
+```
+config/*.php  →  FileConfigLoader  →  Config::get()  →  Configuration\* classes
+  (arrays)          (merge/cache)        (access)           (registration)
+```
+
+Each config file maps to a Configuration class by studly-case name:
+- `config/sidebars.php` → `PressGang\Configuration\Sidebars`
+- `config/custom-post-types.php` → `PressGang\Configuration\CustomPostTypes`
+
+The class **must exist** — a config file alone does nothing without a corresponding Configuration class.
 
 ### Benefits for Theme Development
 
-* **Streamlined Workflow:** By adhering to a convention over configuration philosophy, PressGang reduces the overhead associated with setting up and maintaining theme configurations.
+* **Streamlined Workflow:** Convention over configuration reduces the overhead associated with setting up and maintaining theme configurations.
 * **Enhanced Maintainability:** The clear separation of configuration concerns into dedicated files makes the codebase easier to navigate and maintain.
-* **Flexibility:** Developers can easily extend and customize the theme by adding new configuration files or modifying existing ones without affecting the overall structure.
-
-This documentation should provide a comprehensive understanding of the configuration approach in PressGang and how it supports efficient and maintainable theme development. For further details, refer to the PressGang GitHub repository.
+* **Flexibility:** Developers can easily extend and customize the theme by adding new configuration files or modifying existing ones. Child theme config overrides parent theme config — no hooks or filters needed.
 
 ## Config Files
 
 All files are present in the `config` folder of the PressGang theme. These can be overridden and modified to uniquely configure your child theme by following the same directory structure.
 
-`acf-options.php`  
-Manages Advanced Custom Fields (ACF) options.
+### Configuration Classes
 
-`actions.php`  
-Handles custom actions within the theme.
+These config files map to a singleton Configuration class that registers the defined items with WordPress:
 
-`block-categories.php`  
+`acf-options.php`
+Registers Advanced Custom Fields (ACF) options pages.
+
+`actions.php`
+Registers custom actions within the theme.
+
+`block-categories.php`
 Registers custom block categories for the Gutenberg editor.
 
-`block-patterns.php`  
+`block-patterns.php`
 Defines and registers block patterns.
 
-`blocks.php`  
-Manages block registration for Gutenberg.
+`blocks.php`
+Registers Gutenberg blocks. See the [Blocks](BLOCKS.md) page for details.
 
-`color-palette.php`  
-Configures custom color palettes for the theme.
+`color-palette.php`
+Configures custom color palettes for the editor.
 
-`context-managers.php`  
-Manages context providers for Timber.
+`custom-menu-items.php`
+Registers custom menu item types.
 
-`custom-post-types.php`  
+`custom-post-types.php`
 Registers and configures custom post types.
 
-`custom-taxonomies.php`  
+`custom-taxonomies.php`
 Defines and registers custom taxonomies.
 
-`dequeue-styles.php`  
-Handles dequeueing of styles.
+`customizer.php`
+Registers WordPress Customizer sections and settings.
 
-`deregister-scripts.php`  
-Manages deregistration of scripts.
+`dequeue-styles.php`
+Handles dequeueing of unwanted styles.
 
-`menus.php`  
+`deregister-scripts.php`
+Manages deregistration of unwanted scripts.
+
+`menus.php`
 Registers navigation menus.
 
-`meta-tags.php`  
+`meta-tags.php`
 Manages meta tag configurations.
 
-`nodes.php`  
-Handles custom node configurations.
+`plugins.php`
+Manages required/recommended plugin declarations.
 
-`plugins.php`  
-Manages plugin-related configurations.
-
-`query-vars.php`  
+`query-vars.php`
 Registers custom query variables.
 
-`remove-menus.php`  
-Configures removal of specific menus.
+`remove-menus.php`
+Configures removal of specific admin menus.
 
-`remove-nodes.php`  
-Manages removal of custom nodes.
+`remove-nodes.php`
+Manages removal of admin bar nodes.
 
-`remove-support.php`  
+`remove-support.php`
 Handles removal of theme support features.
 
-`routes.php`  
+`routes.php`
 Configures custom routes.
 
-`scripts.php`  
-Registers and manages scripts.
+`scripts.php`
+Registers and enqueues scripts.
 
-`shortcodes.php`  
-Manages shortcode registrations.
-
-`sidebars.php`  
+`sidebars.php`
 Registers widget sidebars.
 
-`snippets.php`  
-Manages code snippets and includes.
+`snippets.php`
+Configures snippet class loading. See the [Snippets](SNIPPETS.md) page.
 
-`styles.php`  
-Registers and manages styles.
+`styles.php`
+Registers and enqueues styles.
 
-`support.php`  
-Adds theme support features.
+`support.php`
+Adds theme support features (e.g. `post-thumbnails`, `title-tag`).
 
-`twig-extensions.php`  
-Configures Twig extensions for Timber.
+`templates.php`
+Registers custom page templates for the Page Attributes dropdown.
 
-`widgets.php`  
-Manages widget registrations.
+`timber-class-map.php`
+Maps WordPress post types to custom Timber post classes.
 
-## Example usage:
+### Service Provider Config
+
+These config files are consumed by the `TimberServiceProvider` rather than by Configuration classes:
+
+`context-managers.php`
+Lists context manager classes for enriching the Timber context. See [Context Managers](CONTEXT-MANAGERS.md).
+
+`twig-extensions.php`
+Lists Twig extension manager classes for adding custom functions, filters, and globals to Twig. See [Twig Extensions](TWIG-EXTENSIONS.md).
+
+### Include-based Config
+
+These config files list class names to be auto-included and registered by the `Loader`, rather than going through the Configuration singleton pattern:
+
+`shortcodes.php`
+Lists shortcode classes under `src/Shortcodes/` to be included and instantiated.
+
+`widgets.php`
+Lists widget classes under `src/Widgets/` to be included and registered.
+
+### Legacy Config
+
+`nodes.php`
+This file exists for backward compatibility. Node removal is handled by `remove-nodes.php` via the `RemoveNodes` configuration class.
+
+## Example Usage
 
 Here is an example of registering a custom post type via the config. The associative array arguments match the `register_post_type` args.
 
 ### `custom-post-types.php`
 ```php
-
 return [
     'event' => [
         'label' => 'Events',
@@ -129,5 +167,17 @@ return [
         'show_in_rest' => true,
     ],
 ];
+```
 
+### Overriding in a Child Theme
+
+To override a parent theme config, create the same file in your child theme's `config/` directory. Your file's array will be merged on top of the parent's — later values win.
+
+```php
+// child-theme/config/support.php
+return [
+    'post-thumbnails',
+    'title-tag',
+    'custom-logo',
+];
 ```
