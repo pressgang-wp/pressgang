@@ -96,10 +96,8 @@
 		{% set last_size = sizes|last %}
 		{% set w = last_size is iterable ? last_size[0] : last_size %}
 		{% set h = last_size is iterable ? last_size[1] : 0 %}
-		{% set alt = fn('html_entity_decode', alt) %}
-
 		<img
-			src="{{ 'https://via.placeholder.com/%dx%d/333/fff?text=%s'|format(w, h, alt|upper|url_encode) }}"
+			src="{{ 'https://via.placeholder.com/%dx%d/333/fff?text=%s'|format(w, h, alt|striptags|upper|url_encode) }}"
 			alt="{{ alt|default(thumbnail.alt)|e('html_attr') }}"
 			class="{{ class|e('html_attr') }}"
 			{% if img_styles %}
