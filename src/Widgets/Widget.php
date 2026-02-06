@@ -78,13 +78,11 @@ abstract class Widget extends WP_Widget {
 	 * @return array
 	 */
 	protected function get_instance( $args, $instance ): array {
-		extract( $args );
-
 		$instance = array_merge( $instance, [
-			'before_widget' => $before_widget,
-			'after_widget'  => $after_widget,
-			'before_title'  => $before_title,
-			'after_title'   => $after_title,
+			'before_widget' => $args['before_widget'] ?? '',
+			'after_widget'  => $args['after_widget'] ?? '',
+			'before_title'  => $args['before_title'] ?? '',
+			'after_title'   => $args['after_title'] ?? '',
 		], $this->get_acf_fields( $args['widget_id'] ) );
 
 		return $instance;
