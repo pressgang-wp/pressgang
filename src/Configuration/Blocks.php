@@ -99,8 +99,8 @@ class Blocks extends ConfigurationSingleton {
 		$block_name = $block_settings['name'];
 
 		// Trigger the on_register method for the block
-		$block_class = $block_settings['acf']['renderCallback'][0];
-		if ( class_exists( $block_class ) && method_exists( $block_class, 'on_register' ) ) {
+		$block_class = $block_settings['acf']['renderCallback'][0] ?? null;
+		if ( $block_class && class_exists( $block_class ) && method_exists( $block_class, 'on_register' ) ) {
 			call_user_func( [ $block_class, 'on_register' ], $block_settings );
 		}
 
