@@ -46,7 +46,7 @@ class WooCommerceExtensionManager implements TwigExtensionManagerInterface {
 	 *
 	 * @return \WC_Product|null
 	 */
-	public function timber_set_product( $post ): \WC_Product|null {
+	public function timber_set_product( mixed $post ): \WC_Product|null {
 		// Check if the post object is valid and its post type is 'product'
 		if ( ! $post || ! isset( $post->ID ) || get_post_type( $post->ID ) !== 'product' ) {
 			return null;

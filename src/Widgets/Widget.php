@@ -61,7 +61,7 @@ abstract class Widget extends WP_Widget {
 	 * @param array $instance
 	 */
 	#[\Override]
-	public function widget( $args, $instance ) {
+	public function widget( array $args, array $instance ): void {
 		$instance = $this->get_instance( $args, $instance );
 
 		$class     = new ReflectionClass( get_called_class() );
@@ -81,7 +81,7 @@ abstract class Widget extends WP_Widget {
 	 *
 	 * @return array
 	 */
-	protected function get_instance( $args, $instance ): array {
+	protected function get_instance( array $args, array $instance ): array {
 		$instance = array_merge( $instance, [
 			'before_widget' => $args['before_widget'] ?? '',
 			'after_widget'  => $args['after_widget'] ?? '',
@@ -101,7 +101,7 @@ abstract class Widget extends WP_Widget {
 	 * @return array
 	 */
 	#[\Override]
-	public function update( $new_instance, $old_instance ): array {
+	public function update( array $new_instance, array $old_instance ): array {
 		$instance = $old_instance;
 
 		foreach ( $this->fields as $field => &$config ) {
@@ -117,7 +117,7 @@ abstract class Widget extends WP_Widget {
 	 * @param array $instance
 	 */
 	#[\Override]
-	public function form( $instance ) {
+	public function form( array $instance ): void {
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 
 		foreach ( $this->fields as $field => &$config ) {
@@ -138,7 +138,7 @@ abstract class Widget extends WP_Widget {
 	 *
 	 * @return array
 	 */
-	protected function get_acf_fields( $widget_id ): array {
+	protected function get_acf_fields( string $widget_id ): array {
 		if ( function_exists( 'get_fields' ) ) {
 			$fields = get_fields( "widget_{$widget_id}" );
 			if ( $fields ) {

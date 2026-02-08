@@ -2,7 +2,11 @@
 
 namespace PressGang\Controllers;
 
+use Override;
+use Timber\Post;
+use Timber\PostQuery;
 use Timber\Timber;
+use Timber\User;
 
 /**
  * Controller for author archive pages. Retrieves the queried author as a Timber
@@ -10,9 +14,9 @@ use Timber\Timber;
  */
 class AuthorController extends AbstractController {
 
-	protected ?\Timber\User $author = null;
+	protected ?User $author = null;
 
-	/** @var \Timber\PostQuery|\Timber\Post[]|null */
+	/** @var PostQuery|Post[]|null */
 	protected mixed $posts = null;
 
 	/**
@@ -25,9 +29,9 @@ class AuthorController extends AbstractController {
 	/**
 	 * Returns the queried author as a Timber User, lazily initialised.
 	 *
-	 * @return \Timber\User|null
+	 * @return User|null
 	 */
-	protected function get_author(): ?\Timber\User {
+	protected function get_author(): ?User {
 		if ( empty( $this->author ) ) {
 			$id = get_queried_object_id();
 			if ( $id ) {
@@ -41,7 +45,7 @@ class AuthorController extends AbstractController {
 	/**
 	 * Returns the author's posts, lazily initialised.
 	 *
-	 * @return \Timber\Post[]|null
+	 * @return Post[]|null
 	 */
 	protected function get_posts(): mixed {
 		if ( empty( $this->posts ) ) {
@@ -67,7 +71,7 @@ class AuthorController extends AbstractController {
 	 *
 	 * @return array<string, mixed>
 	 */
-	#[\Override]
+	#[Override]
 	protected function get_context(): array {
 		$this->context['author'] = $this->get_author();
 		$this->context['posts']  = $this->get_posts();

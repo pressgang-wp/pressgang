@@ -2,6 +2,8 @@
 
 namespace PressGang\Controllers;
 
+use Override;
+use Timber\Post;
 use Timber\Timber;
 
 /**
@@ -10,11 +12,14 @@ use Timber\Timber;
  */
 class CommentsController extends AbstractController {
 
-	/** @var \Timber\Post|null */
-	protected $post;
+	/** @var Post|null */
+	protected ?Post $post;
 
 	/**
+	 * @see https://developer.wordpress.org/reference/functions/wp_enqueue_script/#comment-reply-script
+	 *
 	 * @param string|null $template
+	 * @return void
 	 */
 	public function __construct( string|null $template = 'comments.twig' ) {
 		parent::__construct( $template );
@@ -28,9 +33,9 @@ class CommentsController extends AbstractController {
 	/**
 	 * Returns the current post, lazily initialised via Timber.
 	 *
-	 * @return \Timber\Post|null
+	 * @return Post|null
 	 */
-	protected function get_post() {
+	protected function get_post(): ?Post {
 		if ( empty( $this->post ) ) {
 			$this->post = Timber::get_post();
 		}
@@ -41,8 +46,8 @@ class CommentsController extends AbstractController {
 	/**
 	 * @return array<string, mixed>
 	 */
-	#[\Override]
-	protected function get_context() {
+	#[Override]
+	protected function get_context(): array {
 		$this->context['post'] = $this->get_post();
 
 		return $this->context;

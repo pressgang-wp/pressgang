@@ -46,7 +46,7 @@ class Metabox {
 	 *
 	 * @param $post_type
 	 */
-	public function add_meta_box( $post_type ): void {
+	public function add_meta_box( string $post_type ): void {
 		if ( $post_type === $this->post_type ) {
 			add_meta_box( sprintf( "metabox_%s_%s", $this->post_type, $this->meta_name ), $this->title, [
 				$this,
@@ -60,7 +60,7 @@ class Metabox {
 	 *
 	 * @param $post
 	 */
-	public function render_meta_box_content( $post ): void {
+	public function render_meta_box_content( \WP_Post $post ): void {
 		// add a nonce - https://codex.wordpress.org/WordPress_Nonces
 		wp_nonce_field( $this->meta_name, sprintf( "%s_nonce", $this->meta_name ) );
 
@@ -90,7 +90,7 @@ class Metabox {
 	 * @param $post_id
 	 * @param $post
 	 */
-	public function save_post_meta( $post_id, $post ) {
+	public function save_post_meta( int $post_id, \WP_Post $post ): int {
 		if ( $post->post_type !== $this->post_type ) {
 			return $post_id;
 		}
@@ -133,7 +133,7 @@ class Metabox {
 	 *
 	 * @return array
 	 */
-	protected function get_field_values( $post ): array {
+	protected function get_field_values( \WP_Post $post ): array {
 
 		$values = [];
 

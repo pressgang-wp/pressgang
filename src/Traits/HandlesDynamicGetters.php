@@ -22,7 +22,7 @@ trait HandlesDynamicGetters {
 	 *
 	 * @return mixed
 	 */
-	public function __get( $field ) {
+	public function __get( string $field ): mixed {
 		if ( $this->has_custom_getter( $field ) ) {
 			return $this->call_custom_getter( $field );
 		}
@@ -38,7 +38,7 @@ trait HandlesDynamicGetters {
 	 *
 	 * @return mixed
 	 */
-	public function meta( $field_name = '', $args = [] ) {
+	public function meta( string $field_name = '', array $args = [] ): mixed {
 		if ( $field_name && $this->has_custom_getter( $field_name ) ) {
 			return $this->call_custom_getter( $field_name );
 		}

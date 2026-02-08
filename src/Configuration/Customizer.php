@@ -132,7 +132,7 @@ class Customizer extends ConfigurationSingleton {
 	 * @param string $setting The setting ID.
 	 * @param array $options Options for the control.
 	 */
-	private function add_control_to_setting( $wp_customize, $section, $setting, $options ): void {
+	private function add_control_to_setting( \WP_Customize_Manager $wp_customize, string $section, string $setting, array $options ): void {
 		$class = $options['class'] ?? 'WP_Customize_Control';
 		$class = "\\{$class}";
 

@@ -33,7 +33,7 @@ trait HasRecaptcha {
 	 *
 	 * @return bool Returns true if the reCAPTCHA verification is successful and meets the minimum score threshold.
 	 */
-	public static function verify_recaptcha( $value ): bool {
+	public static function verify_recaptcha( string $value ): bool {
 		$secret   = self::get_recaptcha_secret();
 		$response = self::get_recaptcha_response( $secret, $value );
 
@@ -72,7 +72,7 @@ trait HasRecaptcha {
 	 *
 	 * @return object|null The decoded JSON response from the reCAPTCHA API, or null on failure.
 	 */
-	protected static function get_recaptcha_response( $secret, $value ): ?object {
+	protected static function get_recaptcha_response( string $secret, string $value ): ?object {
 		$response = \wp_remote_post( self::$recaptcha_verify_url, [
 			'body' => [
 				'secret'   => $secret,

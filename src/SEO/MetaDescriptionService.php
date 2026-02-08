@@ -60,7 +60,7 @@ class MetaDescriptionService {
 	 *
 	 * @return string The generated cache key.
 	 */
-	private static function generate_cache_key( $object ): string {
+	private static function generate_cache_key( object $object ): string {
 		return sprintf( "meta_description_%s_%s", strtolower( get_class( $object ) ), $object->ID ?? $object->name );
 	}
 
@@ -72,7 +72,7 @@ class MetaDescriptionService {
 	 *
 	 * @return string The generated meta description.
 	 */
-	private static function generate_and_cache_description( $object, string $key ): string {
+	private static function generate_and_cache_description( object $object, string $key ): string {
 		$description = self::generate_description( $object );
 		$description = self::sanitize_and_shorten_description( $description );
 		\wp_cache_set( $key, $description );
@@ -87,7 +87,7 @@ class MetaDescriptionService {
 	 *
 	 * @return string The generated meta description.
 	 */
-	private static function generate_description( $object ): string {
+	private static function generate_description( object $object ): string {
 
 		if ( \is_front_page() ) {
 			return self::get_default_description();

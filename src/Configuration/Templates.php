@@ -49,7 +49,7 @@ class Templates extends ConfigurationSingleton {
 	 *
 	 * @return array Original attributes passed to the function.
 	 */
-	public function register_templates( $atts ) {
+	public function register_templates( array $atts ): array {
 
 		// Create the cache key used by WordPress for storing the page template cache
 		$cache_key = 'page_templates-' . md5( \get_theme_root() . '/' . \get_stylesheet() );
