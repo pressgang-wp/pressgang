@@ -158,7 +158,6 @@ class TimberServiceProviderTest extends TestCase {
 		$provider   = new TimberServiceProvider();
 		$reflection = new \ReflectionClass( $provider );
 		$property   = $reflection->getProperty( 'twig_extensions' );
-		$property->setAccessible( true );
 		$property->setValue( $provider, [ $manager ] );
 
 		$twig = new Environment( new ArrayLoader() );

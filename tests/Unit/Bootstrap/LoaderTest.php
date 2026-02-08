@@ -36,7 +36,6 @@ class LoaderTest extends TestCase {
 		$loader       = new Loader( $configLoader );
 
 		$method = new \ReflectionMethod( $loader, 'config_key_to_configuration_class' );
-		$method->setAccessible( true );
 
 		$this->assertSame(
 			'PressGang\\Configuration\\Sidebars',
@@ -50,7 +49,6 @@ class LoaderTest extends TestCase {
 		$loader       = new Loader( $configLoader );
 
 		$method = new \ReflectionMethod( $loader, 'config_key_to_configuration_class' );
-		$method->setAccessible( true );
 
 		$this->assertSame(
 			'PressGang\\Configuration\\CustomPostTypes',
