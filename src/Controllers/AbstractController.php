@@ -22,6 +22,10 @@ abstract class AbstractController implements ControllerInterface {
 	protected int|bool $expires = false;
 
 	/**
+	 * Initialises the Timber context and sets the template if provided.
+	 * Subclasses can override the template by passing it to the parent constructor.
+	 * Subclasses can also override the context by overriding the get_context() method.
+	 *
 	 * @param string|null $template
 	 */
 	public function __construct( ?string $template = null ) {
@@ -38,6 +42,8 @@ abstract class AbstractController implements ControllerInterface {
 
 	/**
 	 * Renders the template with context, applying pressgang filters and actions.
+	 *
+	 * @return void
 	 */
 	#[\Override]
 	public function render(): void {
