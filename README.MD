@@ -45,6 +45,7 @@ Gutenberg blocks are declared in `config/blocks.php` and live under `blocks/<blo
 
 - **PHP** 8.3+
 - **WordPress** 6.4+
+  - For **PHP 8.5** runtime support, use **WordPress 6.9+**
 - **Timber** 2.0+
 - **Composer**
 
@@ -86,6 +87,7 @@ composer require pressgang-wp/pressgang
 ```bash
 composer install          # install dev dependencies
 composer test             # run the unit test suite
+composer test:compat      # run tests with strict PHP error reporting
 ```
 
 Tests use PHPUnit + BrainMonkey — no WordPress installation required. See the [Testing docs](https://docs.pressgang.dev/TESTING) for details on writing new tests.

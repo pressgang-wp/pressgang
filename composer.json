@@ -53,6 +53,7 @@
 	},
 	"scripts": {
 		"test": "@test:unit",
-		"test:unit": "phpunit --testsuite unit"
+		"test:unit": "phpunit --testsuite unit",
+		"test:compat": "php -d error_reporting=E_ALL -d display_errors=1 ./vendor/bin/phpunit --testsuite unit"
 	}
 }
