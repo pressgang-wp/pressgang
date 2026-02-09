@@ -1,13 +1,21 @@
-{% macro picture(thumbnail, sizes=[1920], lqip_size=40, alt, class, quality=100, img_styles=[]) %}
+{% macro picture(thumbnail, sizes=[1920], lqip_size=40, alt, class, quality=100, img_styles=[], attrs={}) %}
 
 	{% set pathinfo = thumbnail.pathinfo %}
 	{% set sizes = sizes is iterable ? sizes|sort : sizes %}
+	{% set loading = attrs.loading|default('lazy') %}
+	{% set eager = loading == 'eager' %}
+	{% set sizes_attr = attrs.sizes|default('100vw') %}
 
 	{% if pathinfo.extension|lower == 'svg' %}
 		<img
 			src="{{ (sizes|last is iterable ? thumbnail.src|resize(sizes|last[0], sizes|last[1]) : thumbnail.src|resize(sizes|last))|relative }}"
 			alt="{{ alt|default(thumbnail.alt)|e('html_attr') }}"
 			class="{{ class|e('html_attr') }} {{ class|e('html_attr') }}--svg"
+			loading="{{ loading|e('html_attr') }}"
+			decoding="{{ attrs.decoding|default('async')|e('html_attr') }}"
+			{% if attrs.fetchpriority is defined %}
+				fetchpriority="{{ attrs.fetchpriority|e('html_attr') }}"
+			{% endif %}
 			{% if img_styles %}
 				style="{{ img_styles|join(';') }};"
 			{% endif %}
@@ -17,42 +25,50 @@
 			{% if thumbnail.src %}
 				<source
 					type="image/webp"
-					srcset="{{ (lqip_size is iterable ? thumbnail.src|resize(lqip_size[0], lqip_size[1]) : thumbnail.src|resize(lqip_size))|towebp(quality)|relative }}"
-					class="blur-up lazyload {{ class|e('html_attr') }}"
-					data-srcset="
-					{% for size in sizes %}
-						{% if size is iterable %}
-							{{ thumbnail.src|resize(size[0], size[1])|towebp(quality)|relative }} {{ size[0] }}w{% if not loop.last %},{% endif %}
-						{% else %}
-							{{ thumbnail.src|resize(size)|towebp(quality)|relative }} {{ size }}w{% if not loop.last %},{% endif %}
-						{% endif %}
-					{% endfor %}
-					"
+					{% if eager %}
+						srcset="
+						{% for size in sizes %}
+							{% if size is iterable %}
+								{{ thumbnail.src|resize(size[0], size[1])|towebp(quality)|relative }} {{ size[0] }}w{% if not loop.last %},{% endif %}
+							{% else %}
+								{{ thumbnail.src|resize(size)|towebp(quality)|relative }} {{ size }}w{% if not loop.last %},{% endif %}
+							{% endif %}
+						{% endfor %}
+						"
+						sizes="{{ sizes_attr|e('html_attr') }}"
+					{% else %}
+						srcset="{{ (lqip_size is iterable ? thumbnail.src|resize(lqip_size[0], lqip_size[1]) : thumbnail.src|resize(lqip_size))|towebp(quality)|relative }}"
+						class="blur-up lazyload {{ class|e('html_attr') }}"
+						data-srcset="
+						{% for size in sizes %}
+							{% if size is iterable %}
+								{{ thumbnail.src|resize(size[0], size[1])|towebp(quality)|relative }} {{ size[0] }}w{% if not loop.last %},{% endif %}
+							{% else %}
+								{{ thumbnail.src|resize(size)|towebp(quality)|relative }} {{ size }}w{% if not loop.last %},{% endif %}
+							{% endif %}
+						{% endfor %}
+						"
+					{% endif %}
 				>
 			{% endif %}
 
-			{{ _self.img(thumbnail, sizes, lqip_size, alt, class, quality, img_styles) }}
+			{{ _self.img(thumbnail, sizes, lqip_size, alt, class, quality, img_styles, attrs) }}
 		</picture>
 	{% endif %}
 {% endmacro %}
 
-{% macro img(thumbnail, sizes=[1920], lqip_size=40, alt, class, quality, img_styles) %}
+{% macro img(thumbnail, sizes=[1920], lqip_size=40, alt, class, quality, img_styles, attrs={}) %}
 
 	{% if thumbnail.src %}
 
-		{# Determine target output width/height from the last 'sizes' entry #}
 		{% set last_size = sizes|last %}
 		{% set target_w = last_size is iterable ? last_size[0] : last_size %}
 		{% set target_h = last_size is iterable ? last_size[1] : null %}
-
-		{# We output intrinsic dimensions at 1x, using your existing "/ 2" convention #}
 		{% set width = (target_w / 2)|round %}
+		{% set loading = attrs.loading|default('lazy') %}
+		{% set eager = loading == 'eager' %}
+		{% set sizes_attr = attrs.sizes|default('100vw') %}
 
-		{# Compute height safely:
-		   - If target_h is provided, use it
-		   - Else derive from image metadata (thumbnail.width/thumbnail.height)
-		   - Clamp to at least 1 so we never emit height="0"
-		#}
 		{% if target_h %}
 			{% set height = (target_h / 2)|round %}
 		{% else %}
@@ -72,20 +88,41 @@
 			width="{{ width }}"
 			height="{{ height }}"
 			src="{{ (last_size is iterable ? thumbnail.src|resize(last_size[0], last_size[1]) : thumbnail.src|resize(last_size))|relative }}"
-			srcset="{{ (lqip_size is iterable ? thumbnail.src|resize(lqip_size[0], lqip_size[1]) : thumbnail.src|resize(lqip_size))|relative }}"
+			{% if eager %}
+				srcset="
+				{% for size in sizes %}
+					{% if size is iterable %}
+						{{ thumbnail.src|resize(size[0], size[1])|relative }} {{ size[0] }}w{% if not loop.last %},{% endif %}
+					{% else %}
+						{{ thumbnail.src|resize(size)|relative }} {{ size }}w{% if not loop.last %},{% endif %}
+					{% endif %}
+				{% endfor %}
+				"
+				sizes="{{ sizes_attr|e('html_attr') }}"
+				class="{{ class|e('html_attr') }}"
+			{% else %}
+				srcset="{{ (lqip_size is iterable ? thumbnail.src|resize(lqip_size[0], lqip_size[1]) : thumbnail.src|resize(lqip_size))|relative }}"
+				class="blur-up lazyload {{ class|e('html_attr') }}"
+				data-sizes="auto"
+				data-src="{{ (last_size is iterable ? thumbnail.src|resize(last_size[0], last_size[1]) : thumbnail.src|resize(last_size))|relative }}"
+				data-srcset="
+				{% for size in sizes %}
+					{% if size is iterable %}
+						{{ thumbnail.src|resize(size[0], size[1])|relative }} {{ size[0] }}w{% if not loop.last %},{% endif %}
+					{% else %}
+						{{ thumbnail.src|resize(size)|relative }} {{ size }}w{% if not loop.last %},{% endif %}
+					{% endif %}
+				{% endfor %}
+				"
+			{% endif %}
 			alt="{{ alt|default(thumbnail.alt)|e('html_attr') }}"
-			class="blur-up lazyload {{ class|e('html_attr') }}"
-			data-sizes="auto"
-			data-src="{{ (last_size is iterable ? thumbnail.src|resize(last_size[0], last_size[1]) : thumbnail.src|resize(last_size))|relative }}"
-			data-srcset="
-			{% for size in sizes %}
-				{% if size is iterable %}
-					{{ thumbnail.src|resize(size[0], size[1])|relative }} {{ size[0] }}w{% if not loop.last %},{% endif %}
-				{% else %}
-					{{ thumbnail.src|resize(size)|relative }} {{ size }}w{% if not loop.last %},{% endif %}
-				{% endif %}
-			{% endfor %}
-			"
+			{% if eager %}
+				loading="eager"
+			{% endif %}
+			decoding="{{ attrs.decoding|default('async')|e('html_attr') }}"
+			{% if attrs.fetchpriority is defined %}
+				fetchpriority="{{ attrs.fetchpriority|e('html_attr') }}"
+			{% endif %}
 			{% if img_styles %}
 				style="{{ img_styles|join(';') }};"
 			{% endif %}
@@ -100,6 +137,10 @@
 			src="{{ 'https://placehold.co/%dx%d/333/fff?text=%s'|format(w, h, alt|striptags|upper|url_encode) }}"
 			alt="{{ alt|default(thumbnail.alt)|e('html_attr') }}"
 			class="{{ class|e('html_attr') }}"
+			{% if attrs.loading|default('lazy') == 'eager' %}
+				loading="eager"
+			{% endif %}
+			decoding="{{ attrs.decoding|default('async')|e('html_attr') }}"
 			{% if img_styles %}
 				style="{{ img_styles|join(';') }};"
 			{% endif %}
