@@ -18,11 +18,14 @@ trait HandlesDynamicGetters {
 	/**
 	 * Intercepts property access to check for custom getter methods.
 	 *
+	 * Signature intentionally untyped to match Timber's Post::__get($field)
+	 * and Term::__get($field) for PHP 8 compatibility.
+	 *
 	 * @param string $field
 	 *
 	 * @return mixed
 	 */
-	public function __get( string $field ): mixed {
+	public function __get( $field ) {
 		if ( $this->has_custom_getter( $field ) ) {
 			return $this->call_custom_getter( $field );
 		}
@@ -33,12 +36,15 @@ trait HandlesDynamicGetters {
 	/**
 	 * Intercepts meta calls to check for custom getter methods.
 	 *
+	 * Signature intentionally untyped to match Timber's CoreEntity::meta($field_name, $args)
+	 * for PHP 8 compatibility.
+	 *
 	 * @param string $field_name
 	 * @param array  $args
 	 *
 	 * @return mixed
 	 */
-	public function meta( string $field_name = '', array $args = [] ): mixed {
+	public function meta( $field_name = '', $args = [] ) {
 		if ( $field_name && $this->has_custom_getter( $field_name ) ) {
 			return $this->call_custom_getter( $field_name );
 		}
