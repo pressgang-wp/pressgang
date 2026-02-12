@@ -11,8 +11,8 @@ use Timber\Timber;
  */
 class TaxonomyController extends PostsController {
 
-	/** @var Term */
-	protected Term $term;
+	/** @var Term|null */
+	protected ?Term $term = null;
 
 	/**
 	 * @param string|null $template
@@ -27,7 +27,7 @@ class TaxonomyController extends PostsController {
 	 * @return Term
 	 */
 	protected function get_term(): Term {
-		if ( empty( $this->term ) ) {
+		if ( $this->term === null ) {
 			$this->term = Timber::get_term( \get_queried_object() );
 		}
 

@@ -13,9 +13,9 @@ use Timber\PostQuery;
 class PostsController extends AbstractController {
 
 	protected string $post_type;
-	protected string $page_title;
-	protected PostQuery $posts;
-	protected Pagination $pagination;
+	protected ?string $page_title = null;
+	protected ?PostQuery $posts = null;
+	protected ?Pagination $pagination = null;
 
 	/**
 	 * Infers the template from the current query context if none is provided.
@@ -62,7 +62,7 @@ class PostsController extends AbstractController {
 	 * @return PostQuery
 	 */
 	protected function get_posts(): PostQuery {
-		if ( empty( $this->posts ) ) {
+		if ( $this->posts === null ) {
 			global $wp_query;
 			$this->posts = new PostQuery( $wp_query );
 		}
@@ -99,7 +99,7 @@ class PostsController extends AbstractController {
 	 */
 	protected function get_page_title(): string {
 
-		if ( empty( $this->page_title ) ) {
+		if ( $this->page_title === null ) {
 			$this->page_title = \get_the_archive_title();
 		}
 
@@ -113,7 +113,7 @@ class PostsController extends AbstractController {
 	 */
 	protected function get_pagination(): Pagination {
 
-		if ( empty( $this->pagination ) ) {
+		if ( $this->pagination === null ) {
 			$this->pagination = $this->get_posts()->pagination();
 		}
 

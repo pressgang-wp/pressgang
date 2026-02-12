@@ -11,8 +11,8 @@ use Timber\Timber;
  */
 class PageController extends AbstractController {
 
-	/** @var Post */
-	protected Post $post;
+	/** @var Post|null */
+	protected ?Post $post = null;
 
 	/**
 	 * @param string|null $template
@@ -27,7 +27,7 @@ class PageController extends AbstractController {
 	 * @return Post
 	 */
 	protected function get_post(): Post {
-		if ( empty( $this->post ) ) {
+		if ( $this->post === null ) {
 			$this->post = Timber::get_post();
 		}
 

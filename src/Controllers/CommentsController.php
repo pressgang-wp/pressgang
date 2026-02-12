@@ -13,7 +13,7 @@ use Timber\Timber;
 class CommentsController extends AbstractController {
 
 	/** @var Post|null */
-	protected ?Post $post;
+	protected ?Post $post = null;
 
 	/**
 	 * @see https://developer.wordpress.org/reference/functions/wp_enqueue_script/#comment-reply-script
@@ -36,7 +36,7 @@ class CommentsController extends AbstractController {
 	 * @return Post|null
 	 */
 	protected function get_post(): ?Post {
-		if ( empty( $this->post ) ) {
+		if ( $this->post === null ) {
 			$this->post = Timber::get_post();
 		}
 

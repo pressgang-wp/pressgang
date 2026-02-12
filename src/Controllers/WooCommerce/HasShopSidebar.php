@@ -10,7 +10,7 @@ use Timber\Timber;
  */
 trait HasShopSidebar {
 
-	protected string $sidebar;
+	protected ?string $sidebar = null;
 
 	/**
 	 * Retrieve the sidebar content.
@@ -20,7 +20,7 @@ trait HasShopSidebar {
 	 * @return string The sidebar content.
 	 */
 	protected function get_sidebar(): string {
-		if ( empty( $this->sidebar ) ) {
+		if ( $this->sidebar === null ) {
 			$this->sidebar = Timber::get_widgets( 'shop_sidebar' );
 		}
 

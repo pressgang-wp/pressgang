@@ -32,7 +32,7 @@ class AuthorController extends AbstractController {
 	 * @return User|null
 	 */
 	protected function get_author(): ?User {
-		if ( empty( $this->author ) ) {
+		if ( $this->author === null ) {
 			$id = get_queried_object_id();
 			if ( $id ) {
 				$this->author = Timber::get_user( $id );
@@ -48,7 +48,7 @@ class AuthorController extends AbstractController {
 	 * @return Post[]|null
 	 */
 	protected function get_posts(): mixed {
-		if ( empty( $this->posts ) ) {
+		if ( $this->posts === null ) {
 			$author = $this->get_author();
 
 			if ( ! $author ) {

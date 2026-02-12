@@ -23,7 +23,7 @@ class SearchController extends PostsController {
 	#[\Override]
 	protected function get_page_title(): string {
 
-		if ( empty( $this->page_title ) ) {
+		if ( $this->page_title === null ) {
 			$this->page_title = sprintf( \_x( "Search results for '%s'", 'Search', THEMENAME ), \get_search_query() );
 		}
 

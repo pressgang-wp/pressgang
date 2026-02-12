@@ -11,7 +11,7 @@ use Timber\Timber;
  */
 trait HasProductCategories {
 
-	protected $product_categories = [];
+	protected ?array $product_categories = null;
 
 	/**
 	 * Get the product categories.
@@ -23,7 +23,7 @@ trait HasProductCategories {
 	 */
 	public function get_product_categories(): array {
 
-		if ( empty( $this->product_categories ) ) {
+		if ( $this->product_categories === null ) {
 
 			$term      = \get_queried_object();
 			$parent_id = empty( $term->term_id ) ? 0 : $term->term_id;

@@ -9,7 +9,7 @@ namespace PressGang\Controllers\WooCommerce;
  */
 trait HasProducts {
 
-	protected array $products = [];
+	protected ?array $products = null;
 
 	/**
 	 * Get an array of WooCommerce product objects.
@@ -21,7 +21,8 @@ trait HasProducts {
 	 * @return array An array of WooCommerce product objects.
 	 */
 	protected function get_products(): array {
-		if ( empty( $this->products ) ) {
+		if ( $this->products === null ) {
+			$this->products = [];
 			foreach ( $this->get_posts() as $post ) {
 				$this->products[] = \wc_get_product( $post->id );
 			}
