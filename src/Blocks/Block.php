@@ -50,7 +50,7 @@ class Block {
 	 * @param $wp_block
 	 * @param array $context The context provided to the block by the post or its parent block.
 	 */
-	public static function render( array $block, string $content, bool $is_preview, int $post_id, mixed $wp_block, array $context ): void {
+	public static function render( array $block, string $content, bool $is_preview, int $post_id, mixed $wp_block, array|false $context ): void {
 		$slug    = substr( $block['name'], strpos( $block['name'], '/' ) + 1 );
 		$context = static::get_context( $block );
 
