@@ -37,6 +37,8 @@ Context managers enrich the global `Timber::context()` with data needed across m
 
 All custom Twig functions, filters, and globals are registered through extension managers configured in `config/twig-extensions.php`. Twig remains a presentation-only layer — no database queries, no mutations, no business logic.
 
+Timber Twig environment options (including compilation cache) are configured through `config/timber.php`, allowing child themes to opt in per project.
+
 ### 🧱 Blocks & Snippets
 
 Gutenberg blocks are declared in `config/blocks.php` and live under `blocks/<block-name>/` with a `block.json` and Twig template. Snippets are reusable view partials registered via `config/snippets.php` — self-contained, explicitly parameterised UI components.

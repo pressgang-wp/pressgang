@@ -130,6 +130,9 @@ Lists context manager classes for enriching the Timber context. See [Context Man
 `twig-extensions.php`
 Lists Twig extension manager classes for adding custom functions, filters, and globals to Twig. See [Twig Extensions](TWIG-EXTENSIONS.md).
 
+`timber.php`
+Configures Timber Twig environment options via `timber/twig/environment/options` (including Twig compilation cache). Child themes can override this file to enable or disable caching per site.
+
 ### Include-based Config
 
 These config files list class names to be auto-included and registered by the `Loader`, rather than going through the Configuration singleton pattern:

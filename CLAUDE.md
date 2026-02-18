@@ -27,7 +27,7 @@ They exist only to prepare data for templates.
 3. `PressGang::boot()`:
 	- `Timber::init()`
 	- `Loader::initialize()`: loads config, registers hooks, includes files — **no business logic**
-	- `TimberServiceProvider::boot()`: registers context managers, Twig extensions, snippet paths
+	- `TimberServiceProvider::boot()`: registers context managers, Twig extensions, Twig environment options, snippet paths
 
 **Never perform queries, I/O, or remote requests during boot.**
 

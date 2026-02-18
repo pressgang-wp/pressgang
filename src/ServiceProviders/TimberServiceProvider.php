@@ -23,12 +23,20 @@ class TimberServiceProvider {
 		$this->register_context_managers();
 		$this->register_twig_extension_managers();
 		$this->register_snippets_template_locations();
+		$this->register_twig_environment_options();
 
 		// Add context filters
 		\add_filter( 'timber/context', [ $this, 'add_to_context' ] );
 
 		// Add to Twig functions
 		\add_filter( 'timber/twig', [ $this, 'add_to_twig' ] );
+	}
+
+	/**
+	 * Registers Twig environment options based on config/timber.php.
+	 */
+	protected function register_twig_environment_options(): void {
+		\add_filter( 'timber/twig/environment/options', [ $this, 'add_twig_environment_options' ] );
 	}
 
 	/**
@@ -101,6 +109,48 @@ class TimberServiceProvider {
 		}
 
 		return $twig;
+	}
+
+	/**
+	 * Applies configured Timber/Twig environment options.
+	 *
+	 * @param array<string, mixed> $options
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function add_twig_environment_options( array $options ): array {
+		$timber_config = Config::get( 'timber', [] );
+
+		if ( ! is_array( $timber_config ) ) {
+			return $options;
+		}
+
+		$twig_config = $timber_config['twig'] ?? null;
+
+		if ( ! is_array( $twig_config ) ) {
+			return $options;
+		}
+
+		if ( array_key_exists( 'cache_enabled', $twig_config ) ) {
+			$cache_enabled = (bool) $twig_config['cache_enabled'];
+
+			if ( $cache_enabled ) {
+				$cache_path = $twig_config['cache_path'] ?? true;
+				$options['cache'] = is_string( $cache_path ) && $cache_path !== '' ? $cache_path : true;
+			} else {
+				$options['cache'] = false;
+			}
+		}
+
+		if ( array_key_exists( 'auto_reload', $twig_config ) ) {
+			$options['auto_reload'] = (bool) $twig_config['auto_reload'];
+		}
+
+		if ( array_key_exists( 'debug', $twig_config ) ) {
+			$options['debug'] = (bool) $twig_config['debug'];
+		}
+
+		return $options;
 	}
 
 	/**

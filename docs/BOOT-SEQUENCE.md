@@ -11,7 +11,7 @@ functions.php
   └── PressGang::boot()
         ├── 1. Timber::init()              — Initialize the Timber library
         ├── 2. Loader::initialize()        — Load config, register components
-        └── 3. TimberServiceProvider::boot() — Register context managers, Twig extensions, snippet paths
+        └── 3. TimberServiceProvider::boot() — Register context managers, Twig extensions, Twig env options, snippet paths
 ```
 
 ## Stage by Stage
@@ -66,11 +66,12 @@ Shortcode and widget classes listed in `config/shortcodes.php` and `config/widge
 
 ### 4. TimberServiceProvider Boot
 
-The `TimberServiceProvider` wires up three things:
+The `TimberServiceProvider` wires up four things:
 
 1. **Context Managers** — classes listed in `config/context-managers.php` are instantiated and hooked into `timber/context` to enrich every page's context.
 2. **Twig Extensions** — classes listed in `config/twig-extensions.php` are instantiated and hooked into `timber/twig` to add custom functions, filters, and globals.
-3. **Snippet Template Paths** — the `pressgang-snippets` vendor views directory is added to Timber's template locations.
+3. **Twig Environment Options** — `config/timber.php` is applied to `timber/twig/environment/options` (child themes can enable or disable Twig compilation cache per site).
+4. **Snippet Template Paths** — the `pressgang-snippets` vendor views directory is added to Timber's template locations.
 
 ## Performance Rules
 
@@ -94,3 +95,4 @@ Several hooks let you customize the boot:
 | `pressgang_include_directories` | filter | Modify where the Loader looks for shortcode/widget files |
 | `timber/context` | filter | Add data to the global Timber context |
 | `timber/twig` | filter | Add functions/filters/globals to the Twig environment |
+| `timber/twig/environment/options` | filter | Configure Twig environment options (cache, auto_reload, debug) |
