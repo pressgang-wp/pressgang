@@ -38,7 +38,7 @@
 						sizes="{{ sizes_attr|e('html_attr') }}"
 					{% else %}
 						srcset="{{ (lqip_size is iterable ? thumbnail.src|resize(lqip_size[0], lqip_size[1]) : thumbnail.src|resize(lqip_size))|towebp(quality)|relative }}"
-						class="blur-up lazyload {{ class|e('html_attr') }}"
+						class="blur-up lazyload"
 						data-srcset="
 						{% for size in sizes %}
 							{% if size is iterable %}
