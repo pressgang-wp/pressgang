@@ -30,6 +30,7 @@ Snippets solve all of these:
 
 Every snippet implements `SnippetInterface`, which requires exactly one thing — a constructor that accepts an array of arguments:
 
+{% code title="src/Snippets/SnippetInterface.php" %}
 ```php
 namespace PressGang\Snippets;
 
@@ -37,6 +38,7 @@ interface SnippetInterface {
     public function __construct(array $args);
 }
 ```
+{% endcode %}
 
 The constructor is where the snippet registers its WordPress hooks. Once constructed, the snippet is fully operational — no additional calls needed.
 
@@ -44,6 +46,7 @@ The constructor is where the snippet registers its WordPress hooks. Once constru
 
 Snippets are activated in your theme's `config/snippets.php`. Each entry maps a snippet class to its arguments:
 
+{% code title="config/snippets.php" lineNumbers="true" %}
 ```php
 return [
     // No configuration needed — pass an empty array
@@ -60,6 +63,7 @@ return [
     'PressGang\\Snippets\\GoogleAnalytics' => [],
 ];
 ```
+{% endcode %}
 
 To disable a snippet, remove or comment out its line. To reconfigure one, change its `$args` array. No code changes needed.
 
@@ -73,6 +77,7 @@ PressGang resolves snippet class names in this order:
 
 This means you can reference snippets by short name when they live in a standard namespace:
 
+{% code title="config/snippets.php" %}
 ```php
 return [
     // These are equivalent:
@@ -83,6 +88,7 @@ return [
     'WooCommerce\\ProductColorSwatch' => [],
 ];
 ```
+{% endcode %}
 
 ### Template Paths
 
@@ -92,6 +98,7 @@ PressGang automatically adds the `pressgang-snippets` vendor views directory to 
 
 Here's what a typical snippet looks like — this one adds Google Analytics tracking via the WordPress Customizer:
 
+{% code title="src/Snippets/GoogleAnalytics.php" lineNumbers="true" %}
 ```php
 namespace PressGang\Snippets;
 
@@ -124,6 +131,7 @@ class GoogleAnalytics implements SnippetInterface {
     }
 }
 ```
+{% endcode %}
 
 Key things to notice:
 
@@ -136,10 +144,13 @@ Key things to notice:
 
 Child themes will often need site-specific snippets that don't belong in the shared library. This is expected and encouraged — it's far better to write a snippet class than to add code to `functions.php`.
 
-### Step 1: Create the Class
+{% stepper %}
+{% step %}
+### Create the class
 
 Place it in your child theme's `src/Snippets/` directory:
 
+{% code title="src/Snippets/AdminBarQuoteButton.php" lineNumbers="true" %}
 ```php
 namespace YourTheme\Snippets;
 
@@ -173,73 +184,101 @@ class AdminBarQuoteButton implements SnippetInterface {
     }
 }
 ```
+{% endcode %}
+{% endstep %}
 
-### Step 2: Register in Config
+{% step %}
+### Register in config
 
+{% code title="config/snippets.php" %}
 ```php
-// config/snippets.php
 return [
     'AdminBarQuoteButton' => ['url' => '/request-quote'],
 ];
 ```
+{% endcode %}
 
 Because your child theme namespace is checked first, you only need the short class name.
+{% endstep %}
 
-### Step 3: Add a Twig Template (if needed)
+{% step %}
+### Add a Twig template (if needed)
 
 If your snippet renders output, place the template in your child theme's `views/snippets/` directory. Render it via `Timber::render('snippets/your-template.twig', $context)`.
+{% endstep %}
+{% endstepper %}
 
 ## Common Snippet Patterns
 
-### Customizer + Render
+<details>
+<summary><strong>Customizer + Render</strong></summary>
 
 Adds a setting to the WordPress Customizer and renders output based on that setting. Used for third-party scripts, tracking pixels, and theme options that need a simple admin UI.
 
+{% code title="Pattern" %}
 ```php
 public function __construct(array $args) {
     \add_action('customize_register', [$this, 'add_to_customizer']);
     \add_action('wp_head', [$this, 'render']);
 }
 ```
+{% endcode %}
 
 **Examples:** `GoogleAnalytics`, `GoogleTagManager`, `FacebookPixel`, `Hotjar`, `GoogleRecaptcha`
 
-### Hook Filtering
+</details>
+
+<details>
+<summary><strong>Hook Filtering</strong></summary>
 
 Modifies WordPress behaviour via actions and filters. No UI, no templates — just behavioural changes.
 
+{% code title="Pattern" %}
 ```php
 public function __construct(array $args) {
     $this->exclude = $args['exclude'] ?? [];
     \add_filter('pre_get_posts', [$this, 'modify_query']);
 }
 ```
+{% endcode %}
 
 **Examples:** `DisableEmojis`, `BigImageScaling`, `SearchExcludePostTypes`, `RemovePosts`
 
-### Config-Driven Registration
+</details>
+
+<details>
+<summary><strong>Config-Driven Registration</strong></summary>
 
 Receives structured `$args` and registers WordPress resources. The args array shape mirrors WordPress API conventions.
 
+{% code title="Pattern" %}
 ```php
 public function __construct(array $args) {
     $this->args = $args;
     \add_action('init', [$this, 'setup_image_sizes']);
 }
 ```
+{% endcode %}
 
 **Examples:** `ImageSizes`, `Permalinks`, `AddQueryVars`
 
-### Admin Features
+</details>
+
+<details>
+<summary><strong>Admin Features</strong></summary>
 
 Adds functionality to the WordPress admin — row actions, admin notices, editor customisation. Always includes capability checks and nonce verification.
 
 **Examples:** `DuplicatePost`, `AdminLogo`, `TinyMceBlockFormats`
 
-### Twig Function Registration
+</details>
+
+<details>
+<summary><strong>Twig Function Registration</strong></summary>
 
 Registers a callable function into the Twig environment, making it available in templates as `{{ function_name() }}`.
 
+{% code title="Pattern" %}
 ```php
 public function __construct(array $args) {
     \add_filter('timber/twig', [$this, 'add_to_twig']);
@@ -250,12 +289,15 @@ public function add_to_twig(Environment $twig): Environment {
     return $twig;
 }
 ```
+{% endcode %}
 
 **Examples:** `Breadcrumb`
 
+</details>
+
 ## Guidelines
 
-{% hint style="warning" %}
+{% hint style="danger" %}
 Snippets are constructed during theme setup and their hooks fire on every request. Keep constructors lightweight — register hooks only, don't do real work.
 {% endhint %}
 
@@ -271,8 +313,10 @@ Snippets are constructed during theme setup and their hooks fire on every reques
 
 A curated collection of 45+ ready-to-use snippets is available as a separate Composer package:
 
+{% code title="Terminal" %}
 ```bash
 composer require pressgang-wp/pressgang-snippets
 ```
+{% endcode %}
 
 This includes snippets for Google Analytics, Tag Manager, Facebook Pixel, emoji removal, image sizes, breadcrumbs, Open Graph tags, JSON-LD schemas, WooCommerce tweaks, and more. See [pressgang-wp/pressgang-snippets](https://github.com/pressgang-wp/pressgang-snippets) for the full list.

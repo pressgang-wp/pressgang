@@ -35,6 +35,7 @@ WooCommerce controllers are also provided under `PressGang\Controllers\WooCommer
 
 ## Example: `PageController`
 
+{% code title="src/Controllers/PageController.php" lineNumbers="true" %}
 ```php
 namespace PressGang\Controllers;
 
@@ -63,39 +64,45 @@ class PageController extends AbstractController {
     }
 }
 ```
+{% endcode %}
 
 ## Usage in Templates
 
 Controllers are utilized in standard WordPress template files. PressGang maintains the familiar WordPress template hierarchy — you still create `page.php`, `single.php`, `archive.php`, etc. — but instead of writing queries and HTML, you delegate to a controller.
 
-### Using `PressGang::render()` (Recommended)
-
+{% tabs %}
+{% tab title="PressGang::render() (Recommended)" %}
 The static `render()` method resolves the controller and template for you:
 
+{% code title="page.php" %}
 ```php
-// page.php
 use PressGang\Controllers\PageController;
 
 PressGang\PressGang::render(controller: PageController::class, twig: 'front-page.twig');
 ```
+{% endcode %}
 
 You can also let PressGang infer the controller automatically from the template filename:
 
+{% code title="page.php" %}
 ```php
-// page.php
 PressGang\PressGang::render(template: 'page.php');
 ```
+{% endcode %}
+{% endtab %}
 
-### Direct Instantiation
-
+{% tab title="Direct Instantiation" %}
 For more control, instantiate the controller directly:
 
+{% code title="front-page.php" %}
 ```php
-// front-page.php
 use PressGang\Controllers\PageController;
 
 (new PageController('front-page.twig'))->render();
 ```
+{% endcode %}
+{% endtab %}
+{% endtabs %}
 
 ## Filters and Actions
 
@@ -111,10 +118,7 @@ The `{controller}` placeholder is the snake_case version of the controller class
 
 To extend the functionality of a parent theme controller in a child theme, create a new controller class in the child theme that inherits from the parent controller.
 
-### Example: Extending PageController
-
-Create a ChildPageController in the child theme:
-
+{% code title="src/Controllers/ChildPageController.php" lineNumbers="true" %}
 ```php
 namespace ChildTheme\Controllers;
 
@@ -128,24 +132,34 @@ class ChildPageController extends PageController {
     }
 }
 ```
+{% endcode %}
 
 Then use it in your child theme's template:
 
+{% code title="child-theme/page.php" %}
 ```php
-// child-theme/page.php
 use ChildTheme\Controllers\ChildPageController;
 
 PressGang\PressGang::render(controller: ChildPageController::class);
 ```
+{% endcode %}
 
 This setup allows the child theme to inherit and extend the logic defined in the parent theme controllers, promoting code reuse and maintainability.
 
 ### Note on MVC Abstraction
 
-While these controllers are named and used similarly to traditional MVC Controllers, they function more closely to **View Models**. In classic MVC:
+{% hint style="info" %}
+While these controllers are named similarly to traditional MVC Controllers, they function more closely as **View Models**.
+{% endhint %}
+
+In classic MVC:
 
 - **Model:** Handles data and business logic.
 - **View:** Manages the display of information.
 - **Controller:** Acts as an intermediary, handling user input, updating the Model, and refreshing the View.
 
-In PressGang, the Controllers primarily prepare and manage context data for the View (Twig templates), aligning more with the View Model pattern. They focus on preparing data for the View without directly handling user input or business logic. They should not perform writes, remote requests, or access request globals like `$_GET` or `$_POST`.
+In PressGang, the Controllers primarily prepare and manage context data for the View (Twig templates), aligning more with the View Model pattern. They focus on preparing data for the View without directly handling user input or business logic.
+
+{% hint style="danger" %}
+Controllers must **not** perform writes, remote requests, or access request globals like `$_GET` or `$_POST`.
+{% endhint %}

@@ -44,56 +44,97 @@ To make the most out of PressGang, familiarity with the following tools is recom
 
 PressGang is designed as a WordPress _parent theme_ that acts as a library for your [_child theme_](https://developer.wordpress.org/themes/advanced-topics/child-themes/).
 
-{% hint style="info" %}
+{% hint style="success" %}
 To get started, you will need to create a child theme. All hands on deck!
 {% endhint %}
 
-### Quick Start with PressGang-Child
-
+{% tabs %}
+{% tab title="Quick Start" %}
 The fastest way to get up and running is by using our [pressgang-child](https://github.com/pressgang-wp/pressgang-child) repository, which provides a ready-made child theme scaffold.
 
-To get started:
+{% stepper %}
+{% step %}
+### Clone the repository
 
-1.  Clone the pressgang-child repository:
+{% code title="Terminal" %}
+```bash
+git clone https://github.com/pressgang-wp/pressgang-child your-theme-name
+```
+{% endcode %}
+{% endstep %}
 
-    ```bash
-    git clone https://github.com/pressgang-wp/pressgang-child your-theme-name
-    ```
-2.  Navigate into your new theme directory:
+{% step %}
+### Navigate into your theme
 
-    ```bash
-    cd your-theme-name
-    ```
-3.  Install dependencies via Composer:
+{% code title="Terminal" %}
+```bash
+cd your-theme-name
+```
+{% endcode %}
+{% endstep %}
 
-    ```bash
-    composer install
-    ```
-4. Follow the instructions in the README to set up your environment and start developing your child theme.
+{% step %}
+### Install dependencies
 
-### Manual Setup
+{% code title="Terminal" %}
+```bash
+composer install
+```
+{% endcode %}
+{% endstep %}
 
+{% step %}
+### Start developing
+
+Follow the instructions in the README to set up your environment and start developing your child theme.
+{% endstep %}
+{% endstepper %}
+{% endtab %}
+
+{% tab title="Manual Setup" %}
 If you prefer to start from scratch, you can manually set up your PressGang environment.
 
-1.  Clone the PressGang repository:
+{% stepper %}
+{% step %}
+### Clone PressGang
 
-    ```bash
-    git clone https://github.com/pressgang-wp/pressgang
-    ```
-2. Create your own child theme by following the [WordPress guidelines for child themes](https://developer.wordpress.org/themes/advanced-topics/child-themes/).
+{% code title="Terminal" %}
+```bash
+git clone https://github.com/pressgang-wp/pressgang
+```
+{% endcode %}
+{% endstep %}
 
-### Composer Installation
+{% step %}
+### Create your child theme
 
+Create your own child theme by following the [WordPress guidelines for child themes](https://developer.wordpress.org/themes/advanced-topics/child-themes/).
+{% endstep %}
+{% endstepper %}
+{% endtab %}
+
+{% tab title="Composer" %}
 You can also include PressGang as a dependency in your project using Composer.
 
-1.  Require the PressGang package via Composer:
+{% stepper %}
+{% step %}
+### Require the package
 
-    ```bash
-    composer require pressgang-wp/pressgang
-    ```
-2. Create and configure your child theme to extend the PressGang parent theme.
+{% code title="Terminal" %}
+```bash
+composer require pressgang-wp/pressgang
+```
+{% endcode %}
+{% endstep %}
 
-For detailed instructions on setting up and configuring your child theme, refer to the [PressGang documentation](https://github.com/pressgang-wp/pressgang).
+{% step %}
+### Configure your child theme
+
+Create and configure your child theme to extend the PressGang parent theme. For detailed instructions, refer to the [PressGang documentation](https://github.com/pressgang-wp/pressgang).
+{% endstep %}
+{% endstepper %}
+{% endtab %}
+{% endtabs %}
 
 ## License
 

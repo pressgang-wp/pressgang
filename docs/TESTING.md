@@ -12,6 +12,7 @@ No WordPress database, no web server, no Docker required.
 
 ## Running Tests
 
+{% code title="Terminal" %}
 ```bash
 composer test            # alias for test:unit
 composer test:unit       # run the full unit suite
@@ -19,11 +20,13 @@ vendor/bin/phpunit --filter ConfigTest           # run a single test class
 vendor/bin/phpunit --filter loads_and_caches     # run a single test by name
 vendor/bin/phpunit --list-tests                  # list all discovered tests
 ```
+{% endcode %}
 
 ## Directory Structure
 
 Tests mirror the `src/` layout under `tests/Unit/`:
 
+{% code title="tests/" %}
 ```
 tests/
 ├── bootstrap.php              # autoloader + THEMENAME/ABSPATH constants
@@ -35,15 +38,21 @@ tests/
     ├── ContextManagers/       # Menu, Site, ThemeMods, AcfOptions, WooCommerce
     └── ServiceProviders/      # TimberServiceProvider
 ```
+{% endcode %}
 
 ## Writing a New Test
 
-### 1. Create the test class
+{% stepper %}
+{% step %}
+### Create the test class
 
 Place it under `tests/Unit/` mirroring the `src/` path. For example, a test for `src/Configuration/Sidebars.php` goes in `tests/Unit/Configuration/SidebarsTest.php`.
+{% endstep %}
 
-### 2. Extend the base TestCase
+{% step %}
+### Extend the base TestCase
 
+{% code title="tests/Unit/Configuration/SidebarsTest.php" %}
 ```php
 namespace PressGang\Tests\Unit\Configuration;
 
@@ -53,14 +62,18 @@ class SidebarsTest extends TestCase {
     // ...
 }
 ```
+{% endcode %}
 
 The base `TestCase` extends `Yoast\WPTestUtils\BrainMonkey\YoastTestCase`, which handles BrainMonkey setup and teardown automatically. It also provides:
 
 - `resetSingletonInstances()` — clears `ConfigurationSingleton` state between tests
 - `setPostData()` / `clearPostData()` — helpers for testing form validators
+{% endstep %}
 
-### 3. Mock WordPress functions with BrainMonkey
+{% step %}
+### Mock WordPress functions with BrainMonkey
 
+{% code title="Example test method" %}
 ```php
 use Brain\Monkey\Functions;
 
@@ -73,31 +86,45 @@ public function registers_sidebars_from_config(): void {
     // trigger the code under test...
 }
 ```
+{% endcode %}
+{% endstep %}
 
-### 4. Reset singletons when needed
+{% step %}
+### Reset singletons when needed
 
 Any test that touches a `ConfigurationSingleton` subclass should reset state:
 
+{% code title="setUp method" %}
 ```php
 public function set_up(): void {
     parent::set_up();
     $this->resetSingletonInstances();
 }
 ```
+{% endcode %}
+{% endstep %}
+{% endstepper %}
 
 ## Testing Context Managers
 
 Context managers depend on static calls (`Timber::get_menu()`, `new Site()`) and global helpers (`config()`) that cannot be mocked directly with BrainMonkey. PressGang uses the **protected method pattern** — static calls are wrapped in protected methods that tests override via anonymous subclasses:
 
+{% tabs %}
+{% tab title="Production class" %}
+{% code title="src/ContextManagers/MenuContextManager.php" %}
 ```php
-// Production class
 class MenuContextManager implements ContextManagerInterface {
     protected function get_menu(string $location): ?object {
         return Timber::get_menu($location);
     }
 }
+```
+{% endcode %}
+{% endtab %}
 
-// Test
+{% tab title="Test override" %}
+{% code title="tests/Unit/ContextManagers/MenuContextManagerTest.php" %}
+```php
 private function makeManager(): MenuContextManager {
     return new class(['primary' => $menuStub]) extends MenuContextManager {
         public function __construct(private readonly array $menuMap) {}
@@ -107,6 +134,9 @@ private function makeManager(): MenuContextManager {
     };
 }
 ```
+{% endcode %}
+{% endtab %}
+{% endtabs %}
 
 This avoids `@runTestsInSeparateProcesses` (which is 5-10x slower) and keeps tests fast and deterministic.
 
@@ -114,14 +144,20 @@ This avoids `@runTestsInSeparateProcesses` (which is 5-10x slower) and keeps tes
 
 ### BrainMonkey `apply_filters` signature
 
-`apply_filters` receives `($hook, $value, ...$extra)`. To pass through the value unchanged, use:
+{% hint style="warning" %}
+`apply_filters` receives `($hook, $value, ...$extra)`. To pass through the value unchanged, use the pattern below.
+{% endhint %}
 
+{% code title="Correct approach" %}
 ```php
 Functions\expect('apply_filters')
     ->andReturnUsing(fn() => func_get_args()[1]);
 ```
+{% endcode %}
 
+{% hint style="danger" %}
 Do **not** use `andReturnFirstArg()` — that returns the hook name, not the value.
+{% endhint %}
 
 ### Pre-loaded functions cannot be mocked
 
@@ -129,4 +165,6 @@ Functions loaded via Composer's `files` autoload (like the `config()` helper) ar
 
 ### `wp_parse_args` is pre-stubbed
 
+{% hint style="info" %}
 `YoastTestCase` pre-stubs `wp_parse_args` to behave like `array_merge($defaults, $args)` — no need to mock it yourself.
+{% endhint %}

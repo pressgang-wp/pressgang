@@ -10,6 +10,7 @@ Every time `Timber::context()` is called (typically once per request, in a contr
 
 ### The Interface
 
+{% code title="src/ContextManagers/ContextManagerInterface.php" %}
 ```php
 namespace PressGang\ContextManagers;
 
@@ -21,6 +22,7 @@ interface ContextManagerInterface {
     public function add_to_context(array $context): array;
 }
 ```
+{% endcode %}
 
 ## Built-in Context Managers
 
@@ -32,10 +34,12 @@ Adds the Timber `Site` object and a cache-busted stylesheet URL to the context.
 
 **Context keys:** `site`, `site.stylesheet`
 
+{% code title="views/layout.twig" %}
 ```twig
 <link rel="stylesheet" href="{{ site.stylesheet }}">
 <h1>{{ site.name }}</h1>
 ```
+{% endcode %}
 
 The stylesheet URL is filterable via `pressgang_stylesheet`.
 
@@ -45,11 +49,13 @@ Adds all registered WordPress navigation menus as Timber `Menu` objects, keyed b
 
 **Context keys:** `menu_{location}` (e.g. `menu_primary`, `menu_footer`)
 
+{% code title="views/partials/nav.twig" %}
 ```twig
 {% for item in menu_primary.items %}
     <a href="{{ item.link }}">{{ item.title }}</a>
 {% endfor %}
 ```
+{% endcode %}
 
 Each menu is filterable via `pressgang_context_menu_{location}`.
 
@@ -59,11 +65,13 @@ Adds all WordPress Customizer theme modifications to the `theme` object.
 
 **Context keys:** properties on `theme` (e.g. `theme.header_image`, `theme.custom_logo`)
 
+{% code title="views/partials/header.twig" %}
 ```twig
 {% if theme.custom_logo %}
     <img src="{{ theme.custom_logo }}" alt="{{ site.name }}">
 {% endif %}
 ```
+{% endcode %}
 
 Each value is filterable via `pressgang_theme_mod_{key}`.
 
@@ -73,10 +81,12 @@ Adds ACF (Advanced Custom Fields) options page fields to the context, converting
 
 **Context key:** `options`
 
+{% code title="views/partials/footer.twig" %}
 ```twig
 {{ options.company_name }}
 {{ options.logo.src }}
 ```
+{% endcode %}
 
 {% hint style="info" %}
 This manager only runs when ACF is active and `config/acf-options.php` is configured.
@@ -88,10 +98,11 @@ Adds WooCommerce-specific data to the context when WooCommerce is active.
 
 ## Creating a Custom Context Manager
 
-To add your own shared data to every template:
+{% stepper %}
+{% step %}
+### Create the class
 
-### 1. Create the class
-
+{% code title="src/ContextManagers/SocialLinksContextManager.php" lineNumbers="true" %}
 ```php
 namespace MyTheme\ContextManagers;
 
@@ -110,11 +121,15 @@ class SocialLinksContextManager implements ContextManagerInterface {
     }
 }
 ```
+{% endcode %}
+{% endstep %}
 
-### 2. Register in config
+{% step %}
+### Register in config
 
 Add it to your child theme's `config/context-managers.php`:
 
+{% code title="config/context-managers.php" %}
 ```php
 return [
     \PressGang\ContextManagers\SiteContextManager::class,
@@ -124,16 +139,23 @@ return [
     \MyTheme\ContextManagers\SocialLinksContextManager::class,
 ];
 ```
+{% endcode %}
+{% endstep %}
 
-### 3. Use in Twig
+{% step %}
+### Use in Twig
 
+{% code title="views/partials/social.twig" %}
 ```twig
 <a href="{{ social_links.twitter }}">Twitter</a>
 ```
+{% endcode %}
+{% endstep %}
+{% endstepper %}
 
 ## Important Guidelines
 
-{% hint style="warning" %}
+{% hint style="danger" %}
 Context managers run on **every request** — frontend, admin, AJAX, and CLI. Keep them lightweight!
 {% endhint %}
 

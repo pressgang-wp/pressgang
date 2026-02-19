@@ -8,6 +8,7 @@ All Twig extensions are managed through extension manager classes that implement
 
 ### The Interface
 
+{% code title="src/TwigExtensions/TwigExtensionManagerInterface.php" %}
 ```php
 namespace PressGang\TwigExtensions;
 
@@ -19,6 +20,7 @@ interface TwigExtensionManagerInterface {
     public function add_twig_globals(Environment $twig): void;
 }
 ```
+{% endcode %}
 
 Each method receives the Twig `Environment` and can register any number of functions, filters, or globals.
 
@@ -44,6 +46,7 @@ Registers general-purpose functions and globals:
 **Globals:**
 * `THEMENAME` — the text domain constant, for use in translation calls.
 
+{% code title="views/search-form.twig" %}
 ```twig
 <form action="/">
     <input type="search" value="{{ get_search_query() }}">
@@ -51,15 +54,18 @@ Registers general-purpose functions and globals:
 
 <p>{{ __('Welcome aboard!', THEMENAME) }}</p>
 ```
+{% endcode %}
 
 ### MetaDescriptionExtensionManager
 
 **Functions:**
 * `meta_description()` — generates an SEO-friendly meta description for the current page, via the `MetaDescriptionService`.
 
+{% code title="views/layouts/base.twig" %}
 ```twig
 <meta name="description" content="{{ meta_description() }}">
 ```
+{% endcode %}
 
 See [SEO](SEO.md) for details on the meta description fallback chain.
 
@@ -71,11 +77,13 @@ Only active on single post pages. Requires the post to be mapped to `PressGang\P
 * `get_latest_posts(count)` — fetches the latest posts (excluding the current one).
 * `get_related_posts(count)` — fetches posts related to the current one by shared taxonomy terms.
 
+{% code title="views/partials/related-posts.twig" %}
 ```twig
 {% for post in get_related_posts(3) %}
     <a href="{{ post.link }}">{{ post.title }}</a>
 {% endfor %}
 ```
+{% endcode %}
 
 ### WidgetExtensionManager
 
@@ -87,8 +95,11 @@ Registers WooCommerce-specific Twig functions when WooCommerce is active.
 
 ## Creating a Custom Extension Manager
 
-### 1. Create the class
+{% stepper %}
+{% step %}
+### Create the class
 
+{% code title="src/TwigExtensions/SocialExtensionManager.php" lineNumbers="true" %}
 ```php
 namespace MyTheme\TwigExtensions;
 
@@ -114,11 +125,15 @@ class SocialExtensionManager implements TwigExtensionManagerInterface {
     }
 }
 ```
+{% endcode %}
+{% endstep %}
 
-### 2. Register in config
+{% step %}
+### Register in config
 
 Add to your child theme's `config/twig-extensions.php`:
 
+{% code title="config/twig-extensions.php" %}
 ```php
 return [
     \PressGang\TwigExtensions\GeneralExtensionManager::class,
@@ -128,16 +143,23 @@ return [
     \MyTheme\TwigExtensions\SocialExtensionManager::class,
 ];
 ```
+{% endcode %}
+{% endstep %}
 
-### 3. Use in Twig
+{% step %}
+### Use in Twig
 
+{% code title="views/partials/share-buttons.twig" %}
 ```twig
 <a href="{{ share_url('twitter', post.link) }}">Share on Twitter</a>
 ```
+{% endcode %}
+{% endstep %}
+{% endstepper %}
 
 ## Rules for Twig Functions
 
-{% hint style="warning" %}
+{% hint style="danger" %}
 Twig is for presentation only. Keep your Twig functions pure and side-effect free!
 {% endhint %}
 
@@ -147,4 +169,6 @@ Twig is for presentation only. Keep your Twig functions pure and side-effect fre
 * **Deterministic** — same inputs should always produce the same outputs.
 * **Pure** — no side effects, no mutation of global state.
 
+{% hint style="info" %}
 The one documented exception is `WooCommerceExtensionManager::timber_set_product()`, which sets `global $product` as required by WooCommerce's template system.
+{% endhint %}

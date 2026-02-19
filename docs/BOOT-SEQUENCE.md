@@ -6,20 +6,30 @@ Understanding how PressGang starts up helps you know where things happen and —
 
 PressGang boots from `functions.php` in three clean stages. Think of it as raising the anchor, setting the sails, and catching the wind:
 
-```
-functions.php
-  └── PressGang::boot()
-        ├── 1. Timber::init()              — Initialize the Timber library
-        ├── 2. Loader::initialize()        — Load config, register components
-        └── 3. TimberServiceProvider::boot() — Register context managers, Twig extensions, Twig env options, snippet paths
+```mermaid
+graph TD
+    A["functions.php"] --> B["PressGang::boot()"]
+    B --> C["1. Timber::init()"]
+    B --> D["2. Loader::initialize()"]
+    B --> E["3. TimberServiceProvider::boot()"]
+    C --> C1["Initialize Timber library"]
+    D --> D1["Load config files"]
+    D --> D2["Register components"]
+    E --> E1["Context managers"]
+    E --> E2["Twig extensions"]
+    E --> E3["Twig env options"]
+    E --> E4["Snippet paths"]
 ```
 
 ## Stage by Stage
 
+{% stepper %}
+{% step %}
 ### 1. Composer Autoload
 
 Before anything else, `functions.php` loads the Composer autoloader and defines the `THEMENAME` constant used for translations:
 
+{% code title="functions.php" lineNumbers="true" %}
 ```php
 if (!defined('THEMENAME')) {
     define('THEMENAME', 'pressgang');
@@ -35,15 +45,20 @@ if (file_exists($autoload_path)) {
     new TimberServiceProvider()
 ))->boot();
 ```
+{% endcode %}
 
 {% hint style="info" %}
 Your child theme's `functions.php` should override `THEMENAME` with your own text domain before requiring the autoloader.
 {% endhint %}
+{% endstep %}
 
+{% step %}
 ### 2. Timber Initialization
 
 `Timber::init()` sets up the Timber library — connecting Twig to WordPress and preparing the template rendering pipeline.
+{% endstep %}
 
+{% step %}
 ### 3. Loader Initialization
 
 The `Loader` performs two tasks:
@@ -54,16 +69,20 @@ The `FileConfigLoader` reads every `*.php` file from the parent theme's `config/
 
 For each config key, the Loader converts it to a Configuration class name (e.g. `custom-post-types` → `CustomPostTypes`) and calls `initialize()` on the singleton instance:
 
+{% code title="Config → Class mapping" %}
 ```
-config/sidebars.php       → Configuration\Sidebars::get_instance()->initialize($config)
+config/sidebars.php         → Configuration\Sidebars::get_instance()->initialize($config)
 config/custom-post-types.php → Configuration\CustomPostTypes::get_instance()->initialize($config)
-config/scripts.php        → Configuration\Scripts::get_instance()->initialize($config)
+config/scripts.php          → Configuration\Scripts::get_instance()->initialize($config)
 ```
+{% endcode %}
 
 **b) Include Files**
 
 Shortcode and widget classes listed in `config/shortcodes.php` and `config/widgets.php` are included and registered. These use a different mechanism — they're `require`'d and instantiated directly rather than going through the Configuration singleton pattern.
+{% endstep %}
 
+{% step %}
 ### 4. TimberServiceProvider Boot
 
 The `TimberServiceProvider` wires up four things:
@@ -72,10 +91,12 @@ The `TimberServiceProvider` wires up four things:
 2. **Twig Extensions** — classes listed in `config/twig-extensions.php` are instantiated and hooked into `timber/twig` to add custom functions, filters, and globals.
 3. **Twig Environment Options** — `config/timber.php` is applied to `timber/twig/environment/options` (child themes can enable or disable Twig compilation cache per site).
 4. **Snippet Template Paths** — the `pressgang-snippets` vendor views directory is added to Timber's template locations.
+{% endstep %}
+{% endstepper %}
 
 ## Performance Rules
 
-{% hint style="warning" %}
+{% hint style="danger" %}
 Never perform queries, I/O, or remote requests during boot. The boot sequence runs on every request — keep it fast!
 {% endhint %}
 

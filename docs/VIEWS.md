@@ -20,6 +20,7 @@ While Timber provides a simple way to render Twig templates with context data (s
 
 In a typical PressGang setup, the `AbstractController` takes a `$template` argument in its constructor for the Twig template name, and attaches the base `Timber::context()` to the `$context` class property:
 
+{% code title="src/Controllers/AbstractController.php" %}
 ```php
 use Timber\Timber;
 
@@ -32,13 +33,15 @@ abstract class AbstractController implements ControllerInterface {
 
 }
 ```
+{% endcode %}
 
 Each controller's `get_context()` method then enriches the context with page-specific data.
 
-### Example: PostController
-
+{% tabs %}
+{% tab title="PostController" %}
 The `PostController` adds the current post to the context under both `'post'` and a post-type-specific key:
 
+{% code title="src/Controllers/PostController.php" %}
 ```php
 protected function get_context(): array {
     $post = $this->get_post();
@@ -49,13 +52,15 @@ protected function get_context(): array {
     return $this->context;
 }
 ```
+{% endcode %}
 
 This means in your `single.twig` template, you can access the post as `{{ post }}` or by its type, e.g., `{{ event }}` for a custom post type called `event`.
+{% endtab %}
 
-### Example: PostsController
-
+{% tab title="PostsController" %}
 The `PostsController` adds posts, pagination, and a page title for archive pages:
 
+{% code title="src/Controllers/PostsController.php" %}
 ```php
 protected function get_context(): array {
     $this->context['page_title']  = $this->get_page_title();
@@ -65,6 +70,9 @@ protected function get_context(): array {
     return $this->context;
 }
 ```
+{% endcode %}
+{% endtab %}
+{% endtabs %}
 
 ## Escaping
 
@@ -74,7 +82,7 @@ Twig's auto-escaping is enabled by default. This means `{{ value }}` is automati
 * **URLs:** `{{ value|e('url') }}`
 * **Raw HTML:** `{{ value|raw }}` — only when the value has been sanitised in PHP and is explicitly intended to contain HTML.
 
-{% hint style="warning" %}
+{% hint style="danger" %}
 Sanitise input in PHP before passing it to the context. Let Twig handle the escaping on output. Don't mix the two!
 {% endhint %}
 
@@ -82,10 +90,12 @@ Sanitise input in PHP before passing it to the context. Let Twig handle the esca
 
 PressGang uses a single text domain constant, `THEMENAME`, which is available as a Twig global:
 
+{% code title="views/example.twig" %}
 ```twig
 {{ __('Read more', THEMENAME) }}
 {{ __('View %s', THEMENAME)|format(post.title) }}
 ```
+{% endcode %}
 
 Do not concatenate translated strings — use format placeholders instead.
 
@@ -97,6 +107,7 @@ Timber will look for templates in the child theme first, then falls back to the 
 
 The PressGang parent theme organises its views into the following subdirectories:
 
+{% code title="views/" %}
 ```
 views/
   layouts/     — Base page layouts (header, footer, body structure)
@@ -105,5 +116,6 @@ views/
   scaffold/    — Structural scaffolding templates
   shared/      — Shared components used across templates
 ```
+{% endcode %}
 
 You can follow this same structure in your child theme, or organise views however suits your project. Any file in your child theme's `views/` directory will take precedence over the parent theme's version.

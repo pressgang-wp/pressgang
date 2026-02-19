@@ -4,13 +4,15 @@ PressGang provides a structured form handling pipeline with built-in validation,
 
 ## Architecture
 
-```
-Form submit → WordPress admin-post → FormSubmission::handle_form_submission()
-                                        ├── Nonce verification
-                                        ├── Input flashing
-                                        ├── Validator pipeline
-                                        ├── process_submission() (your logic)
-                                        └── Redirect with status
+```mermaid
+graph LR
+    A["Form submit"] --> B["WordPress<br/>admin-post"]
+    B --> C["FormSubmission::<br/>handle_form_submission()"]
+    C --> D["Nonce verification"]
+    D --> E["Input flashing"]
+    E --> F["Validator pipeline"]
+    F --> G["process_submission()<br/>(your logic)"]
+    G --> H["Redirect with status"]
 ```
 
 ## FormSubmission (Base Class)
@@ -27,6 +29,7 @@ The abstract `FormSubmission` class handles the form lifecycle:
 
 Extend `FormSubmission` and implement `process_submission()`:
 
+{% code title="src/Forms/NewsletterSubmission.php" lineNumbers="true" %}
 ```php
 namespace MyTheme\Forms;
 
@@ -42,13 +45,14 @@ class NewsletterSubmission extends FormSubmission {
     }
 }
 ```
+{% endcode %}
 
 ### Initialising and Registering Hooks
 
 Form handlers register themselves with WordPress via `admin_post` actions:
 
+{% code title="Snippet or functions.php" %}
 ```php
-// In a snippet or functions.php
 use MyTheme\Forms\NewsletterSubmission;
 
 NewsletterSubmission::init([
@@ -58,6 +62,7 @@ NewsletterSubmission::init([
     ],
 ]);
 ```
+{% endcode %}
 
 This registers handlers for both logged-in (`admin_post_{action}`) and logged-out (`admin_post_nopriv_{action}`) users.
 
@@ -71,6 +76,7 @@ PressGang ships with a `ContactSubmission` class that handles contact form email
 * Filterable recipient via `pressgang_contact_to_email`.
 * Filterable subject via `pressgang_contact_subject`.
 
+{% code title="Contact form setup" lineNumbers="true" %}
 ```php
 use PressGang\Forms\ContactSubmission;
 
@@ -85,11 +91,13 @@ ContactSubmission::init([
     ],
 ]);
 ```
+{% endcode %}
 
 ## Validators
 
 Validators implement the `ValidatorInterface`:
 
+{% code title="src/Forms/Validators/ValidatorInterface.php" %}
 ```php
 namespace PressGang\Forms\Validators;
 
@@ -97,6 +105,7 @@ interface ValidatorInterface {
     public function validate(): array;
 }
 ```
+{% endcode %}
 
 The `validate()` method returns an empty array on success, or an array of error messages on failure.
 
@@ -110,6 +119,7 @@ The `validate()` method returns an empty array on success, or an array of error 
 
 ### Creating a Custom Validator
 
+{% code title="src/Forms/Validators/PhoneValidator.php" lineNumbers="true" %}
 ```php
 namespace MyTheme\Forms\Validators;
 
@@ -128,11 +138,13 @@ class PhoneValidator implements ValidatorInterface {
     }
 }
 ```
+{% endcode %}
 
 ## Form Template (Twig)
 
 Your Twig form template must include a nonce field and target the `admin_post` endpoint:
 
+{% code title="views/forms/contact.twig" lineNumbers="true" %}
 ```twig
 <form method="post" action="{{ site.url }}/wp-admin/admin-post.php">
     <input type="hidden" name="action" value="contact_form">
@@ -144,10 +156,11 @@ Your Twig form template must include a nonce field and target the `admin_post` e
     <button type="submit">{{ __('Send', THEMENAME) }}</button>
 </form>
 ```
+{% endcode %}
 
 ## Security
 
-{% hint style="warning" %}
+{% hint style="danger" %}
 All PressGang forms enforce WordPress security conventions — nonce verification, input sanitisation, and capability checks are mandatory. Never trust raw user input!
 {% endhint %}
 

@@ -8,9 +8,11 @@ The `MetaDescriptionService` generates a single, authoritative meta description 
 
 ### Usage in Twig
 
+{% code title="views/layouts/base.twig" %}
 ```twig
 <meta name="description" content="{{ meta_description() }}">
 ```
+{% endcode %}
 
 That's it. One line in your `<head>` and PressGang handles the rest.
 
@@ -18,7 +20,8 @@ That's it. One line in your `<head>` and PressGang handles the rest.
 
 The service uses a smart fallback chain to find the best description for each page type:
 
-### Posts and Pages
+<details>
+<summary><strong>Posts and Pages</strong></summary>
 
 1. **Yoast SEO meta description** (`_yoast_wpseo_metadesc` post meta) — if Yoast is installed and a description is set, it takes priority.
 2. **Custom field** (`meta_description` post meta) — a manual override without needing Yoast.
@@ -26,20 +29,31 @@ The service uses a smart fallback chain to find the best description for each pa
 4. **Post content** — falls back to the rendered content.
 5. **Site tagline** — the default site description from Settings > General.
 
-### Taxonomy Terms
+</details>
+
+<details>
+<summary><strong>Taxonomy Terms</strong></summary>
 
 1. **Yoast SEO taxonomy meta** — if configured in Yoast's taxonomy settings.
 2. **Term description** — the description field from the term editor.
 3. **Site tagline** — the default fallback.
 
-### Archives
+</details>
+
+<details>
+<summary><strong>Archives</strong></summary>
 
 1. **Archive description** — via `get_the_archive_description()`.
 2. **Site tagline** — the default fallback.
 
-### Front Page
+</details>
+
+<details>
+<summary><strong>Front Page</strong></summary>
 
 Always uses the **site tagline** (from Settings > General > Tagline).
+
+</details>
 
 ## Truncation
 
@@ -61,7 +75,7 @@ Meta descriptions are cached per object using `wp_cache`, so the fallback chain 
 |---|---|---|
 | `pressgang_contact_to_email` | filter | ContactSubmission |
 
-{% hint style="info" %}
+{% hint style="success" %}
 The `MetaDescriptionService` works alongside Yoast SEO rather than competing with it. If Yoast is installed, its per-page descriptions always take priority. PressGang simply provides a sensible fallback chain for pages where Yoast hasn't been configured.
 {% endhint %}
 
@@ -71,11 +85,12 @@ The `MetaDescriptionExtensionManager` is registered by default in `config/twig-e
 
 To add `meta_description()` support to a theme, ensure the extension manager is listed:
 
+{% code title="config/twig-extensions.php" %}
 ```php
-// config/twig-extensions.php
 return [
     \PressGang\TwigExtensions\GeneralExtensionManager::class,
     \PressGang\TwigExtensions\MetaDescriptionExtensionManager::class,
     // ...
 ];
 ```
+{% endcode %}

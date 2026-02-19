@@ -14,9 +14,11 @@ No need to wrestle with tangled `functions.php` files — PressGang lets you cha
 
 ### The Config Lifecycle
 
-```
-config/*.php  →  FileConfigLoader  →  Config::get()  →  Configuration\* classes
-  (arrays)          (merge/cache)        (access)           (registration)
+```mermaid
+graph LR
+    A["config/*.php<br/>(arrays)"] --> B["FileConfigLoader<br/>(merge/cache)"]
+    B --> C["Config::get()<br/>(access)"]
+    C --> D["Configuration\\* classes<br/>(registration)"]
 ```
 
 Each config file maps to a Configuration class by studly-case name:
@@ -26,6 +28,10 @@ Each config file maps to a Configuration class by studly-case name:
 The class **must exist** — a config file alone does nothing without a corresponding Configuration class.
 
 ### Benefits for Theme Development
+
+{% hint style="success" %}
+Convention over configuration reduces overhead and keeps your theme maintainable.
+{% endhint %}
 
 * **Streamlined Workflow:** Convention over configuration reduces the overhead associated with setting up and maintaining theme configurations.
 * **Enhanced Maintainability:** The clear separation of configuration concerns into dedicated files makes the codebase easier to navigate and maintain.
@@ -39,26 +45,8 @@ All files are present in the `config` folder of the PressGang theme. These can b
 
 These config files map to a singleton Configuration class that registers the defined items with WordPress:
 
-`acf-options.php`
-Registers Advanced Custom Fields (ACF) options pages.
-
-`actions.php`
-Registers custom actions within the theme.
-
-`block-categories.php`
-Registers custom block categories for the Gutenberg editor.
-
-`block-patterns.php`
-Defines and registers block patterns.
-
-`blocks.php`
-Registers Gutenberg blocks. See the [Blocks](BLOCKS.md) page for details.
-
-`color-palette.php`
-Configures custom color palettes for the editor.
-
-`custom-menu-items.php`
-Registers custom menu item types.
+<details>
+<summary><strong>Content Types</strong></summary>
 
 `custom-post-types.php`
 Registers and configures custom post types.
@@ -66,8 +54,53 @@ Registers and configures custom post types.
 `custom-taxonomies.php`
 Defines and registers custom taxonomies.
 
-`customizer.php`
-Registers WordPress Customizer sections and settings.
+`templates.php`
+Registers custom page templates for the Page Attributes dropdown.
+
+`timber-class-map.php`
+Maps WordPress post types to custom Timber post classes.
+
+</details>
+
+<details>
+<summary><strong>Navigation & Layout</strong></summary>
+
+`menus.php`
+Registers navigation menus.
+
+`sidebars.php`
+Registers widget sidebars.
+
+`custom-menu-items.php`
+Registers custom menu item types.
+
+</details>
+
+<details>
+<summary><strong>Editor & Blocks</strong></summary>
+
+`blocks.php`
+Registers Gutenberg blocks. See the [Blocks](BLOCKS.md) page for details.
+
+`block-categories.php`
+Registers custom block categories for the Gutenberg editor.
+
+`block-patterns.php`
+Defines and registers block patterns.
+
+`color-palette.php`
+Configures custom color palettes for the editor.
+
+</details>
+
+<details>
+<summary><strong>Assets</strong></summary>
+
+`scripts.php`
+Registers and enqueues scripts.
+
+`styles.php`
+Registers and enqueues styles.
 
 `dequeue-styles.php`
 Handles dequeueing of unwanted styles.
@@ -75,17 +108,24 @@ Handles dequeueing of unwanted styles.
 `deregister-scripts.php`
 Manages deregistration of unwanted scripts.
 
-`menus.php`
-Registers navigation menus.
+</details>
 
-`meta-tags.php`
-Manages meta tag configurations.
+<details>
+<summary><strong>Theme Features</strong></summary>
 
-`plugins.php`
-Manages required/recommended plugin declarations.
+`support.php`
+Adds theme support features (e.g. `post-thumbnails`, `title-tag`).
 
-`query-vars.php`
-Registers custom query variables.
+`remove-support.php`
+Handles removal of theme support features.
+
+`customizer.php`
+Registers WordPress Customizer sections and settings.
+
+</details>
+
+<details>
+<summary><strong>Admin</strong></summary>
 
 `remove-menus.php`
 Configures removal of specific admin menus.
@@ -93,32 +133,33 @@ Configures removal of specific admin menus.
 `remove-nodes.php`
 Manages removal of admin bar nodes.
 
-`remove-support.php`
-Handles removal of theme support features.
+`query-vars.php`
+Registers custom query variables.
+
+</details>
+
+<details>
+<summary><strong>Integrations & Misc</strong></summary>
+
+`acf-options.php`
+Registers Advanced Custom Fields (ACF) options pages.
+
+`actions.php`
+Registers custom actions within the theme.
+
+`meta-tags.php`
+Manages meta tag configurations.
+
+`plugins.php`
+Manages required/recommended plugin declarations.
 
 `routes.php`
 Configures custom routes.
 
-`scripts.php`
-Registers and enqueues scripts.
-
-`sidebars.php`
-Registers widget sidebars.
-
 `snippets.php`
 Configures snippet class loading. See the [Snippets](SNIPPETS.md) page.
 
-`styles.php`
-Registers and enqueues styles.
-
-`support.php`
-Adds theme support features (e.g. `post-thumbnails`, `title-tag`).
-
-`templates.php`
-Registers custom page templates for the Page Attributes dropdown.
-
-`timber-class-map.php`
-Maps WordPress post types to custom Timber post classes.
+</details>
 
 ### Service Provider Config
 
@@ -152,7 +193,7 @@ This file exists for backward compatibility. Node removal is handled by `remove-
 
 Here is an example of registering a custom post type via the config. The associative array arguments match the `register_post_type` args.
 
-### `custom-post-types.php`
+{% code title="config/custom-post-types.php" lineNumbers="true" %}
 ```php
 return [
     'event' => [
@@ -171,16 +212,18 @@ return [
     ],
 ];
 ```
+{% endcode %}
 
 ### Overriding in a Child Theme
 
 To override a parent theme config, create the same file in your child theme's `config/` directory. Your file's array will be merged on top of the parent's — later values win.
 
+{% code title="child-theme/config/support.php" %}
 ```php
-// child-theme/config/support.php
 return [
     'post-thumbnails',
     'title-tag',
     'custom-logo',
 ];
 ```
+{% endcode %}
