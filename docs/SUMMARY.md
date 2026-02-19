@@ -12,3 +12,4 @@
 * [Forms and Validation](FORMS.md)
 * [SEO](SEO.md)
 * [Testing](TESTING.md)
+* [A Note from the Author](NOTE-FROM-AUTHOR.md)
