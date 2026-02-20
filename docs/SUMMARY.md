@@ -7,6 +7,7 @@
 * [🖼️ Views](VIEWS.md)
 * [📦 Context Managers](CONTEXT-MANAGERS.md)
 * [🧩 Twig Extensions](TWIG-EXTENSIONS.md)
+* [🔌 Service Providers](SERVICE-PROVIDERS.md)
 * [🧱 Blocks](BLOCKS.md)
 * [✂️ Snippets](SNIPPETS.md)
 * [📋 Forms and Validation](FORMS.md)
