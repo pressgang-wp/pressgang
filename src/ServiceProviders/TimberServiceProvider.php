@@ -1,4 +1,4 @@
-Check <?php
+<?php
 
 namespace PressGang\ServiceProviders;
 
