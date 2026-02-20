@@ -148,7 +148,123 @@ $posts = Quartermaster::posts()
 Timber is optional and runtime-guarded. If Timber is unavailable, Quartermaster throws a clear `RuntimeException` rather than hard-coupling Timber into core.
 {% endhint %}
 {% endtab %}
+
+{% tab title="🪝 Apply to existing query" %}
+Modify an existing `WP_Query` in a `pre_get_posts` hook — scalar args are set directly, clause arrays (`tax_query`, `meta_query`, `date_query`) are merged with existing clauses:
+
+{% code title="functions.php" lineNumbers="true" %}
+```php
+add_action('pre_get_posts', function (WP_Query $query): void {
+    if (! $query->is_main_query() || is_admin()) {
+        return;
+    }
+
+    Quartermaster::posts('product')
+        ->whereTax('product_visibility', ['exclude-from-catalog'], 'name', 'NOT IN')
+        ->whereMetaExists('_price')
+        ->applyTo($query);
+});
+```
+{% endcode %}
+
+{% hint style="info" %}
+`applyTo()` is a terminal — it does not return the builder. Clause arrays from multiple hooks compose safely because clauses are merged, not overwritten.
+{% endhint %}
+{% endtab %}
 {% endtabs %}
+
+---
+
+## 🪝 Query Hooks (`pre_get_posts`)
+
+`applyTo()` lets you use the full Quartermaster API inside WordPress query hooks like `pre_get_posts`. Instead of creating a new query, it modifies an existing `WP_Query` in place.
+
+{% tabs %}
+{% tab title="Basic" %}
+{% code title="functions.php" lineNumbers="true" %}
+```php
+use PressGang\Quartermaster\Quartermaster;
+
+add_action('pre_get_posts', function (WP_Query $query): void {
+    if (! $query->is_main_query() || is_admin()) {
+        return;
+    }
+
+    Quartermaster::posts('product')
+        ->status('publish')
+        ->limit(12)
+        ->applyTo($query);
+});
+```
+{% endcode %}
+{% endtab %}
+
+{% tab title="Merging clauses" %}
+Clause arrays (`tax_query`, `meta_query`, `date_query`) are **merged** with any clauses already on the query — they are never overwritten. This means multiple hooks can safely compose:
+
+{% code title="functions.php" lineNumbers="true" %}
+```php
+// Hook A: exclude hidden products
+add_action('pre_get_posts', function (WP_Query $query): void {
+    if (! $query->is_main_query() || ! is_post_type_archive('product')) {
+        return;
+    }
+
+    Quartermaster::prepare()
+        ->whereTax('product_visibility', ['exclude-from-catalog'], 'name', 'NOT IN')
+        ->applyTo($query);
+});
+
+// Hook B: only show priced products
+add_action('pre_get_posts', function (WP_Query $query): void {
+    if (! $query->is_main_query() || ! is_post_type_archive('product')) {
+        return;
+    }
+
+    Quartermaster::prepare()
+        ->whereMetaExists('_price')
+        ->whereMeta('_price', '', '!=')
+        ->applyTo($query);
+});
+
+// Both tax_query and meta_query clauses are merged — not overwritten
+```
+{% endcode %}
+{% endtab %}
+
+{% tab title="With conditionals" %}
+Combine `when()` and `applyTo()` for conditional hook logic:
+
+{% code title="functions.php" lineNumbers="true" %}
+```php
+add_action('pre_get_posts', function (WP_Query $query): void {
+    if (! $query->is_main_query() || ! is_post_type_archive('event')) {
+        return;
+    }
+
+    $isArchive = isset($_GET['archive']);
+
+    Quartermaster::prepare()
+        ->when($isArchive, fn ($q) =>
+            $q->whereMetaDate('start', '<')->orderByMeta('start', 'DESC')
+        )
+        ->when(! $isArchive, fn ($q) =>
+            $q->whereMetaDate('start', '>=')->orderByMeta('start', 'ASC')
+        )
+        ->applyTo($query);
+});
+```
+{% endcode %}
+{% endtab %}
+{% endtabs %}
+
+{% hint style="warning" %}
+`applyTo()` is a **void terminal** — it does not return the builder. If you need to inspect the args that were applied, hold a reference to the builder and call `explain()` separately.
+{% endhint %}
+
+{% hint style="info" %}
+**Relation precedence:** when merging clause arrays, the existing query's relation takes precedence over the builder's. If the query already has `relation => OR` on its `meta_query`, `applyTo()` will not overwrite it with `AND`. This ensures earlier hooks aren't silently overridden.
+{% endhint %}
 
 ---
 
@@ -1003,6 +1119,7 @@ Field defaults to `slug`. Operator defaults to `IN`. Multiple calls produce AND 
 | `toArray()` | `array` — smart Timber/WP detection |
 | `wpQuery()` | `WP_Query` — full query object |
 | `timber()` | `Timber\PostQuery` — Timber post collection |
+| `applyTo($query)` | `void` — modify existing `WP_Query` in place (for `pre_get_posts`) |
 
 </details>
 
