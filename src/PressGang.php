@@ -2,35 +2,33 @@
 
 namespace PressGang;
 
+use PressGang\Bootstrap\Config;
 use PressGang\Bootstrap\Loader;
 use PressGang\Controllers\ControllerFactory;
-use PressGang\ServiceProviders\TimberServiceProvider;
+use PressGang\ServiceProviders\ServiceProviderInterface;
 use Timber\Timber;
 
 /**
  * Entry point for the PressGang theme framework. Instantiated in functions.php
- * with a Loader and TimberServiceProvider, then boot() initialises Timber,
- * loads config-driven components, and registers context managers and Twig extensions.
+ * with a Loader, then boot() initialises Timber, loads config-driven components,
+ * and boots configured service providers.
  */
 class PressGang {
 
 	/** @var Loader */
 	private Loader $loader;
 
-	/** @var TimberServiceProvider */
-	private TimberServiceProvider $timberServiceProvider;
-
 	/**
 	 * @param Loader $loader
-	 * @param TimberServiceProvider $timberServiceProvider
 	 */
-	public function __construct(Loader $loader, TimberServiceProvider $timberServiceProvider) {
+	public function __construct( Loader $loader ) {
 		$this->loader = $loader;
-		$this->timberServiceProvider = $timberServiceProvider;
 	}
 
 	/**
-	 * Initialises Timber, loads config-driven components, and boots the service provider.
+	 * Initialises Timber, loads config-driven components, and boots service providers.
+	 *
+	 * @return void
 	 */
 	public function boot(): void {
 		// Initialize Timber
@@ -39,8 +37,32 @@ class PressGang {
 		// Initialize the Loader to load theme settings
 		$this->loader->initialize();
 
-		// Initialize the Timber service provider
-		$this->timberServiceProvider->boot();
+		// Boot service providers from config and filters.
+		$this->boot_service_providers();
+	}
+
+	/**
+	 * Boots service providers.
+	 *
+	 * Providers are configured as class strings in config/service-providers.php
+	 * and can be extended via the pressgang_service_providers filter. Entries
+	 * that are not loadable ServiceProviderInterface implementations are skipped.
+	 *
+	 * @return void
+	 */
+	protected function boot_service_providers(): void {
+		$providers = Config::get( 'service-providers', [] );
+		$providers = \apply_filters( 'pressgang_service_providers', $providers );
+
+		foreach ( (array) $providers as $class ) {
+			if ( is_string( $class ) && class_exists( $class ) ) {
+				$provider = new $class();
+
+				if ( $provider instanceof ServiceProviderInterface ) {
+					$provider->boot();
+				}
+			}
+		}
 	}
 
 	/**
@@ -50,7 +72,7 @@ class PressGang {
 	 * @param string|null $controller
 	 * @param string|null $twig
 	 */
-	public static function render(?string $template = null, ?string $controller = null, ?string $twig = null): void {
-		ControllerFactory::render($template, $controller, $twig);
+	public static function render( ?string $template = null, ?string $controller = null, ?string $twig = null ): void {
+		ControllerFactory::render( $template, $controller, $twig );
 	}
 }

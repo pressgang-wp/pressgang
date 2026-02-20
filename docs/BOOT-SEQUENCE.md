@@ -11,14 +11,13 @@ graph TD
     A["functions.php"] --> B["PressGang::boot()"]
     B --> C["1. Timber::init()"]
     B --> D["2. Loader::initialize()"]
-    B --> E["3. TimberServiceProvider::boot()"]
+    B --> E["3. Service providers"]
     C --> C1["Initialize Timber library"]
     D --> D1["Load config files"]
     D --> D2["Register components"]
-    E --> E1["Context managers"]
-    E --> E2["Twig extensions"]
-    E --> E3["Twig env options"]
-    E --> E4["Snippet paths"]
+    E --> E1["Boot classes from config/service-providers.php"]
+    E --> E2["Filter via pressgang_service_providers"]
+    E --> E3["TimberServiceProvider::boot() by default"]
 ```
 
 ## Stage by Stage
@@ -41,8 +40,7 @@ if (file_exists($autoload_path)) {
 }
 
 (new PressGang\PressGang(
-    new Loader(new FileConfigLoader()),
-    new TimberServiceProvider()
+    new Loader(new FileConfigLoader())
 ))->boot();
 ```
 {% endcode %}
@@ -83,15 +81,18 @@ Shortcode and widget classes listed in `config/shortcodes.php` and `config/widge
 {% endstep %}
 
 {% step %}
-### 4. TimberServiceProvider Boot
+### 4. Service Providers
 
-The `TimberServiceProvider` wires up four things:
+Service providers are loaded from `config/service-providers.php` (then filtered by `pressgang_service_providers`).
+
+By default this includes `TimberServiceProvider`, which wires up:
 
 1. **Context Managers** — classes listed in `config/context-managers.php` are instantiated and hooked into `timber/context` to enrich every page's context.
 2. **Twig Extensions** — classes listed in `config/twig-extensions.php` are instantiated and hooked into `timber/twig` to add custom functions, filters, and globals.
 3. **Twig Environment Options** — `config/timber.php` is applied to `timber/twig/environment/options` (child themes can enable or disable Twig compilation cache per site).
 4. **Snippet Template Paths** — the `pressgang-snippets` vendor views directory is added to Timber's template locations.
 {% endstep %}
+
 {% endstepper %}
 
 ## Performance Rules
@@ -117,3 +118,4 @@ Several hooks let you customize the boot:
 | `timber/context` | filter | Add data to the global Timber context |
 | `timber/twig` | filter | Add functions/filters/globals to the Twig environment |
 | `timber/twig/environment/options` | filter | Configure Twig environment options (cache, auto_reload, debug) |
+| `pressgang_service_providers` | filter | Modify the list of service providers to boot |

@@ -10,7 +10,6 @@
 
 use PressGang\Bootstrap\FileConfigLoader;
 use PressGang\Bootstrap\Loader;
-use PressGang\ServiceProviders\TimberServiceProvider;
 
 // Theme slug used for localisation across the framework.
 // This should be overridden in child themes to ensure translations work correctly.
@@ -25,4 +24,4 @@ if ( file_exists( $autoload_path ) ) {
 }
 
 // Initialize the PressGang theme.
-( new PressGang\PressGang( new Loader( new FileConfigLoader() ), new TimberServiceProvider() ) )->boot();
+( new PressGang\PressGang( new Loader( new FileConfigLoader() ) ) )->boot();

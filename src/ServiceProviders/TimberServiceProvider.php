@@ -1,4 +1,4 @@
-<?php
+Check <?php
 
 namespace PressGang\ServiceProviders;
 
@@ -12,7 +12,7 @@ use Twig\Environment;
  * Timber's filter system. Hooks into timber/context and timber/twig to apply all
  * registered managers, and adds the pressgang-snippets views directory to Timber's paths.
  */
-class TimberServiceProvider {
+class TimberServiceProvider implements ServiceProviderInterface {
 	protected array $context_managers = [];
 	protected array $twig_extensions = [];
 

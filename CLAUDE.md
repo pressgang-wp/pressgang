@@ -23,11 +23,11 @@ They exist only to prepare data for templates.
 ## Boot Sequence (from `functions.php`)
 
 1. Composer autoload
-2. Instantiate `PressGang` with `Loader` and `TimberServiceProvider`
+2. Instantiate `PressGang` with `Loader`
 3. `PressGang::boot()`:
 	- `Timber::init()`
 	- `Loader::initialize()`: loads config, registers hooks, includes files — **no business logic**
-	- `TimberServiceProvider::boot()`: registers context managers, Twig extensions, Twig environment options, snippet paths
+	- `Service providers boot`: class strings from `config/service-providers.php` are instantiated and booted (by default includes `TimberServiceProvider` for context managers, Twig extensions, Twig environment options, and snippet paths)
 
 **Never perform queries, I/O, or remote requests during boot.**
 

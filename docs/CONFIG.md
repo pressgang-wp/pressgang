@@ -174,6 +174,9 @@ Lists Twig extension manager classes for adding custom functions, filters, and g
 `timber.php`
 Configures Timber Twig environment options via `timber/twig/environment/options` (including Twig compilation cache). Child themes can override this file to enable or disable caching per site.
 
+`service-providers.php`
+Lists bootable service provider class strings. PressGang boots these after Timber init + Loader initialize; by default this list includes `\PressGang\ServiceProviders\TimberServiceProvider::class`. This list is also filterable via `pressgang_service_providers`.
+
 ### Include-based Config
 
 These config files list class names to be auto-included and registered by the `Loader`, rather than going through the Configuration singleton pattern:
