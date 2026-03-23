@@ -75,19 +75,23 @@ trait HandlesDynamicGetters {
 
 		$reflection = new ReflectionMethod( $this, $method );
 		$parameters = $reflection->getParameters();
-		$resolved   = $this->default_parameter_resolution( $parameters );
+		$resolved   = $this->resolve_getter_arguments( $method, $parameters );
 
 		return $this->$method( ...$resolved );
 	}
 
 	/**
-	 * Resolves default values for method parameters.
+	 * Resolves arguments for a dynamic getter method.
 	 *
-	 * @param \ReflectionParameter[] $parameters
+	 * Override in consuming classes to inject context-specific values
+	 * (e.g. the current post ID) based on parameter name or method.
+	 *
+	 * @param string                 $method     The getter method name (e.g. 'get_news').
+	 * @param \ReflectionParameter[] $parameters The method's reflected parameters.
 	 *
 	 * @return array
 	 */
-	protected function default_parameter_resolution( array $parameters ): array {
+	protected function resolve_getter_arguments( string $method, array $parameters ): array {
 		$resolved = array();
 
 		foreach ( $parameters as $param ) {
