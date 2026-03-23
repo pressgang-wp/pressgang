@@ -522,6 +522,11 @@ $ids = Quartermaster::posts('event')
     ->status('publish')
     ->get();
 
+// Ignore sticky posts — prevent them being prepended to results
+$q = Quartermaster::posts('post')
+    ->ignoreStickyPosts()
+    ->status('publish');
+
 // Control cache priming
 $q = Quartermaster::posts('post')
     ->withMetaCache(false)   // Skip meta cache priming
@@ -581,6 +586,46 @@ Ordering direction is strict: only `ASC` and `DESC` are accepted. Invalid values
 
 ---
 
+## 🔍 Search
+
+{% tabs %}
+{% tab title="Basic search" %}
+{% code title="Controller" lineNumbers="true" %}
+```php
+// Set the search term — sanitised with sanitize_text_field()
+$q = Quartermaster::posts('post')
+    ->search(get_query_var('s'))
+    ->status('publish')
+    ->paged(12);
+
+// null/empty values are ignored — no `s` arg is set
+$q = Quartermaster::posts('post')->search(null);
+```
+{% endcode %}
+{% endtab %}
+
+{% tab title="Relevanssi" %}
+{% code title="Controller" lineNumbers="true" %}
+```php
+// Set the search term and enable Relevanssi integration
+$q = Quartermaster::posts('post')
+    ->relevanssi(get_query_var('s'))
+    ->status('publish')
+    ->paged(12);
+
+// Sets both `s` and `relevanssi = true` so the Relevanssi plugin intercepts the query.
+// Empty/null values are ignored — neither `s` nor `relevanssi` are set.
+```
+{% endcode %}
+
+{% hint style="warning" %}
+`relevanssi()` requires the [Relevanssi](https://www.relevanssi.com/) plugin to be active. Without it, the `relevanssi` arg is ignored by WordPress and the query falls back to default search.
+{% endhint %}
+{% endtab %}
+{% endtabs %}
+
+---
+
 ## 🏷️ Terms — Quick Start
 
 Quartermaster also provides a fluent builder for `WP_Term_Query` via `Quartermaster::terms()`.
@@ -607,6 +652,23 @@ $tags = Quartermaster::terms('post_tag')
     ->get();
 ```
 {% endcode %}
+{% endtab %}
+
+{% tab title="Scoped to a post type" %}
+{% code title="Controller" lineNumbers="true" %}
+```php
+// Only categories actually used by published 'event' posts
+$categories = Quartermaster::terms('category')
+    ->forPostType('event')
+    ->hideEmpty()
+    ->orderBy('name')
+    ->get();
+```
+{% endcode %}
+
+{% hint style="info" %}
+`forPostType()` bridges a gap in `WP_Term_Query` — WordPress doesn't natively support scoping terms by post type. Under the hood it queries published post IDs for the given type and passes them as `object_ids`.
+{% endhint %}
 {% endtab %}
 
 {% tab title="Hierarchical" %}
@@ -757,6 +819,7 @@ If no taxonomy is provided, Binder assumes the taxonomy name matches the query v
 | `Bind::orderBy()` | Sort field + direction with per-field overrides | Falls back to default |
 | `Bind::metaNum()` | Numeric meta comparison | Skips if null or empty |
 | `Bind::search()` | Search query | Skips if empty; sanitised |
+| `Bind::relevanssi()` | Relevanssi-aware search (requires [Relevanssi](https://www.relevanssi.com/)) | Skips if empty; sanitised |
 
 {% hint style="success" %}
 Every binding attempt is logged in `explain()` output — including whether it was applied, skipped, and why. Bound values are redacted for safety; only type shapes are shown.
@@ -1049,6 +1112,16 @@ Field defaults to `slug`. Operator defaults to `IN`. Multiple calls produce AND 
 </details>
 
 <details>
+<summary><strong>🔍 Search</strong></summary>
+
+| Method | Description |
+|---|---|
+| `search(string\|null)` | Set search term (`s`); sanitised, null/empty ignored |
+| `relevanssi(string\|null)` | Search with Relevanssi (`s` + `relevanssi = true`); requires [Relevanssi](https://www.relevanssi.com/) |
+
+</details>
+
+<details>
 <summary><strong>📄 Pagination and Performance</strong></summary>
 
 | Method | Description |
@@ -1060,6 +1133,7 @@ Field defaults to `slug`. Operator defaults to `IN`. Multiple calls produce AND 
 | `idsOnly()` | Return IDs only (`fields='ids'`) |
 | `withMetaCache(bool)` | Toggle meta cache priming |
 | `withTermCache(bool)` | Toggle term cache priming |
+| `ignoreStickyPosts()` | Prevent sticky posts being prepended |
 
 </details>
 
@@ -1097,6 +1171,7 @@ Field defaults to `slug`. Operator defaults to `IN`. Multiple calls produce AND 
 | `Bind::orderBy($default, $dir, $overrides?)` | Order binding with per-field overrides |
 | `Bind::metaNum($key, $compare)` | Numeric meta binding |
 | `Bind::search()` | Search term binding |
+| `Bind::relevanssi()` | Relevanssi-aware search binding (requires [Relevanssi](https://www.relevanssi.com/)) |
 
 </details>
 
@@ -1130,6 +1205,7 @@ Field defaults to `slug`. Operator defaults to `IN`. Multiple calls produce AND 
 |---|---|
 | `taxonomy(string\|array)` | Set taxonomy |
 | `objectIds(int\|array)` | Scope to specific post(s) |
+| `forPostType(string)` | Scope terms to a post type (via `object_ids`) |
 | `hideEmpty(bool)` | Hide/show empty terms |
 | `slug(string\|array)` | Filter by slug |
 | `name(string\|array)` | Filter by name |
