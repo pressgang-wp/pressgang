@@ -56,6 +56,10 @@ class TimberServiceProviderTest extends TestCase {
 			->with( 'timber/locations', \Mockery::type( 'Closure' ) )
 			->once();
 
+		Functions\expect( 'add_filter' )
+			->with( 'timber/twig/environment/options', \Mockery::type( 'array' ) )
+			->once();
+
 		$provider = new TimberServiceProvider();
 		$provider->boot();
 	}
@@ -185,6 +189,10 @@ class TimberServiceProviderTest extends TestCase {
 
 		Functions\expect( 'add_filter' )
 			->with( 'timber/locations', \Mockery::type( 'Closure' ) )
+			->once();
+
+		Functions\expect( 'add_filter' )
+			->with( 'timber/twig/environment/options', \Mockery::type( 'array' ) )
 			->once();
 
 		$provider = new TimberServiceProvider();

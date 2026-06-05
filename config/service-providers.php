@@ -15,4 +15,5 @@
  */
 return [
 	\PressGang\ServiceProviders\TimberServiceProvider::class,
+	\PressGang\ServiceProviders\SeoServiceProvider::class,
 ];

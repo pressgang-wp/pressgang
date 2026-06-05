@@ -8,13 +8,13 @@ The `MetaDescriptionService` generates a single, authoritative meta description 
 
 ### Usage in Twig
 
-{% code title="views/layouts/base.twig" %}
+{% code title="views/scaffold/head.twig" %}
 ```twig
-<meta name="description" content="{{ meta_description() }}">
+{{ fn('wp_head') }}
 ```
 {% endcode %}
 
-That's it. One line in your `<head>` and PressGang handles the rest.
+That's it. PressGang's SEO service provider renders its fallback `<meta name="description">` tag through `wp_head` only when a dedicated SEO plugin is not detected.
 
 ## Fallback Chain
 
@@ -76,12 +76,29 @@ Meta descriptions are cached per object using `wp_cache`, so the fallback chain 
 | `pressgang_contact_to_email` | filter | ContactSubmission |
 
 {% hint style="success" %}
-The `MetaDescriptionService` works alongside Yoast SEO rather than competing with it. If Yoast is installed, its per-page descriptions always take priority. PressGang simply provides a sensible fallback chain for pages where Yoast hasn't been configured.
+The `MetaDescriptionService` can read Yoast SEO data when generating fallback descriptions, but PressGang does not output its own meta description tag when Yoast SEO, Rank Math, or All in One SEO is detected. This avoids duplicate description tags while keeping the fallback service useful for themes without a dedicated SEO plugin.
 {% endhint %}
+
+## SEO Plugin Detection
+
+PressGang checks common SEO plugin constants before rendering its fallback meta description:
+
+- `WPSEO_VERSION` for Yoast SEO.
+- `RANK_MATH_VERSION` for Rank Math.
+- `AIOSEO_VERSION` for All in One SEO.
+
+The detection and rendering decision are filterable:
+
+{% code title="functions.php" %}
+```php
+add_filter( 'pressgang_has_seo_plugin', '__return_true' );
+add_filter( 'pressgang_should_render_meta_description', '__return_false' );
+```
+{% endcode %}
 
 ## Configuration
 
-The `MetaDescriptionExtensionManager` is registered by default in `config/twig-extensions.php`. No additional configuration is needed — just use `{{ meta_description() }}` in your templates.
+The `SeoServiceProvider` is registered by default in `config/service-providers.php`. The `MetaDescriptionExtensionManager` is also registered by default in `config/twig-extensions.php` for themes that want to call `{{ meta_description() }}` directly.
 
 To add `meta_description()` support to a theme, ensure the extension manager is listed:
 
