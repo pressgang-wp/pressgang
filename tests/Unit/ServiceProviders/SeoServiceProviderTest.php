@@ -73,8 +73,8 @@ class SeoServiceProviderTest extends TestCase {
 
 	public function test_render_meta_description_outputs_escaped_tag(): void {
 		// Reset MetaDescriptionService's static cache so this test is order-independent.
+		// (No setAccessible() call - a no-op since PHP 8.1, deprecated in 8.5.)
 		$cache = new \ReflectionProperty( \PressGang\SEO\MetaDescriptionService::class, 'meta_description' );
-		$cache->setAccessible( true );
 		$cache->setValue( null, '' );
 
 		Functions\expect( 'esc_attr' )
