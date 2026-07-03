@@ -63,6 +63,38 @@ Use direct WordPress calls only when:
 
 **Rule of thumb:** if data ends up in Twig, it should be a Timber object.
 
+### ACF relationship/post-object values
+
+ACF returns raw `WP_Post` objects or IDs. To satisfy the rule above, convert
+them with `PressGang\ACF\TimberMapper::to_timber_posts( $value )` — the same
+mapper `AcfOptionsContextManager` uses for options fields, so all ACF → Timber
+conversion goes through one class.
+
+Timber 2 has its own transform mapping — the `timber/meta/transform_value`
+filter (globally, or per call via `$post->meta( 'x', [ 'transform_value' => true ] )`)
+— which converts ACF post_object/relationship/image/gallery/file/taxonomy/
+user/date values into Timber objects. **PressGang prefers explicit conversion
+via TimberMapper over enabling the global filter**, because:
+
+- **Explicit over magic.** The helper marks exactly where conversion happens;
+  the global filter silently changes the return type of *every* `meta()`
+  call — dates become `DateTimeImmutable`, images become `Timber\Image`
+  instead of ACF arrays — a blast radius that is hard to audit and breaks
+  code that feeds raw IDs into query args (`post__not_in`, `meta_query`).
+- **One canonical bridge.** `TimberMapper` already converts options-page
+  fields for the context manager; using the same class for meta values keeps
+  a single, auditable conversion surface instead of two mechanisms.
+- **Coverage gap.** The Timber transformer keys off the *queried field's*
+  type — values read from flexible-content, group, or repeater sub-fields are
+  never transformed. Those sites need explicit conversion whatever the filter
+  says, and one idiom everywhere beats two.
+- **Migration parity.** PressGang v1 themes were built against raw ACF
+  semantics with inline `new TimberPost()` conversion; explicit conversion
+  preserves those semantics exactly during v1 → v2 migrations.
+
+Per-call `[ 'transform_value' => true ]` is acceptable for a one-off
+top-level field; do not enable the filter globally.
+
 ---
 
 ## Controllers and Rendering
