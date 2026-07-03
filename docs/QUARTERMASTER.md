@@ -452,8 +452,30 @@ $q = Quartermaster::posts('product')
 // Exclude a taxonomy term
 $q = Quartermaster::posts('post')
     ->whereTax('category', 'uncategorized', 'slug', 'NOT IN');
+
+// OR relation between clauses — in EITHER category
+$q = Quartermaster::posts('post')
+    ->whereTax('category', 'news')
+    ->orWhereTax('category', 'events');
 ```
 {% endcode %}
+
+Multiple `whereTax()` calls combine as AND; the first `orWhereTax()` switches the relation to OR (mirroring `orWhereMeta()`).
+
+### Optional filters — no `when()` wrappers needed
+
+`whereTax()` treats `null` and empty terms as "no filter": the builder is simply left unchanged. So values that may or may not be present pass straight through:
+
+{% code title="Controller" lineNumbers="true" %}
+```php
+// $topic comes from a query var, an ACF field, a route param... or not at all.
+$q = Quartermaster::posts('post')
+    ->whereTax('topic', $topic ?: null)
+    ->whereTax('region', $region ?: null);
+```
+{% endcode %}
+
+The `?: null` matters when the source hands you `false` (Twig often does) — `false` isn't a term, `null` is a no-op. `excludeIds([])` is likewise a no-op, so plucked ID lists can be passed unconditionally. Save `when()` for genuine conditional *logic*, not optional values.
 
 ---
 
@@ -1080,9 +1102,10 @@ Quartermaster automatically detects common gotchas:
 
 | Method | Description |
 |---|---|
-| `whereTax($taxonomy, $terms, $field?, $operator?)` | Taxonomy query clause |
+| `whereTax($taxonomy, $terms, $field?, $operator?)` | Taxonomy query clause (AND) |
+| `orWhereTax($taxonomy, $terms, $field?, $operator?)` | Taxonomy query clause under an OR relation |
 
-Field defaults to `slug`. Operator defaults to `IN`. Multiple calls produce AND relation.
+Field defaults to `slug`. Operator defaults to `IN`. Multiple `whereTax()` calls produce an AND relation; the first `orWhereTax()` switches it to OR. Null or empty `$terms` leave the builder unchanged, so optional filters can be passed directly (`->whereTax('topic', $topic ?: null)`).
 
 </details>
 

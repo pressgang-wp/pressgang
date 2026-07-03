@@ -2,7 +2,7 @@
 
 Service providers are PressGang's hook for bootstrapping services after the framework has initialised. They run after Timber and the Loader are ready, making them the right place for wiring up filters, registering integrations, or initialising third-party libraries.
 
-PressGang ships with one service provider by default — `TimberServiceProvider` — which registers context managers, Twig extensions, Twig environment options, and snippet template paths. But you can add your own alongside it.
+PressGang ships with one service provider by default — `TimberServiceProvider` — which registers context managers, Twig extensions, Twig environment options, and snippet template paths. The framework also provides the opt-in `TemplateRoutingServiceProvider` for convention-based [Template Routing](TEMPLATE-ROUTING.md). And you can add your own alongside them.
 
 ## How They Work
 

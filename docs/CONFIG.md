@@ -153,8 +153,14 @@ Manages meta tag configurations.
 `plugins.php`
 Manages required/recommended plugin declarations.
 
+`controllers.php`
+Maps template hierarchy candidates to controllers when a name defies convention. See [Template Routing](TEMPLATE-ROUTING.md).
+
+`page-templates.php`
+Registers file-less page templates. See [Template Routing](TEMPLATE-ROUTING.md).
+
 `routes.php`
-Configures custom routes.
+Configures custom routes — template filenames or `RouteHandlerInterface` classes. See [Template Routing](TEMPLATE-ROUTING.md).
 
 `snippets.php`
 Configures snippet class loading. See the [Snippets](SNIPPETS.md) page.

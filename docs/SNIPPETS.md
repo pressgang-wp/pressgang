@@ -319,4 +319,4 @@ composer require pressgang-wp/pressgang-snippets
 ```
 {% endcode %}
 
-This includes snippets for Google Analytics, Tag Manager, Facebook Pixel, emoji removal, image sizes, breadcrumbs, Open Graph tags, JSON-LD schemas, WooCommerce tweaks, and more. See [pressgang-wp/pressgang-snippets](https://github.com/pressgang-wp/pressgang-snippets) for the full list.
+This includes snippets for Google Analytics, Tag Manager, Facebook Pixel, emoji removal, image sizes, breadcrumbs, Open Graph tags, JSON-LD schemas, WooCommerce tweaks, block-style removal, SVG uploads, taxonomy admin UI removal, Timber menu-item class mapping, and more. See [pressgang-wp/pressgang-snippets](https://github.com/pressgang-wp/pressgang-snippets) for the full list.

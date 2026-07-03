@@ -104,6 +104,63 @@ use PressGang\Controllers\PageController;
 {% endtab %}
 {% endtabs %}
 
+{% hint style="info" %}
+Tired of writing stub files at all? With [Template Routing](TEMPLATE-ROUTING.md) enabled, requests resolve to controllers by naming convention — most themes need no template PHP files.
+{% endhint %}
+
+## Context Getters: Declare the Template Contract
+
+Wiring context keys one line at a time gets old fast. Instead, declare the keys your template needs and let each one populate from its matching getter:
+
+{% code title="src/Controllers/FrontPageController.php" lineNumbers="true" %}
+```php
+namespace MyTheme\Controllers;
+
+use PressGang\Controllers\PageController;
+
+class FrontPageController extends PageController {
+
+    /**
+     * Template contract for front-page.twig: latest news and upcoming
+     * events, each populated from its get_{key}() getter.
+     *
+     * @var array<int|string, string>
+     */
+    protected array $context_getters = [ 'news', 'events' ];
+
+    protected function get_news(): array {
+        return $this->news ??= /* ... query ... */;
+    }
+
+    protected function get_events(): array {
+        return $this->events ??= /* ... query ... */;
+    }
+}
+```
+{% endcode %}
+
+Each plain entry calls `get_{key}()`; use `'key' => 'method'` to point a key at a differently-named getter. The manifest is applied after `get_context()` and before the `pressgang_{controller}_context` filter, so both extension points still work — and with a manifest, most controllers don't need a `get_context()` override at all.
+
+{% hint style="info" %}
+This is the controller counterpart to the `HandlesDynamicGetters` trait on models: getters own the *fetching*, the manifest declares which of them form the *template contract*. Keep it a declared list — the framework deliberately never auto-publishes getters, or your internal helpers would silently become template API.
+{% endhint %}
+
+## Working with ACF Values
+
+ACF relationship and post-object fields return raw `WP_Post` objects or IDs — but Twig wants Timber posts. Convert with the same mapper the ACF options context manager uses:
+
+{% code title="Controller" lineNumbers="true" %}
+```php
+use PressGang\ACF\TimberMapper;
+
+protected function get_related(): array {
+    return TimberMapper::to_timber_posts( $this->get_post()->meta( 'related_items' ) );
+}
+```
+{% endcode %}
+
+It accepts the raw field value directly (empty and `false` values are fine) and returns a clean array of `Timber\Post` objects. Prefer this explicit conversion over enabling Timber's global `timber/meta/transform_value` filter, which silently changes the return type of *every* `meta()` call — and doesn't reach values inside flexible-content or repeater sub-fields anyway.
+
 ## Filters and Actions
 
 The `render()` method fires several hooks, giving you fine-grained control over any controller's output:
