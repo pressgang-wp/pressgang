@@ -121,6 +121,47 @@ One controller per template concern. Avoid "god controllers".
 
 ---
 
+## Template Routing (Controllers Without Stubs)
+
+Opt-in: enabled by listing `TemplateRoutingServiceProvider` in the child
+theme's config/service-providers.php. Deliberately not a parent default —
+the many existing stub-built PressGang themes must upgrade with zero
+routing-behaviour change.
+
+WordPress template hierarchy candidates are recorded per request
+(`Templates\TemplateHierarchy`), and candidates containing underscores get
+hyphenated twins (`taxonomy-hit_group.php` -> also `taxonomy-hit-group.php`)
+so theme files can use kebab-case consistently.
+
+When a request falls through to a **parent-theme** template, the dispatcher
+(`Templates\TemplateDispatcher` -> `dispatch.php`) resolves a controller from
+the candidates, most specific first:
+
+1. `config/controllers.php` — explicit candidate => controller FQCN map
+2. Convention — `{ChildNS}\Controllers\{StudlyCandidate}Controller`, plus
+   hierarchy-semantic inflections: `archive-{type}` => pluralised
+   `{Types}Controller`, and `single-{type}` / `taxonomy-{tax}` =>
+   `{Subject}Controller` (so `archive-event` => `EventsController`,
+   `taxonomy-hit-group` => `HitGroupController` — zero config)
+
+The candidate's `{candidate}.twig` is used when it exists in the child
+`views/`; otherwise the controller's own template inference applies. A
+physical template file in the child theme always wins over dispatch — use a
+stub for conditional controller selection or Routes-loaded templates. Parent
+framework controllers are never matched by convention (parent templates
+already route to them), so dispatch only activates for theme-defined
+behaviour.
+
+Page templates are registered file-lessly via `config/page-templates.php`
+(`Configuration\PageTemplates`, `theme_page_templates` filter). Use legacy
+file-shaped ids when migrating so stored `_wp_page_template` values keep
+working. The assigned template's slug is seeded as the leading candidate
+(`TemplateHierarchy::prepend()`); registered slugs fall back to
+`PageController` when no `{Slug}Controller` exists. Custom route handlers
+can seed candidates the same way before loading `dispatch.php`.
+
+---
+
 ## Context Managers
 
 Context managers extend the global `Timber::context()`.
