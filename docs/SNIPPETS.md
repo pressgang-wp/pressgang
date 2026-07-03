@@ -1,4 +1,4 @@
-# Snippets
+# ✂️ Snippets
 
 Snippets are PressGang's answer to the WordPress `functions.php` junk drawer. Instead of dumping unrelated functionality into a single file — analytics scripts next to image size definitions next to admin tweaks — each concern gets its own class, with its own configuration, that can be enabled or disabled with a single line.
 
@@ -8,21 +8,21 @@ Think of snippets as your ship's provisions — pre-packaged, self-contained, re
 
 In a typical WordPress theme, `functions.php` grows into a sprawling file that mixes unrelated concerns: analytics tracking, custom image sizes, admin tweaks, WooCommerce overrides, Customizer settings. This creates problems:
 
-- **Hard to find things.** Where's the code that disables emojis? Somewhere in 800 lines.
-- **Hard to reuse.** Want the same analytics setup on another site? Copy-paste and hope you got everything.
-- **Hard to disable.** Commenting out blocks of code is error-prone and messy.
-- **Hard to share.** Distributing a `functions.php` snippet via Composer isn't practical.
+* **Hard to find things.** Where's the code that disables emojis? Somewhere in 800 lines.
+* **Hard to reuse.** Want the same analytics setup on another site? Copy-paste and hope you got everything.
+* **Hard to disable.** Commenting out blocks of code is error-prone and messy.
+* **Hard to share.** Distributing a `functions.php` snippet via Composer isn't practical.
 
 Snippets solve all of these:
 
-| `functions.php` approach | Snippet approach |
-|---|---|
-| One file, many concerns | One class per concern |
+| `functions.php` approach          | Snippet approach                                |
+| --------------------------------- | ----------------------------------------------- |
+| One file, many concerns           | One class per concern                           |
 | Enable/disable by commenting code | Enable/disable by adding/removing a config line |
-| Copy-paste between projects | Install via Composer, share across all themes |
-| Arguments buried in code | Configuration passed explicitly via `$args` |
-| No standard structure | Every snippet implements the same interface |
-| Grows without limit | Each snippet stays small and focused |
+| Copy-paste between projects       | Install via Composer, share across all themes   |
+| Arguments buried in code          | Configuration passed explicitly via `$args`     |
+| No standard structure             | Every snippet implements the same interface     |
+| Grows without limit               | Each snippet stays small and focused            |
 
 ## How Snippets Work
 
@@ -135,10 +135,10 @@ class GoogleAnalytics implements SnippetInterface {
 
 Key things to notice:
 
-- **Constructor registers hooks** — `customize_register` for the Customizer UI, `wp_head` for the script output.
-- **No work in the constructor itself** — it only wires up hooks for WordPress to call later.
-- **Renders via Timber** — output goes through a Twig template, not inline `echo` statements.
-- **Guards its output** — checks that a tracking ID exists before rendering anything.
+* **Constructor registers hooks** — `customize_register` for the Customizer UI, `wp_head` for the script output.
+* **No work in the constructor itself** — it only wires up hooks for WordPress to call later.
+* **Renders via Timber** — output goes through a Twig template, not inline `echo` statements.
+* **Guards its output** — checks that a tracking ID exists before rendering anything.
 
 ## Writing Your Own Snippets
 
@@ -211,6 +211,7 @@ If your snippet renders output, place the template in your child theme's `views/
 ## Common Snippet Patterns
 
 <details>
+
 <summary><strong>Customizer + Render</strong></summary>
 
 Adds a setting to the WordPress Customizer and renders output based on that setting. Used for third-party scripts, tracking pixels, and theme options that need a simple admin UI.
@@ -229,6 +230,7 @@ public function __construct(array $args) {
 </details>
 
 <details>
+
 <summary><strong>Hook Filtering</strong></summary>
 
 Modifies WordPress behaviour via actions and filters. No UI, no templates — just behavioural changes.
@@ -247,6 +249,7 @@ public function __construct(array $args) {
 </details>
 
 <details>
+
 <summary><strong>Config-Driven Registration</strong></summary>
 
 Receives structured `$args` and registers WordPress resources. The args array shape mirrors WordPress API conventions.
@@ -265,6 +268,7 @@ public function __construct(array $args) {
 </details>
 
 <details>
+
 <summary><strong>Admin Features</strong></summary>
 
 Adds functionality to the WordPress admin — row actions, admin notices, editor customisation. Always includes capability checks and nonce verification.
@@ -274,6 +278,7 @@ Adds functionality to the WordPress admin — row actions, admin notices, editor
 </details>
 
 <details>
+
 <summary><strong>Twig Function Registration</strong></summary>
 
 Registers a callable function into the Twig environment, making it available in templates as `{{ function_name() }}`.
@@ -301,13 +306,13 @@ public function add_to_twig(Environment $twig): Environment {
 Snippets are constructed during theme setup and their hooks fire on every request. Keep constructors lightweight — register hooks only, don't do real work.
 {% endhint %}
 
-- **One concern per snippet.** If you're tempted to add unrelated functionality, create a second snippet.
-- **Accept `array $args`** and document what keys are supported. Provide sensible defaults.
-- **Guard for context.** Don't assume you're on the frontend — snippets may fire on admin, AJAX, or CLI requests. Check `\is_admin()`, `\is_singular()`, etc. where appropriate.
-- **Guard for dependencies.** If a snippet depends on ACF or WooCommerce, check `function_exists()` or `class_exists()` before calling their APIs.
-- **Escape output.** Use Twig auto-escaping for templates. Use `\esc_html()`, `\esc_attr()`, `\esc_url()` for PHP output.
-- **Sanitise input.** Always apply `sanitize_text_field()`, `\absint()`, etc. to values from `$_GET`/`$_POST` or Customizer settings.
-- **Use fully-qualified function calls.** Write `\add_action()`, not `add_action()`, in namespaced code.
+* **One concern per snippet.** If you're tempted to add unrelated functionality, create a second snippet.
+* **Accept `array $args`** and document what keys are supported. Provide sensible defaults.
+* **Guard for context.** Don't assume you're on the frontend — snippets may fire on admin, AJAX, or CLI requests. Check `\is_admin()`, `\is_singular()`, etc. where appropriate.
+* **Guard for dependencies.** If a snippet depends on ACF or WooCommerce, check `function_exists()` or `class_exists()` before calling their APIs.
+* **Escape output.** Use Twig auto-escaping for templates. Use `\esc_html()`, `\esc_attr()`, `\esc_url()` for PHP output.
+* **Sanitise input.** Always apply `sanitize_text_field()`, `\absint()`, etc. to values from `$_GET`/`$_POST` or Customizer settings.
+* **Use fully-qualified function calls.** Write `\add_action()`, not `add_action()`, in namespaced code.
 
 ## PressGang Snippets Library
 

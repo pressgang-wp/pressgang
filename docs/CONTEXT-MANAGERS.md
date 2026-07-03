@@ -1,4 +1,4 @@
-# Context Managers
+# 📦 Context Managers
 
 Context managers enrich the global `Timber::context()` with shared data that's available in every template. They're the quartermaster's store — making sure every template has the supplies it needs before setting sail.
 
@@ -100,7 +100,7 @@ Adds WooCommerce-specific data to the context when WooCommerce is active.
 
 {% stepper %}
 {% step %}
-### Create the class
+#### Create the class
 
 {% code title="src/ContextManagers/SocialLinksContextManager.php" lineNumbers="true" %}
 ```php
@@ -125,7 +125,7 @@ class SocialLinksContextManager implements ContextManagerInterface {
 {% endstep %}
 
 {% step %}
-### Register in config
+#### Register in config
 
 Add it to your child theme's `config/context-managers.php`:
 
@@ -143,7 +143,7 @@ return [
 {% endstep %}
 
 {% step %}
-### Use in Twig
+#### Use in Twig
 
 {% code title="views/partials/social.twig" %}
 ```twig

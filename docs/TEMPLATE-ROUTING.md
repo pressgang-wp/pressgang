@@ -1,4 +1,4 @@
-# Template Routing
+# 🗺️ Template Routing
 
 ## Overview
 
@@ -40,15 +40,15 @@ The matching `{candidate}.twig` in your `views/` directory renders automatically
 
 Beyond the literal StudlyCase name, the dispatcher understands WordPress template hierarchy semantics — matching the PressGang convention of **plural controllers for archives, singular for single views**:
 
-| Candidate | Resolves to | Rule |
-|---|---|---|
-| `search` | `SearchController` | StudlyCase |
-| `front-page` | `FrontPageController` | StudlyCase |
-| `archive-event` | `EventsController` | `archive-{type}` → pluralised type |
-| `single-event` | `EventController` | `single-{type}` → the subject |
-| `taxonomy-event-type` | `EventTypeController` | `taxonomy-{tax}` → the subject |
+| Candidate             | Resolves to           | Rule                               |
+| --------------------- | --------------------- | ---------------------------------- |
+| `search`              | `SearchController`    | StudlyCase                         |
+| `front-page`          | `FrontPageController` | StudlyCase                         |
+| `archive-event`       | `EventsController`    | `archive-{type}` → pluralised type |
+| `single-event`        | `EventController`     | `single-{type}` → the subject      |
+| `taxonomy-event-type` | `EventTypeController` | `taxonomy-{tax}` → the subject     |
 
-Parent framework controllers are never matched by convention — the parent theme's own templates already route to them — so dispatch only activates for controllers *you* define.
+Parent framework controllers are never matched by convention — the parent theme's own templates already route to them — so dispatch only activates for controllers _you_ define.
 
 ## Hyphenated Template Names
 
@@ -149,7 +149,7 @@ class NewsRoute implements RouteHandlerInterface {
 ```
 {% endcode %}
 
-`TemplateHierarchy::prepend()` seeds the candidate your route *means*, so controller resolution stays deterministic even when WordPress's conditionals disagree (an empty page 2, for example).
+`TemplateHierarchy::prepend()` seeds the candidate your route _means_, so controller resolution stays deterministic even when WordPress's conditionals disagree (an empty page 2, for example).
 
 ## Precedence, In One Breath
 

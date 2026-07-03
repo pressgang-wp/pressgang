@@ -1,4 +1,4 @@
-# Twig Extensions
+# 🧩 Twig Extensions
 
 Twig extensions let you add custom functions, filters, and globals to the Twig templating environment. They're the rigging of your PressGang ship — connecting the PHP engine room to the Twig deck where templates do their work.
 
@@ -39,11 +39,13 @@ If your extension only needs to implement one or two of the three methods, Press
 Registers general-purpose functions and globals:
 
 **Functions:**
+
 * `get_search_query()` — returns the current search query string.
 * `get_option(name)` — retrieves a WordPress option.
 * `get_theme_mod(name)` — retrieves a theme modification value.
 
 **Globals:**
+
 * `THEMENAME` — the text domain constant, for use in translation calls.
 
 {% code title="views/search-form.twig" %}
@@ -59,6 +61,7 @@ Registers general-purpose functions and globals:
 ### MetaDescriptionExtensionManager
 
 **Functions:**
+
 * `meta_description()` — generates an SEO-friendly meta description for the current page, via the `MetaDescriptionService`.
 
 {% code title="views/layouts/base.twig" %}
@@ -74,6 +77,7 @@ See [SEO](SEO.md) for details on the meta description fallback chain.
 Only active on single post pages. Requires the post to be mapped to `PressGang\Post` via the `timber-class-map` config.
 
 **Functions:**
+
 * `get_latest_posts(count)` — fetches the latest posts (excluding the current one).
 * `get_related_posts(count)` — fetches posts related to the current one by shared taxonomy terms.
 
@@ -97,7 +101,7 @@ Registers WooCommerce-specific Twig functions when WooCommerce is active.
 
 {% stepper %}
 {% step %}
-### Create the class
+#### Create the class
 
 {% code title="src/TwigExtensions/SocialExtensionManager.php" lineNumbers="true" %}
 ```php
@@ -129,7 +133,7 @@ class SocialExtensionManager implements TwigExtensionManagerInterface {
 {% endstep %}
 
 {% step %}
-### Register in config
+#### Register in config
 
 Add to your child theme's `config/twig-extensions.php`:
 
@@ -147,7 +151,7 @@ return [
 {% endstep %}
 
 {% step %}
-### Use in Twig
+#### Use in Twig
 
 {% code title="views/partials/share-buttons.twig" %}
 ```twig

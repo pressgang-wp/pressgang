@@ -1,4 +1,4 @@
-# Forms and Validation
+# 📋 Forms and Validation
 
 PressGang provides a structured form handling pipeline with built-in validation, CSRF protection, and error handling. No more tangled `$_POST` processing scattered across your theme — PressGang keeps your forms battened down and secure.
 
@@ -111,11 +111,11 @@ The `validate()` method returns an empty array on success, or an array of error 
 
 ### Built-in Validators
 
-| Validator | Purpose |
-|---|---|
-| `EmailValidator` | Validates that a submitted email address is well-formed |
-| `MessageValidator` | Validates that a message field is not empty |
-| `RecaptchaValidator` | Validates a Google reCAPTCHA response |
+| Validator            | Purpose                                                 |
+| -------------------- | ------------------------------------------------------- |
+| `EmailValidator`     | Validates that a submitted email address is well-formed |
+| `MessageValidator`   | Validates that a message field is not empty             |
+| `RecaptchaValidator` | Validates a Google reCAPTCHA response                   |
 
 ### Creating a Custom Validator
 

@@ -1,4 +1,4 @@
-# SEO
+# 🔍 SEO
 
 PressGang includes a built-in `MetaDescriptionService` that generates smart, cached meta descriptions for every page on your site. No need for a full SEO plugin just to get decent meta tags — PressGang has you covered on this voyage.
 
@@ -21,6 +21,7 @@ That's it. PressGang's SEO service provider renders its fallback `<meta name="de
 The service uses a smart fallback chain to find the best description for each page type:
 
 <details>
+
 <summary><strong>Posts and Pages</strong></summary>
 
 1. **Yoast SEO meta description** (`_yoast_wpseo_metadesc` post meta) — if Yoast is installed and a description is set, it takes priority.
@@ -32,6 +33,7 @@ The service uses a smart fallback chain to find the best description for each pa
 </details>
 
 <details>
+
 <summary><strong>Taxonomy Terms</strong></summary>
 
 1. **Yoast SEO taxonomy meta** — if configured in Yoast's taxonomy settings.
@@ -41,6 +43,7 @@ The service uses a smart fallback chain to find the best description for each pa
 </details>
 
 <details>
+
 <summary><strong>Archives</strong></summary>
 
 1. **Archive description** — via `get_the_archive_description()`.
@@ -49,6 +52,7 @@ The service uses a smart fallback chain to find the best description for each pa
 </details>
 
 <details>
+
 <summary><strong>Front Page</strong></summary>
 
 Always uses the **site tagline** (from Settings > General > Tagline).
@@ -71,8 +75,8 @@ Meta descriptions are cached per object using `wp_cache`, so the fallback chain 
 
 ## Hooks
 
-| Hook | Type | Available in |
-|---|---|---|
+| Hook                         | Type   | Available in      |
+| ---------------------------- | ------ | ----------------- |
 | `pressgang_contact_to_email` | filter | ContactSubmission |
 
 {% hint style="success" %}
@@ -83,9 +87,9 @@ The `MetaDescriptionService` can read Yoast SEO data when generating fallback de
 
 PressGang checks common SEO plugin constants before rendering its fallback meta description:
 
-- `WPSEO_VERSION` for Yoast SEO.
-- `RANK_MATH_VERSION` for Rank Math.
-- `AIOSEO_VERSION` for All in One SEO.
+* `WPSEO_VERSION` for Yoast SEO.
+* `RANK_MATH_VERSION` for Rank Math.
+* `AIOSEO_VERSION` for All in One SEO.
 
 The detection and rendering decision are filterable:
 

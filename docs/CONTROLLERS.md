@@ -1,4 +1,4 @@
-# Controllers
+# 🧭 Controllers
 
 ## Overview
 
@@ -20,16 +20,16 @@ The `AbstractController` class provides common functionalities for all controlle
 
 PressGang ships with controllers for all the common WordPress template types:
 
-| Controller | Template | Purpose |
-|---|---|---|
-| `PageController` | `page.twig` | Standard WordPress pages |
-| `PostController` | `single.twig` | Single post views (auto-detects post type) |
-| `PostsController` | `archive.twig` | Archive listings, categories, search results |
-| `SearchController` | `search.twig` | Search results (extends PostsController) |
-| `AuthorController` | `author.twig` | Author archive pages |
-| `TaxonomyController` | varies | Taxonomy archive pages |
-| `CommentsController` | `comments.twig` | Comments template |
-| `NotFoundController` | `404.twig` | 404 error page |
+| Controller           | Template        | Purpose                                      |
+| -------------------- | --------------- | -------------------------------------------- |
+| `PageController`     | `page.twig`     | Standard WordPress pages                     |
+| `PostController`     | `single.twig`   | Single post views (auto-detects post type)   |
+| `PostsController`    | `archive.twig`  | Archive listings, categories, search results |
+| `SearchController`   | `search.twig`   | Search results (extends PostsController)     |
+| `AuthorController`   | `author.twig`   | Author archive pages                         |
+| `TaxonomyController` | varies          | Taxonomy archive pages                       |
+| `CommentsController` | `comments.twig` | Comments template                            |
+| `NotFoundController` | `404.twig`      | 404 error page                               |
 
 WooCommerce controllers are also provided under `PressGang\Controllers\WooCommerce\`.
 
@@ -142,7 +142,7 @@ class FrontPageController extends PageController {
 Each plain entry calls `get_{key}()`; use `'key' => 'method'` to point a key at a differently-named getter. The manifest is applied after `get_context()` and before the `pressgang_{controller}_context` filter, so both extension points still work — and with a manifest, most controllers don't need a `get_context()` override at all.
 
 {% hint style="info" %}
-This is the controller counterpart to the `HandlesDynamicGetters` trait on models: getters own the *fetching*, the manifest declares which of them form the *template contract*. Keep it a declared list — the framework deliberately never auto-publishes getters, or your internal helpers would silently become template API.
+This is the controller counterpart to the `HandlesDynamicGetters` trait on models: getters own the _fetching_, the manifest declares which of them form the _template contract_. Keep it a declared list — the framework deliberately never auto-publishes getters, or your internal helpers would silently become template API.
 {% endhint %}
 
 ## Working with ACF Values
@@ -159,17 +159,17 @@ protected function get_related(): array {
 ```
 {% endcode %}
 
-It accepts the raw field value directly (empty and `false` values are fine) and returns a clean array of `Timber\Post` objects. Prefer this explicit conversion over enabling Timber's global `timber/meta/transform_value` filter, which silently changes the return type of *every* `meta()` call — and doesn't reach values inside flexible-content or repeater sub-fields anyway.
+It accepts the raw field value directly (empty and `false` values are fine) and returns a clean array of `Timber\Post` objects. Prefer this explicit conversion over enabling Timber's global `timber/meta/transform_value` filter, which silently changes the return type of _every_ `meta()` call — and doesn't reach values inside flexible-content or repeater sub-fields anyway.
 
 ## Filters and Actions
 
 The `render()` method fires several hooks, giving you fine-grained control over any controller's output:
 
-- **`pressgang_{controller}_template`** — filter the Twig template path before rendering.
-- **`pressgang_{controller}_context`** — filter the context array before it reaches Twig.
-- **`pressgang_render_{controller}`** — action fired just before `Timber::render()`.
+* **`pressgang_{controller}_template`** — filter the Twig template path before rendering.
+* **`pressgang_{controller}_context`** — filter the context array before it reaches Twig.
+* **`pressgang_render_{controller}`** — action fired just before `Timber::render()`.
 
-The `{controller}` placeholder is the snake_case version of the controller class name, e.g., `pressgang_page_controller_template`.
+The `{controller}` placeholder is the snake\_case version of the controller class name, e.g., `pressgang_page_controller_template`.
 
 ## Extending Controllers in Child Themes
 
@@ -211,9 +211,9 @@ While these controllers are named similarly to traditional MVC Controllers, they
 
 In classic MVC:
 
-- **Model:** Handles data and business logic.
-- **View:** Manages the display of information.
-- **Controller:** Acts as an intermediary, handling user input, updating the Model, and refreshing the View.
+* **Model:** Handles data and business logic.
+* **View:** Manages the display of information.
+* **Controller:** Acts as an intermediary, handling user input, updating the Model, and refreshing the View.
 
 In PressGang, the Controllers primarily prepare and manage context data for the View (Twig templates), aligning more with the View Model pattern. They focus on preparing data for the View without directly handling user input or business logic.
 
