@@ -2,9 +2,24 @@
 
 namespace PressGang\Configuration;
 
+use PressGang\Routes\RouteHandlerInterface;
+
 /**
  * Registers custom URL routes from config/routes.php using the Upstatement Routes
- * library. Each entry maps a route pattern to a template that Routes::load() will render.
+ * library.
+ *
+ * Each entry maps a route pattern to either:
+ *
+ * - a template filename, loaded directly via Routes::load() with the matched
+ *   route parameters available through the global $params, or
+ * - a class implementing RouteHandlerInterface, instantiated and invoked with
+ *   the matched route parameters — for routes that need logic (parameter
+ *   resolution, query args) before loading a template.
+ *
+ *     return [
+ *         'archive/:year'        => 'archive-year.php',
+ *         'hit/:hit/news/'       => \MyTheme\Routes\HitNewsRoute::class,
+ *     ];
  *
  * Why: provides declarative routing outside of WordPress's template hierarchy.
  * Extend via: child theme config override.
@@ -15,21 +30,34 @@ namespace PressGang\Configuration;
 class Routes extends ConfigurationSingleton {
 
 	/**
-	 * Initializes the Routes class with configuration data.
-	 *
-	 * Sets up the custom routes as defined in the configuration array, each pointing to a specific template.
-	 *
-	 * The Routes::map function is used to define a route.
-	 * For each route, Routes::load is called with the specified template and parameters.
+	 * Maps each configured route to its template or handler class.
 	 *
 	 * @param array $config The configuration array for custom routes.
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {
-		foreach ( $config as $route => $template ) {
-			\Routes::map( $route, function ( $params ) use ( $template ) {
-				\Routes::load( $template, $params, 200 );
-			} );
+		foreach ( $config as $route => $handler ) {
+			\Routes::map( $route, $this->make_callback( $handler ) );
 		}
+	}
+
+	/**
+	 * Builds the route callback for a template filename or handler class.
+	 *
+	 * @param string $handler Template filename, or RouteHandlerInterface class name.
+	 *
+	 * @return callable
+	 */
+	protected function make_callback( string $handler ): callable {
+
+		if ( is_subclass_of( $handler, RouteHandlerInterface::class ) ) {
+			return static function ( $params ) use ( $handler ): void {
+				( new $handler() )->handle( $params ?: [] );
+			};
+		}
+
+		return static function ( $params ) use ( $handler ): void {
+			\Routes::load( $handler, $params );
+		};
 	}
 }
