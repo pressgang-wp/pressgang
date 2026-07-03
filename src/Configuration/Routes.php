@@ -18,7 +18,7 @@ use PressGang\Routes\RouteHandlerInterface;
  *
  *     return [
  *         'archive/:year'        => 'archive-year.php',
- *         'hit/:hit/news/'       => \MyTheme\Routes\HitNewsRoute::class,
+ *         'route/:slug/news/'    => \MyTheme\Routes\NewsRoute::class,
  *     ];
  *
  * Why: provides declarative routing outside of WordPress's template hierarchy.

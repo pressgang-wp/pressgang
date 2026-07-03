@@ -190,8 +190,8 @@ class ControllerFactory {
 	 * applied: `archive-{type}` infers the pluralised type controller
 	 * (`archive-event` => `EventsController`), and `single-{type}` /
 	 * `taxonomy-{tax}` infer the bare StudlyCase subject
-	 * (`single-hit` => `HitController`, `taxonomy-hit-group` =>
-	 * `HitGroupController`).
+	 * (`single-event` => `EventController`, `taxonomy-event-type` =>
+	 * `EventTypeController`).
 	 *
 	 * @param string $candidate Candidate slug.
 	 *

@@ -9,7 +9,7 @@ namespace PressGang\Templates;
  *
  * 1. **Hyphenated template names** — for every hierarchy candidate containing
  *    an underscore (derived from post type / taxonomy keys, e.g.
- *    `taxonomy-hit_group.php`), a hyphenated twin (`taxonomy-hit-group.php`)
+ *    `taxonomy-event_type.php`), a hyphenated twin (`taxonomy-event-type.php`)
  *    is inserted ahead of it, so theme files can use consistent kebab-case
  *    naming. Underscored filenames continue to work.
  *

@@ -37,13 +37,13 @@ built on explicit template stubs are untouched by framework upgrades.
 Once enabled, requests route to controllers by convention — most themes
 need **no template PHP files at all**. WordPress's template hierarchy candidates are
 recorded per request, kebab-case twins are added for underscored post
-type/taxonomy names (`taxonomy-hit_group` also matches
-`taxonomy-hit-group`), and when a request falls through to a parent-theme
+type/taxonomy names (`taxonomy-event_type` also matches
+`taxonomy-event-type`), and when a request falls through to a parent-theme
 template the dispatcher resolves a child controller:
 
 - `search` → `SearchController`, `front-page` → `FrontPageController` (StudlyCase)
 - `archive-event` → `EventsController` (plural for archives)
-- `single-event` → `EventController`, `taxonomy-hit-group` → `HitGroupController` (singular subjects)
+- `single-event` → `EventController`, `taxonomy-event-type` → `EventTypeController` (singular subjects)
 
 The matching `{candidate}.twig` renders when the child theme has one.
 `config/controllers.php` maps any name that defies convention, and a

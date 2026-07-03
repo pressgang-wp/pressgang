@@ -36,13 +36,13 @@ namespace PressGang\Tests\Unit\Controllers {
 		/** @test */
 		public function explicit_map_entry_wins_for_most_specific_candidate(): void {
 			$resolved = ControllerFactory::resolve_candidate_for(
-				[ 'taxonomy-hit-group', 'taxonomy-hit_group', 'taxonomy' ],
-				[ 'taxonomy-hit-group' => \PressGang\Controllers\TaxonomyController::class ],
+				[ 'taxonomy-event-type', 'taxonomy-event_type', 'taxonomy' ],
+				[ 'taxonomy-event-type' => \PressGang\Controllers\TaxonomyController::class ],
 				self::CHILD
 			);
 
 			$this->assertSame( \PressGang\Controllers\TaxonomyController::class, $resolved['controller'] );
-			$this->assertSame( 'taxonomy-hit-group', $resolved['candidate'] );
+			$this->assertSame( 'taxonomy-event-type', $resolved['candidate'] );
 		}
 
 		/** @test */

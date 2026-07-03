@@ -22,7 +22,7 @@
  *     return [
  *         'front-page'         => \MyTheme\Controllers\FrontPageController::class,
  *         'archive-event'      => \MyTheme\Controllers\EventsController::class,
- *         'taxonomy-hit-group' => \MyTheme\Controllers\HitGroupController::class,
+ *         'taxonomy-event-type' => \MyTheme\Controllers\EventTypeController::class,
  *         'home'               => \PressGang\Controllers\PostsController::class,
  *     ];
  *

@@ -130,7 +130,7 @@ routing-behaviour change.
 
 WordPress template hierarchy candidates are recorded per request
 (`Templates\TemplateHierarchy`), and candidates containing underscores get
-hyphenated twins (`taxonomy-hit_group.php` -> also `taxonomy-hit-group.php`)
+hyphenated twins (`taxonomy-event_type.php` -> also `taxonomy-event-type.php`)
 so theme files can use kebab-case consistently.
 
 When a request falls through to a **parent-theme** template, the dispatcher
@@ -142,7 +142,7 @@ the candidates, most specific first:
    hierarchy-semantic inflections: `archive-{type}` => pluralised
    `{Types}Controller`, and `single-{type}` / `taxonomy-{tax}` =>
    `{Subject}Controller` (so `archive-event` => `EventsController`,
-   `taxonomy-hit-group` => `HitGroupController` — zero config)
+   `taxonomy-event-type` => `EventTypeController` — zero config)
 
 The candidate's `{candidate}.twig` is used when it exists in the child
 `views/`; otherwise the controller's own template inference applies. A

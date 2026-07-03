@@ -20,8 +20,8 @@ class TemplateHierarchyTest extends TestCase {
 		$hierarchy = new TemplateHierarchy();
 
 		$this->assertSame(
-			[ 'taxonomy-hit-group.php', 'taxonomy-hit_group.php', 'taxonomy.php' ],
-			$hierarchy->filter_candidates( [ 'taxonomy-hit_group.php', 'taxonomy.php' ] )
+			[ 'taxonomy-event-type.php', 'taxonomy-event_type.php', 'taxonomy.php' ],
+			$hierarchy->filter_candidates( [ 'taxonomy-event_type.php', 'taxonomy.php' ] )
 		);
 	}
 
@@ -39,11 +39,11 @@ class TemplateHierarchyTest extends TestCase {
 	public function records_candidate_slugs_in_resolution_order(): void {
 		$hierarchy = new TemplateHierarchy();
 
-		$hierarchy->filter_candidates( [ 'taxonomy-hit_group.php', 'taxonomy.php' ] );
+		$hierarchy->filter_candidates( [ 'taxonomy-event_type.php', 'taxonomy.php' ] );
 		$hierarchy->filter_candidates( [ 'archive.php' ] );
 
 		$this->assertSame(
-			[ 'taxonomy-hit-group', 'taxonomy-hit_group', 'taxonomy', 'archive' ],
+			[ 'taxonomy-event-type', 'taxonomy-event_type', 'taxonomy', 'archive' ],
 			TemplateHierarchy::candidates()
 		);
 	}
@@ -53,9 +53,9 @@ class TemplateHierarchyTest extends TestCase {
 		$hierarchy = new TemplateHierarchy();
 
 		$hierarchy->filter_candidates( [ '404.php' ] );
-		TemplateHierarchy::prepend( 'taxonomy-hit-group', '404' );
+		TemplateHierarchy::prepend( 'taxonomy-event-type', '404' );
 
-		$this->assertSame( [ 'taxonomy-hit-group', '404' ], TemplateHierarchy::candidates() );
+		$this->assertSame( [ 'taxonomy-event-type', '404' ], TemplateHierarchy::candidates() );
 	}
 
 	/** @test */
