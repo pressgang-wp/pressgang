@@ -117,6 +117,20 @@ Controllers live in `src/Controllers`.
 - Filters: `pressgang_{controller}_template`, `pressgang_{controller}_context`
 - Action: `pressgang_render_{controller}`
 
+**Context manifest** — instead of overriding `get_context()` to wire getters
+one line at a time, declare the template contract:
+
+```php
+protected array $context_getters = [ 'news', 'events', 'hero_featured' ];
+```
+
+Each entry calls the matching `get_{key}()` (or `'key' => 'method'` to
+override the name); applied after `get_context()`, before the context
+filters. This is the controller counterpart to `HandlesDynamicGetters` on
+models: getters own the fetching, the manifest declares which of them are
+template API. The manifest must stay an explicit list — never auto-publish
+all getters, or internal helpers silently become template contract.
+
 One controller per template concern. Avoid "god controllers".
 
 ---

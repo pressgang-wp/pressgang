@@ -29,6 +29,8 @@ Everything in PressGang starts with a config file. Arrays in `config/` declare w
 
 Controllers live in `src/Controllers/` and are **view models**, not request handlers. Each controller extends `AbstractController`, gathers data via Timber, builds a context array, and selects a template. They must be side-effect free — no writes, no remote requests, no direct rendering.
 
+Context wiring is declarative: list the template contract in `protected array $context_getters = [ 'news', 'events' ]` and each key is populated from its `get_{key}()` getter — no `get_context()` boilerplate.
+
 ### 🗺️ Template Routing (No Stub Files)
 
 Opt-in via `config/service-providers.php` (add
