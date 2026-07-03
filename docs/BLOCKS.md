@@ -1,4 +1,4 @@
-# Blocks
+# 🧱 Blocks
 
 PressGang provides declarative Gutenberg block registration, keeping your block setup clean and your codebase shipshape. Define your blocks in config, and PressGang handles the registration, path resolution, and lifecycle hooks.
 
@@ -100,8 +100,8 @@ This allows blocks to perform one-time setup (like registering field groups) at 
 
 ## Hooks
 
-| Hook | Type | Purpose |
-|---|---|---|
+| Hook                                | Type   | Purpose                                                               |
+| ----------------------------------- | ------ | --------------------------------------------------------------------- |
 | `pressgang_block_registered_{name}` | action | Fired after a block is registered. Receives the block settings array. |
 
 The `{name}` placeholder is the block's `name` field from `block.json` (e.g. `pressgang_block_registered_acf/hero`).

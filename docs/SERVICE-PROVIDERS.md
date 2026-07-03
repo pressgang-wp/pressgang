@@ -1,4 +1,4 @@
-# Service Providers
+# 🔌 Service Providers
 
 Service providers are PressGang's hook for bootstrapping services after the framework has initialised. They run after Timber and the Loader are ready, making them the right place for wiring up filters, registering integrations, or initialising third-party libraries.
 
@@ -63,12 +63,12 @@ return [
 
 `TimberServiceProvider` wires up:
 
-| Concern | Config source | Hook |
-|---|---|---|
-| Context managers | `config/context-managers.php` | `timber/context` |
-| Twig extensions | `config/twig-extensions.php` | `timber/twig` |
-| Twig environment options | `config/timber.php` | `timber/twig/environment/options` |
-| Snippet template paths | vendor directory | `timber/locations` |
+| Concern                  | Config source                 | Hook                              |
+| ------------------------ | ----------------------------- | --------------------------------- |
+| Context managers         | `config/context-managers.php` | `timber/context`                  |
+| Twig extensions          | `config/twig-extensions.php`  | `timber/twig`                     |
+| Twig environment options | `config/timber.php`           | `timber/twig/environment/options` |
+| Snippet template paths   | vendor directory              | `timber/locations`                |
 
 See [Context Managers](CONTEXT-MANAGERS.md) and [Twig Extensions](TWIG-EXTENSIONS.md) for details on each.
 
@@ -143,13 +143,13 @@ add_filter('pressgang_service_providers', function (array $providers): array {
 Service providers boot on **every request**. Keep `boot()` lightweight — register hooks and filters only, don't do real work.
 {% endhint %}
 
-- **Register hooks in `boot()`, execute work in callbacks.** The `boot()` method should only call `add_action()` / `add_filter()` — not perform queries, remote requests, or heavy computation.
-- **One concern per provider.** If your provider handles both search customisation and email configuration, split it into two providers.
-- **Guard for dependencies.** If your provider depends on a plugin (ACF, WooCommerce, etc.), check `class_exists()` or `function_exists()` before registering hooks.
-- **No constructor arguments.** PressGang instantiates providers with `new $class()`. Use `Config::get()` or WordPress options for configuration.
+* **Register hooks in `boot()`, execute work in callbacks.** The `boot()` method should only call `add_action()` / `add_filter()` — not perform queries, remote requests, or heavy computation.
+* **One concern per provider.** If your provider handles both search customisation and email configuration, split it into two providers.
+* **Guard for dependencies.** If your provider depends on a plugin (ACF, WooCommerce, etc.), check `class_exists()` or `function_exists()` before registering hooks.
+* **No constructor arguments.** PressGang instantiates providers with `new $class()`. Use `Config::get()` or WordPress options for configuration.
 
 ## Hooks
 
-| Hook | Type | Purpose |
-|---|---|---|
+| Hook                          | Type   | Purpose                                                       |
+| ----------------------------- | ------ | ------------------------------------------------------------- |
 | `pressgang_service_providers` | filter | Modify the list of service provider class strings before boot |

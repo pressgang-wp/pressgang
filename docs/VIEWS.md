@@ -1,4 +1,4 @@
-# Views
+# 🖼️ Views
 
 In PressGang, views are responsible for rendering the HTML output for the front-end of the website. Views are created using the [Twig](https://twig.symfony.com/) templating engine, provided by the [Timber library](https://timber.github.io/docs/v2/). This approach separates the presentation logic from the business logic, promoting cleaner and more maintainable code.
 

@@ -1,4 +1,4 @@
-# Config
+# ⚙️ Config
 
 ## Centralized Configuration Management
 
@@ -22,8 +22,9 @@ graph LR
 ```
 
 Each config file maps to a Configuration class by studly-case name:
-- `config/sidebars.php` → `PressGang\Configuration\Sidebars`
-- `config/custom-post-types.php` → `PressGang\Configuration\CustomPostTypes`
+
+* `config/sidebars.php` → `PressGang\Configuration\Sidebars`
+* `config/custom-post-types.php` → `PressGang\Configuration\CustomPostTypes`
 
 The class **must exist** — a config file alone does nothing without a corresponding Configuration class.
 
@@ -46,124 +47,102 @@ All files are present in the `config` folder of the PressGang theme. These can b
 These config files map to a singleton Configuration class that registers the defined items with WordPress:
 
 <details>
+
 <summary><strong>Content Types</strong></summary>
 
-`custom-post-types.php`
-Registers and configures custom post types.
+`custom-post-types.php` Registers and configures custom post types.
 
-`custom-taxonomies.php`
-Defines and registers custom taxonomies.
+`custom-taxonomies.php` Defines and registers custom taxonomies.
 
-`templates.php`
-Registers custom page templates for the Page Attributes dropdown.
+`templates.php` Registers custom page templates for the Page Attributes dropdown.
 
-`timber-class-map.php`
-Maps WordPress post types to custom Timber post classes.
+`timber-class-map.php` Maps WordPress post types to custom Timber post classes.
 
 </details>
 
 <details>
-<summary><strong>Navigation & Layout</strong></summary>
 
-`menus.php`
-Registers navigation menus.
+<summary><strong>Navigation &#x26; Layout</strong></summary>
 
-`sidebars.php`
-Registers widget sidebars.
+`menus.php` Registers navigation menus.
 
-`custom-menu-items.php`
-Registers custom menu item types.
+`sidebars.php` Registers widget sidebars.
+
+`custom-menu-items.php` Registers custom menu item types.
 
 </details>
 
 <details>
-<summary><strong>Editor & Blocks</strong></summary>
 
-`blocks.php`
-Registers Gutenberg blocks. See the [Blocks](BLOCKS.md) page for details.
+<summary><strong>Editor &#x26; Blocks</strong></summary>
 
-`block-categories.php`
-Registers custom block categories for the Gutenberg editor.
+`blocks.php` Registers Gutenberg blocks. See the [Blocks](BLOCKS.md) page for details.
 
-`block-patterns.php`
-Defines and registers block patterns.
+`block-categories.php` Registers custom block categories for the Gutenberg editor.
 
-`color-palette.php`
-Configures custom color palettes for the editor.
+`block-patterns.php` Defines and registers block patterns.
+
+`color-palette.php` Configures custom color palettes for the editor.
 
 </details>
 
 <details>
+
 <summary><strong>Assets</strong></summary>
 
-`scripts.php`
-Registers and enqueues scripts.
+`scripts.php` Registers and enqueues scripts.
 
-`styles.php`
-Registers and enqueues styles.
+`styles.php` Registers and enqueues styles.
 
-`dequeue-styles.php`
-Handles dequeueing of unwanted styles.
+`dequeue-styles.php` Handles dequeueing of unwanted styles.
 
-`deregister-scripts.php`
-Manages deregistration of unwanted scripts.
+`deregister-scripts.php` Manages deregistration of unwanted scripts.
 
 </details>
 
 <details>
+
 <summary><strong>Theme Features</strong></summary>
 
-`support.php`
-Adds theme support features (e.g. `post-thumbnails`, `title-tag`).
+`support.php` Adds theme support features (e.g. `post-thumbnails`, `title-tag`).
 
-`remove-support.php`
-Handles removal of theme support features.
+`remove-support.php` Handles removal of theme support features.
 
-`customizer.php`
-Registers WordPress Customizer sections and settings.
+`customizer.php` Registers WordPress Customizer sections and settings.
 
 </details>
 
 <details>
+
 <summary><strong>Admin</strong></summary>
 
-`remove-menus.php`
-Configures removal of specific admin menus.
+`remove-menus.php` Configures removal of specific admin menus.
 
-`remove-nodes.php`
-Manages removal of admin bar nodes.
+`remove-nodes.php` Manages removal of admin bar nodes.
 
-`query-vars.php`
-Registers custom query variables.
+`query-vars.php` Registers custom query variables.
 
 </details>
 
 <details>
-<summary><strong>Integrations & Misc</strong></summary>
 
-`acf-options.php`
-Registers Advanced Custom Fields (ACF) options pages.
+<summary><strong>Integrations &#x26; Misc</strong></summary>
 
-`actions.php`
-Registers custom actions within the theme.
+`acf-options.php` Registers Advanced Custom Fields (ACF) options pages.
 
-`meta-tags.php`
-Manages meta tag configurations.
+`actions.php` Registers custom actions within the theme.
 
-`plugins.php`
-Manages required/recommended plugin declarations.
+`meta-tags.php` Manages meta tag configurations.
 
-`controllers.php`
-Maps template hierarchy candidates to controllers when a name defies convention. See [Template Routing](TEMPLATE-ROUTING.md).
+`plugins.php` Manages required/recommended plugin declarations.
 
-`page-templates.php`
-Registers file-less page templates. See [Template Routing](TEMPLATE-ROUTING.md).
+`controllers.php` Maps template hierarchy candidates to controllers when a name defies convention. See [Template Routing](TEMPLATE-ROUTING.md).
 
-`routes.php`
-Configures custom routes — template filenames or `RouteHandlerInterface` classes. See [Template Routing](TEMPLATE-ROUTING.md).
+`page-templates.php` Registers file-less page templates. See [Template Routing](TEMPLATE-ROUTING.md).
 
-`snippets.php`
-Configures snippet class loading. See the [Snippets](SNIPPETS.md) page.
+`routes.php` Configures custom routes — template filenames or `RouteHandlerInterface` classes. See [Template Routing](TEMPLATE-ROUTING.md).
+
+`snippets.php` Configures snippet class loading. See the [Snippets](SNIPPETS.md) page.
 
 </details>
 
@@ -171,32 +150,25 @@ Configures snippet class loading. See the [Snippets](SNIPPETS.md) page.
 
 These config files are consumed by the `TimberServiceProvider` rather than by Configuration classes:
 
-`context-managers.php`
-Lists context manager classes for enriching the Timber context. See [Context Managers](CONTEXT-MANAGERS.md).
+`context-managers.php` Lists context manager classes for enriching the Timber context. See [Context Managers](CONTEXT-MANAGERS.md).
 
-`twig-extensions.php`
-Lists Twig extension manager classes for adding custom functions, filters, and globals to Twig. See [Twig Extensions](TWIG-EXTENSIONS.md).
+`twig-extensions.php` Lists Twig extension manager classes for adding custom functions, filters, and globals to Twig. See [Twig Extensions](TWIG-EXTENSIONS.md).
 
-`timber.php`
-Configures Timber Twig environment options via `timber/twig/environment/options` (including Twig compilation cache). Child themes can override this file to enable or disable caching per site.
+`timber.php` Configures Timber Twig environment options via `timber/twig/environment/options` (including Twig compilation cache). Child themes can override this file to enable or disable caching per site.
 
-`service-providers.php`
-Lists bootable service provider class strings. PressGang boots these after Timber init + Loader initialize; by default this list includes `\PressGang\ServiceProviders\TimberServiceProvider::class`. This list is also filterable via `pressgang_service_providers`.
+`service-providers.php` Lists bootable service provider class strings. PressGang boots these after Timber init + Loader initialize; by default this list includes `\PressGang\ServiceProviders\TimberServiceProvider::class`. This list is also filterable via `pressgang_service_providers`.
 
 ### Include-based Config
 
 These config files list class names to be auto-included and registered by the `Loader`, rather than going through the Configuration singleton pattern:
 
-`shortcodes.php`
-Lists shortcode classes under `src/Shortcodes/` to be included and instantiated.
+`shortcodes.php` Lists shortcode classes under `src/Shortcodes/` to be included and instantiated.
 
-`widgets.php`
-Lists widget classes under `src/Widgets/` to be included and registered.
+`widgets.php` Lists widget classes under `src/Widgets/` to be included and registered.
 
 ### Legacy Config
 
-`nodes.php`
-This file exists for backward compatibility. Node removal is handled by `remove-nodes.php` via the `RemoveNodes` configuration class.
+`nodes.php` This file exists for backward compatibility. Node removal is handled by `remove-nodes.php` via the `RemoveNodes` configuration class.
 
 ## Example Usage
 

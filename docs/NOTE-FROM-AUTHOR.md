@@ -1,4 +1,4 @@
-# A Note from the Author
+# ✍️ A Note from the Author
 
 ## ❤️ A Labour of Love
 

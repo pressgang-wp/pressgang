@@ -1,6 +1,6 @@
 # Table of contents
 
-* [⚓ PressGang](HOME.md)
+* [⚓ PressGang](README.md)
 * [🚀 Boot Sequence](BOOT-SEQUENCE.md)
 * [⚙️ Config](CONFIG.md)
 * [🧭 Controllers](CONTROLLERS.md)

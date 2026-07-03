@@ -1,4 +1,4 @@
-# Boot Sequence
+# 🚀 Boot Sequence
 
 Understanding how PressGang starts up helps you know where things happen and — just as importantly — where they should _not_ happen.
 
@@ -24,7 +24,7 @@ graph TD
 
 {% stepper %}
 {% step %}
-### 1. Composer Autoload
+#### 1. Composer Autoload
 
 Before anything else, `functions.php` loads the Composer autoloader and defines the `THEMENAME` constant used for translations:
 
@@ -51,13 +51,13 @@ Your child theme's `functions.php` should override `THEMENAME` with your own tex
 {% endstep %}
 
 {% step %}
-### 2. Timber Initialization
+#### 2. Timber Initialization
 
 `Timber::init()` sets up the Timber library — connecting Twig to WordPress and preparing the template rendering pipeline.
 {% endstep %}
 
 {% step %}
-### 3. Loader Initialization
+#### 3. Loader Initialization
 
 The `Loader` performs two tasks:
 
@@ -81,7 +81,7 @@ Shortcode and widget classes listed in `config/shortcodes.php` and `config/widge
 {% endstep %}
 
 {% step %}
-### 4. Service Providers
+#### 4. Service Providers
 
 Service providers are loaded from `config/service-providers.php` (then filtered by `pressgang_service_providers`).
 
@@ -92,7 +92,6 @@ By default this includes `TimberServiceProvider`, which wires up:
 3. **Twig Environment Options** — `config/timber.php` is applied to `timber/twig/environment/options` (child themes can enable or disable Twig compilation cache per site).
 4. **Snippet Template Paths** — the `pressgang-snippets` vendor views directory is added to Timber's template locations.
 {% endstep %}
-
 {% endstepper %}
 
 ## Performance Rules
@@ -110,12 +109,12 @@ Never perform queries, I/O, or remote requests during boot. The boot sequence ru
 
 Several hooks let you customize the boot:
 
-| Hook | Type | Purpose |
-|---|---|---|
-| `pressgang_config_directories` | filter | Modify the list of config directories to load from |
-| `pressgang_get_config` | filter | Filter the merged config array after loading |
-| `pressgang_include_directories` | filter | Modify where the Loader looks for shortcode/widget files |
-| `timber/context` | filter | Add data to the global Timber context |
-| `timber/twig` | filter | Add functions/filters/globals to the Twig environment |
-| `timber/twig/environment/options` | filter | Configure Twig environment options (cache, auto_reload, debug) |
-| `pressgang_service_providers` | filter | Modify the list of service providers to boot |
+| Hook                              | Type   | Purpose                                                         |
+| --------------------------------- | ------ | --------------------------------------------------------------- |
+| `pressgang_config_directories`    | filter | Modify the list of config directories to load from              |
+| `pressgang_get_config`            | filter | Filter the merged config array after loading                    |
+| `pressgang_include_directories`   | filter | Modify where the Loader looks for shortcode/widget files        |
+| `timber/context`                  | filter | Add data to the global Timber context                           |
+| `timber/twig`                     | filter | Add functions/filters/globals to the Twig environment           |
+| `timber/twig/environment/options` | filter | Configure Twig environment options (cache, auto\_reload, debug) |
+| `pressgang_service_providers`     | filter | Modify the list of service providers to boot                    |

@@ -1,12 +1,12 @@
-# Testing
+# 🧪 Testing
 
 PressGang ships with a unit test suite so you can verify framework behaviour and safely refactor without a running WordPress installation.
 
 ## Stack
 
-- **PHPUnit 9.6** — test runner
-- **yoast/wp-test-utils ^1.2** — provides BrainMonkey integration and pre-stubbed WordPress functions (matches Timber 2's own test stack)
-- **BrainMonkey** — mocks WordPress functions (`add_action`, `apply_filters`, `wp_cache_get`, etc.) in pure PHP
+* **PHPUnit 9.6** — test runner
+* **yoast/wp-test-utils ^1.2** — provides BrainMonkey integration and pre-stubbed WordPress functions (matches Timber 2's own test stack)
+* **BrainMonkey** — mocks WordPress functions (`add_action`, `apply_filters`, `wp_cache_get`, etc.) in pure PHP
 
 No WordPress database, no web server, no Docker required.
 
@@ -44,13 +44,13 @@ tests/
 
 {% stepper %}
 {% step %}
-### Create the test class
+#### Create the test class
 
 Place it under `tests/Unit/` mirroring the `src/` path. For example, a test for `src/Configuration/Sidebars.php` goes in `tests/Unit/Configuration/SidebarsTest.php`.
 {% endstep %}
 
 {% step %}
-### Extend the base TestCase
+#### Extend the base TestCase
 
 {% code title="tests/Unit/Configuration/SidebarsTest.php" %}
 ```php
@@ -66,12 +66,12 @@ class SidebarsTest extends TestCase {
 
 The base `TestCase` extends `Yoast\WPTestUtils\BrainMonkey\YoastTestCase`, which handles BrainMonkey setup and teardown automatically. It also provides:
 
-- `resetSingletonInstances()` — clears `ConfigurationSingleton` state between tests
-- `setPostData()` / `clearPostData()` — helpers for testing form validators
+* `resetSingletonInstances()` — clears `ConfigurationSingleton` state between tests
+* `setPostData()` / `clearPostData()` — helpers for testing form validators
 {% endstep %}
 
 {% step %}
-### Mock WordPress functions with BrainMonkey
+#### Mock WordPress functions with BrainMonkey
 
 {% code title="Example test method" %}
 ```php
@@ -90,7 +90,7 @@ public function registers_sidebars_from_config(): void {
 {% endstep %}
 
 {% step %}
-### Reset singletons when needed
+#### Reset singletons when needed
 
 Any test that touches a `ConfigurationSingleton` subclass should reset state:
 
