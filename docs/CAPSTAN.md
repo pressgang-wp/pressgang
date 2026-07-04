@@ -139,7 +139,19 @@ The ZIP lands alongside the theme directory by default (e.g. `themes/my-theme.zi
 
 ## 🗺️ Roadmap
 
-Planned commands: `make block`, `make cpt`, `doctor` (diagnose theme configuration), `config dump` (resolved PressGang configuration), and `theme screenshot`.
+Capstan's [README roadmap](https://github.com/pressgang-wp/pressgang-capstan#roadmap) is the single source of truth for planned commands. Currently charted:
+
+| | Planned | Purpose |
+|---|---|---|
+| 🧱 | `make block` / `make cpt` | Scaffold blocks and custom post types with config registration |
+| 🧭 | `resolve <url>` | Show the template candidates and resolved controller for a URL |
+| ⚙️ | `config dump` | Display the resolved PressGang configuration |
+| ✂️ | `snippets` | List registered snippets and their constructor args |
+| 📦 | `context <Controller>` | Show a controller's context keys and getters |
+| 🩺 | `doctor` | Diagnose common theme configuration issues |
+| 🖼️ | `theme screenshot` | Generate a theme screenshot |
+
+The introspection commands are designed for humans and AI agents alike — once they ship, [Bosun](BOSUN.md) fragments will teach agents the recipes.
 
 ---
 
