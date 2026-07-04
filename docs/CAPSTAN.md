@@ -35,8 +35,37 @@ WP-CLI's shorthand package index (`wp package install pressgang-wp/capstan`) is 
 |---|---|
 | `wp capstan new` | Scaffold a full PressGang project — core, parent, child theme |
 | `wp capstan make child` | Scaffold a child theme into an existing WordPress install |
+| `wp capstan make cpt` | Scaffold a custom post type entry in `config/custom-post-types.php` |
+| `wp capstan make block` | Scaffold an ACF block — block.json, Twig stub, config registration |
+| `wp capstan resolve <url>` | Template hierarchy candidates → resolved controller for a URL |
+| `wp capstan context <Ctrl>` | A controller's context manifest and getters, by pure reflection |
+| `wp capstan config dump` | The resolved PressGang configuration the theme boots with |
+| `wp capstan snippets` | Registered snippets, their resolved classes and args |
+| `wp capstan doctor` | Deterministic theme configuration health checks |
 | `wp capstan theme package` | Build a WordPress-uploadable ZIP from a theme directory |
 | `wp capstan about` | Capstan version, PHP version, WordPress root detection |
+
+## 🧭 Introspection
+
+PressGang's conventions are invisible by design — introspection makes them verifiable:
+
+{% code title="Terminal" %}
+```bash
+wp capstan resolve /events/
+# Hierarchy candidates, the controller each would infer, and the winner:
+# dispatch — EventsController renders archive-event.twig (via "archive-event")
+
+wp capstan context FrontPage
+# The $context_getters manifest, each getter's declaring class, and
+# theme getters not yet published in the manifest.
+
+wp capstan doctor
+# 11 deterministic checks: autoload, namespace, snippet/provider/route
+# classes, shadowed page templates, legacy v1 boot files...
+```
+{% endcode %}
+
+These answer the questions agents (and new crew) ask most: *which controller handles this URL, what data does the template get, and is the rigging sound?* [Bosun](BOSUN.md)-composed guidelines teach agents these recipes.
 
 {% hint style="info" %}
 **Dry-run by default.** Every scaffolding command prints its execution plan first and only writes when you re-run with `--force`. Review the charts before you sail. 🗺️
@@ -143,15 +172,7 @@ Capstan's [README roadmap](https://github.com/pressgang-wp/pressgang-capstan#roa
 
 | | Planned | Purpose |
 |---|---|---|
-| 🧱 | `make block` / `make cpt` | Scaffold blocks and custom post types with config registration |
-| 🧭 | `resolve <url>` | Show the template candidates and resolved controller for a URL |
-| ⚙️ | `config dump` | Display the resolved PressGang configuration |
-| ✂️ | `snippets` | List registered snippets and their constructor args |
-| 📦 | `context <Controller>` | Show a controller's context keys and getters |
-| 🩺 | `doctor` | Diagnose common theme configuration issues |
 | 🖼️ | `theme screenshot` | Generate a theme screenshot |
-
-The introspection commands are designed for humans and AI agents alike — once they ship, [Bosun](BOSUN.md) fragments will teach agents the recipes.
 
 ---
 
