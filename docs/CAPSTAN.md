@@ -37,8 +37,9 @@ WP-CLI's shorthand package index (`wp package install pressgang-wp/capstan`) is 
 | `wp capstan make child` | Scaffold a child theme into an existing WordPress install |
 | `wp capstan make cpt` | Scaffold a custom post type entry in `config/custom-post-types.php` |
 | `wp capstan make block` | Scaffold an ACF block — block.json, Twig stub, config registration |
+| `wp capstan make controller` | Scaffold a controller with a documented `$context_getters` manifest |
 | `wp capstan resolve <url>` | Template hierarchy candidates → resolved controller for a URL |
-| `wp capstan context <Ctrl>` | A controller's context manifest and getters, by pure reflection |
+| `wp capstan context <Ctrl>` | A controller's context manifest and getters; `--add` publishes keys |
 | `wp capstan config dump` | The resolved PressGang configuration the theme boots with |
 | `wp capstan snippets` | Registered snippets, their resolved classes and args |
 | `wp capstan doctor` | Deterministic theme configuration health checks |
@@ -58,6 +59,10 @@ wp capstan resolve /events/
 wp capstan context FrontPage
 # The $context_getters manifest, each getter's declaring class, and
 # theme getters not yet published in the manifest.
+
+wp capstan context FrontPage --add=news,events --force
+# Publishes keys into the manifest — explicit selection, theme-owned
+# files only, lint-checked before the file is replaced.
 
 wp capstan doctor
 # 11 deterministic checks: autoload, namespace, snippet/provider/route
