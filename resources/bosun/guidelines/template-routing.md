@@ -18,3 +18,8 @@ directory) and resolve to `{Slug}Controller` or PageController.
 
 A physical template file always wins over dispatch — only add one for
 genuine logic (e.g. conditional controller selection), and say why.
+
+Verify routing instead of reasoning about it: `wp capstan resolve <url>`
+shows the hierarchy candidates, the controller each would infer, and the
+winner. Run it after adding a controller, registering a page template, or
+editing `config/controllers.php`.

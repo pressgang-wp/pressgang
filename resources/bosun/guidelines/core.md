@@ -18,5 +18,24 @@ Timber 2 + Twig rendering, and config-driven bootstrapping.
   Timber's global `timber/meta/transform_value` filter.
 - Twig is presentation only: no queries, no request globals, no business
   logic. Twig escapes (`|e`), PHP sanitises — never `esc_*` in Twig.
-- Inspect and run the site with WP-CLI (`wp eval`, `wp db query`) and
-  `wp capstan` commands where available.
+
+### Verify with Capstan, don't guess
+
+When the `wp capstan` WP-CLI package is installed, PressGang's conventions
+are inspectable — prefer these over inferring from source:
+
+- `wp capstan resolve <url>` — which controller handles a URL, via which
+  hierarchy candidate. Run it after adding a controller or changing
+  routing config to confirm resolution.
+- `wp capstan context <Controller>` — a controller's manifest, its
+  getters, and which are unpublished. After writing getters, publish them
+  explicitly: `wp capstan context <Controller> --add=<keys> --force`
+  (never hand-expand a manifest you haven't read first).
+- `wp capstan config dump [<key>]` — the merged config the theme actually
+  boots with; `wp capstan snippets` — registered snippets and their args.
+- `wp capstan doctor` — run after config or composer changes; it catches
+  missing classes and shadowed page templates deterministically.
+
+Scaffold rather than hand-write boilerplate — each previews first and
+writes with `--force`: `wp capstan make controller <Name> --type=posts|post|page`,
+`wp capstan make cpt <slug>`, `wp capstan make block <slug>`.
