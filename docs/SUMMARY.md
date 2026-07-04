@@ -18,6 +18,7 @@
 ## Ecosystem
 
 * [⚓ Quartermaster](QUARTERMASTER.md)
+* [🧭 Bosun](BOSUN.md)
 
 ## About
 
