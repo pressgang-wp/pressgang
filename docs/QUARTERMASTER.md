@@ -52,6 +52,192 @@ Sometimes raw `WP_Query` is fine — if your query is short and static, use it. 
 
 ---
 
+## 👀 Before and After
+
+Three real queries, as typically written in a theme — and the same queries with Quartermaster. In every case the "after" produces a **plain `WP_Query` args array** you can inspect with `toArgs()`.
+
+### 1. Upcoming events, soonest first
+
+The classic meta-date query: filter by an ACF date field, order by the same field, paginate.
+
+{% tabs %}
+{% tab title="😩 Before" %}
+{% code title="Controller" lineNumbers="true" %}
+```php
+$events = new WP_Query([
+    'post_type'      => 'event',
+    'post_status'    => 'publish',
+    'posts_per_page' => 12,
+    'paged'          => max(1, (int) get_query_var('paged')),
+    'meta_key'       => 'start',
+    'orderby'        => 'meta_value',
+    'order'          => 'ASC',
+    'meta_query'     => [
+        [
+            'key'     => 'start',
+            'value'   => wp_date('Ymd'),
+            'compare' => '>=',
+            'type'    => 'DATE',
+        ],
+    ],
+]);
+```
+{% endcode %}
+
+Four things have to line up silently: `meta_key` must match the `meta_query` key, `orderby => meta_value` breaks without `meta_key`, the date format has to match ACF's storage, and `wp_date()` vs `date()` decides whether events flip a day at midnight in the wrong timezone.
+{% endtab %}
+
+{% tab title="⚓ After" %}
+{% code title="Controller" lineNumbers="true" %}
+```php
+$events = Quartermaster::posts('event')
+    ->status('publish')
+    ->paged(12)
+    ->whereMetaDate('start', '>=')
+    ->orderByMeta('start', 'ASC')
+    ->wpQuery();
+```
+{% endcode %}
+
+`whereMetaDate()` defaults to today via timezone-aware `wp_date()` in ACF's `Ymd` format, and `orderByMeta()` sets `meta_key` and `orderby` together — the pair that's easiest to get wrong by hand. If you *do* set `orderby => meta_value` without a key, `explain()` warns you.
+{% endtab %}
+{% endtabs %}
+
+### 2. Optional filters
+
+Filters that may or may not have a value — from an ACF field, a route param, a widget setting. Raw arrays force you to build conditionally.
+
+{% tabs %}
+{% tab title="😩 Before" %}
+{% code title="Controller" lineNumbers="true" %}
+```php
+$args = [
+    'post_type'      => 'post',
+    'post_status'    => 'publish',
+    'posts_per_page' => 9,
+];
+
+$tax_query = [];
+
+if (! empty($topic)) {
+    $tax_query[] = [
+        'taxonomy' => 'topic',
+        'field'    => 'slug',
+        'terms'    => $topic,
+    ];
+}
+
+if (! empty($region)) {
+    $tax_query[] = [
+        'taxonomy' => 'region',
+        'field'    => 'slug',
+        'terms'    => $region,
+    ];
+}
+
+if ($tax_query) {
+    $args['tax_query'] = $tax_query;
+}
+
+if (! empty($exclude_ids)) {
+    $args['post__not_in'] = $exclude_ids;
+}
+
+$posts = get_posts($args);
+```
+{% endcode %}
+
+Most of the code is scaffolding around *maybe* having a value — and an accidental `'tax_query' => []` or `'post__not_in' => []` is a real bug (an empty `post__not_in` array changes nothing, but an empty *string* ID list can). The query's intent is buried.
+{% endtab %}
+
+{% tab title="⚓ After" %}
+{% code title="Controller" lineNumbers="true" %}
+```php
+$posts = Quartermaster::posts('post')
+    ->status('publish')
+    ->limit(9)
+    ->whereTax('topic', $topic ?: null)
+    ->whereTax('region', $region ?: null)
+    ->excludeIds($exclude_ids)
+    ->get();
+```
+{% endcode %}
+
+`whereTax()` treats `null` and empty terms as "no filter", and `excludeIds([])` is a no-op — so optional values pass straight through and the chain reads as the query it is. No `if` scaffolding, no empty-clause bugs.
+{% endtab %}
+{% endtabs %}
+
+### 3. A filterable archive
+
+URL-driven filtering — taxonomy facets, a numeric range, search — is where raw args sprawl fastest.
+
+{% tabs %}
+{% tab title="😩 Before" %}
+{% code title="Controller" lineNumbers="true" %}
+```php
+$args = [
+    'post_type'      => 'route',
+    'post_status'    => 'publish',
+    'posts_per_page' => 12,
+    'paged'          => max(1, (int) get_query_var('paged')),
+];
+
+if ($shape = get_query_var('shape')) {
+    $args['tax_query'][] = [
+        'taxonomy' => 'route_shape',
+        'field'    => 'slug',
+        'terms'    => sanitize_text_field($shape),
+    ];
+}
+
+if (($min = get_query_var('min_distance')) !== '') {
+    $args['meta_query'][] = [
+        'key'     => 'distance_miles',
+        'value'   => (float) $min,
+        'compare' => '>=',
+        'type'    => 'NUMERIC',
+    ];
+}
+
+if ($search = get_query_var('search')) {
+    $args['s'] = sanitize_text_field($search);
+}
+
+$query = new WP_Query($args);
+```
+{% endcode %}
+
+Every filter repeats the same ritual: read, check, sanitise, append. Each new facet grows the block, and it's easy to forget the sanitising step on just one of them.
+{% endtab %}
+
+{% tab title="⚓ After" %}
+{% code title="Controller" lineNumbers="true" %}
+```php
+use PressGang\Quartermaster\Bindings\Bind;
+
+$query = Quartermaster::posts('route')
+    ->status('publish')
+    ->bindQueryVars([
+        'paged'        => Bind::paged(),
+        'shape'        => Bind::tax('route_shape'),
+        'min_distance' => Bind::metaNum('distance_miles', '>='),
+        'search'       => Bind::search(),
+    ])
+    ->paged(12)
+    ->wpQuery();
+```
+{% endcode %}
+
+Each binding reads, validates, sanitises, and skips-when-empty in one declaration — and `explain()` logs every binding attempt, including why one was skipped. Adding a facet is one line.
+{% endtab %}
+{% endtabs %}
+
+{% hint style="success" %}
+Nothing was lost in translation: call `->toArgs()` on any of the "after" chains and you get back exactly the kind of array the "before" code built by hand. ⚓
+{% endhint %}
+
+---
+
 ## 🧠 Design Philosophy
 
 Quartermaster is intentionally light-touch. Steady hands on the wheel, predictable seas ahead. 🚢
