@@ -60,7 +60,7 @@ Customise in `.ai/guidelines/` (or outside the region) — never inside the regi
 
 ## ⚓ With Capstan
 
-[Capstan](https://github.com/pressgang-wp/pressgang-capstan) scaffolds run `wp bosun install` automatically after a new theme's dependencies land, so a freshly launched theme starts life with its crew already briefed.
+[Capstan](CAPSTAN.md) scaffolds run `wp bosun install` automatically after a new theme's dependencies land, so a freshly launched theme starts life with its crew already briefed.
 
 ***
 
