@@ -8,7 +8,7 @@
 
 ## Overview
 
-PressGang is a WordPress parent theme framework that gives you the architecture of a modern PHP application — Composer autoloading, Twig templating via Timber, config-driven bootstrapping, and a clear separation of concerns — without leaving the WordPress ecosystem. Build child themes on a solid, opinionated foundation and spend your time on features, not plumbing.
+PressGang is a WordPress parent theme framework that brings Timber and Twig templating, MVC-inspired controllers that act as view models, and Laravel-inspired, config-driven bootstrapping (convention over configuration) to WordPress — all on a modern Composer and PSR-4 foundation. Build child themes on a clean, opinionated architecture with a clear separation of concerns, and spend your time on features, not plumbing.
 
 ## ✨ Key Features
 

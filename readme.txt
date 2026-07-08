@@ -10,7 +10,7 @@ Tags: responsive-layout, accessibility-ready, custom-background, custom-logo, cu
 Text Domain: PressGang
 
 == Description ==
-PressGang is a modern WordPress parent theme framework designed to accelerate custom theme development while keeping code clean, explicit, and maintainable.
+PressGang is a modern WordPress parent theme framework built on Timber and Twig, with MVC-inspired controllers (view models), Laravel-inspired config-driven bootstrapping, and Composer/PSR-4 autoloading. It accelerates custom theme development while keeping code clean, explicit, and maintainable.
 
 PressGang explicitly avoids being a page builder or abstraction-heavy framework. It delivers:
 
