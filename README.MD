@@ -2,6 +2,11 @@
 
 # Hijacking Your WordPress Development Workflow
 
+[![Latest Stable Version](https://poser.pugx.org/pressgang-wp/pressgang/v/stable)](https://packagist.org/packages/pressgang-wp/pressgang)
+[![Build Status](https://github.com/pressgang-wp/pressgang/actions/workflows/php-compatibility.yml/badge.svg)](https://github.com/pressgang-wp/pressgang/actions/workflows/php-compatibility.yml)
+[![Total Downloads](https://poser.pugx.org/pressgang-wp/pressgang/downloads)](https://packagist.org/packages/pressgang-wp/pressgang)
+[![License](https://poser.pugx.org/pressgang-wp/pressgang/license)](https://packagist.org/packages/pressgang-wp/pressgang)
+
 **Ahoy there! Modernize your WordPress development and ship your WordPress themes faster than ever. PressGang anchors your workflow in modern development practices. Build cleaner, faster, smarter themes and navigate your development course to calmer seas.**
 
 📖 **[Read the full documentation at docs.pressgang.dev](https://docs.pressgang.dev/)**
