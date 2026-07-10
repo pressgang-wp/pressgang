@@ -10,6 +10,8 @@
  * @package PressGang
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use PressGang\Controllers\ControllerFactory;
 
 ControllerFactory::dispatch();
