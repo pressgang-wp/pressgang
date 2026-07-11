@@ -22,36 +22,54 @@ class PostsController extends AbstractController {
 	 *
 	 * @see https://developer.wordpress.org/themes/basics/template-hierarchy/
 	 *
-	 * @param string|null $template
+	 * @param string|array<int, string>|null $template
 	 */
-	public function __construct( string|null $template = null ) {
+	public function __construct( string|array|null $template = null ) {
 
 		global $wp_query;
 
 		$this->post_type = $wp_query->query['post_type'] ?? \get_post_type();
 
-		if ( ! $template ) {
+		parent::__construct( $template ?: $this->infer_template() );
+	}
 
-			$template = 'archive.twig';
+	/**
+	 * Builds the Twig template fallback chain for the current query context.
+	 *
+	 * Mirrors the WordPress template hierarchy: the most specific template
+	 * first, falling back towards `archive.twig`. Timber renders the first
+	 * template in the chain that exists, so a theme without `category.twig`
+	 * still renders categories via `archive.twig` instead of a blank page.
+	 *
+	 * @return string|array<int, string>
+	 */
+	protected function infer_template(): string|array {
 
-			// Try to guess the template
-			if ( \is_category() ) {
-				$template = 'category.twig';
-			} else if ( \is_tax() ) {
-				$taxonomy = \get_queried_object()->taxonomy;
-				$taxonomy = str_replace( '_', '-', $taxonomy );
-				$template = sprintf( "taxonomy%s.twig", $taxonomy === 'tag' ? '' : "-{$taxonomy}" );
-			} else if ( \is_search() ) {
-				$template = 'search.twig';
-			} else {
-				if ( $this->post_type && $this->post_type !== 'post' ) {
-					$post_type_slug = str_replace( '_', '-', $this->post_type );
-					$template       = sprintf( "archive-%s.twig", $post_type_slug );
-				}
-			}
+		if ( \is_category() ) {
+			return [ 'category.twig', 'archive.twig' ];
 		}
 
-		parent::__construct( $template );
+		if ( \is_tag() ) {
+			return [ 'tag.twig', 'archive.twig' ];
+		}
+
+		if ( \is_tax() ) {
+			$taxonomy = str_replace( '_', '-', \get_queried_object()->taxonomy );
+
+			return [ "taxonomy-{$taxonomy}.twig", 'taxonomy.twig', 'archive.twig' ];
+		}
+
+		if ( \is_search() ) {
+			return [ 'search.twig', 'archive.twig' ];
+		}
+
+		if ( $this->post_type && $this->post_type !== 'post' ) {
+			$post_type_slug = str_replace( '_', '-', $this->post_type );
+
+			return [ "archive-{$post_type_slug}.twig", 'archive.twig' ];
+		}
+
+		return 'archive.twig';
 	}
 
 	/**

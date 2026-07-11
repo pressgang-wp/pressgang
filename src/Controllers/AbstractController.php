@@ -2,6 +2,7 @@
 
 namespace PressGang\Controllers;
 
+use Timber\Loader;
 use Timber\Timber;
 use function Symfony\Component\String\u;
 
@@ -15,8 +16,13 @@ abstract class AbstractController implements ControllerInterface {
 	/** @var array<string, mixed> */
 	public array $context;
 
-	/** @var string|null */
-	public ?string $template;
+	/**
+	 * Twig template to render: a single name, or a fallback chain rendered
+	 * first-existing-wins (Timber accepts an array, mirroring the WP hierarchy).
+	 *
+	 * @var string|array<int, string>|null
+	 */
+	public string|array|null $template;
 
 	/** @var int|bool */
 	protected int|bool $expires = false;
@@ -40,9 +46,9 @@ abstract class AbstractController implements ControllerInterface {
 	 * Subclasses can override the template by passing it to the parent constructor.
 	 * Subclasses can also override the context by overriding the get_context() method.
 	 *
-	 * @param string|null $template
+	 * @param string|array<int, string>|null $template
 	 */
-	public function __construct( ?string $template = null ) {
+	public function __construct( string|array|null $template = null ) {
 		$this->template = $template;
 		$this->context  = Timber::context();
 	}
@@ -72,8 +78,47 @@ abstract class AbstractController implements ControllerInterface {
 
 		\do_action( "pressgang_render_{$key}" );
 
-		Timber::render( $this->template, $this->context, $this->expires );
+		// Timber::render() is void and echoes compile()'s output — echoing the
+		// `false` it produces for a missing template prints nothing, which is
+		// exactly the silent-blank-page bug. Compile explicitly (via_render
+		// keeps the timber/render/* filter semantics identical) so failure is
+		// observable.
+		$output = Timber::compile( $this->template, $this->context, $this->expires, Loader::CACHE_USE_DEFAULT, true );
 
+		if ( false === $output ) {
+			$this->handle_render_failure();
+
+			return;
+		}
+
+		echo $output;
+	}
+
+	/**
+	 * Surfaces a failed render instead of letting WordPress serve a blank 200.
+	 *
+	 * Timber::render() returns false when none of the requested templates
+	 * exist — historically an easy way to ship a silently empty page. Logs the
+	 * failure, fires `pressgang_render_failed` for observers, and raises a
+	 * warning under WP_DEBUG.
+	 *
+	 * @return void
+	 */
+	protected function handle_render_failure(): void {
+
+		$message = sprintf(
+			'PressGang: %s rendered no output — no Twig template found (tried: %s).',
+			static::class,
+			implode( ', ', (array) $this->template ) ?: '(none)'
+		);
+
+		\do_action( 'pressgang_render_failed', static::class, $this->template );
+
+		error_log( $message );
+
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			trigger_error( esc_html( $message ), E_USER_WARNING );
+		}
 	}
 
 	/**

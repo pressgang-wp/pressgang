@@ -6,8 +6,13 @@ use Timber\Term;
 use Timber\Timber;
 
 /**
- * Controller for taxonomy archive pages. Extends PostsController to add the
- * current Timber Term to the context alongside the standard posts/pagination data.
+ * Controller for taxonomy archive pages — categories, tags, and custom
+ * taxonomies. Extends PostsController to add the current Timber Term to the
+ * context alongside the standard posts/pagination data.
+ *
+ * When no template is given, the query-context inference applies:
+ * `category.twig` / `tag.twig` / `taxonomy-{taxonomy}.twig`, each falling
+ * back through the hierarchy to `archive.twig` (see PostsController::infer_template()).
  */
 class TaxonomyController extends PostsController {
 
@@ -15,9 +20,9 @@ class TaxonomyController extends PostsController {
 	protected ?Term $term = null;
 
 	/**
-	 * @param string|null $template
+	 * @param string|array<int, string>|null $template
 	 */
-	public function __construct( string|null $template = 'taxonomy.twig' ) {
+	public function __construct( string|array|null $template = null ) {
 		parent::__construct( $template );
 	}
 

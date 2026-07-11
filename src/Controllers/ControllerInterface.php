@@ -9,6 +9,11 @@ namespace PressGang\Controllers;
 interface ControllerInterface {
 
 	/**
+	 * Deliberately the narrowest contract (`?string`): implementations — and
+	 * PHP's contravariance rules — may accept more (AbstractController also
+	 * takes a fallback chain array), but widening the interface itself would
+	 * fatal every existing child-theme controller declared with `?string`.
+	 *
 	 * @param string|null $template
 	 */
 	public function __construct( string|null $template = null );
