@@ -29,6 +29,8 @@ Themes built on explicit template stubs are completely untouched by framework up
 
 When WordPress resolves a request, PressGang records the template hierarchy candidates (most specific first). If the request falls through to a **parent-theme** template — meaning your child theme had no stub for it — the dispatcher resolves a controller from those candidates and renders it.
 
+Mechanically: `template_include` must return a PHP file for WordPress to load, so the dispatcher hands it the parent theme's `dispatch.php` — a one-line landing file that calls `ControllerFactory::dispatch()`. The routing *decision* happens in the filter; `dispatch.php` is just where the request touches down. (Custom route handlers reuse the same landing file — see below.)
+
 For each candidate, resolution tries:
 
 1. **Your config map** — an explicit entry in `config/controllers.php`
