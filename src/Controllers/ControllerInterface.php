@@ -9,10 +9,13 @@ namespace PressGang\Controllers;
 interface ControllerInterface {
 
 	/**
-	 * Deliberately the narrowest contract (`?string`): implementations — and
-	 * PHP's contravariance rules — may accept more (AbstractController also
-	 * takes a fallback chain array), but widening the interface itself would
-	 * fatal every existing child-theme controller declared with `?string`.
+	 * The framework constructs controllers generically via
+	 * ControllerFactory::make() with a `?string` template — so `?string` is the
+	 * true minimal construction contract every controller must honour. Widening
+	 * here would make the interface over-promise a capability generic dispatch
+	 * never supplies. AbstractController legitimately accepts more
+	 * (`string|array|null` for a fallback chain) — an implementation exceeding
+	 * its interface, which is fine.
 	 *
 	 * @param string|null $template
 	 */
