@@ -9,6 +9,21 @@ description: >-
 
 Aboard ship, a muster assembles the crew and counts every hand. In your project, Muster assembles **content**: posts, pages, terms, users, menus, media and options, created through fluent builders with realistic fake data — the same content, byte for byte, every time you run it.
 
+## 🗺️ The naming, translated
+
+The names are nautical (like the rest of the fleet), but the concepts are the seeders and factories you know from other frameworks:
+
+| Muster | Laravel | Rails / elsewhere | Role |
+| --- | --- | --- | --- |
+| `Muster` class + `run()` | `DatabaseSeeder` + `run()` | `seeds.rb` | The orchestrator: one place describing the content a site should have |
+| `Pattern` + `count()` + `build()` | `Model::factory()->count(5)->create()` | FactoryBot's `create_list` | Repeatable batch creation from a recipe |
+| `Victuals` (a ship's provisions) | `$this->faker` | `Faker` gem | Seeded fake data — headlines, emails, dates |
+| Builders (`post()`, `term()`, `menu()`…) | Factory definitions / Eloquent creates | Factory definitions | Explicit, typed creation of one kind of thing |
+| Refs (`PostRef`, `TermRef`…) | The returned model instance | Ditto | A handle for wiring relationships (parents, menu items, featured images) |
+| `populated()` / `minimal()` ACF variants | Factory *states* | FactoryBot traits | Named variations of the same content shape |
+
+Two WordPress-flavoured differences from the Laravel model: builders **upsert on natural keys** rather than always inserting (a Muster describes desired state, so re-runs converge), and there's no ORM underneath — every builder calls real WordPress APIs (`wp_insert_post()`, `wp_set_object_terms()`, ACF's `update_field()`).
+
 {% hint style="success" %}
 **The promise is determinism.** Same seed, same content, on every machine, forever. That's what makes seeded content usable for visual regression, stable selectors, and reproducible bug reports — and it's why [Shakedown](SHAKEDOWN.md) uses Muster to build its sandbox fixtures.
 {% endhint %}
