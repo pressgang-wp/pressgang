@@ -93,7 +93,7 @@ npx shakedown sandbox
 ```
 {% endcode %}
 
-This assembles a **throwaway WordPress** in a temp directory: your code symlinked read-only, its own fresh SQLite database, its own uploads — think Laravel's in-memory test database, for WordPress. Then it seeds **state fixtures** derived from your ACF field groups via [Muster](https://github.com/pressgang-wp/pressgang-muster): for every group, one page/post with *every field populated* and one with *only required fields* — the sparsest content an editor can legally publish, which is exactly where empty-link and missing-image bugs live. Runs all passes, then vaporises.
+This assembles a **throwaway WordPress** in a temp directory: your code symlinked read-only, its own fresh SQLite database, its own uploads — think Laravel's in-memory test database, for WordPress. Then it seeds **state fixtures** derived from your ACF field groups via [Muster](MUSTER.md): for every group, one page/post with *every field populated* and one with *only required fields* — the sparsest content an editor can legally publish, which is exactly where empty-link and missing-image bugs live. Runs all passes, then vaporises.
 
 ```
 ⚓ sandbox up at http://127.0.0.1:54223 (isolation verified)
@@ -170,7 +170,7 @@ The Trial Report and route matrix upload as artifacts on every run. Suits theme-
 Shakedown works on any PressGang site out of the box, and gets sharper with its shipmates installed:
 
 * **[Capstan](CAPSTAN.md)** — the matrix gains an *oracle*: each route annotated with the template and controller that *should* render it, asserted at runtime. Silent fallbacks to `index.php` become hard failures. `wp capstan doctor` also runs as a pre-flight, aborting before any browser launches if the theme's config is broken.
-* **[Muster](https://github.com/pressgang-wp/pressgang-muster)** — powers the sandbox's ACF state fixtures. Without it, the sandbox still runs; it just skips seeding.
+* **[Muster](MUSTER.md)** — powers the sandbox's ACF state fixtures. Without it, the sandbox still runs; it just skips seeding.
 
 The sandbox also counts **PHP notices, warnings and deprecations on every request** — even when display and logging are off — and fails any route that raises one. A page can look perfect and still be noisy underneath.
 

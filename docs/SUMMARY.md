@@ -20,6 +20,7 @@
 * [⚓ Quartermaster](QUARTERMASTER.md)
 * [🛞 Capstan](CAPSTAN.md)
 * [🧭 Bosun](BOSUN.md)
+* [🍪 Muster](MUSTER.md)
 * [🚢 Shakedown](SHAKEDOWN.md)
   * [🧭 Design & Internals](SHAKEDOWN-DESIGN.md)
 
