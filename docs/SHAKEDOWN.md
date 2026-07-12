@@ -12,6 +12,24 @@ A shakedown cruise is the sea trial of a new vessel: take her out, push every sy
 **The one-liner:** run `npx shakedown` inside your theme and, in about a minute, every page your site serves has been checked for errors, broken assets, and accessibility problems — in a real browser.
 {% endhint %}
 
+## 🧰 Commands at a glance
+
+Shakedown runs in one of two **modes** — keep the distinction in mind, everything below builds on it:
+
+| Mode | Answers | Touches your database? |
+| --- | --- | --- |
+| **Attached** — your live local site | "Is my site healthy *right now*?" | Never writes — read-only GETs |
+| **Sandbox** — a disposable throwaway WordPress | "Is my *theme* correct, independent of content?" | N/A — its own database, vaporised after |
+
+| Command | Mode | What it does |
+| --- | --- | --- |
+| `npx shakedown` | Attached | Runs every pass against your local site |
+| `npx shakedown matrix` | Attached | Prints the route matrix without running checks |
+| `npx shakedown sandbox` | Sandbox | Spins up the throwaway WordPress, seeds fixtures, runs every pass |
+| `npx shakedown sandbox --update-snapshots` | Sandbox | Re-mints visual regression baselines |
+| `npx shakedown ui` | Either | Playwright's UI / watch mode, for fixing failures |
+| `npx playwright show-report` | Either | Opens the last HTML report |
+
 ## 📦 Install
 
 You need Node 20+, [WP-CLI](https://wp-cli.org/), and your site running locally (any server — Herd, Valet, DDEV, MAMP… it's just a URL). From inside your theme:

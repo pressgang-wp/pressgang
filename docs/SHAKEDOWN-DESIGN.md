@@ -34,7 +34,11 @@ Muster follows Laravel's seeder model (fluent builders, idempotent upserts, `--s
 
 ### Why the sandbox is SQLite
 
-The [SQLite Database Integration plugin](https://wordpress.org/plugins/sqlite-database-integration/) (the WordPress Performance team's own project, with a real MySQL-parser driver since 2025) lets a genuine PHP WordPress run with a single database *file* — no MySQL server, no Docker, nothing shared. The sandbox symlinks your **code** read-only and owns its **state** (config, uploads, database) in a temp dir: Laravel's in-memory test database, translated to WordPress. Isolation isn't assumed — every boot queries a witness endpoint and refuses to test unless `ABSPATH`, the content dir, and the database all resolve inside the temp directory. (Hard-won: PHP resolves `__DIR__` through symlinks, so entry PHP files are *copied* — a symlinked `wp-load.php` would load the real site's config.)
+The [SQLite Database Integration plugin](https://wordpress.org/plugins/sqlite-database-integration/) (the WordPress Performance team's own project, with a real MySQL-parser driver since 2025) lets a genuine PHP WordPress run with a single database *file* — no MySQL server, no Docker, nothing shared. The sandbox symlinks your **code** read-only and owns its **state** (config, uploads, database) in a temp dir: Laravel's in-memory test database, translated to WordPress. Isolation isn't assumed — every boot queries a witness endpoint and refuses to test unless `ABSPATH`, the content dir, and the database all resolve inside the temp directory.
+
+{% hint style="warning" %}
+**Hard-won:** PHP resolves `__DIR__` through symlinks, so entry PHP files are *copied* rather than symlinked — a symlinked `wp-load.php` would silently load the real site's config instead of the sandbox's.
+{% endhint %}
 
 ### Why CI
 

@@ -1,16 +1,22 @@
+---
+description: >-
+  PHPUnit unit tests for PressGang's own PHP framework code — no WordPress
+  install required — plus where to go for full theme end-to-end testing.
+---
+
 # 🧪 Testing
 
 PressGang ships with a unit test suite so you can verify framework behaviour and safely refactor without a running WordPress installation.
 
-## Stack
+## 🧰 Stack
 
-* **PHPUnit 9.6** — test runner
-* **yoast/wp-test-utils ^1.2** — provides BrainMonkey integration and pre-stubbed WordPress functions (matches Timber 2's own test stack)
-* **BrainMonkey** — mocks WordPress functions (`add_action`, `apply_filters`, `wp_cache_get`, etc.) in pure PHP
+* **[PHPUnit](https://phpunit.de/) 9.6** — test runner
+* **[yoast/wp-test-utils](https://github.com/Yoast/wp-test-utils) ^1.2** — provides BrainMonkey integration and pre-stubbed WordPress functions (matches Timber 2's own test stack)
+* **[BrainMonkey](https://brain-wp.github.io/BrainMonkey/)** — mocks WordPress functions (`add_action`, `apply_filters`, `wp_cache_get`, etc.) in pure PHP
 
 No WordPress database, no web server, no Docker required.
 
-## Running Tests
+## ▶️ Running Tests
 
 {% code title="Terminal" %}
 ```bash
@@ -22,7 +28,7 @@ vendor/bin/phpunit --list-tests                  # list all discovered tests
 ```
 {% endcode %}
 
-## Directory Structure
+## 🗂️ Directory Structure
 
 Tests mirror the `src/` layout under `tests/Unit/`:
 
@@ -40,7 +46,7 @@ tests/
 ```
 {% endcode %}
 
-## Writing a New Test
+## ✍️ Writing a New Test
 
 {% stepper %}
 {% step %}
@@ -105,7 +111,7 @@ public function set_up(): void {
 {% endstep %}
 {% endstepper %}
 
-## Testing Context Managers
+## 🔧 Testing Context Managers
 
 Context managers depend on static calls (`Timber::get_menu()`, `new Site()`) and global helpers (`config()`) that cannot be mocked directly with BrainMonkey. PressGang uses the **protected method pattern** — static calls are wrapped in protected methods that tests override via anonymous subclasses:
 
@@ -140,7 +146,7 @@ private function makeManager(): MenuContextManager {
 
 This avoids `@runTestsInSeparateProcesses` (which is 5-10x slower) and keeps tests fast and deterministic.
 
-## Tips and Gotchas
+## 💡 Tips and Gotchas
 
 ### BrainMonkey `apply_filters` signature
 
