@@ -21,6 +21,7 @@
 * [🛞 Capstan](CAPSTAN.md)
 * [🧭 Bosun](BOSUN.md)
 * [🚢 Shakedown](SHAKEDOWN.md)
+  * [🧭 Design & Internals](SHAKEDOWN-DESIGN.md)
 
 ## About
 
