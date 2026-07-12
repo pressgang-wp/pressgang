@@ -112,6 +112,24 @@ wp capstan muster App\\Muster\\DemoMuster --only=events         # just one patte
 ```
 {% endcode %}
 
+## 🌱 Development seeding
+
+You don't have to write your SiteMuster from scratch — [Capstan](CAPSTAN.md) can scaffold one from the theme's own shape (post types, taxonomies, page templates, menu locations):
+
+{% code title="Terminal" %}
+```bash
+wp capstan make muster --force   # scaffolds src/Muster/SiteMuster.php (preview without --force)
+wp capstan seed                  # runs it — Laravel's db:seed, for WordPress
+wp capstan seed --fresh          # clean-slate reset first, then seed
+```
+{% endcode %}
+
+The generated file seeds five of each post type (ACF values derived via `acfFor()`), three terms per taxonomy, a page per registered page template, and a menu per location — all with pinned dates and idempotent slugs, so re-seeding converges. It's generated **once** and never overwritten: it's your file; rename fixtures and add domain content freely.
+
+{% hint style="warning" %}
+`wp capstan seed` refuses outright when `WP_ENVIRONMENT_TYPE` is `production` — no override flag exists, by design. Seeding is for development sites and disposable sandboxes.
+{% endhint %}
+
 ## 🧬 ACF fixtures, derived
 
 The standout feature: Muster can generate fixture values **from your `acf-json/` exports** instead of you writing them. `AcfJson` reads each field group and its location rules; `AcfValueGenerator` produces `update_field()`-ready values for ~25 field types — recursing through repeaters, groups, and flexible content (one row per layout, so every layout renders at least once).
