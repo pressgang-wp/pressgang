@@ -168,3 +168,7 @@ Functions loaded via Composer's `files` autoload (like the `config()` helper) ar
 {% hint style="info" %}
 `YoastTestCase` pre-stubs `wp_parse_args` to behave like `array_merge($defaults, $args)` — no need to mock it yourself.
 {% endhint %}
+
+## 🚢 End-to-end testing
+
+Unit tests cover the framework's PHP in isolation. For testing an actual **theme** — every route rendered in a real browser, accessibility, visual regression, derived fixtures — see [Shakedown](SHAKEDOWN.md), the fleet's e2e harness. It needs zero authored tests to start: the suite is derived from your theme's config.

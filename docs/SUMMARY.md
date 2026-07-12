@@ -20,6 +20,7 @@
 * [⚓ Quartermaster](QUARTERMASTER.md)
 * [🛞 Capstan](CAPSTAN.md)
 * [🧭 Bosun](BOSUN.md)
+* [🚢 Shakedown](SHAKEDOWN.md)
 
 ## About
 
