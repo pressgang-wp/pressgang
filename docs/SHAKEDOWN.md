@@ -135,7 +135,9 @@ None required. An optional `shakedown.config.json` in the theme handles the exce
   "searchTerm": "research",
   "sandbox": {
     "plugins": ["contact-form-7"],
-    "map": { "assets": "patterns/public/assets" }
+    "map": { "assets": "patterns/public/assets" },
+    "seed": 42,
+    "epoch": "2026-01-01T09:00:00+00:00"
   }
 }
 ```
@@ -144,6 +146,10 @@ None required. An optional `shakedown.config.json` in the theme handles the exce
 * `searchTerm` — a word that actually appears in your content, for the search probe.
 * `sandbox.plugins` — plugins the sandbox should activate (forms plugins, mostly).
 * `sandbox.map` — URL paths your web server serves via rewrites (e.g. a pattern library's assets), so the sandbox can mirror them.
+* `sandbox.seed` — integer controlling Muster's deterministic generated-value sequence.
+* `sandbox.epoch` — timezone-qualified ISO 8601 fixture datetime used by post
+  dates and every relative Victuals/ACF date helper. Randomness and time are
+  separate inputs.
 
 Your own journey tests (form submissions, checkout flows) live in the theme's `tests/e2e/` — when present, they run alongside the derived passes.
 
@@ -163,7 +169,10 @@ jobs:
 ```
 {% endcode %}
 
-The Trial Report and route matrix upload as artifacts on every run. Suits theme-shaped repos (the repo *is* the theme).
+The Trial Report and route matrix upload as artifacts on every run. Suits
+theme-shaped repos (the repo *is* the theme). The reusable workflow also accepts
+`muster-ref`; its default is the exact Muster commit verified with that
+Shakedown revision, so fixture behavior cannot drift when Muster's `main` moves.
 
 ## 🛞 Better with the fleet
 

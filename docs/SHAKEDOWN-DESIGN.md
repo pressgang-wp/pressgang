@@ -26,7 +26,7 @@ The observer must run on **every request**, load **before plugins**, and require
 
 Three reasons real content can't be the fixture:
 
-1. **Determinism.** Visual snapshots and stable selectors need repeatable content across runs and machines. [Muster](MUSTER.md) supplies the seeded [Faker](https://fakerphp.org/) sequence, while Shakedown fixes the seed and pins post dates so rendered dates do not drift.
+1. **Determinism.** Visual snapshots and stable selectors need repeatable content across runs and machines. [Muster](MUSTER.md) supplies the seeded [Faker](https://fakerphp.org/) sequence, while Shakedown separately pins one fixture epoch shared by post dates and ACF/Victuals date generation. Neither generated values nor relative dates consult the machine clock.
 2. **Denominators.** Real content only exercises the states editors happen to have created. Fixtures derived from `acf-json` exercise the states that *can exist* — including the all-important **minimal state** (required fields only), where empty-link and missing-image bugs live. Real content found one such bug on BHP by luck; derivation finds them systematically.
 3. **The hard rule.** Nothing ever writes to a real site's database. Seeding is therefore only possible in an environment that is disposable *by construction* — which is why Muster and the sandbox arrived together.
 
@@ -114,7 +114,7 @@ A small [Playwright reporter](https://playwright.dev/docs/test-reporters#custom-
 
 ### Fixtures — Muster's seeding pipeline
 
-`shakedown sandbox` runs a bundled PHP script via WP-CLI inside the sandbox: [`AcfJson`](MUSTER.md) reads the theme's `acf-json/`, extracts each group's seedable location (post type / page template / options page), and `AcfValueGenerator` produces values for ~25 ACF field types — recursing through repeaters, groups, and flexible content (one row per layout, so every layout renders at least once). Media fields get generated placeholder images (colour derived from the slug — deterministic), relational fields get stub posts/terms. Two variants per group: `populated` and `minimal`. Options-page groups seed once so the site chrome (header/footer) renders fully.
+`shakedown sandbox` runs a bundled PHP script via WP-CLI inside the sandbox: [`AcfJson`](MUSTER.md) reads the theme's `acf-json/`, extracts each group's seedable location (post type / page template / options page), and `AcfValueGenerator` produces values for ~25 ACF field types — recursing through repeaters, groups, and flexible content (one row per layout, so every layout renders at least once). Media fields get generated placeholder images (colour derived from the slug — deterministic), relational fields get stub posts/terms. Two variants per group: `populated` and `minimal`. Options-page groups seed once so the site chrome (header/footer) renders fully. One explicit seed and fixture epoch are passed into Muster; the same clock pins both generated ACF dates and fixture post dates.
 
 ### The sandbox assembly — SQLite + wp server
 
@@ -122,4 +122,4 @@ The [SQLite Database Integration plugin](https://github.com/WordPress/sqlite-dat
 
 ### CI — the reusable workflow
 
-The [workflow](https://github.com/pressgang-wp/pressgang-shakedown/blob/main/.github/workflows/shakedown.yml) checks the theme out *into* a WordPress-shaped tree, then: [`shivammathur/setup-php`](https://github.com/shivammathur/setup-php) (PHP + WP-CLI + Composer), `wp core download --skip-content`, `composer install` in the theme (parent + plugins land via installer-paths; ACF Pro credentials via the `COMPOSER_AUTH` secret — [Composer auth docs](https://getcomposer.org/doc/articles/authentication-for-private-packages.md)), Muster cloned for fixtures, Capstan installed for the oracle, then `npx shakedown sandbox`. Composer and [Playwright browser caches](https://playwright.dev/docs/ci#caching-browsers) keep warm runs fast; the Trial Report uploads as an artifact either way.
+The [workflow](https://github.com/pressgang-wp/pressgang-shakedown/blob/main/.github/workflows/shakedown.yml) checks the theme out *into* a WordPress-shaped tree, then: [`shivammathur/setup-php`](https://github.com/shivammathur/setup-php) (PHP + WP-CLI + Composer), `wp core download --skip-content`, `composer install` in the theme (parent + plugins land via installer-paths; ACF Pro credentials via the `COMPOSER_AUTH` secret — [Composer auth docs](https://getcomposer.org/doc/articles/authentication-for-private-packages.md)), the workflow's pinned `muster-ref` fetched for fixtures, Capstan installed for the oracle, then `npx shakedown sandbox`. Composer and [Playwright browser caches](https://playwright.dev/docs/ci#caching-browsers) keep warm runs fast; the Trial Report uploads as an artifact either way.
