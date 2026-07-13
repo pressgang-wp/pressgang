@@ -150,6 +150,11 @@ Posts, terms, and users use **merge-upsert** semantics:
 | Attachment | Attachment slug |
 | Menu | Menu name |
 
+New users must declare `->password('initial-password')`. Muster sends it only
+when `wp_insert_user()` creates the user. Later runs leave credentials untouched
+because WordPress stores a one-way hash that cannot be compared safely with the
+plaintext declaration.
+
 The other builders have deliberately different current behavior:
 
 * **Options** use WordPress's option upsert behavior.
@@ -398,7 +403,7 @@ sandbox, exercising both rich content and sparse-but-valid editorial states.
 | `$this->post('event')->key('event:1')` | Posts and custom post types |
 | `$this->page()->key('page:about')` | Pages |
 | `$this->term('event_type')->key('event-type:talk')` | Taxonomy terms |
-| `$this->user()->key('user:editor')` | WordPress users |
+| `$this->user('editor')->key('user:editor')->password('initial-password')` | WordPress users; passwords are create-only |
 | `$this->option('name')->key('option:name')` | WordPress options |
 | `$this->attachment('hero')->key('attachment:hero')` | Media attachments and deterministic placeholders |
 | `$this->menu('Main Menu')->key('menu:main')` | Navigation menus, items, nesting, and locations |
@@ -409,6 +414,25 @@ sandbox, exercising both rich content and sparse-but-valid editorial states.
 Refs returned by `save()` use real WordPress IDs without exposing database-table
 details. They can be passed to parents, menu items, attachment relationships,
 and featured-image assignments.
+
+## 🧪 Real WordPress verification
+
+Muster keeps its fast PHPUnit 11 suite for focused feedback and a separate
+WordPress 7/PHPUnit 9 integration harness for behavior that stubs cannot prove.
+The latter runs posts, terms, users, options, ownership, dry-run planning, merge
+updates, and pruning through real core APIs and a real MySQL test database.
+
+```bash
+export WP_TEST_DB_NAME=muster_test
+export WP_TEST_DB_USER=root
+export WP_TEST_DB_PASSWORD=secret
+export WP_TEST_DB_HOST=127.0.0.1
+bin/run-integration-tests.sh
+```
+
+The database must be disposable. WordPress's test harness installs and clears
+its prefixed tables. GitHub Actions runs the unit suite on PHP 8.3 and 8.4 plus
+the integration suite against WordPress 7.0.1.
 
 ## 🛳️ With the fleet
 
@@ -423,8 +447,8 @@ and featured-image assignments.
 
 Logical ownership, collision detection, adoption, owned reset/pruning, named
 declaration groups, a deterministic fixture clock, and the structured
-plan/apply lifecycle are implemented. The next priority is a real WordPress
-integration suite.
+plan/apply lifecycle are implemented and verified against real WordPress core.
+The next priorities are CommentBuilder and generic factory declarations.
 
 See the maintained
 [Muster roadmap](https://github.com/pressgang-wp/pressgang-muster/blob/main/ROADMAP.md)
