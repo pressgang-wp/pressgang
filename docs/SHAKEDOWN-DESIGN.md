@@ -26,11 +26,14 @@ The observer must run on **every request**, load **before plugins**, and require
 
 Three reasons real content can't be the fixture:
 
-1. **Determinism.** Visual snapshots and stable selectors need content that is byte-identical across runs and machines. [Muster](MUSTER.md) seeds via a seeded [Faker](https://fakerphp.org/) — same seed, same content, forever — and pins post dates so rendered dates never drift.
+1. **Determinism.** Visual snapshots and stable selectors need repeatable content across runs and machines. [Muster](MUSTER.md) supplies the seeded [Faker](https://fakerphp.org/) sequence, while Shakedown fixes the seed and pins post dates so rendered dates do not drift.
 2. **Denominators.** Real content only exercises the states editors happen to have created. Fixtures derived from `acf-json` exercise the states that *can exist* — including the all-important **minimal state** (required fields only), where empty-link and missing-image bugs live. Real content found one such bug on BHP by luck; derivation finds them systematically.
 3. **The hard rule.** Nothing ever writes to a real site's database. Seeding is therefore only possible in an environment that is disposable *by construction* — which is why Muster and the sandbox arrived together.
 
-Muster follows Laravel's seeder model (fluent builders, idempotent upserts, `--seed=N`) because it's the proven shape for this problem.
+Muster borrows useful seeder ergonomics from several frameworks, then adapts
+them to WordPress: fluent builders persist through core APIs, natural-key
+lookups avoid blind inserts, and `--seed=N` controls generated fixture values
+without introducing Models or an ORM.
 
 ### Why the sandbox is SQLite
 
