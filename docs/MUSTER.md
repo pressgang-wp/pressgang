@@ -52,6 +52,7 @@ resources are persisted. WP-CLI is required for the `wp capstan` commands.
 | `Victuals` | A curated Faker wrapper for seeded headlines, content, names, addresses, dates, and other fixture values. |
 | `Pattern` | Repeats a post-builder recipe a declared number of times with an optional pattern seed. |
 | Refs | Immutable handles such as `PostRef`, `TermRef`, and `MenuRef` used to connect saved resources. |
+| `RunReport` | Ordered `create`, `update`, `keep`, `prune`, and `conflict` results for one plan or apply pass. |
 | ACF generation | Reads `acf-json` field definitions and produces minimal or populated field values for coverage fixtures. |
 
 Patterns currently require a `PostBuilder`. Generic repeated declarations for
@@ -161,6 +162,37 @@ The persistence contract distinguishes three modes for that future lifecycle:
 (complete authoritative state). Merge is the current default; ensure and
 replace are not yet public builder modes.
 
+### Inspectable plan and apply
+
+Every CLI command runs the Muster in a read-only planning context first. The
+plan resolves current WordPress resources and reports one of five operations:
+
+| Operation | Meaning |
+| --- | --- |
+| `create` | No owned or adopted resource currently exists. |
+| `update` | The owned declaration differs or has authoritative side effects. |
+| `keep` | Comparable declared state already matches WordPress. |
+| `prune` | An owned or explicitly truncated resource will be deleted. |
+| `conflict` | Ownership or locator safety prevents application. |
+
+Without `--dry-run`, Muster prints the plan and then performs a second pass that
+re-resolves WordPress state and applies the declarations. Planning conflicts
+stop before any application writes. WordPress has no transaction spanning all
+of its resource APIs, so the application pass validates again rather than
+treating the earlier reads as a lock.
+
+{% hint style="warning" %}
+A normal CLI application calls `run()` twice: once to plan and once to apply.
+Keep `run()` declarative. Do not send email, call remote APIs, or perform writes
+outside Muster builders.
+{% endhint %}
+
+Core post, term, user, and option fields can be proven unchanged and reported
+as `keep`. ACF/meta/taxonomy payloads and authoritative menu rebuilds are
+conservatively reported as updates until their adapters expose comparable read
+contracts. Programmatic integrations can inspect
+`$context->report()->operations()`, `summary()`, or `toArray()`.
+
 ### Ownership, adoption, and cleanup
 
 Muster stores ownership records in the non-autoloaded
@@ -198,8 +230,9 @@ locations, and ACF JSON:
 wp capstan make muster          # preview src/Muster/SiteMuster.php
 wp capstan make muster --force  # write it once
 wp capstan seed --seed=1234     # run the conventional SiteMuster
-wp capstan seed --dry-run       # show current intent without writes
+wp capstan seed --dry-run       # resolve and report the plan without writes
 wp capstan seed --fresh         # reset this Muster's owned resources, then run
+wp capstan seed --format=json   # machine-readable plan and apply reports
 ```
 {% endcode %}
 
@@ -216,8 +249,14 @@ level command:
 wp capstan muster App\\Muster\\DemoMuster --seed=1234
 wp capstan muster App\\Muster\\DemoMuster --dry-run
 wp capstan muster App\\Muster\\DemoMuster --only=events
+wp capstan muster App\\Muster\\DemoMuster --format=json
 ```
 {% endcode %}
+
+`--dry-run` performs the full read-only planning pass and stops before
+application. `--format=json` suppresses human log lines and emits one object
+containing `status`, ordered `operations`, and per-action `summary` values for
+the plan and optional apply pass. It is suitable for CI checks and tooling.
 
 `--only` currently filters named **Patterns**, not direct builder calls.
 Combining it with `--fresh` intentionally clears all resources owned by the
@@ -316,10 +355,10 @@ and featured-image assignments.
 
 ## 🧭 Current roadmap
 
-Logical keys, ownership metadata, collision detection, adoption, and owned-only
-reset/pruning are implemented. The next priority is an inspectable plan/apply
-lifecycle with structured results, followed by named groups and a deterministic
-fixture clock.
+Logical ownership, collision detection, adoption, owned reset/pruning, and the
+structured plan/apply lifecycle are implemented. The next priority is named
+declaration groups, followed by a deterministic fixture clock and a real
+WordPress integration suite.
 
 See the maintained
 [Muster roadmap](https://github.com/pressgang-wp/pressgang-muster/blob/main/ROADMAP.md)
