@@ -8,7 +8,7 @@ description: >-
 
 Aboard ship, a muster assembles the crew and accounts for every hand. In a
 WordPress project, [Muster](https://github.com/pressgang-wp/pressgang-muster)
-assembles content: posts, pages, terms, users, options, menus, and media created
+assembles content: posts, pages, terms, users, options, comments, menus, and media created
 through WordPress and plugin APIs.
 
 Muster is a **WordPress-native toolkit for deterministic content provisioning
@@ -102,6 +102,15 @@ final class SiteMuster extends Muster
                 ->link('Contact', '/contact/')
                 ->location('main-menu')
                 ->save();
+
+            $this->comment($about)
+                ->key('comment:about:welcome')
+                ->author('Fixture Editor')
+                ->email('fixtures@example.test')
+                ->date($this->at('+1 day')->format('Y-m-d H:i:s'))
+                ->content('Welcome to the fixture discussion.')
+                ->status('approve')
+                ->save();
         });
 
         $this->group('events', function (): void {
@@ -132,7 +141,7 @@ Every builder created through a Muster requires an explicit `key()`. The
 concrete Muster class and logical key are stable identity; the native
 WordPress locator is how Muster discovers or updates the current object.
 
-Posts, terms, and users use **merge-upsert** semantics:
+Posts, terms, users, and comments use **merge-upsert** semantics:
 
 1. Resolve an owned resource by Muster class and logical key.
 2. Check the current WordPress locator for collisions.
@@ -147,6 +156,7 @@ Posts, terms, and users use **merge-upsert** semantics:
 | Term | Taxonomy + slug |
 | User | Login |
 | Option | Option name |
+| Comment or reply | Post + parent + type + author identity + deterministic GMT date |
 | Attachment | Attachment slug |
 | Menu | Menu name |
 
@@ -154,6 +164,13 @@ New users must declare `->password('initial-password')`. Muster sends it only
 when `wp_insert_user()` creates the user. Later runs leave credentials untouched
 because WordPress stores a one-way hash that cannot be compared safely with the
 plaintext declaration.
+
+Comments have no slug, so their native locator uses the target post, parent,
+comment type, author email (or name), and GMT date. Comment content remains a
+mutable field and can be revised without creating a duplicate. Pin `date()` or
+define a scenario epoch so an otherwise identical declaration has a stable
+locator across invocations. `CommentRef` can be passed to `parent()` to build
+threaded replies.
 
 The other builders have deliberately different current behavior:
 
@@ -405,6 +422,7 @@ sandbox, exercising both rich content and sparse-but-valid editorial states.
 | `$this->term('event_type')->key('event-type:talk')` | Taxonomy terms |
 | `$this->user('editor')->key('user:editor')->password('initial-password')` | WordPress users; passwords are create-only |
 | `$this->option('name')->key('option:name')` | WordPress options |
+| `$this->comment($post)->key('comment:welcome')` | Comments and threaded replies |
 | `$this->attachment('hero')->key('attachment:hero')` | Media attachments and deterministic placeholders |
 | `$this->menu('Main Menu')->key('menu:main')` | Navigation menus, items, nesting, and locations |
 | `$this->resetOwned()` | Every resource owned by this concrete Muster |
@@ -412,14 +430,14 @@ sandbox, exercising both rich content and sparse-but-valid editorial states.
 | `$this->truncate()` | Immediate destructive post-type or taxonomy reset |
 
 Refs returned by `save()` use real WordPress IDs without exposing database-table
-details. They can be passed to parents, menu items, attachment relationships,
-and featured-image assignments.
+details. They can be passed to post and comment parents, menu items, attachment
+relationships, and featured-image assignments.
 
 ## 🧪 Real WordPress verification
 
 Muster keeps its fast PHPUnit 11 suite for focused feedback and a separate
 WordPress 7/PHPUnit 9 integration harness for behavior that stubs cannot prove.
-The latter runs posts, terms, users, options, ownership, dry-run planning, merge
+The latter runs posts, terms, users, options, comments, ownership, dry-run planning, merge
 updates, and pruning through real core APIs and a real MySQL test database.
 
 ```bash
@@ -446,9 +464,9 @@ the integration suite against WordPress 7.0.1.
 ## 🧭 Current roadmap
 
 Logical ownership, collision detection, adoption, owned reset/pruning, named
-declaration groups, a deterministic fixture clock, and the structured
+declaration groups, a deterministic fixture clock, comments, and the structured
 plan/apply lifecycle are implemented and verified against real WordPress core.
-The next priorities are CommentBuilder and generic factory declarations.
+The next priority is generic factory declarations.
 
 See the maintained
 [Muster roadmap](https://github.com/pressgang-wp/pressgang-muster/blob/main/ROADMAP.md)
