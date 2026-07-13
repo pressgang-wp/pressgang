@@ -1,7 +1,7 @@
 ---
 description: >-
-  WordPress-native deterministic content provisioning and development fixtures,
-  with fluent builders, seeded fake data, and ACF-derived coverage states.
+  WordPress-native deterministic content provisioning with stable ownership,
+  fluent builders, seeded fake data, and ACF-derived development fixtures.
 ---
 
 # 🍪 Muster
@@ -48,6 +48,7 @@ resources are persisted. WP-CLI is required for the `wp capstan` commands.
 | --- | --- |
 | `Muster` | The orchestration entry point. A subclass implements `run()` and describes one provisioning flow. |
 | Builders | Collect intent for one WordPress resource and write it through the relevant WordPress API on `save()`. |
+| Logical keys | Stable identity within one concrete Muster class, independent of mutable WordPress locators such as slugs. |
 | `Victuals` | A curated Faker wrapper for seeded headlines, content, names, addresses, dates, and other fixture values. |
 | `Pattern` | Repeats a post-builder recipe a declared number of times with an optional pattern seed. |
 | Refs | Immutable handles such as `PostRef`, `TermRef`, and `MenuRef` used to connect saved resources. |
@@ -71,6 +72,7 @@ final class SiteMuster extends Muster
     public function run(): void
     {
         $about = $this->page()
+            ->key('page:about')
             ->title('About us')
             ->slug('about-us')
             ->status('publish')
@@ -79,12 +81,14 @@ final class SiteMuster extends Muster
             ->save();
 
         $this->attachment('about-hero')
+            ->key('attachment:about-hero')
             ->placeholder(1200, 800, 'About us')
             ->alt('Our team at work')
             ->featuredOn($about)
             ->save();
 
         $this->menu('Main Menu')
+            ->key('menu:main')
             ->postItem($about, 'About')
             ->link('Contact', '/contact/')
             ->location('main-menu')
@@ -95,6 +99,7 @@ final class SiteMuster extends Muster
             ->count(5)
             ->build(
                 fn (int $i) => $this->post('event')
+                    ->key('event:' . $i)
                     ->title($this->victuals()->headline())
                     ->slug('event-' . $i)
                     ->status('publish')
@@ -111,12 +116,17 @@ Every write goes through WordPress-native functions such as `wp_insert_post()`,
 
 ## 🔁 Persistence semantics
 
-Posts, terms, and users currently use **merge-upsert** semantics:
+Every builder created through a Muster requires an explicit `key()`. The
+concrete Muster class and logical key are stable identity; the native
+WordPress locator is how Muster discovers or updates the current object.
 
-1. Find an existing resource by its documented natural key.
-2. Create it when it does not exist.
-3. When it exists, update only fields explicitly supplied to the builder.
-4. Preserve omitted WordPress fields; passing an empty value explicitly clears
+Posts, terms, and users use **merge-upsert** semantics:
+
+1. Resolve an owned resource by Muster class and logical key.
+2. Check the current WordPress locator for collisions.
+3. Create it when it does not exist.
+4. When it exists, update only fields explicitly supplied to the builder.
+5. Preserve omitted WordPress fields; passing an empty value explicitly clears
    a field.
 
 | Resource | Current locator |
@@ -140,16 +150,42 @@ The other builders have deliberately different current behavior:
   term in the selected taxonomy.
 
 {% hint style="warning" %}
-Natural-key lookup does not yet prove that Muster owns the matching resource.
-An existing page, user, term, attachment, or menu may have been created by an
-editor or another tool. Ownership metadata, collision detection, owned-only
-reset, and stale-resource pruning are the next reconciliation milestone.
+Natural-key lookup does not prove ownership. If a matching resource exists but
+is not registered to this Muster key, saving fails. Call `adopt()` only when the
+declaration is intentionally taking responsibility for that existing object.
+Adoption never steals a resource already owned by another Muster or key.
 {% endhint %}
 
 The persistence contract distinguishes three modes for that future lifecycle:
 `ensure` (create only), `merge` (update supplied fields), and `replace`
 (complete authoritative state). Merge is the current default; ensure and
 replace are not yet public builder modes.
+
+### Ownership, adoption, and cleanup
+
+Muster stores ownership records in the non-autoloaded
+`pressgang_muster_registry` WordPress option. Records contain the concrete
+Muster class, logical key, resource kind, WordPress ID, subtype, and current
+locator. WordPress remains the source of truth for the resource itself.
+
+```php
+$this->page()
+    ->key('page:about')
+    ->adopt() // required only to claim a pre-existing unowned page
+    ->title('About us')
+    ->slug('about-us')
+    ->save();
+
+$this->resetOwned();
+$this->pruneOwned(); // after a complete run, remove keys not touched this run
+$this->pruneOwned(['page:seasonal']); // optionally retain conditional keys too
+```
+
+`resetOwned()` deletes every registered resource owned by that concrete Muster
+class. `pruneOwned()` automatically keeps keys saved in the current run,
+including reserved `acf:*` support keys, and deletes stale owned resources. Its
+optional array means “also keep.” Never prune after a partial `--only` run.
+Both operations leave editor-created and other unowned WordPress content alone.
 
 ## 🌱 Conventional development seed
 
@@ -163,13 +199,13 @@ wp capstan make muster          # preview src/Muster/SiteMuster.php
 wp capstan make muster --force  # write it once
 wp capstan seed --seed=1234     # run the conventional SiteMuster
 wp capstan seed --dry-run       # show current intent without writes
-wp capstan seed --fresh         # call SiteMuster::fresh(), then run
+wp capstan seed --fresh         # reset this Muster's owned resources, then run
 ```
 {% endcode %}
 
 The generated file is a starting point owned by the child theme and is never
 overwritten by the scaffold command. Edit its sample counts, names, content,
-relationships, and reset policy to fit the project.
+relationships, and logical keys to fit the project.
 
 `wp capstan seed` refuses to run when `WP_ENVIRONMENT_TYPE` is `production`.
 There is no override flag. Code can also run a named Muster through the lower
@@ -183,15 +219,14 @@ wp capstan muster App\\Muster\\DemoMuster --only=events
 ```
 {% endcode %}
 
-`--only` currently filters named **Patterns**, not direct builder calls. Avoid
-combining `--fresh` and `--only` unless the Muster's `fresh()` implementation is
-explicitly designed for a partial run.
+`--only` currently filters named **Patterns**, not direct builder calls.
+Combining it with `--fresh` intentionally clears all resources owned by the
+Muster and then rebuilds only the selected Patterns plus direct declarations.
 
-{% hint style="danger" %}
-`--fresh` is not an ownership-aware rollback. The scaffolded `fresh()` uses
-`truncate()`, which can remove non-Muster content of the configured types. Use
-it only on disposable environments or a development database whose contents
-you are prepared to lose.
+{% hint style="info" %}
+`--fresh` is ownership-aware and requires no custom `fresh()` method. The broad
+`truncate()` builder remains available for deliberately disposable databases,
+but Capstan's conventional fresh seed does not use it.
 {% endhint %}
 
 ## 🎲 Determinism
@@ -225,6 +260,7 @@ definition in seed code:
 
 ```php
 $this->post('event')
+    ->key('event:example')
     ->title('Example event')
     ->slug('example-event')
     ->acf($this->acfFor('event'))
@@ -240,7 +276,8 @@ The generator handles common scalar fields plus groups, repeaters, flexible
 content, galleries, and relational fields. Relational and media fields need
 real WordPress IDs, so `Muster::acfFor()` may create deterministic supporting
 attachments, posts, or terms through its providers. Treat it as provisioning,
-not as a side-effect-free value lookup.
+not as a side-effect-free value lookup. Those supporting resources receive
+reserved `acf:*` logical keys and are owned by the calling Muster.
 
 When ACF is active, the CLI wires `LiveAcfAdapter` and writes through
 `update_field()`. When ACF is unavailable, ACF payloads are not persisted.
@@ -253,13 +290,15 @@ sandbox, exercising both rich content and sparse-but-valid editorial states.
 
 | Entry point | Creates or updates |
 | --- | --- |
-| `$this->post('event')` | Posts and custom post types |
-| `$this->page()` | Pages |
-| `$this->term('event_type')` | Taxonomy terms |
-| `$this->user()` | WordPress users |
-| `$this->option('name')` | WordPress options |
-| `$this->attachment('hero')` | Media attachments and deterministic placeholders |
-| `$this->menu('Main Menu')` | Navigation menus, items, nesting, and locations |
+| `$this->post('event')->key('event:1')` | Posts and custom post types |
+| `$this->page()->key('page:about')` | Pages |
+| `$this->term('event_type')->key('event-type:talk')` | Taxonomy terms |
+| `$this->user()->key('user:editor')` | WordPress users |
+| `$this->option('name')->key('option:name')` | WordPress options |
+| `$this->attachment('hero')->key('attachment:hero')` | Media attachments and deterministic placeholders |
+| `$this->menu('Main Menu')->key('menu:main')` | Navigation menus, items, nesting, and locations |
+| `$this->resetOwned()` | Every resource owned by this concrete Muster |
+| `$this->pruneOwned([...])` | Stale owned resources not touched or additionally retained |
 | `$this->truncate()` | Immediate destructive post-type or taxonomy reset |
 
 Refs returned by `save()` use real WordPress IDs without exposing database-table
@@ -277,10 +316,10 @@ and featured-image assignments.
 
 ## 🧭 Current roadmap
 
-The next priority is trustworthy reconciliation: stable logical keys, ownership
-metadata, collision detection, an inspectable plan/apply lifecycle, and
-owned-only reset and pruning. Generic Patterns and additional builders come
-after those safety semantics.
+Logical keys, ownership metadata, collision detection, adoption, and owned-only
+reset/pruning are implemented. The next priority is an inspectable plan/apply
+lifecycle with structured results, followed by named groups and a deterministic
+fixture clock.
 
 See the maintained
 [Muster roadmap](https://github.com/pressgang-wp/pressgang-muster/blob/main/ROADMAP.md)
