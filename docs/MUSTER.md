@@ -50,6 +50,7 @@ resources are persisted. WP-CLI is required for the `wp capstan` commands.
 | Builders | Collect intent for one WordPress resource and write it through the relevant WordPress API on `save()`. |
 | Logical keys | Stable identity within one concrete Muster class, independent of mutable WordPress locators such as slugs. |
 | `Victuals` | A curated Faker wrapper for seeded headlines, content, names, addresses, dates, and other fixture values. |
+| Fixture clock | One immutable epoch for relative dates, independent of Faker's random seed. |
 | Groups | Named callback boundaries selected by `--only`; skipped callbacks are not evaluated. |
 | `Pattern` | Repeats a post-builder recipe a declared number of times with an optional pattern seed. |
 | Refs | Immutable handles such as `PostRef`, `TermRef`, and `MenuRef` used to connect saved resources. |
@@ -71,6 +72,11 @@ use PressGang\Muster\Muster;
 
 final class SiteMuster extends Muster
 {
+    public static function defaultEpoch(): string
+    {
+        return '2026-01-01 09:00:00+00:00';
+    }
+
     public function run(): void
     {
         $this->group('site-shell', function (): void {
@@ -240,6 +246,7 @@ locations, and ACF JSON:
 wp capstan make muster          # preview src/Muster/SiteMuster.php
 wp capstan make muster --force  # write it once
 wp capstan seed --seed=1234     # run the conventional SiteMuster
+wp capstan seed --epoch="2026-01-01 09:00:00+00:00" # override its clock
 wp capstan seed --dry-run       # resolve and report the plan without writes
 wp capstan seed --fresh         # reset this Muster's owned resources, then run
 wp capstan seed --only=content:event # run one generated declaration group
@@ -248,7 +255,7 @@ wp capstan seed --format=json   # machine-readable plan and apply reports
 {% endcode %}
 
 The generated file is a starting point owned by the child theme and is never
-overwritten by the scaffold command. It creates groups such as
+overwritten by the scaffold command. It pins a `defaultEpoch()` and creates groups such as
 `taxonomy:event_type`, `content:event`, `page:contact`, and `menu:main-menu`.
 Edit its sample counts, names, content, relationships, group names, and logical
 keys to fit the project.
@@ -306,7 +313,8 @@ but Capstan's conventional fresh seed does not use it.
 
 ## 🎲 Determinism
 
-An explicit seed gives Faker-backed values a repeatable sequence:
+Randomness and time are separate inputs. An explicit seed gives Faker-backed
+values a repeatable sequence:
 
 ```bash
 wp capstan seed --seed=1978
@@ -316,13 +324,34 @@ A Pattern seed overrides the run seed for that Pattern. Calls within a Pattern
 share one scoped `Victuals` instance, so the sequence is stable when the seed,
 call order, locale, and inputs are stable.
 
-There are two important limits:
+The fixture epoch defines what relative dates mean. Capstan-generated scenarios
+override `defaultEpoch()`, and any Muster can do the same:
+
+```php
+public static function defaultEpoch(): string
+{
+    return '2026-01-01 09:00:00+00:00';
+}
+```
+
+Use `$this->epoch()` for the reference instant and `$this->at('+1 week')` for a
+resolved date. Victuals `date()`, `datetime()`, and `dateBetween()` use that same
+clock. Override a scenario temporarily with:
+
+```bash
+wp capstan seed --epoch="2027-04-05 09:00:00+00:00"
+```
+
+An explicit CLI epoch takes precedence over `defaultEpoch()`. Without either,
+Muster captures the system clock once and shares it across plan and apply. That
+keeps one invocation coherent but does not make separate invocations repeatable.
+
+There are two remaining limits:
 
 * Faker's seeding uses PHP's global `mt_rand` stream. Interleaving independently
   seeded Faker instances can change their sequences.
-* Relative date boundaries such as `dateBetween('+1 week', '+6 months')` depend
-  on the current clock. Pin dates explicitly for visual fixtures. A separate
-  deterministic fixture epoch is planned.
+* Direct access through `victuals()->raw()` bypasses Muster's curated clock
+  behavior.
 
 [Shakedown](SHAKEDOWN.md) supplies a fixed seed and pins published dates inside
 its disposable sandbox, which keeps its generated visual fixtures stable.
@@ -393,8 +422,8 @@ and featured-image assignments.
 ## 🧭 Current roadmap
 
 Logical ownership, collision detection, adoption, owned reset/pruning, named
-declaration groups, and the structured plan/apply lifecycle are implemented.
-The next priorities are a deterministic fixture clock and a real WordPress
+declaration groups, a deterministic fixture clock, and the structured
+plan/apply lifecycle are implemented. The next priority is a real WordPress
 integration suite.
 
 See the maintained
