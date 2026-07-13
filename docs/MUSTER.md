@@ -52,13 +52,14 @@ resources are persisted. WP-CLI is required for the `wp capstan` commands.
 | `Victuals` | A curated Faker wrapper for seeded headlines, content, names, addresses, dates, and other fixture values. |
 | Fixture clock | One immutable epoch for relative dates, independent of Faker's random seed. |
 | Groups | Named callback boundaries selected by `--only`; skipped callbacks are not evaluated. |
-| `Pattern` | Repeats a post-builder recipe a declared number of times with an optional pattern seed. |
-| Refs | Immutable handles such as `PostRef`, `TermRef`, and `MenuRef` used to connect saved resources. |
+| `Pattern` | Repeats any `PersistableDeclaration` recipe a declared number of times with an optional pattern seed. |
+| Definitions, states, and sequences | Reusable builder factories, named declaration transformations, and immutable cycling iteration values. |
+| Refs | Immutable save results plus logical-key `LazyRef` handles resolved by consuming builders at save-time. |
 | `RunReport` | Ordered `create`, `update`, `keep`, `prune`, and `conflict` results for one plan or apply pass. |
 | ACF generation | Reads `acf-json` field definitions and produces minimal or populated field values for coverage fixtures. |
 
-Patterns currently require a `PostBuilder`. Generic repeated declarations for
-terms, users, attachments, and other resources remain future work.
+Patterns can repeat posts, terms, users, options, comments, attachments, menus,
+or a custom declaration implementing `PersistableDeclaration`.
 
 ## ✍️ A Muster in practice
 
@@ -134,6 +135,70 @@ final class SiteMuster extends Muster
 Every write goes through WordPress-native functions such as `wp_insert_post()`,
 `wp_update_post()`, `wp_insert_term()`, `wp_update_user()`, and
 `wp_update_nav_menu_item()`. ACF values use its public `update_field()` API.
+
+### Reusable definitions and factory variants
+
+Definitions reuse ordinary WordPress builders; they do not introduce Models or
+attribute maps. States are named builder transformations, and Sequences derive
+cycling values from the one-based Pattern index without a mutable cursor:
+
+```php
+$status = $this->sequence('draft', 'publish');
+$event = $this->definition(
+    'event',
+    fn (int $i) => $this->post('event')
+        ->key('event:' . $i)
+        ->slug('event-' . $i)
+        ->status($status->at($i))
+)->state(
+    'featured',
+    fn ($builder, int $i) => $builder->meta(['featured' => true])
+);
+
+$this->pattern('events')
+    ->count(6)
+    ->after('welcome-comment', fn ($post, int $i) =>
+        $this->comment($post)
+            ->key('comment:event:' . $i)
+            ->author('Fixture Editor')
+            ->content('Welcome')
+    )
+    ->using($event->with('featured'));
+```
+
+An after-hook may return a persistable declaration, an iterable of declarations,
+or `null`. Muster saves those returned builders in both plan and apply, so every
+related resource appears in structured output. The callback itself must not
+perform an unrelated or invisible write.
+
+### Ordered Musters and logical-key references
+
+Split a large scenario into focused dependencies without creating separate run
+state:
+
+```php
+$this->call(UserMuster::class, EventMuster::class);
+```
+
+Called Musters share the clock, seeded Victuals stream, ownership registry,
+group selection, and report. Calls run in declared order; recursion and duplicate
+execution fail with a dependency-path diagnostic.
+
+`ref()` addresses the same stable logical key used for ownership. It can be
+captured before the target exists because a consuming builder resolves it on
+`save()`:
+
+```php
+$about = $this->ref('page:about');
+$menu = $this->menu('Main Menu')->key('menu:main')->postItem($about, 'About');
+
+$this->page()->key('page:about')->title('About')->slug('about')->save();
+$menu->save();
+```
+
+On a clean first run, save the target before its consumer. To reference a key
+owned by a called Muster, pass that Muster class explicitly as the second
+argument: `$this->ref('user:editor', UserMuster::class)`.
 
 ## 🔁 Persistence semantics
 
@@ -273,6 +338,8 @@ wp capstan seed --dry-run       # resolve and report the plan without writes
 wp capstan seed --fresh         # reset this Muster's owned resources, then run
 wp capstan seed --only=content:event # run one generated declaration group
 wp capstan seed --format=json   # machine-readable plan and apply reports
+wp capstan seed --verbose       # builder and operation identity details
+wp capstan seed --quiet         # suppress successful human output
 ```
 {% endcode %}
 
@@ -292,6 +359,7 @@ wp capstan muster App\\Muster\\DemoMuster --seed=1234
 wp capstan muster App\\Muster\\DemoMuster --dry-run
 wp capstan muster App\\Muster\\DemoMuster --only=events
 wp capstan muster App\\Muster\\DemoMuster --format=json
+wp capstan muster App\\Muster\\DemoMuster --verbose
 ```
 {% endcode %}
 
@@ -299,6 +367,10 @@ wp capstan muster App\\Muster\\DemoMuster --format=json
 application. `--format=json` suppresses human log lines and emits one object
 containing `status`, ordered `operations`, and per-action `summary` values for
 the plan and optional apply pass. It is suitable for CI checks and tooling.
+`--verbose` also prints builder diagnostics and complete operation identity
+fields. `--quiet` suppresses progress, reports, and completion text on a
+successful human-readable run; errors remain visible. An explicitly requested
+JSON payload is still emitted.
 
 `--only` filters named declaration **groups**. Use an explicit callback boundary
 around every independently selectable part of the scenario:
@@ -378,6 +450,18 @@ There are two remaining limits:
 [Shakedown](SHAKEDOWN.md) supplies a fixed seed and pins published dates inside
 its disposable sandbox, which keeps its generated visual fixtures stable.
 
+Victuals also supplies higher-level WordPress-shaped content:
+
+* `imageUrl($width, $height, $label)` returns a seeded, self-contained SVG data
+  URL with no external placeholder service. Attachment fixtures can continue to
+  use `AttachmentBuilder::placeholder()` for a real Media Library object.
+* `gutenbergBlocks($paragraphs)` emits serialized core heading and paragraph blocks.
+* `richContent($sections)` emits escaped semantic HTML with headings, lists,
+  links, and a blockquote.
+* `repeaterRows($count, $schema)` builds ACF-shaped row arrays. Callable schema
+  values receive the Victuals instance and one-based row index; constants are
+  copied into each row.
+
 ## 🧬 ACF-derived coverage fixtures
 
 `acf-json` is the machine-readable description of a theme's editorial surface.
@@ -431,7 +515,8 @@ sandbox, exercising both rich content and sparse-but-valid editorial states.
 
 Refs returned by `save()` use real WordPress IDs without exposing database-table
 details. They can be passed to post and comment parents, menu items, attachment
-relationships, and featured-image assignments.
+relationships, and featured-image assignments. `ref('logical:key')` provides a
+save-time handle backed by the same ownership registry.
 
 ## 🧪 Real WordPress verification
 
@@ -452,6 +537,13 @@ The database must be disposable. WordPress's test harness installs and clears
 its prefixed tables. GitHub Actions runs the unit suite on PHP 8.3 and 8.4 plus
 the integration suite against WordPress 7.0.1.
 
+Test cases can `use AssertsWordPressFixtures` for focused post, term, user,
+option, and comment assertions. `MusterSnapshot::serialize()` and
+`assertMatches()` produce versioned structured-report JSON for regression
+checks. Volatile WordPress IDs are omitted by default; include them explicitly
+only when the database lifecycle makes them stable. Snapshot creation or
+replacement requires an explicit `write()` call.
+
 ## 🛳️ With the fleet
 
 * **[Capstan](CAPSTAN.md)** scaffolds the theme's `SiteMuster` and hosts the
@@ -463,10 +555,11 @@ the integration suite against WordPress 7.0.1.
 
 ## 🧭 Current roadmap
 
-Logical ownership, collision detection, adoption, owned reset/pruning, named
-declaration groups, a deterministic fixture clock, comments, and the structured
-plan/apply lifecycle are implemented and verified against real WordPress core.
-The next priority is generic factory declarations.
+Every currently charted milestone is implemented: ownership-aware plan/apply,
+all builders, generic Patterns, definitions/states/sequences, inspectable hooks,
+ordered chaining, logical-key refs, ACF and Victuals generation, CLI progress
+and output modes, plus testing utilities. Core persistence and lazy-reference
+behavior are verified against real WordPress.
 
 See the maintained
 [Muster roadmap](https://github.com/pressgang-wp/pressgang-muster/blob/main/ROADMAP.md)
