@@ -50,6 +50,7 @@ resources are persisted. WP-CLI is required for the `wp capstan` commands.
 | Builders | Collect intent for one WordPress resource and write it through the relevant WordPress API on `save()`. |
 | Logical keys | Stable identity within one concrete Muster class, independent of mutable WordPress locators such as slugs. |
 | `Victuals` | A curated Faker wrapper for seeded headlines, content, names, addresses, dates, and other fixture values. |
+| Groups | Named callback boundaries selected by `--only`; skipped callbacks are not evaluated. |
 | `Pattern` | Repeats a post-builder recipe a declared number of times with an optional pattern seed. |
 | Refs | Immutable handles such as `PostRef`, `TermRef`, and `MenuRef` used to connect saved resources. |
 | `RunReport` | Ordered `create`, `update`, `keep`, `prune`, and `conflict` results for one plan or apply pass. |
@@ -72,40 +73,44 @@ final class SiteMuster extends Muster
 {
     public function run(): void
     {
-        $about = $this->page()
-            ->key('page:about')
-            ->title('About us')
-            ->slug('about-us')
-            ->status('publish')
-            ->date('2026-01-01 09:00:00')
-            ->content($this->victuals()->paragraphs(3))
-            ->save();
+        $this->group('site-shell', function (): void {
+            $about = $this->page()
+                ->key('page:about')
+                ->title('About us')
+                ->slug('about-us')
+                ->status('publish')
+                ->date('2026-01-01 09:00:00')
+                ->content($this->victuals()->paragraphs(3))
+                ->save();
 
-        $this->attachment('about-hero')
-            ->key('attachment:about-hero')
-            ->placeholder(1200, 800, 'About us')
-            ->alt('Our team at work')
-            ->featuredOn($about)
-            ->save();
+            $this->attachment('about-hero')
+                ->key('attachment:about-hero')
+                ->placeholder(1200, 800, 'About us')
+                ->alt('Our team at work')
+                ->featuredOn($about)
+                ->save();
 
-        $this->menu('Main Menu')
-            ->key('menu:main')
-            ->postItem($about, 'About')
-            ->link('Contact', '/contact/')
-            ->location('main-menu')
-            ->save();
+            $this->menu('Main Menu')
+                ->key('menu:main')
+                ->postItem($about, 'About')
+                ->link('Contact', '/contact/')
+                ->location('main-menu')
+                ->save();
+        });
 
-        $this->pattern('events')
-            ->seed(1201)
-            ->count(5)
-            ->build(
-                fn (int $i) => $this->post('event')
-                    ->key('event:' . $i)
-                    ->title($this->victuals()->headline())
-                    ->slug('event-' . $i)
-                    ->status('publish')
-                    ->date('2026-01-01 09:00:00')
-            );
+        $this->group('events', function (): void {
+            $this->pattern('event-fixtures')
+                ->seed(1201)
+                ->count(5)
+                ->build(
+                    fn (int $i) => $this->post('event')
+                        ->key('event:' . $i)
+                        ->title($this->victuals()->headline())
+                        ->slug('event-' . $i)
+                        ->status('publish')
+                        ->date('2026-01-01 09:00:00')
+                );
+        });
     }
 }
 ```
@@ -192,6 +197,8 @@ as `keep`. ACF/meta/taxonomy payloads and authoritative menu rebuilds are
 conservatively reported as updates until their adapters expose comparable read
 contracts. Programmatic integrations can inspect
 `$context->report()->operations()`, `summary()`, or `toArray()`.
+Each structured operation includes the declaration `group` that produced it,
+or `null` for an ungrouped complete run or orchestration-level operation.
 
 ### Ownership, adoption, and cleanup
 
@@ -219,6 +226,9 @@ including reserved `acf:*` support keys, and deletes stale owned resources. Its
 optional array means “also keep.” Never prune after a partial `--only` run.
 Both operations leave editor-created and other unowned WordPress content alone.
 
+Muster enforces that rule: `resetOwned()` and `pruneOwned()` declarations fail
+when `--only` is active because they reconcile the complete ownership scope.
+
 ## 🌱 Conventional development seed
 
 [Capstan](CAPSTAN.md) can inspect the active theme and scaffold a starting
@@ -232,13 +242,16 @@ wp capstan make muster --force  # write it once
 wp capstan seed --seed=1234     # run the conventional SiteMuster
 wp capstan seed --dry-run       # resolve and report the plan without writes
 wp capstan seed --fresh         # reset this Muster's owned resources, then run
+wp capstan seed --only=content:event # run one generated declaration group
 wp capstan seed --format=json   # machine-readable plan and apply reports
 ```
 {% endcode %}
 
 The generated file is a starting point owned by the child theme and is never
-overwritten by the scaffold command. Edit its sample counts, names, content,
-relationships, and logical keys to fit the project.
+overwritten by the scaffold command. It creates groups such as
+`taxonomy:event_type`, `content:event`, `page:contact`, and `menu:main-menu`.
+Edit its sample counts, names, content, relationships, group names, and logical
+keys to fit the project.
 
 `wp capstan seed` refuses to run when `WP_ENVIRONMENT_TYPE` is `production`.
 There is no override flag. Code can also run a named Muster through the lower
@@ -258,9 +271,32 @@ application. `--format=json` suppresses human log lines and emits one object
 containing `status`, ordered `operations`, and per-action `summary` values for
 the plan and optional apply pass. It is suitable for CI checks and tooling.
 
-`--only` currently filters named **Patterns**, not direct builder calls.
-Combining it with `--fresh` intentionally clears all resources owned by the
-Muster and then rebuilds only the selected Patterns plus direct declarations.
+`--only` filters named declaration **groups**. Use an explicit callback boundary
+around every independently selectable part of the scenario:
+
+```php
+$this->group('events', function (): void {
+    $this->page()->key('page:events')->title('Events')->slug('events')->save();
+
+    $this->pattern('event-fixtures')->count(5)->build(
+        fn (int $i) => $this->event()
+            ->key('event:' . $i)
+            ->title($this->victuals()->headline())
+            ->slug('event-' . $i)
+    );
+});
+```
+
+A skipped callback is never invoked. Direct builders, Patterns, Victuals calls,
+and ACF support provisioning inside it therefore perform no reads, writes, or
+random draws. Names must be non-empty and unique within one pass; groups cannot
+be nested. Unknown `--only` names fail rather than silently doing nothing.
+
+When `--only` is active, data declarations outside groups plus `resetOwned()`
+and `pruneOwned()` declarations also fail. Without `--only`, ungrouped
+declarations remain valid. Combining the filter with `--fresh` intentionally
+clears all resources owned by the Muster as a CLI lifecycle step and then
+rebuilds only the selected groups.
 
 {% hint style="info" %}
 `--fresh` is ownership-aware and requires no custom `fresh()` method. The broad
@@ -329,6 +365,7 @@ sandbox, exercising both rich content and sparse-but-valid editorial states.
 
 | Entry point | Creates or updates |
 | --- | --- |
+| `$this->group('events', fn () => ...)` | A named declaration boundary selectable by `--only` |
 | `$this->post('event')->key('event:1')` | Posts and custom post types |
 | `$this->page()->key('page:about')` | Pages |
 | `$this->term('event_type')->key('event-type:talk')` | Taxonomy terms |
@@ -355,10 +392,10 @@ and featured-image assignments.
 
 ## 🧭 Current roadmap
 
-Logical ownership, collision detection, adoption, owned reset/pruning, and the
-structured plan/apply lifecycle are implemented. The next priority is named
-declaration groups, followed by a deterministic fixture clock and a real
-WordPress integration suite.
+Logical ownership, collision detection, adoption, owned reset/pruning, named
+declaration groups, and the structured plan/apply lifecycle are implemented.
+The next priorities are a deterministic fixture clock and a real WordPress
+integration suite.
 
 See the maintained
 [Muster roadmap](https://github.com/pressgang-wp/pressgang-muster/blob/main/ROADMAP.md)
