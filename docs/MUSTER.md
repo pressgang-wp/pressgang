@@ -367,8 +367,8 @@ wp capstan muster App\\Muster\\DemoMuster --verbose
 application. `--format=json` suppresses human log lines and emits one object
 containing `status`, ordered `operations`, and per-action `summary` values for
 the plan and optional apply pass. It is suitable for CI checks and tooling.
-`--verbose` also prints builder diagnostics and complete operation identity
-fields. `--quiet` suppresses progress, reports, and completion text on a
+`--verbose` also prints declared field names (never values) and complete
+operation identity fields. `--quiet` suppresses progress, reports, and completion text on a
 successful human-readable run; errors remain visible. An explicitly requested
 JSON payload is still emitted.
 
