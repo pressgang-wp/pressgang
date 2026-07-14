@@ -497,10 +497,9 @@ never steals a resource already owned by another Muster or key.
 * **`truncate()`** — permanently deletes every post of the selected type, or
   every term in the selected taxonomy.
 
-The persistence contract distinguishes three modes: `ensure` (create only),
-`merge` (update supplied fields), and `replace` (complete authoritative state).
-**Merge is the current default**; ensure and replace are not yet public builder
-modes.
+Builders persist by **merge** because a declaration is a partial statement of
+intent, never a complete resource. A builder that manufactured update defaults
+would silently erase content Muster did not author.
 
 </details>
 
