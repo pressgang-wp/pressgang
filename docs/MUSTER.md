@@ -24,95 +24,37 @@ are PHP and FakerPHP.
 
 ---
 
-## 🌱 New to seeding?
+## 🌱 Why seed at all?
 
-**Seeding is describing the content your site needs in code, so anyone can
-recreate it on demand.** Instead of passing a `database.sql` around the team, you
-commit a PHP class that says "this site has an About page, five articles, and a
-main menu" — and run it.
+Most WordPress teams don't. A developer clones the repo, runs it, and gets an
+empty site — then spends an afternoon clicking content into wp-admin so there's
+something to look at. What they build isn't what anyone else has.
 
-That matters because the usual alternatives all bite:
+<table><thead><tr><th width="250">What most teams do today</th><th>What it costs</th></tr></thead><tbody><tr><td>Click test content in by hand</td><td>Nobody else has your content, and it vanishes on the next reset. The awkward states — a 90-character title, a missing hero image, an empty repeater — are exactly the ones nobody builds by hand.</td></tr><tr><td>Copy the production database down</td><td>Puts real customer data on developer laptops. Gigabytes to move, and stale within a week.</td></tr><tr><td>Share a <code>.sql</code> dump or WXR export</td><td>Opaque and unreviewable — nobody can see in a pull request what changed, and it drifts away from the code it exists to support.</td></tr><tr><td>Work against an empty site</td><td>The bugs your editors hit don't appear until an editor hits them.</td></tr></tbody></table>
 
-<table><thead><tr><th width="220">The usual approach</th><th>Where it hurts</th></tr></thead><tbody><tr><td>Share a database dump</td><td>Stale the moment it lands. Can't be reviewed in a pull request. Drifts away from the code it exists to support.</td></tr><tr><td>Write a one-off seed script</td><td>Works once. Run it twice and you have two About pages — or it deletes something a colleague was using.</td></tr><tr><td>Generate random fake content</td><td>Changes on every run, so a visual regression or a failing test can't be reproduced or bisected.</td></tr></tbody></table>
+**Seeding replaces all four with a PHP class you commit.** It says "this site has
+an About page, five articles, and a main menu" — and one command makes it so, on
+any machine, as many times as you like.
 
-Muster answers all three: content becomes **declarative** (you describe the
-end state, not the steps), **idempotent** (re-running converges instead of
-duplicating), and **deterministic** (the same seed produces the same site).
+That pays off the moment you have:
+
+* **A new team member** — `composer install && wp capstan seed`, and they have the
+  real thing in a minute rather than an afternoon.
+* **Tests or CI** — automated checks need content, and need the *same* content on
+  every run.
+* **Visual regression** — a screenshot diff is noise unless the content is
+  identical every time. This is what [Shakedown](SHAKEDOWN.md) is built on.
+* **Editorial edge cases** — the sparse-but-valid states where empty-link and
+  missing-image bugs hide.
 
 ---
 
 ## ✨ Why Muster?
 
-{% tabs %}
-{% tab title="😩 Before" %}
-{% code title="seed.php" lineNumbers="true" %}
-```php
-// Run this twice and you get two About pages.
-wp_insert_post([
-    'post_type'    => 'page',
-    'post_title'   => 'About us',
-    'post_name'    => 'about-us',
-    'post_status'  => 'publish',
-    'post_content' => $faker->paragraphs(3, true),
-]);
-
-foreach (range(1, 5) as $i) {
-    wp_insert_post([
-        'post_type'   => 'post',
-        'post_title'  => $faker->sentence(),
-        'post_status' => 'publish',
-        // Moves with the wall clock — today's fixtures aren't yesterday's.
-        'post_date'   => $faker->dateTimeThisYear()->format('Y-m-d H:i:s'),
-    ]);
-}
-```
-{% endcode %}
-
-* Re-running **duplicates** every page.
-* Titles and dates **change on every run**, so nothing is reproducible.
-* You cannot see what it will do **before** it does it.
-* Cleaning up means guessing which rows were yours.
-{% endtab %}
-
-{% tab title="⚓ After" %}
-{% code title="src/Muster/SiteMuster.php" lineNumbers="true" %}
-```php
-final class SiteMuster extends Muster
-{
-    public static function defaultEpoch(): string
-    {
-        return '2026-01-01 09:00:00+00:00';
-    }
-
-    public function run(): void
-    {
-        $this->page()
-            ->key('page:about')
-            ->title('About us')
-            ->slug('about-us')
-            ->status('publish')
-            ->content($this->victuals()->paragraphs(3))
-            ->save();
-
-        $this->pattern('articles')
-            ->count(5)
-            ->build(fn (int $i) => $this->post()
-                ->key('article:' . $i)
-                ->title($this->victuals()->headline())
-                ->slug('article-' . $i)
-                ->status('publish')
-                ->date($this->at('-' . $i . ' weeks')->format('Y-m-d H:i:s')));
-    }
-}
-```
-{% endcode %}
-
-* Re-running **updates** the same page — the logical key is its identity.
-* `--seed` fixes the words; the **epoch** fixes the dates.
-* `--dry-run` shows the plan **before** any write happens.
-* `pruneOwned()` cleans up **only what Muster made**.
-{% endtab %}
-{% endtabs %}
+Seeding only helps if the seed is trustworthy. Muster makes that content
+**declarative** (describe the end state, not the steps), **idempotent** (re-running
+converges instead of duplicating), and **deterministic** (the same seed produces
+the same site).
 
 | | Benefit | How |
 | --- | --- | --- |
