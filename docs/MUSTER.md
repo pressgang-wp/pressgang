@@ -309,40 +309,45 @@ Every write goes through WordPress-native functions such as `wp_insert_post()`,
 
 <summary><strong>Reusable recipes, states, and sequences</strong></summary>
 
-A **Recipe** reuses ordinary builders — a Recipe uses Victuals to produce a
-resource declaration, not a Model or attribute map (see ADR 0007). States are
-named transformations; Sequences derive cycling values from the one-based
-Pattern index without a mutable cursor:
+A **Recipe** is a reusable class for one resource shape — a Recipe uses Victuals
+to produce a resource declaration, not a Model or attribute map (see ADR 0007).
+It lives in the theme's `muster/Recipes/` directory: implement `define()` with the
+default shape, and add named variations as methods that return `$this->state(...)`.
+
+{% code title="muster/Recipes/ArticleRecipe.php" %}
+```php
+final class ArticleRecipe extends \PressGang\Muster\Patterns\Recipe
+{
+    public function define(int $i): PostBuilder
+    {
+        return $this->content('post')->slug('article-' . $i);   // populated title/body/ACF
+    }
+
+    public function featured(): static
+    {
+        return $this->state(fn (PostBuilder $b, int $i) => $b->meta(['featured' => true]));
+    }
+}
+```
+{% endcode %}
+
+Reuse it in a seed or a test — `count()->create()` seeds a self-keyed batch,
+states compose immutably, and `Pattern::using()` feeds it to a pattern:
 
 ```php
-$status = $this->sequence('draft', 'publish');
+$this->recipe(ArticleRecipe::class)->count(6)->withThumbnail()->create();
+$this->recipe(ArticleRecipe::class)->featured()->count(2)->create();
 
-$article = $this->recipe(
-    'article',
-    fn (int $i) => $this->post()
-        ->key('article:' . $i)
-        ->slug('article-' . $i)
-        ->status($status->at($i))
-)->state(
-    'featured',
-    fn ($builder, int $i) => $builder->meta(['featured' => true])
-);
-
-$this->pattern('articles')
-    ->count(6)
-    ->after('welcome-comment', fn ($post, int $i) =>
-        $this->comment($post)
-            ->key('comment:article:' . $i)
-            ->author('Fixture Editor')
-            ->content('Welcome')
-    )
-    ->using($article->with('featured'));
+// or drive a Pattern directly, e.g. to attach an after-hook:
+$this->pattern('articles')->count(6)
+    ->after('welcome-comment', fn ($post, int $i) => $this->comment($post)
+        ->key('comment:article:' . $i)->author('Fixture Editor')->content('Welcome'))
+    ->using($this->recipe(ArticleRecipe::class));
 ```
 
-An after-hook may return a declaration, an iterable of declarations, or `null`.
-Muster saves returned builders in both plan and apply, so every related resource
-appears in structured output. The callback itself must not perform an unrelated
-or invisible write.
+Because a Recipe is a plain class, the *same* shape seeds your dev content and
+arranges a scenario in a test — the ORM-free equivalent of a Laravel factory used
+in both a seeder and a test.
 
 </details>
 
