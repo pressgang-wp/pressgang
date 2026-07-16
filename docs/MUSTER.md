@@ -328,7 +328,12 @@ $this->call(AuthorMuster::class, ArticleMuster::class);
 
 Called Musters share the clock, seeded Victuals stream, ownership registry, group
 selection, and report. Calls run in declared order; recursion and duplicate
-execution fail with a dependency-path diagnostic.
+execution fail with a dependency-path diagnostic. This makes a `SiteMuster` that
+only calls focused children — like Laravel's `DatabaseSeeder` — the idiomatic way
+to organise a larger seed: `wp capstan seed` runs the root, and each child is
+reached exactly once. Because the ownership registry is shared, `acfFor()` support
+resources are deduped across the whole graph, so children targeting the same field
+group never collide over the same placeholder.
 
 `ref()` addresses the same stable logical key used for ownership. It can be
 captured **before** the target exists, because the consuming builder resolves it
@@ -727,11 +732,18 @@ $this->post('event')
 The generator handles common scalar fields plus groups, repeaters, flexible
 content, galleries, and relational fields.
 
+The target is any location value a field group declares: a post type (`event`),
+a page **or** post template path (`page-templates/contact.php`), an options-page
+slug (`site-options`), a `page_type` such as `front_page`, or a nav-menu-item
+location (`location/primary`). Groups on any of these resolve — not just post
+types and page templates.
+
 {% hint style="warning" %}
 **`acfFor()` is provisioning, not a side-effect-free lookup.** Relational and
 media fields need real WordPress IDs, so it may create supporting attachments,
 posts, or terms. Those receive reserved `acf:*` logical keys and are owned by the
-calling Muster.
+**run's root Muster** — so several chained seeders that target the same field
+group share one placeholder rather than contending to own it.
 {% endhint %}
 
 When ACF is active, the CLI wires `LiveAcfAdapter` and writes through

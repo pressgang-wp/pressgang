@@ -93,14 +93,20 @@ npx shakedown sandbox
 ```
 {% endcode %}
 
-This assembles a **throwaway WordPress** in a temp directory: your code symlinked read-only, its own fresh SQLite database, its own uploads — think Laravel's in-memory test database, for WordPress. Then it seeds **state fixtures** derived from your ACF field groups via [Muster](MUSTER.md): for every group, one page/post with *every field populated* and one with *only required fields* — the sparsest content an editor can legally publish, which is exactly where empty-link and missing-image bugs live. Runs all passes, then vaporises.
+This assembles a **throwaway WordPress** in a temp directory: your code symlinked read-only, its own fresh SQLite database, its own uploads — think Laravel's in-memory test database, for WordPress. It then seeds in two layers, convention-first:
+
+1. **Your theme's own fixtures.** If the theme ships [Muster](MUSTER.md) seeders (`src/Muster/*`), the sandbox runs them via `wp capstan seed` — so your real menus, terms, pages and relationships are present, exactly as on a dev site. A theme that ships none is unaffected; the derived layer below still covers it.
+2. **Derived ACF state fixtures.** On top, for every field group, one page/post with *every field populated* and one with *only required fields* — the sparsest content an editor can legally publish, which is exactly where empty-link and missing-image bugs live.
+
+Then it runs all passes and vaporises.
 
 ```
 ⚓ sandbox up at http://127.0.0.1:54223 (isolation verified)
-⚓ seeded 20 ACF state fixtures via Muster
+⚓ seeded theme baseline via `wp capstan seed`
+⚓ seeded 34 ACF state fixtures via Muster
 ⚓ capstan doctor: 11 checks, 0 failures, 0 warnings
 ⚓ 22 routes (via capstan)
-113 passed (18s)
+127 passed (18s)
 ```
 
 {% hint style="warning" %}
@@ -179,7 +185,7 @@ Shakedown revision, so fixture behavior cannot drift when Muster's `main` moves.
 Shakedown works on any PressGang site out of the box, and gets sharper with its shipmates installed:
 
 * **[Capstan](CAPSTAN.md)** — the matrix gains an *oracle*: each route annotated with the template and controller that *should* render it, asserted at runtime. Silent fallbacks to `index.php` become hard failures. `wp capstan doctor` also runs as a pre-flight, aborting before any browser launches if the theme's config is broken.
-* **[Muster](MUSTER.md)** — powers the sandbox's ACF state fixtures. Without it, the sandbox still runs; it just skips seeding.
+* **[Muster](MUSTER.md)** — runs the theme's own seeders as the sandbox baseline (via `wp capstan seed`) and powers the derived ACF state fixtures on top. Without it, the sandbox still runs; it just skips seeding.
 
 The sandbox also counts **PHP notices, warnings and deprecations on every request** — even when display and logging are off — and fails any route that raises one. A page can look perfect and still be noisy underneath.
 
