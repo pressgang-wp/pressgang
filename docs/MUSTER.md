@@ -575,11 +575,11 @@ ownership, and plan/apply are identical to a hand-written seed:
 public function run(): void
 {
     $this->assemble([
-        'terms' => ['hit_group' => 3],                      // taxonomy => count
+        'terms' => ['topic' => 3],                          // taxonomy => count
         'posts' => [
-            'hit'   => ['count' => 5, 'thumbnail' => true, 'terms' => ['hit_group' => 'rotate']],
-            'post'  => ['count' => 5, 'thumbnail' => true],
-            'event' => ['count' => 5, 'thumbnail' => true, 'terms' => ['hit_group' => 'rotate']],
+            'article' => ['count' => 5, 'thumbnail' => true, 'terms' => ['topic' => 'rotate']],
+            'post'    => ['count' => 5, 'thumbnail' => true],
+            'event'   => ['count' => 5, 'thumbnail' => true, 'terms' => ['topic' => 'rotate']],
         ],
         'pages' => 'templates',    // one page per registered page template
         'menus' => 'locations',    // a menu per registered nav location
@@ -588,7 +588,7 @@ public function run(): void
 ```
 {% endcode %}
 
-Each section runs in its own group (`terms:hit_group`, `posts:hit`, `pages`,
+Each section runs in its own group (`terms:topic`, `posts:article`, `pages`,
 `menus:primary`), so `--only` selects it. The manifest is the terse default; for
 anything it can't express — bespoke relationships, conditional content — write a
 Muster class and `$this->call()` it. The two compose: a manifest for the bulk, a
