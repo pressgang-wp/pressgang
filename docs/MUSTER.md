@@ -270,9 +270,9 @@ final class SiteMuster extends Muster
             $this->pattern('article-fixtures')
                 ->seed(1201)
                 ->count(5)
+                ->withThumbnail()
                 ->build(
                     fn (int $i) => $this->post()
-                        ->key('article:' . $i)
                         ->title($this->victuals()->headline())
                         ->slug('article-' . $i)
                         ->status('publish')
@@ -287,6 +287,15 @@ final class SiteMuster extends Muster
 Every write goes through WordPress-native functions such as `wp_insert_post()`,
 `wp_update_post()`, `wp_insert_term()`, `wp_update_user()`, and
 `wp_update_nav_menu_item()`. ACF values use its public `update_field()` API.
+
+{% hint style="info" %}
+**Pattern rows self-key.** A row that sets no `key()` of its own is keyed from
+the pattern name and one-based index (`article-fixtures:1`, `article-fixtures:2`,
+…) — stable and independent of the slug, so re-runs and resets behave exactly as
+with a hand-written key. Call `key()` in the recipe to override it.
+`withThumbnail()` gives each row a deterministic placeholder featured image
+without a hand-written after-hook. See [ADR 0006](https://github.com/pressgang-wp/pressgang-muster/blob/main/docs/adr/0006-seeder-authoring-ergonomics.md).
+{% endhint %}
 
 <details>
 
