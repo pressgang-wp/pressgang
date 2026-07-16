@@ -23,5 +23,14 @@ if ( file_exists( $autoload_path ) ) {
 	require_once $autoload_path;
 }
 
+// PressGang is a parent-theme framework: it boots only when a child theme supplies
+// the Composer autoloader above. If the framework class is unavailable — because
+// PressGang was activated or "Live Preview"-ed directly — degrade to an explanatory
+// message instead of a fatal "class not found" (here and in every template stub).
+if ( ! class_exists( PressGang\PressGang::class ) ) {
+	require_once __DIR__ . '/bootstrap-fallback.php';
+	return;
+}
+
 // Initialize the PressGang theme.
 ( new PressGang\PressGang( new Loader( new FileConfigLoader() ) ) )->boot();
