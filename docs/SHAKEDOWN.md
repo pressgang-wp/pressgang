@@ -36,7 +36,7 @@ You need Node 20+, [WP-CLI](https://wp-cli.org/), and your site running locally 
 
 {% code title="Terminal" %}
 ```bash
-npm i -D github:pressgang-wp/pressgang-shakedown
+npm i -D @pressgang-wp/shakedown
 npx playwright install chromium   # once per machine
 ```
 {% endcode %}
