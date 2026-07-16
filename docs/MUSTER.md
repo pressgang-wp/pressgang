@@ -204,7 +204,7 @@ Plan:
 | Fixture clock | One immutable epoch for relative dates, independent of Faker's random seed. |
 | Groups | Named callback boundaries selected by `--only`; skipped callbacks are not evaluated. |
 | `Pattern` | Repeats any declaration recipe a declared number of times, with an optional pattern seed. |
-| Definitions, states, sequences | Reusable builder factories, named transformations, and immutable cycling values. |
+| Recipes, states, sequences | Reusable resource recipes, named transformations, and immutable cycling values. |
 | Refs | Immutable save results, plus logical-key `LazyRef` handles resolved at save-time. |
 | `RunReport` | Ordered `create`, `update`, `keep`, `prune`, and `conflict` results for one pass. |
 | ACF generation | Reads `acf-json` definitions and produces minimal or populated field values. |
@@ -307,16 +307,17 @@ Every write goes through WordPress-native functions such as `wp_insert_post()`,
 
 <details>
 
-<summary><strong>Reusable definitions, states, and sequences</strong></summary>
+<summary><strong>Reusable recipes, states, and sequences</strong></summary>
 
-Definitions reuse ordinary builders — they are not Models or attribute maps.
-States are named transformations; Sequences derive cycling values from the
-one-based Pattern index without a mutable cursor:
+A **Recipe** reuses ordinary builders — a Recipe uses Victuals to produce a
+resource declaration, not a Model or attribute map (see ADR 0007). States are
+named transformations; Sequences derive cycling values from the one-based
+Pattern index without a mutable cursor:
 
 ```php
 $status = $this->sequence('draft', 'publish');
 
-$article = $this->definition(
+$article = $this->recipe(
     'article',
     fn (int $i) => $this->post()
         ->key('article:' . $i)
