@@ -289,12 +289,18 @@ Every write goes through WordPress-native functions such as `wp_insert_post()`,
 `wp_update_nav_menu_item()`. ACF values use its public `update_field()` API.
 
 {% hint style="info" %}
-**Pattern rows self-key.** A row that sets no `key()` of its own is keyed from
-the pattern name and one-based index (`article-fixtures:1`, `article-fixtures:2`,
-…) — stable and independent of the slug, so re-runs and resets behave exactly as
-with a hand-written key. Call `key()` in the recipe to override it.
-`withThumbnail()` gives each row a deterministic placeholder featured image
-without a hand-written after-hook. See [ADR 0006](https://github.com/pressgang-wp/pressgang-muster/blob/main/docs/adr/0006-seeder-authoring-ergonomics.md).
+**Less ceremony, same guarantees** (see [ADR 0006](https://github.com/pressgang-wp/pressgang-muster/blob/main/docs/adr/0006-seeder-authoring-ergonomics.md)):
+
+- **Pattern rows self-key** from the pattern name and one-based index
+  (`article-fixtures:1`, `article-fixtures:2`, …) when the recipe sets no
+  `key()` — stable and independent of the slug, so re-runs and resets behave
+  exactly as with a hand-written key. Call `key()` to override it.
+- **`withThumbnail()`** gives each row a deterministic placeholder featured
+  image without a hand-written after-hook.
+- **A post's `status` defaults to `publish` and its `date` to the fixture
+  epoch** on first insert — so the common row writes neither. An explicit
+  `status()`/`date()` still wins, and the default applies to inserts only, never
+  overwriting a field on a re-run.
 {% endhint %}
 
 <details>
