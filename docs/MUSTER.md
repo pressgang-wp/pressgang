@@ -743,7 +743,10 @@ types and page templates.
 media fields need real WordPress IDs, so it may create supporting attachments,
 posts, or terms. Those receive reserved `acf:*` logical keys and are owned by the
 **run's root Muster** — so several chained seeders that target the same field
-group share one placeholder rather than contending to own it.
+group share one placeholder rather than contending to own it. Relationship stub
+posts are dated a year before the fixture epoch and carry a placeholder featured
+image, so they never head date-ordered feeds or render thumbnail-less — and,
+because the date derives from the shared clock, output stays deterministic.
 {% endhint %}
 
 When ACF is active, the CLI wires `LiveAcfAdapter` and writes through
