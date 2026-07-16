@@ -272,10 +272,8 @@ final class SiteMuster extends Muster
                 ->count(5)
                 ->withThumbnail()
                 ->build(
-                    fn (int $i) => $this->post()
-                        ->title($this->victuals()->headline())
+                    fn (int $i) => $this->content()
                         ->slug('article-' . $i)
-                        ->status('publish')
                         ->date($this->at('-' . $i . ' weeks')->format('Y-m-d H:i:s'))
                 );
         });
@@ -301,6 +299,10 @@ Every write goes through WordPress-native functions such as `wp_insert_post()`,
   epoch** on first insert — so the common row writes neither. An explicit
   `status()`/`date()` still wins, and the default applies to inserts only, never
   overwriting a field on a re-run.
+- **`content($type)`** returns a post pre-filled with a generated title, body,
+  and the ACF values `acfFor($type)` derives — the "populated content" shape in
+  one place. Override any field afterwards; it is opt-in, so bare `post()` still
+  writes only what you declare (what the sparse "minimal" fixtures rely on).
 {% endhint %}
 
 <details>
