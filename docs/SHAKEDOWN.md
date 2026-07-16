@@ -95,7 +95,7 @@ npx shakedown sandbox
 
 This assembles a **throwaway WordPress** in a temp directory: your code symlinked read-only, its own fresh SQLite database, its own uploads — think Laravel's in-memory test database, for WordPress. Its install defaults (Hello world!, Sample Page, the seeded comment) are cleared first, so only seeded fixtures exist and no version-dependent default content leaks into feeds, archives, or menus. It then seeds in two layers, convention-first:
 
-1. **Your theme's own fixtures.** If the theme ships [Muster](MUSTER.md) seeders (`src/Muster/*`), the sandbox runs them via `wp capstan seed` — so your real menus, terms, pages and relationships are present, exactly as on a dev site. A theme that ships none is unaffected; the derived layer below still covers it.
+1. **Your theme's own fixtures.** If the theme ships [Muster](MUSTER.md) seeders (a top-level `muster/` directory), the sandbox runs them via `wp capstan seed` — so your real menus, terms, pages and relationships are present, exactly as on a dev site. A theme that ships none is unaffected; the derived layer below still covers it.
 2. **Derived ACF state fixtures.** On top, for every field group, one page/post with *every field populated* and one with *only required fields* — the sparsest content an editor can legally publish, which is exactly where empty-link and missing-image bugs live.
 
 Then it runs all passes and vaporises.

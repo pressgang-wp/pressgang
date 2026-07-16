@@ -90,6 +90,19 @@ A development dependency is right for local setup, CI, and disposable test
 environments. If a controlled non-production runtime needs Muster after a
 `composer install --no-dev`, install it as a regular dependency instead.
 
+Seeders live in a top-level `muster/` directory, mapped under your composer
+`autoload-dev` — they are development and test fixtures, not production theme
+code, so they belong beside the dev-only Muster dependency, not in the shipped
+`src/`:
+
+{% code title="composer.json" %}
+```json
+"autoload-dev": { "psr-4": { "App\\Muster\\": "muster/" } }
+```
+{% endcode %}
+
+(`wp capstan make muster` scaffolds into `muster/` and prints this mapping.)
+
 {% hint style="warning" %}
 Muster is **pre-1.0**. The public API may still change between minor versions —
 pin an exact version if that matters to you.
@@ -106,7 +119,7 @@ pin an exact version if that matters to you.
 A Muster is one class with a `run()` method. Every builder needs a `key()` — the
 stable name Muster uses to recognise this resource on the next run.
 
-{% code title="src/Muster/SiteMuster.php" %}
+{% code title="muster/SiteMuster.php" %}
 ```php
 <?php
 
@@ -203,7 +216,7 @@ or any custom declaration implementing `PressGang\Muster\Contracts\PersistableDe
 
 ## ✍️ A fuller example
 
-{% code title="src/Muster/SiteMuster.php" %}
+{% code title="muster/SiteMuster.php" %}
 ```php
 <?php
 
@@ -534,7 +547,7 @@ locations, and ACF JSON:
 
 {% code title="Terminal" %}
 ```bash
-wp capstan make muster          # preview src/Muster/SiteMuster.php
+wp capstan make muster          # preview muster/SiteMuster.php
 wp capstan make muster --force  # write it once
 ```
 {% endcode %}
