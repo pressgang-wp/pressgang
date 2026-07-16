@@ -556,6 +556,38 @@ fail when `--only` is active, because they reconcile the complete ownership scop
 
 ---
 
+## 📋 The declarative manifest
+
+For the common whole-surface case — some terms, populated content per type, a
+page per template, a menu per location — a `SiteMuster` can declare a **manifest**
+instead of writing each builder. `assemble()` derives all of it through the same
+primitives (self-keyed patterns, `withThumbnail()`, `content()`), so determinism,
+ownership, and plan/apply are identical to a hand-written seed:
+
+{% code title="muster/SiteMuster.php" %}
+```php
+public function run(): void
+{
+    $this->assemble([
+        'terms' => ['hit_group' => 3],                      // taxonomy => count
+        'posts' => [
+            'hit'   => ['count' => 5, 'thumbnail' => true, 'terms' => ['hit_group' => 'rotate']],
+            'post'  => ['count' => 5, 'thumbnail' => true],
+            'event' => ['count' => 5, 'thumbnail' => true, 'terms' => ['hit_group' => 'rotate']],
+        ],
+        'pages' => 'templates',    // one page per registered page template
+        'menus' => 'locations',    // a menu per registered nav location
+    ]);
+}
+```
+{% endcode %}
+
+Each section runs in its own group (`terms:hit_group`, `posts:hit`, `pages`,
+`menus:primary`), so `--only` selects it. The manifest is the terse default; for
+anything it can't express — bespoke relationships, conditional content — write a
+Muster class and `$this->call()` it. The two compose: a manifest for the bulk, a
+class for the exceptions. See [ADR 0006](https://github.com/pressgang-wp/pressgang-muster/blob/main/docs/adr/0006-seeder-authoring-ergonomics.md).
+
 ## 🌱 Conventional development seed
 
 [Capstan](CAPSTAN.md) can inspect the active theme and scaffold a starting
