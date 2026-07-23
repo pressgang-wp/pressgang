@@ -307,6 +307,39 @@ Every write goes through WordPress-native functions such as `wp_insert_post()`,
 
 <details>
 
+<summary><strong>Declare fields as an array — <code>fill()</code></strong></summary>
+
+Every post and term builder also accepts a **nested array** instead of chained
+setters. The keys are WordPress's own — the ones `wp_insert_post()` and
+`wp_insert_term()` already take — so there is no second vocabulary to learn:
+
+```php
+$this->post('event')->fill([
+    'post_title'  => 'Launch',
+    'post_name'   => 'launch',
+    'post_status' => 'publish',
+    'meta_input'  => ['legacy_id' => 42],   // raw meta channel
+    'tax_input'   => ['topic' => ['design']],
+    'acf'         => ['hero_title' => 'Hello'], // ACF channel
+    'key'         => 'event:launch',
+])->save();
+```
+
+The only additions to the WordPress vocabulary are the two things it has no key
+for: `acf` (an `update_field()`-shaped map) and Muster's logical `key`/`adopt`
+identity.
+
+`fill()` is pure sugar over the fluent setters — it dispatches each key to the
+matching method, so ref resolution, merge-upsert, and the meta-vs-ACF guard all
+apply unchanged. It merges with setters called before or after it (last write
+wins), and an unrecognised key throws rather than being silently dropped. Because
+a Recipe's `define()` returns a builder, the same array shape works there too — so
+a fixture generated from an existing entity is simply a `fill([...])` array.
+
+</details>
+
+<details>
+
 <summary><strong>Reusable recipes, states, and sequences</strong></summary>
 
 A **Recipe** is a reusable class for one resource shape — a Recipe uses Victuals
@@ -594,6 +627,26 @@ anything it can't express — bespoke relationships, conditional content — wri
 Muster class and `$this->call()` it. The two compose: a manifest for the bulk, a
 class for the exceptions. See [ADR 0006](https://github.com/pressgang-wp/pressgang-muster/blob/main/docs/adr/0006-seeder-authoring-ergonomics.md).
 
+A post spec can also carry a **`fill`** block of explicit WordPress-native field
+values — the same array shape a builder's `fill()` takes — applied to every
+generated row on top of its generated content. It is the manifest's way to
+declare concrete values, not just generated ones:
+
+{% code title="muster/SiteMuster.php" %}
+```php
+'posts' => [
+    'page' => ['count' => 1, 'fill' => [
+        'post_title' => 'About',
+        'post_name'  => 'about',
+        'acf'        => ['hero_heading' => 'Hello'],
+    ]],
+],
+```
+{% endcode %}
+
+Row slugs stay self-keyed unless `fill` sets `post_name`; for different explicit
+values per row, reach for a Recipe.
+
 ## 🌱 Conventional development seed
 
 [Capstan](CAPSTAN.md) can inspect the active theme and scaffold a starting
@@ -819,6 +872,16 @@ because the date derives from the shared clock, output stays deterministic.
 
 When ACF is active, the CLI wires `LiveAcfAdapter` and writes through
 `update_field()`. When ACF is unavailable, ACF payloads are not persisted.
+
+{% hint style="warning" %}
+**Meta and ACF are separate channels — don't cross them.** `->acf([...])` writes
+through ACF's `update_field()`, which also stores the field-key reference
+`get_field()` needs; `->meta([...])` writes raw post/term meta through
+`update_post_meta()`. They are not interchangeable — writing an ACF field's name
+as raw meta reads back empty. Muster guards this: a `meta()` key that `acf-json`
+registers as an ACF field for the post type or taxonomy is rejected on `save()`
+(plan and apply alike), pointing you at `acf()` instead.
+{% endhint %}
 
 This is especially valuable to [Shakedown](SHAKEDOWN.md): every ACF field group
 gets populated **and** minimal fixtures in an isolated sandbox, exercising both
