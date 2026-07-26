@@ -68,6 +68,18 @@ npx shakedown matrix
 
 The matrix covers your front page, every post type's archive plus sample singles, taxonomy term pages, every page using a registered page template, internal menu targets, a search probe, and a 404 probe. Add a post type to `config/custom-post-types.php` and the next run covers it automatically. 🗺️
 
+It also covers the surfaces that are easy to forget because nothing links to them prominently:
+
+| Family | Why it's there |
+| --- | --- |
+| **Author** archives | `author.php` is a template most themes ship and few ever open |
+| **Date** archives | likewise `date.php` — year and month, taken from your newest post |
+| **Pagination** | page 2 of any archive with more posts than fit; where off-by-one and empty-page bugs live |
+| **Feeds** | the main feed and per-post-type feeds — a feed that fatals is still a broken site |
+| **Empty search** | a term that matches *nothing*, so the no-results branch gets exercised — your `searchTerm` is chosen to find things |
+
+Feeds are checked by pass 00 only: a full-page screenshot or an axe audit of XML measures nothing. Page 2 appears only when a post type genuinely has more published posts than `posts_per_page`.
+
 ## 🧪 What gets checked
 
 | Pass | Checks |
@@ -93,10 +105,11 @@ npx shakedown sandbox
 ```
 {% endcode %}
 
-This assembles a **throwaway WordPress** in a temp directory: your code symlinked read-only, its own fresh SQLite database, its own uploads — think Laravel's in-memory test database, for WordPress. Its install defaults (Hello world!, Sample Page, the seeded comment) are cleared first, so only seeded fixtures exist and no version-dependent default content leaks into feeds, archives, or menus. It then seeds in two layers, convention-first:
+This assembles a **throwaway WordPress** in a temp directory: your code symlinked read-only, its own fresh SQLite database, its own uploads — think Laravel's in-memory test database, for WordPress. Its install defaults (Hello world!, Sample Page, the seeded comment) are cleared first, so only seeded fixtures exist and no version-dependent default content leaks into feeds, archives, or menus. It then seeds in three layers, convention-first:
 
 1. **Your theme's own fixtures.** If the theme ships [Muster](MUSTER.md) seeders (a top-level `muster/` directory), the sandbox runs them via `wp capstan seed` — so your real menus, terms, pages and relationships are present, exactly as on a dev site. A theme that ships none is unaffected; the derived layer below still covers it.
 2. **Derived ACF state fixtures.** On top, for every field group, one page/post with *every field populated* and one with *only required fields* — the sparsest content an editor can legally publish, which is exactly where empty-link and missing-image bugs live.
+3. **Per-journey scenarios.** Finally, any `tests/e2e/*.setup.php` in your theme runs, so an authored journey can arrange the precise, deterministic scenario its paired `*.spec.mjs` asserts on.
 
 Then it runs all passes and vaporises.
 
@@ -127,9 +140,17 @@ npx shakedown sandbox --update-snapshots
 
 Baselines land in your theme at `tests/__screenshots__/` (per-platform) — **commit them**. Because fixtures are seeded deterministically and dates are pinned, snapshots are byte-stable across runs: a future diff means the *theme* changed, not the content.
 
+{% hint style="info" %}
+**Baselines are only ever written on purpose.** A route with no baseline *fails* rather than quietly acquiring one, and `--update-snapshots` is refused outside sandbox mode. A baseline captured from your live site records whatever was published that day — and because singles are sampled newest-first, the very pages it captured drift as you edit. Deterministic fixtures are what make a snapshot mean something, so baselines come from the sandbox or not at all.
+{% endhint %}
+
+Everything a baseline rests on is pinned to an exact version: the WordPress core it was rendered against, the Muster revision that generated the fixtures, and the SQLite drop-in underneath (verified by checksum on download). Otherwise an upstream release could rebreak every baseline you own on its release day, with no change on your side.
+
 ## 📋 The Trial Report
 
-Every run writes `.shakedown/trial-report.html` — a self-contained, client-readable page: summary numbers, a screenshot preview per route, a route × pass matrix, and failures in plain English (no stack traces). Attach it to a PR, or send it with a handover. The developer-grade report with traces lives separately in `playwright-report/`.
+Every run writes `.shakedown/trial-report.html` — a self-contained, client-readable page: summary numbers, a screenshot preview per route, a route × pass matrix, and failures in plain English (no stack traces). Attach it to a PR, or send it with a handover. The developer-grade report with traces lives separately in `playwright-report/`, and `run.json` beside it carries the same run for anything that wants to consume it.
+
+It reports what happened rather than the tidiest version of it. A route that failed and then passed on a retry is marked **flaky** with its first failure shown, not folded into the passes — on a shared server a retry absorbs a load transient, but the same signature can mean a race in your theme, and that's your call to make rather than the report's. Suppressed categories are listed. A run that checked nothing says so, instead of leaving the previous run's report sitting there looking current.
 
 ## ⚙️ Configuration
 
@@ -159,6 +180,32 @@ None required. An optional `shakedown.config.json` in the theme handles the exce
 
 Your own journey tests (form submissions, checkout flows) live in the theme's `tests/e2e/` — when present, they run alongside the derived passes.
 
+### 🔇 Suppressing what isn't yours
+
+The passes are strict on purpose: zero console errors, zero PHP notices, no serious axe violations. On a real site some of that noise belongs to somebody else — a tag manager logging to the console, a deprecation raised inside ACF on a newer PHP, a contrast rule your palette loses deliberately. An `ignore` block records what's already been judged, so you never have to choose between the noise and switching a whole pass off:
+
+{% code title="shakedown.config.json" %}
+```json
+{
+  "ignore": {
+    "routes":        ["/private-area", "/wp-json/"],
+    "consoleErrors": ["googletagmanager", "ERR_BLOCKED_BY_CLIENT"],
+    "requests":      ["/wp-json/"],
+    "phpIssues":     ["wp-content/plugins/advanced-custom-fields-pro/"],
+    "a11yRules":     ["color-contrast"]
+  }
+}
+```
+{% endcode %}
+
+Patterns are plain **substrings**, case-sensitive — not regex, not globs. Paste the text out of a failure message and it's the pattern that silences it. `a11yRules` is the exception: exact axe rule IDs, handed to axe's own `disableRules()`.
+
+`phpIssues` matches the whole signature — `<message> in <path>:<line>`, the path relative to WordPress — so a pattern can name an **origin** (`wp-content/plugins/…/`) as easily as a message, and stays portable across machines and CI.
+
+{% hint style="warning" %}
+**Nothing is suppressed quietly.** Every active pattern is printed when the matrix is derived, ignored routes are counted, and the Trial Report ends with a *Suppressed by configuration* table — so a clean run can be read for what it is. A mistyped key (`consoleError`, singular) is an error rather than a silent no-op that suppresses nothing while looking like it works.
+{% endhint %}
+
 ## 🤖 CI
 
 One caller workflow gives every push the full sandbox suite — no MySQL, no Docker, no database dump. WordPress core is downloaded bare and your theme's own `composer.json` provisions the parent and plugins:
@@ -176,9 +223,12 @@ jobs:
 {% endcode %}
 
 The Trial Report and route matrix upload as artifacts on every run. Suits
-theme-shaped repos (the repo *is* the theme). The reusable workflow also accepts
-`muster-ref`; its default is the exact Muster commit verified with that
-Shakedown revision, so fixture behavior cannot drift when Muster's `main` moves.
+theme-shaped repos (the repo *is* the theme).
+
+Versions are **pinned, not floating**: `wp-version` and `muster-ref` both default
+to exact revisions verified against that Shakedown release, so neither core
+markup nor fixture behaviour can drift when an upstream `main` moves. Pass
+`latest` explicitly when you want to test forward compatibility on purpose.
 
 ## 🛞 Better with the fleet
 
@@ -187,7 +237,7 @@ Shakedown works on any PressGang site out of the box, and gets sharper with its 
 * **[Capstan](CAPSTAN.md)** — the matrix gains an *oracle*: each route annotated with the template and controller that *should* render it, asserted at runtime. Silent fallbacks to `index.php` become hard failures. `wp capstan doctor` also runs as a pre-flight, aborting before any browser launches if the theme's config is broken.
 * **[Muster](MUSTER.md)** — runs the theme's own seeders as the sandbox baseline (via `wp capstan seed`) and powers the derived ACF state fixtures on top. Without it, the sandbox still runs; it just skips seeding.
 
-The sandbox also counts **PHP notices, warnings and deprecations on every request** — even when display and logging are off — and fails any route that raises one. A page can look perfect and still be noisy underneath.
+The sandbox also counts **PHP notices, warnings and deprecations on every request** — even when display and logging are off — and fails any route that raises one. A page can look perfect and still be noisy underneath. The failure quotes the signature verbatim, so if the notice comes from a dependency rather than your theme you can paste it straight into `ignore.phpIssues`.
 
 ## 🧯 Troubleshooting
 

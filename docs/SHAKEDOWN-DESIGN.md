@@ -85,7 +85,11 @@ X-Shakedown-Controller: events_controller
 X-Shakedown-Php-Issues: 0
 ```
 
-Pass 00 compares the first two against the oracle (so a route silently falling back to `index.php` is a hard failure), and fails any route whose PHP-issue count is non-zero — notices are counted by an error handler even when display and logging are off. Output is buffered for the whole request so headers can still be written at shutdown.
+Pass 00 compares the first two against the oracle (so a route silently falling back to `index.php` is a hard failure), and fails any route whose PHP-issue count is non-zero — notices are counted by an error handler even when display and logging are off.
+
+Getting those headers out is fiddlier than it looks, and the timing is the whole trick. The observer buffers output for the entire request, then writes the headers from WordPress's `shutdown` action at **priority 0** — ahead of `wp_ob_end_flush_all` at priority 1, which is what flushes the buffer and commits the response. A plain `register_shutdown_function()` cannot work here: WordPress registers *its* shutdown handler at `wp-settings.php:166`, while mu-plugins don't load until `:498`, so WP's always runs first and `headers_sent()` is already true. Everything raised during rendering is therefore counted; anything raised later, by shutdown callbacks at priority 1 or beyond, is not — the honest cost of having to commit headers before the body goes out.
+
+Because every one of those assertions is guarded on its header existing, an observer that stops answering would turn them all into no-ops that report success. So a sandbox run also asserts that the observer answered at all: silence is a failure, not a skip.
 
 ### The passes — Playwright
 
@@ -118,7 +122,7 @@ A small [Playwright reporter](https://playwright.dev/docs/test-reporters#custom-
 
 ### The sandbox assembly — SQLite + wp server
 
-The [SQLite Database Integration plugin](https://github.com/WordPress/sqlite-database-integration) is cached from wordpress.org and wired in via its `db.copy` drop-in template (`DB_DIR`/`DB_FILE` constants point at the temp dir). The site is served by [`wp server`](https://developer.wordpress.org/cli/commands/server/) — WP-CLI's built-in PHP server with a WordPress-aware router — on an OS-assigned ephemeral port. `wp core install`, theme activation, and permalink setup all run against the throwaway database.
+The [SQLite Database Integration plugin](https://github.com/WordPress/sqlite-database-integration) is pinned to an exact version, fetched from wordpress.org, verified against a known SHA-256, and wired in via its `db.copy` drop-in template (`DB_DIR`/`DB_FILE` constants point at the temp dir). The cache is keyed by version and staged-then-renamed, so bumping the pin invalidates it by construction and an interrupted download can never become the cache — `latest-stable` would have meant two machines assembling sandboxes on two different database layers, underneath every visual baseline. The site is served by [`wp server`](https://developer.wordpress.org/cli/commands/server/) — WP-CLI's built-in PHP server with a WordPress-aware router — on an OS-assigned ephemeral port. `wp core install`, theme activation, and permalink setup all run against the throwaway database.
 
 ### CI — the reusable workflow
 
