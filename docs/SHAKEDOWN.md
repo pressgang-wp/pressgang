@@ -192,6 +192,7 @@ The passes are strict on purpose: zero console errors, zero PHP notices, no seri
     "consoleErrors": ["googletagmanager", "ERR_BLOCKED_BY_CLIENT"],
     "requests":      ["/wp-json/"],
     "phpIssues":     ["wp-content/plugins/advanced-custom-fields-pro/"],
+    "errorSignatures": ["on https://mysite.test/alerts/"],
     "a11yRules":     ["color-contrast"]
   }
 }
@@ -201,6 +202,8 @@ The passes are strict on purpose: zero console errors, zero PHP notices, no seri
 Patterns are plain **substrings**, case-sensitive — not regex, not globs. Paste the text out of a failure message and it's the pattern that silences it. `a11yRules` is the exception: exact axe rule IDs, handed to axe's own `disableRules()`.
 
 `phpIssues` matches the whole signature — `<message> in <path>:<line>`, the path relative to WordPress — so a pattern can name an **origin** (`wp-content/plugins/…/`) as easily as a message, and stays portable across machines and CI.
+
+`errorSignatures` covers the awkward case where a page's *content* legitimately reads "Warning: " — a health site's article about risk, say. It matches `<signature> on <url>`, so naming the URL suppresses the body scan for that one page rather than disabling it everywhere.
 
 {% hint style="warning" %}
 **Nothing is suppressed quietly.** Every active pattern is printed when the matrix is derived, ignored routes are counted, and the Trial Report ends with a *Suppressed by configuration* table — so a clean run can be read for what it is. A mistyped key (`consoleError`, singular) is an error rather than a silent no-op that suppresses nothing while looking like it works.
