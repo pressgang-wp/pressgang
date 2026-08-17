@@ -33,6 +33,21 @@ PressGang ships with controllers for all the common WordPress template types:
 
 WooCommerce controllers are also provided under `PressGang\Controllers\WooCommerce\`.
 
+### WooCommerce Taxonomy Templates
+
+WooCommerce hands every product archive to the theme's `woocommerce.php`, and `WC_Template_Loader` places that file **ahead of** `taxonomy-{taxonomy}.php` in its candidate list. Because PressGang ships a `woocommerce.php`, WordPress' per-taxonomy PHP template route is unavailable — a `taxonomy-product_brand.php` in your theme would be silently ignored.
+
+`ProductsController` restores that route in the Twig layer. Product taxonomy archives resolve:
+
+| Candidate                              | Used when                                |
+| -------------------------------------- | ---------------------------------------- |
+| `woocommerce/taxonomy-{taxonomy}.twig` | The theme provides one for that taxonomy |
+| `woocommerce/archive-product.twig`     | Fallback for every product archive       |
+
+So a promotions taxonomy registered as `product_promotion` picks up `views/woocommerce/taxonomy-product-promotion.twig` when present. Underscores become hyphens, matching `PostsController::infer_template()`. Themes without a taxonomy-specific template resolve exactly as before.
+
+This applies to `product_cat` and `product_tag` as well as to any custom taxonomy registered against the `product` post type.
+
 ## Example: `PageController`
 
 {% code title="src/Controllers/PageController.php" lineNumbers="true" %}

@@ -20,12 +20,46 @@ class ProductsController extends PostsController {
 	/**
 	 * ProductsController constructor.
 	 *
-	 * Initializes the controller for handling WooCommerce product archives with a specified template.
+	 * Initializes the controller for handling WooCommerce product archives,
+	 * inferring the template from the current query when none is given.
 	 *
-	 * @param string|null $template The template file to use for rendering the product archive. Defaults to 'woocommerce/archive.twig'.
+	 * @param string|array<int, string>|null $template The template file(s) to use for rendering the product archive.
 	 */
-	public function __construct( string|null $template = 'woocommerce/archive-product.twig' ) {
+	public function __construct( string|array|null $template = null ) {
 		parent::__construct( $template );
+	}
+
+	/**
+	 * Builds the Twig template fallback chain for WooCommerce product archives.
+	 *
+	 * WooCommerce routes every product archive through the theme's
+	 * `woocommerce.php`, which `WC_Template_Loader` places ahead of
+	 * `taxonomy-{taxonomy}.php` in its candidate list. Themes shipping a
+	 * `woocommerce.php` — as PressGang does — therefore lose WordPress'
+	 * per-taxonomy template route entirely.
+	 *
+	 * That route is restored here in the Twig layer: a theme can add
+	 * `woocommerce/taxonomy-product-brand.twig` and have it picked up for that
+	 * taxonomy alone, exactly as `taxonomy-product_brand.php` would have been.
+	 * Underscores become hyphens to match `PostsController::infer_template()`.
+	 *
+	 * Falls back to `woocommerce/archive-product.twig`, so themes without a
+	 * taxonomy-specific template resolve exactly as they did before.
+	 *
+	 * @see https://developer.wordpress.org/themes/classic-themes/templates/taxonomy-templates/
+	 *
+	 * @return string|array<int, string>
+	 */
+	#[\Override]
+	protected function infer_template(): string|array {
+
+		if ( \is_product_taxonomy() ) {
+			$taxonomy = \str_replace( '_', '-', \get_queried_object()->taxonomy );
+
+			return [ "woocommerce/taxonomy-{$taxonomy}.twig", 'woocommerce/archive-product.twig' ];
+		}
+
+		return 'woocommerce/archive-product.twig';
 	}
 
 	/**
