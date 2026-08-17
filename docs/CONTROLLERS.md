@@ -48,6 +48,15 @@ So a promotions taxonomy registered as `product_promotion` picks up `views/wooco
 
 This applies to `product_cat` and `product_tag` as well as to any custom taxonomy registered against the `product` post type.
 
+A product taxonomy can also take its own **controller**, resolved child-theme-first by the same `{Taxonomy}Controller` convention used elsewhere in PressGang:
+
+| Taxonomy             | Controller                  |
+| -------------------- | --------------------------- |
+| `product_promotion`  | `ProductPromotionController` |
+| `product_brand`      | `ProductBrandController`     |
+
+`WooCommerceControllerResolver` tries that class before falling back to the shared `ProductsController`, so a theme can give one taxonomy bespoke context without overriding the controller that also serves the shop and every other product archive. Extend `ProductsController` to inherit the products query and shop sidebar.
+
 ## Example: `PageController`
 
 {% code title="src/Controllers/PageController.php" lineNumbers="true" %}

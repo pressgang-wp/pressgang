@@ -39,7 +39,54 @@ class WooCommerceControllerResolver {
 			);
 		}
 
-		return self::resolve_controller( 'WooCommerce\ProductsController' );
+		return self::resolve_product_taxonomy_controller()
+			?? self::resolve_controller( 'WooCommerce\ProductsController' );
+	}
+
+	/**
+	 * Resolve a controller named after the queried product taxonomy.
+	 *
+	 * Mirrors the `taxonomy-{taxonomy}` => `{Taxonomy}Controller` convention
+	 * used elsewhere in PressGang, so a custom product taxonomy can take a
+	 * dedicated controller without a theme having to override the shared
+	 * `ProductsController` — which handles the shop and every other product
+	 * archive besides.
+	 *
+	 * A `product_promotion` taxonomy resolves to `ProductPromotionController`.
+	 * Returns null when no such class exists, leaving the caller to fall back.
+	 *
+	 * @return string|null Fully qualified controller class name, or null.
+	 */
+	protected static function resolve_product_taxonomy_controller(): ?string {
+		if ( ! \is_product_taxonomy() ) {
+			return null;
+		}
+
+		$term = \get_queried_object();
+
+		if ( ! $term instanceof \WP_Term ) {
+			return null;
+		}
+
+		return self::resolve_taxonomy_controller_class( $term->taxonomy, \get_child_theme_namespace() );
+	}
+
+	/**
+	 * Resolve a taxonomy-named controller against a specific child namespace.
+	 *
+	 * @param string      $taxonomy        Registered taxonomy name, e.g. `product_promotion`.
+	 * @param string|null $child_namespace Active child theme namespace, or null.
+	 *
+	 * @return string|null Fully qualified controller class name, or null.
+	 */
+	public static function resolve_taxonomy_controller_class( string $taxonomy, ?string $child_namespace ): ?string {
+		$studly = \str_replace( ' ', '', \ucwords( \str_replace( [ '-', '_' ], ' ', $taxonomy ) ) );
+
+		if ( '' === $studly ) {
+			return null;
+		}
+
+		return ClassResolver::resolve( "WooCommerce\\{$studly}Controller", 'Controllers', $child_namespace );
 	}
 
 	/**
