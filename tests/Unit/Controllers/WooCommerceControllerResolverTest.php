@@ -4,6 +4,7 @@ namespace Acme\Theme\Controllers\WooCommerce {
 	class ProductsController extends \PressGang\Controllers\WooCommerce\ProductsController {}
 	class ProductController extends \PressGang\Controllers\WooCommerce\ProductController {}
 	class ProductPromotionController extends \PressGang\Controllers\WooCommerce\ProductsController {}
+	class ClearanceController extends \PressGang\Controllers\WooCommerce\ProductsController {}
 }
 
 namespace PressGang\Tests\Unit\Controllers {
@@ -66,6 +67,23 @@ namespace PressGang\Tests\Unit\Controllers {
 		public function taxonomy_controller_resolution_returns_null_without_a_child_namespace(): void {
 			$this->assertNull(
 				WooCommerceControllerResolver::resolve_taxonomy_controller_class( 'product_promotion', null )
+			);
+		}
+
+
+		/** @test */
+		public function taxonomy_controller_resolution_accepts_the_unprefixed_name(): void {
+			$this->assertSame(
+				'Acme\\Theme\\Controllers\\WooCommerce\\ClearanceController',
+				WooCommerceControllerResolver::resolve_taxonomy_controller_class( 'product_clearance', 'Acme\\Theme' )
+			);
+		}
+
+		/** @test */
+		public function the_prefixed_name_wins_when_both_exist(): void {
+			$this->assertSame(
+				'Acme\\Theme\\Controllers\\WooCommerce\\ProductPromotionController',
+				WooCommerceControllerResolver::resolve_taxonomy_controller_class( 'product_promotion', 'Acme\\Theme' )
 			);
 		}
 

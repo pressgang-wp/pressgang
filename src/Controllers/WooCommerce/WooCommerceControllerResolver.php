@@ -52,8 +52,10 @@ class WooCommerceControllerResolver {
 	 * `ProductsController` — which handles the shop and every other product
 	 * archive besides.
 	 *
-	 * A `product_promotion` taxonomy resolves to `ProductPromotionController`.
-	 * Returns null when no such class exists, leaving the caller to fall back.
+	 * A `product_promotion` taxonomy resolves to `ProductPromotionController`,
+	 * or `PromotionController` — the `product_` prefix is redundant inside the
+	 * WooCommerce controller namespace. Returns null when neither class exists,
+	 * leaving the caller to fall back.
 	 *
 	 * @return string|null Fully qualified controller class name, or null.
 	 */
@@ -74,19 +76,37 @@ class WooCommerceControllerResolver {
 	/**
 	 * Resolve a taxonomy-named controller against a specific child namespace.
 	 *
+	 * Tries the full taxonomy name first, then the name with a leading
+	 * `product_` stripped: `product_promotion` matches `ProductPromotionController`
+	 * or `PromotionController`, whichever the theme defines.
+	 *
 	 * @param string      $taxonomy        Registered taxonomy name, e.g. `product_promotion`.
 	 * @param string|null $child_namespace Active child theme namespace, or null.
 	 *
 	 * @return string|null Fully qualified controller class name, or null.
 	 */
 	public static function resolve_taxonomy_controller_class( string $taxonomy, ?string $child_namespace ): ?string {
-		$studly = \str_replace( ' ', '', \ucwords( \str_replace( [ '-', '_' ], ' ', $taxonomy ) ) );
+		$names = [ $taxonomy ];
 
-		if ( '' === $studly ) {
-			return null;
+		if ( \str_starts_with( $taxonomy, 'product_' ) ) {
+			$names[] = \substr( $taxonomy, \strlen( 'product_' ) );
 		}
 
-		return ClassResolver::resolve( "WooCommerce\\{$studly}Controller", 'Controllers', $child_namespace );
+		foreach ( $names as $name ) {
+			$studly = \str_replace( ' ', '', \ucwords( \str_replace( [ '-', '_' ], ' ', $name ) ) );
+
+			if ( '' === $studly ) {
+				continue;
+			}
+
+			$resolved = ClassResolver::resolve( "WooCommerce\\{$studly}Controller", 'Controllers', $child_namespace );
+
+			if ( $resolved ) {
+				return $resolved;
+			}
+		}
+
+		return null;
 	}
 
 	/**

@@ -50,10 +50,12 @@ This applies to `product_cat` and `product_tag` as well as to any custom taxonom
 
 A product taxonomy can also take its own **controller**, resolved child-theme-first by the same `{Taxonomy}Controller` convention used elsewhere in PressGang:
 
-| Taxonomy             | Controller                  |
-| -------------------- | --------------------------- |
-| `product_promotion`  | `ProductPromotionController` |
-| `product_brand`      | `ProductBrandController`     |
+| Taxonomy            | Controller                                       |
+| ------------------- | ------------------------------------------------ |
+| `product_promotion` | `ProductPromotionController` or `PromotionController` |
+| `product_brand`     | `ProductBrandController` or `BrandController`     |
+
+The full taxonomy name is tried first, then the name with a leading `product_` stripped — that prefix is redundant inside the `Controllers\WooCommerce\` namespace.
 
 `WooCommerceControllerResolver` tries that class before falling back to the shared `ProductsController`, so a theme can give one taxonomy bespoke context without overriding the controller that also serves the shop and every other product archive. Extend `ProductsController` to inherit the products query and shop sidebar.
 
