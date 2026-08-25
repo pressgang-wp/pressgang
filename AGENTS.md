@@ -580,6 +580,8 @@ managers can genuinely see it unavailable even when WooCommerce itself is active
 ```bash
 composer test           # alias for test:unit
 composer test:unit      # run the full unit suite
+composer test:compat    # strict PHP compatibility/unit pass
+composer check          # local convenience: test:compat + phpstan
 vendor/bin/phpunit --filter ConfigTest          # single class
 vendor/bin/phpunit --filter loads_and_caches    # single test by name
 ```
@@ -588,13 +590,35 @@ vendor/bin/phpunit --filter loads_and_caches    # single test by name
 
 - **PHPStan 2.x** at level 8, with `szepeviktor/phpstan-wordpress`, `php-stubs/woocommerce-stubs`,
   and `php-stubs/acf-pro-stubs` for WP/WooCommerce/ACF-aware type checking.
-- Config: `phpstan.neon.dist`. Pre-existing debt is tracked in `phpstan-baseline.neon`
-  rather than fixed inline — new code should not add to it.
-- Two ignored identifiers are architectural, not suppressed bugs — see Known Exceptions below.
+- Config: `phpstan.neon.dist`. There is no PHPStan baseline in this repo; new
+  findings should be fixed rather than baselined.
+- Remaining ignored identifiers are architectural, not suppressed bugs — see Known Exceptions below.
 
 ```bash
 composer phpstan         # run PHPStan against src/
 ```
+
+`composer check` is intentionally narrow: it runs `test:compat` and `phpstan`
+only. Keep CI split into separate steps for clearer failure attribution.
+Agents should run `composer check` when a child theme provides it; otherwise
+run the theme's documented test and static-analysis commands separately.
+Prefer source, PHPDoc, project stubs, or config fixes over new ignores, and do
+not add baselines unless explicitly requested.
+
+### Tooling boundaries
+
+- PHPStan handles static PHP type/convention pressure.
+- Capstan handles runtime introspection: `wp capstan resolve`, `context`,
+  `config dump`, `snippets`, and `doctor`.
+- Shakedown asserts runtime behaviour in CI with Capstan's
+  `wp capstan matrix --resolve` oracle.
+- `doctor` stays runtime-only, deterministic, fast, and heuristic-free; do not
+  fold PHPStan-style checks into it.
+- `wp capstan check` is unbuilt and blocked until at least one child theme has
+  a working `composer check`; if built, it must only shell out to that command,
+  run `doctor`, and report both.
+- Do not extract a shared `pressgang/phpstan` package until a second PressGang
+  repo independently adopts PHPStan level 8 and hits the same stubs/ignores.
 
 ### Directory structure
 

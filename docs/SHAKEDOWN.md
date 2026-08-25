@@ -240,6 +240,11 @@ Shakedown works on any PressGang site out of the box, and gets sharper with its 
 * **[Capstan](CAPSTAN.md)** — the matrix gains an *oracle*: each route annotated with the template and controller that *should* render it, asserted at runtime. Silent fallbacks to `index.php` become hard failures. `wp capstan doctor` also runs as a pre-flight, aborting before any browser launches if the theme's config is broken.
 * **[Muster](MUSTER.md)** — runs the theme's own seeders as the sandbox baseline (via `wp capstan seed`) and powers the derived ACF state fixtures on top. Without it, the sandbox still runs; it just skips seeding.
 
+Route, controller, context, and config-dump validation belong to this
+Capstan/Shakedown boundary. Do not duplicate them in PHPStan conventions or in
+new Capstan commands: PHPStan handles static PHP signals, while Shakedown uses
+Capstan's runtime oracle to prove what the theme actually renders.
+
 The sandbox also counts **PHP notices, warnings and deprecations on every request** — even when display and logging are off — and fails any route that raises one. A page can look perfect and still be noisy underneath. The failure quotes the signature verbatim, so if the notice comes from a dependency rather than your theme you can paste it straight into `ignore.phpIssues`.
 
 ## 🧯 Troubleshooting

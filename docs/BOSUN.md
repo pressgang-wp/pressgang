@@ -40,6 +40,7 @@ The document always opens with an **inventory of reality** — installed package
 
 * Guidance for [Template Routing](TEMPLATE-ROUTING.md) only comes aboard when `config/service-providers.php` registers the provider.
 * [Quartermaster](QUARTERMASTER.md) guidance appears only when the package is installed — along with a pointer to its machine-readable API index (`docs/api-index.json`, every method signature and the WP args it sets).
+* Testing guidance tells agents to prefer `composer check` when a theme provides it, and otherwise run the theme's documented test and static-analysis commands separately.
 * Skills (Agent Skills format) install to `.claude/skills/` — including a v1 → v2 migration skill that appears **only** on themes still booting through PressGang v1, and disappears once they're migrated.
 
 ## 🧩 Where Guidance Comes From

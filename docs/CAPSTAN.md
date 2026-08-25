@@ -72,6 +72,17 @@ wp capstan doctor
 
 These answer the questions agents (and new crew) ask most: *which controller handles this URL, what data does the template get, and is the rigging sound?* [Bosun](BOSUN.md)-composed guidelines teach agents these recipes.
 
+`doctor` stays runtime-only: deterministic, fast, and heuristic-free. It should
+not absorb PHPStan-style static analysis, type checks, or convention inference.
+Use `composer phpstan` for static analysis and [Shakedown](SHAKEDOWN.md) for
+browser/runtime assertions.
+
+`wp capstan check` is deliberately unbuilt. If it lands later, it must be a
+thin orchestrator that shells out to the target theme's `composer check`, runs
+`wp capstan doctor`, and reports both results. It must not re-implement,
+configure, or wrap PHPStan itself. Do not build it until at least one child
+theme has adopted a working `composer check` for Capstan to call.
+
 {% hint style="info" %}
 **Dry-run by default.** Every scaffolding command prints its execution plan first and only writes when you re-run with `--force`. Review the charts before you sail. 🗺️
 {% endhint %}
