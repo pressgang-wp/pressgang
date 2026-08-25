@@ -94,7 +94,7 @@ class FileConfigLoader implements ConfigLoaderInterface {
 		$loaded_settings = [];
 
 		if ( is_dir( $directory_path ) ) {
-			$config_files = glob( $directory_path . '*.php' );
+			$config_files = glob( $directory_path . '*.php' ) ?: [];
 
 			foreach ( $config_files as $file ) {
 				$setting_key = basename( $file, '.php' );

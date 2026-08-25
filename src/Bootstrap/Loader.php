@@ -39,14 +39,26 @@ class Loader {
 		Config::set_loader( $this->configLoader );
 
 		foreach ( Config::get() as $key => $config ) {
+			if ( ! is_array( $config ) ) {
+				continue;
+			}
+
 			$class_name = $this->config_key_to_configuration_class( $key );
-			if ( class_exists( $class_name ) && in_array( ConfigurationInterface::class, class_implements( $class_name ) ) ) {
+			if ( $this->is_configuration_class( $class_name ) ) {
 				$instance = $class_name::get_instance();
-				if ( method_exists( $instance, 'initialize' ) ) {
-					$instance->initialize( $config );
-				}
+				$instance->initialize( $config );
 			}
 		}
+	}
+
+	/**
+	 * @param string $class_name
+	 * @return bool
+	 *
+	 * @phpstan-assert-if-true class-string<ConfigurationInterface> $class_name
+	 */
+	protected function is_configuration_class( string $class_name ): bool {
+		return is_subclass_of( $class_name, ConfigurationInterface::class );
 	}
 
 	/**
