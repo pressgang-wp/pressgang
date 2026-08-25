@@ -3,8 +3,7 @@
 namespace PressGang\Controllers;
 
 use Override;
-use Timber\Post;
-use Timber\PostQuery;
+use Timber\PostCollectionInterface;
 use Timber\Timber;
 use Timber\User;
 
@@ -16,8 +15,7 @@ class AuthorController extends AbstractController {
 
 	protected ?User $author = null;
 
-	/** @var PostQuery|Post[]|null */
-	protected mixed $posts = null;
+	protected ?PostCollectionInterface $posts = null;
 
 	/**
 	 * @param string|null $template
@@ -43,11 +41,12 @@ class AuthorController extends AbstractController {
 	}
 
 	/**
-	 * Returns the author's posts, lazily initialised.
+	 * Returns the author's posts, lazily initialised. Empty array when the
+	 * queried object has no author (e.g. current user is not a post author).
 	 *
-	 * @return Post[]|null
+	 * @return PostCollectionInterface|array<int, never>|null
 	 */
-	protected function get_posts(): mixed {
+	protected function get_posts(): PostCollectionInterface|array|null {
 		if ( $this->posts === null ) {
 			$author = $this->get_author();
 

@@ -15,10 +15,10 @@ function reading_time( $text, bool $to_nearest_minute = false, int $speed = 200 
 	$seconds = 0;
 
 	if ( $to_nearest_minute ) {
-		$minutes = floor( $words / $speed );
-		$seconds = floor( $words % $speed / ( $speed / 60 ) );
+		$minutes = (int) floor( $words / $speed );
+		$seconds = (int) floor( $words % $speed / ( $speed / 60 ) );
 	} else {
-		$minutes = ceil( $words / $speed );
+		$minutes = (int) ceil( $words / $speed );
 	}
 
 	$est = sprintf( _n( "%d minute", "%d minutes", $minutes, THEMENAME ), $minutes );

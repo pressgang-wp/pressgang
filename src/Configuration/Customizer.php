@@ -127,7 +127,7 @@ class Customizer extends ConfigurationSingleton {
 	/**
 	 * Adds a control to a specific customizer setting.
 	 *
-	 * @param WP_Customize_Manager $wp_customize The WP Customizer Manager object.
+	 * @param \WP_Customize_Manager $wp_customize The WP Customizer Manager object.
 	 * @param string $section The section ID.
 	 * @param string $setting The setting ID.
 	 * @param array $options Options for the control.

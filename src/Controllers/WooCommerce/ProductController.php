@@ -56,7 +56,7 @@ class ProductController extends PostController {
 	 */
 	#[\Override]
 	public function get_context(): array {
-		parent::get_context();
+		$this->context = parent::get_context();
 
 		$this->context['shop_sidebar'] = $this->get_sidebar();
 		$this->context['product']      = $this->get_product();

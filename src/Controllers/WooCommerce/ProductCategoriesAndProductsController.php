@@ -39,7 +39,7 @@ class ProductCategoriesAndProductsController extends PostsController {
 	 * @return array The context array with additional data for the product category archive.
 	 */
 	protected function get_context(): array {
-		parent::get_context();
+		$this->context = parent::get_context();
 
 		$this->context['products']           = $this->get_products();
 		$this->context['product_categories'] = $this->get_product_categories();

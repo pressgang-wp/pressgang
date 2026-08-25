@@ -57,12 +57,15 @@ abstract class Widget extends WP_Widget {
 	/**
 	 * Display the widget content on the frontend.
 	 *
+	 * WP_Widget declares these as `mixed` for back-compat; PressGang always
+	 * calls them with arrays, so the docblock keeps the concrete type for IDEs.
+	 *
 	 * @param array $args
 	 * @param array $instance
 	 */
 	#[\Override]
-	public function widget( array $args, array $instance ): void {
-		$instance = $this->get_instance( $args, $instance );
+	public function widget( mixed $args, mixed $instance ): void {
+		$instance = $this->get_instance( (array) $args, (array) $instance );
 
 		$class     = new ReflectionClass( get_called_class() );
 		$classname = $class->getShortName();
@@ -95,14 +98,18 @@ abstract class Widget extends WP_Widget {
 	/**
 	 * Update the widget options.
 	 *
+	 * WP_Widget declares these as `mixed` for back-compat; PressGang always
+	 * calls them with arrays, so the docblock keeps the concrete type for IDEs.
+	 *
 	 * @param array $new_instance
 	 * @param array $old_instance
 	 *
 	 * @return array
 	 */
 	#[\Override]
-	public function update( array $new_instance, array $old_instance ): array {
-		$instance = $old_instance;
+	public function update( mixed $new_instance, mixed $old_instance ): array {
+		$new_instance = (array) $new_instance;
+		$instance     = (array) $old_instance;
 
 		foreach ( $this->fields as $field => &$config ) {
 			$instance[ $field ] = \sanitize_text_field( $new_instance[ $field ] ?? '' );
@@ -114,10 +121,13 @@ abstract class Widget extends WP_Widget {
 	/**
 	 * Display the widget form in the admin area.
 	 *
+	 * WP_Widget declares this as `mixed` for back-compat; PressGang always
+	 * calls it with an array, so the docblock keeps the concrete type for IDEs.
+	 *
 	 * @param array $instance
 	 */
 	#[\Override]
-	public function form( array $instance ): void {
+	public function form( mixed $instance ): void {
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 
 		foreach ( $this->fields as $field => &$config ) {

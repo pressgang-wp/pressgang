@@ -72,7 +72,7 @@ class ProductsController extends PostsController {
 	 */
 	#[\Override]
 	protected function get_context(): array {
-		parent::get_context();
+		$this->context = parent::get_context();
 
 		$this->context['products']          = $this->get_products();
 		$this->context['shop_sidebar']      = $this->get_sidebar();

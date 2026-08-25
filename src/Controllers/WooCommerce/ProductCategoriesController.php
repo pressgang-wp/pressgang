@@ -39,7 +39,7 @@ class ProductCategoriesController extends AbstractController {
 	 */
 	#[\Override]
 	protected function get_context(): array {
-		parent::get_context();
+		$this->context = parent::get_context();
 
 		$this->context['product_categories'] = $this->get_product_categories();
 		$this->context['shop_sidebar']       = $this->get_sidebar();

@@ -39,13 +39,17 @@ class Flash {
 	 *
 	 * @param string $key The key for the flash message.
 	 * @param mixed|null $default The default value to return if the key does not exist.
+	 * @param bool $clear Whether to clear the message after retrieval (default true).
 	 *
 	 * @return mixed The flash message if it exists, or $default if not.
 	 */
-	public static function get( string $key, mixed $default = null ): mixed {
+	public static function get( string $key, mixed $default = null, bool $clear = true ): mixed {
 		self::session();
 		$value = $_SESSION['flash'][ $key ] ?? $default;
-		self::schedule_flash_clear( $key );
+
+		if ( $clear ) {
+			self::schedule_flash_clear( $key );
+		}
 
 		return $value;
 	}

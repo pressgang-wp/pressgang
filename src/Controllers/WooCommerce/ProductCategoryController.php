@@ -35,7 +35,7 @@ class ProductCategoryController extends TaxonomyController {
 	 */
 	#[\Override]
 	protected function get_context(): array {
-		parent::get_context();
+		$this->context = parent::get_context();
 
 		$this->context['category'] = $this->get_term();
 		$this->context['title']    = \single_term_title( '', false );
