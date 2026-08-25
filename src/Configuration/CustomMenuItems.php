@@ -13,12 +13,12 @@ namespace PressGang\Configuration;
 class CustomMenuItems extends ConfigurationSingleton {
 
 	/**
-	 * @var array
+	 * @var array<string, array{parent_object_id: int|string, subitems: array<int, array<string, mixed>>}>
 	 */
 	private array $menus = [];
 
 	/**
-	 * @param array $config
+	 * @param array<string, array{parent_object_id?: int|string, subitems?: array<int, array<string, mixed>>}> $config
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {
@@ -46,10 +46,10 @@ class CustomMenuItems extends ConfigurationSingleton {
 	 * @link http://teleogistic.net/2013/02/dynamically-add-items-to-a-wp_nav_menu-list/
 	 * @link https://github.com/timber/timber/issues/200
 	 *
-	 * @param array $items
+	 * @param array<int, \WP_Post> $items
 	 * @param \WP_Term $menu
 	 *
-	 * @return array
+	 * @return array<int, \WP_Post>
 	 */
 	public function filter_nav_menu_items( array $items, \WP_Term $menu ): array {
 
@@ -71,6 +71,10 @@ class CustomMenuItems extends ConfigurationSingleton {
 		$menu_order = count( $items ) + 1;
 
 		foreach ( $menu_config['subitems'] as $subitem ) {
+			if ( empty( $subitem['text'] ) || ! is_string( $subitem['text'] ) || empty( $subitem['url'] ) || ! is_string( $subitem['url'] ) ) {
+				continue;
+			}
+
 			$menu_item_data = (object) [
 				'ID'                    => mt_rand( 100000, 999999 ), // Generate a numeric ID
 				'post_title'            => $subitem['text'],
@@ -84,9 +88,9 @@ class CustomMenuItems extends ConfigurationSingleton {
 				'post_parent'           => $parent_menu_item_id,
 				'menu_order'            => $menu_order,
 				'post_date'             => current_time( 'mysql' ),
-				'post_date_gmt'         => current_time( 'mysql', 1 ),
+				'post_date_gmt'         => current_time( 'mysql', true ),
 				'post_modified'         => current_time( 'mysql' ),
-				'post_modified_gmt'     => current_time( 'mysql', 1 ),
+				'post_modified_gmt'     => current_time( 'mysql', true ),
 				'post_content_filtered' => '',
 				'post_mime_type'        => '',
 				'comment_status'        => 'closed',
@@ -104,10 +108,10 @@ class CustomMenuItems extends ConfigurationSingleton {
 			$menu_item_post->type             = 'custom';
 			$menu_item_post->type_label       = __( 'Custom Link' );
 			$menu_item_post->url              = $subitem['url'];
-			$menu_item_post->classes          = isset( $subitem['classes'] ) ? $subitem['classes'] : [];
-			$menu_item_post->target           = isset( $subitem['target'] ) ? $subitem['target'] : '';
-			$menu_item_post->attr_title       = isset( $subitem['text'] ) ? $subitem['text'] : '';
-			$menu_item_post->description      = isset( $subitem['description'] ) ? $subitem['description'] : '';
+			$menu_item_post->classes          = isset( $subitem['classes'] ) && is_array( $subitem['classes'] ) ? $subitem['classes'] : [];
+			$menu_item_post->target           = isset( $subitem['target'] ) && is_string( $subitem['target'] ) ? $subitem['target'] : '';
+			$menu_item_post->attr_title       = $subitem['text'];
+			$menu_item_post->description      = isset( $subitem['description'] ) && is_string( $subitem['description'] ) ? $subitem['description'] : '';
 			$menu_item_post->xfn              = '';
 
 			$items[] = $menu_item_post;

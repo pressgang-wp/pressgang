@@ -19,7 +19,7 @@ class Blocks extends ConfigurationSingleton {
 	 *
 	 * Sets up the configuration and adds action hooks for Gutenberg block registration.
 	 *
-	 * @param array $config The configuration array for Gutenberg blocks.
+	 * @param array<array-key, array<string, mixed>|string> $config The configuration array for Gutenberg blocks.
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {
@@ -83,17 +83,21 @@ class Blocks extends ConfigurationSingleton {
 	 * Registers a single block type and triggers a custom action for additional setup.
 	 *
 	 * @param string $block_path The path to the block's registration file (block.json).
-	 * @param array $args Additional arguments for block registration (if any).
+	 * @param array<string, mixed> $args Additional arguments for block registration (if any).
 	 */
 	private function register_block( string $block_path, array $args = [] ): void {
 		// Read and decode the block.json file
 		$file_content = file_get_contents( $block_path );
 
-		if ( ! json_validate( $file_content ) ) {
+		if ( ! is_string( $file_content ) || ! json_validate( $file_content ) ) {
 			return;
 		}
 
 		$block_settings = json_decode( $file_content, true );
+
+		if ( ! is_array( $block_settings ) || empty( $block_settings['name'] ) || ! is_string( $block_settings['name'] ) ) {
+			return;
+		}
 
 		// Register the block type using the block.json file and any additional arguments
 		\register_block_type( $block_path, $args );
@@ -102,8 +106,8 @@ class Blocks extends ConfigurationSingleton {
 
 		// Trigger the on_register method for the block
 		$block_class = $block_settings['acf']['renderCallback'][0] ?? null;
-		if ( $block_class && class_exists( $block_class ) && method_exists( $block_class, 'on_register' ) ) {
-			call_user_func( [ $block_class, 'on_register' ], $block_settings );
+		if ( is_string( $block_class ) && is_callable( [ $block_class, 'on_register' ] ) ) {
+			$block_class::on_register( $block_settings );
 		}
 
 		// Trigger custom action based on the block name

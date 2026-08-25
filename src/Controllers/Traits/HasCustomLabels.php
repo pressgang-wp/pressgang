@@ -14,9 +14,9 @@ trait HasCustomLabels {
 	 * Merges auto-generated singular/plural labels into the registration args.
 	 *
 	 * @param string $key  The CPT or taxonomy slug from config.
-	 * @param array  $args Registration arguments (may already contain partial labels).
+	 * @param array<string, mixed> $args Registration arguments (may already contain partial labels).
 	 *
-	 * @return array The args with a complete 'labels' array merged in.
+	 * @return array<string, mixed> The args with a complete 'labels' array merged in.
 	 */
 	protected function parse_labels( string $key, array $args ): array {
 

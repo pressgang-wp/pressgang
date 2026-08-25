@@ -18,7 +18,7 @@ class MetaTags extends ConfigurationSingleton {
 	 *
 	 * Sets up the meta tags configuration and adds an action hook to output them in the head section.
 	 *
-	 * @param array $config The configuration array for meta tags.
+	 * @param array<string, string> $config The configuration array for meta tags.
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {
@@ -39,4 +39,3 @@ class MetaTags extends ConfigurationSingleton {
 		}
 	}
 }
-

@@ -47,10 +47,10 @@ class PageTemplates extends ConfigurationSingleton {
 	public function initialize( array $config ): void {
 		$this->config = $config;
 
-		self::$slugs = array_values( array_map(
+		self::$slugs = array_map(
 			static fn( string $id ): string => basename( $id, '.php' ),
 			array_keys( $config )
-		) );
+		);
 
 		\add_filter( 'theme_page_templates', [ $this, 'register_templates' ] );
 		\add_filter( 'page_template_hierarchy', [ $this, 'seed_candidate' ] );

@@ -20,12 +20,12 @@ class Support extends ConfigurationSingleton {
 	 * The configuration can specify support options either as a simple string (for features without additional arguments)
 	 * or as an associative array for features that require arguments.
 	 *
-	 * @param array $config Configuration array for theme support options.
+	 * @param array<array-key, array<string, mixed>|string> $config Configuration array for theme support options.
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {
 		foreach ( $config as $key => $args ) {
-			if ( is_numeric( $key ) ) {
+			if ( is_numeric( $key ) && is_string( $args ) ) {
 				// Simple theme support feature, added directly
 				\add_theme_support( $args );
 			} elseif ( is_array( $args ) ) {

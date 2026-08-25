@@ -19,7 +19,7 @@ class Sidebars extends ConfigurationSingleton {
 	 * Sets up theme support for widgets, registers sidebars based on the provided configuration,
 	 * and adds Timber functions for sidebar rendering.
 	 *
-	 * @param array $config The configuration array for sidebars.
+	 * @param array<string, array<string, mixed>> $config The configuration array for sidebars.
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {
@@ -48,9 +48,9 @@ class Sidebars extends ConfigurationSingleton {
 	/**
 	 * Parses and merges sidebar arguments with default values.
 	 *
-	 * @param array $args Sidebar configuration arguments.
+	 * @param array<string, mixed> $args Sidebar configuration arguments.
 	 *
-	 * @return array Merged array of arguments.
+	 * @return array<string, mixed> Merged array of arguments.
 	 */
 	public function parse_args( array $args ): array {
 		$defaults = [

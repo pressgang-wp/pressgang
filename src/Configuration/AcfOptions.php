@@ -19,7 +19,7 @@ class AcfOptions extends ConfigurationSingleton {
 	 *
 	 * Sets up the configuration and adds an action hook to create ACF options pages.
 	 *
-	 * @param array $config The configuration array for ACF options pages.
+	 * @param array<string, array<string, mixed>> $config The configuration array for ACF options pages.
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {

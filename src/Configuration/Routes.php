@@ -32,7 +32,7 @@ class Routes extends ConfigurationSingleton {
 	/**
 	 * Maps each configured route to its template or handler class.
 	 *
-	 * @param array $config The configuration array for custom routes.
+	 * @param array<string, class-string<RouteHandlerInterface>|string> $config The configuration array for custom routes.
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {

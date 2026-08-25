@@ -15,7 +15,7 @@ namespace PressGang\Configuration;
 class Customizer extends ConfigurationSingleton {
 
 	/**
-	 * @param array<string, mixed> $config Sections containing settings and control definitions.
+	 * @param array<string, array<string, mixed>> $config Sections containing settings and control definitions.
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {
@@ -67,6 +67,10 @@ class Customizer extends ConfigurationSingleton {
 	 */
 	private function add_customizer_sections( \WP_Customize_Manager $wp_customize ): void {
 		foreach ( $this->config as $section => $args ) {
+			if ( ! is_array( $args ) ) {
+				continue;
+			}
+
 			if ( ! $wp_customize->get_section( $section ) ) {
 				$title = $args['title'] ?? ucwords( str_replace( [ '-', '_' ], ' ', $section ) );
 				$wp_customize->add_section( $section, [ 'title' => $title ] );
@@ -81,6 +85,10 @@ class Customizer extends ConfigurationSingleton {
 	 */
 	private function add_customizer_settings( \WP_Customize_Manager $wp_customize ): void {
 		foreach ( $this->config as $section => $args ) {
+			if ( ! is_array( $args ) || empty( $args['settings'] ) || ! is_array( $args['settings'] ) ) {
+				continue;
+			}
+
 			$this->create_settings_for_section( $wp_customize, $section, $args['settings'] );
 		}
 	}
@@ -90,10 +98,22 @@ class Customizer extends ConfigurationSingleton {
 	 *
 	 * @param \WP_Customize_Manager $wp_customize The WP Customizer Manager object.
 	 * @param string $section The section ID.
-	 * @param array $settings Array of settings for the section.
+	 * @param array<array-key, array<string, mixed>|string> $settings Array of settings for the section.
 	 */
 	private function create_settings_for_section( \WP_Customize_Manager $wp_customize, string $section, array $settings ): void {
 		foreach ( $settings as $setting => $options ) {
+			if ( is_int( $setting ) ) {
+				if ( is_string( $options ) ) {
+					$this->create_setting( $wp_customize, $section, $options, [] );
+				}
+
+				continue;
+			}
+
+			if ( ! is_array( $options ) ) {
+				continue;
+			}
+
 			$this->create_setting( $wp_customize, $section, $setting, $options );
 		}
 	}
@@ -104,14 +124,9 @@ class Customizer extends ConfigurationSingleton {
 	 * @param \WP_Customize_Manager $wp_customize The WP Customizer Manager object.
 	 * @param string $section The section ID.
 	 * @param string $setting The setting ID.
-	 * @param array $options Options for the setting.
+	 * @param array<string, mixed> $options Options for the setting.
 	 */
 	private function create_setting( \WP_Customize_Manager $wp_customize, string $section, string $setting, array $options ): void {
-		if ( is_numeric( $setting ) ) {
-			$setting = $options;
-			$options = [];
-		}
-
 		$sanitize_callback = $options['sanitize_callback'] ?? 'sanitize_text_field';
 		$default           = $options['default'] ?? null;
 
@@ -130,13 +145,18 @@ class Customizer extends ConfigurationSingleton {
 	 * @param \WP_Customize_Manager $wp_customize The WP Customizer Manager object.
 	 * @param string $section The section ID.
 	 * @param string $setting The setting ID.
-	 * @param array $options Options for the control.
+	 * @param array<string, mixed> $options Options for the control.
 	 */
 	private function add_control_to_setting( \WP_Customize_Manager $wp_customize, string $section, string $setting, array $options ): void {
 		$class = $options['class'] ?? 'WP_Customize_Control';
-		$class = "\\{$class}";
 
-		if ( ! class_exists( $class ) ) {
+		if ( ! is_string( $class ) || $class === '' ) {
+			return;
+		}
+
+		$class = ltrim( $class, '\\' );
+
+		if ( ! class_exists( $class ) || ( $class !== \WP_Customize_Control::class && ! is_subclass_of( $class, \WP_Customize_Control::class ) ) ) {
 			// Handle error or log the issue
 			return;
 		}
@@ -146,13 +166,15 @@ class Customizer extends ConfigurationSingleton {
 		$priority    = $options['priority'] ?? 10;
 		$type        = $options['type'] ?? null;
 
-		$wp_customize->add_control( new $class( $wp_customize, $setting, [
+		$control = new $class( $wp_customize, $setting, [
 			'label'       => $label,
 			'description' => $description,
 			'section'     => $section,
 			'priority'    => $priority,
 			'type'        => $type,
-		] ) );
+		] );
+
+		$wp_customize->add_control( $control );
 	}
 
 }

@@ -21,7 +21,7 @@ class CustomPostTypes extends ConfigurationSingleton {
 	 * Sets up the configuration for custom post types and adds an action hook
 	 * to register the custom post types after WordPress initializes.
 	 *
-	 * @param array $config The configuration array for custom post types.
+	 * @param array<string, array<string, mixed>> $config The configuration array for custom post types.
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {

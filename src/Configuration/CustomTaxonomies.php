@@ -21,7 +21,7 @@ class CustomTaxonomies extends ConfigurationSingleton {
 	 * Sets up the configuration for custom taxonomies and adds an action hook
 	 * to register the custom taxonomies after WordPress initializes.
 	 *
-	 * @param array $config The configuration array for custom taxonomies.
+	 * @param array<string, array{object-type?: string|array<int, string>, args: array<string, mixed>}> $config The configuration array for custom taxonomies.
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {

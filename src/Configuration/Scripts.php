@@ -18,7 +18,7 @@ class Scripts extends ConfigurationSingleton {
 	 *
 	 * Registers scripts based on provided configuration to be enqueued on the given hooks ( default = 'wp_enqueue_scripts' )
 	 *
-	 * @param array $config The configuration array for scripts.
+	 * @param array<string, array<string, mixed>|string> $config The configuration array for scripts.
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {

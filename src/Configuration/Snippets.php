@@ -15,7 +15,7 @@ use PressGang\Util\ClassResolver;
  */
 class Snippets extends ConfigurationSingleton {
 	/**
-	 * @param array $config
+	 * @param array<string, array<string, mixed>> $config
 	 *
 	 * @return void
 	 */

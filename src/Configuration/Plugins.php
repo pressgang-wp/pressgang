@@ -16,7 +16,7 @@ class Plugins extends ConfigurationSingleton {
 	 *
 	 * Sets up the configuration for required plugins and adds a filter to check if these plugins are active.
 	 *
-	 * @param array $config The configuration array for required plugins.
+	 * @param array<string, string|null> $config The configuration array for required plugins.
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {

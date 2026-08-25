@@ -20,7 +20,7 @@ class Styles extends ConfigurationSingleton {
 	 *
 	 * @see https://codex.wordpress.org/Plugin_API/Action_Reference/wp_enqueue_scripts
 	 *
-	 * @param array $config Configuration array for styles.
+	 * @param array<string, array<string, mixed>|string> $config Configuration array for styles.
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {

@@ -18,7 +18,7 @@ class BlockCategories extends ConfigurationSingleton {
 	 *
 	 * @see https://developer.wordpress.org/reference/hooks/block_categories_all/
 	 *
-	 * @param array $config The configuration array for Gutenberg blocks.
+	 * @param array<string, string> $config The configuration array for Gutenberg blocks.
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {
@@ -29,11 +29,11 @@ class BlockCategories extends ConfigurationSingleton {
 	/**
 	 * Adds custom block categories to the block editor.
 	 *
-	 * @param array $categories Existing block categories.
+	 * @param array<int, array<string, mixed>> $categories Existing block categories.
 	 *
 	 * @hooked block_categories_all
 	 *
-	 * @return array Modified array of block categories including custom ones.
+	 * @return array<int, array<string, mixed>> Modified array of block categories including custom ones.
 	 */
 	public function add_custom_categories( array $categories ): array {
 
@@ -46,7 +46,7 @@ class BlockCategories extends ConfigurationSingleton {
 			];
 		}
 
-		return array_values( array_merge( $categories, $custom_categories ) );
+		return array_merge( $categories, $custom_categories );
 
 	}
 

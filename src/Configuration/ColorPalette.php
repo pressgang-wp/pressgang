@@ -22,7 +22,7 @@ class ColorPalette extends ConfigurationSingleton {
 	 * Sets up the configuration for the color palette and adds an action hook
 	 * to register the color palette after the theme setup.
 	 *
-	 * @param array $config The configuration array for the color palette.
+	 * @param array<string, array<string, mixed>|string> $config The configuration array for the color palette.
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {

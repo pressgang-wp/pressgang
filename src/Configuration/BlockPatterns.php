@@ -21,7 +21,7 @@ class BlockPatterns extends ConfigurationSingleton {
 	 *
 	 * Sets up the configuration and adds an action hook to register block patterns.
 	 *
-	 * @param array $config The configuration array for block patterns.
+	 * @param array<string, array<string, mixed>> $config The configuration array for block patterns.
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {

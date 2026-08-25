@@ -17,7 +17,7 @@ class RemoveSupport extends ConfigurationSingleton {
 	 *
 	 * Iterates through each configuration item and adds theme support using WordPress's remove_theme_support function.
 	 *
-	 * @param array $config Configuration array for theme support options to remove.
+	 * @param array<int, string> $config Configuration array for theme support options to remove.
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {

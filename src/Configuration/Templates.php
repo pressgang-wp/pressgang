@@ -26,7 +26,7 @@ class Templates extends ConfigurationSingleton {
 	 * Adds templates to the WordPress cache to make them available in the admin page attributes dropdown
 	 * and ensures they are recognized during post saving.
 	 *
-	 * @param array $config Array of template file names to be registered.
+	 * @param array<string, string> $config Array of template file names to be registered.
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {
@@ -45,9 +45,9 @@ class Templates extends ConfigurationSingleton {
 	 *
 	 * @link https://developer.wordpress.org/themes/basics/template-hierarchy/ For more information on WordPress template hierarchy.
 	 *
-	 * @param array $atts Attributes for the page attributes dropdown, not modified by this function.
+	 * @param array<string, mixed> $atts Attributes for the page attributes dropdown, not modified by this function.
 	 *
-	 * @return array Original attributes passed to the function.
+	 * @return array<string, mixed> Original attributes passed to the function.
 	 */
 	public function register_templates( array $atts ): array {
 
@@ -57,9 +57,8 @@ class Templates extends ConfigurationSingleton {
 		// Retrieve the current list of page templates from the active theme
 		$templates = \wp_get_theme()->get_page_templates();
 
-		// Initialize an empty array if no templates are found
-		// This ensures $templates is always an array, even if empty
-		if ( empty( $templates ) || ! is_array( $templates ) ) {
+		// Initialize an empty array if no templates are found.
+		if ( empty( $templates ) ) {
 			$templates = [];
 		}
 
