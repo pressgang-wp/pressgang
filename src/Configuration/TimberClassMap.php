@@ -14,7 +14,7 @@ namespace PressGang\Configuration;
 class TimberClassMap extends ConfigurationSingleton {
 
 	/**
-	 * @var array Array of classes to map.
+	 * @var array<string, array<string, class-string>> Array of classes to map.
 	 */
 	protected array $config;
 
@@ -26,11 +26,11 @@ class TimberClassMap extends ConfigurationSingleton {
 	 *
 	 * @link https://timber.github.io/docs/v2/guides/class-maps/
 	 *
-	 * @param array $config An array of WordPress elements (post types, terms, etc.)
-	 *                      to their respective classes. The array should have keys
-	 *                      representing the Timber classmap filter (e.g., 'post', 'term')
-	 *                      and values being associative arrays where keys are slugs,
- *                          and values are the class names to be used.
+	 * @param array<string, array<string, class-string>> $config An array of WordPress elements (post types, terms, etc.)
+	 *                                                          to their respective classes. The array should have keys
+	 *                                                          representing the Timber classmap filter (e.g., 'post', 'term')
+	 *                                                          and values being associative arrays where keys are slugs,
+	 *                                                          and values are the class names to be used.
 	 *
 	 * @return void
 	 */

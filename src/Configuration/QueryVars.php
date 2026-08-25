@@ -12,7 +12,7 @@ namespace PressGang\Configuration;
 class QueryVars extends ConfigurationSingleton {
 
 	/**
-	 * @var array Array of query variables to be registered.
+	 * @var array<int, string> Array of query variables to be registered.
 	 */
 	protected array $config;
 
@@ -21,8 +21,8 @@ class QueryVars extends ConfigurationSingleton {
 	 * This method registers the custom query variables defined in the configuration array
 	 * to the WordPress query system using the 'query_vars' filter.
 	 *
-	 * @param array $config An array of query variables to be added.
-	 *                      Each element in the array should be a string representing a query variable name.
+	 * @param array<int, string> $config An array of query variables to be added.
+	 *                                   Each element in the array should be a string representing a query variable name.
 	 *
 	 * @return void
 	 */

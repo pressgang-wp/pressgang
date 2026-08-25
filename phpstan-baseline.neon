@@ -193,24 +193,6 @@ parameters:
 			path: src/Configuration/ColorPalette.php
 
 		-
-			message: '#^Property PressGang\\Configuration\\ConfigurationSingleton\:\:\$config type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Configuration/ConfigurationSingleton.php
-
-		-
-			message: '#^Property PressGang\\Configuration\\ConfigurationSingleton\:\:\$instances type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Configuration/ConfigurationSingleton.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: src/Configuration/ConfigurationSingleton.php
-
-		-
 			message: '#^Method PressGang\\Configuration\\CustomMenuItems\:\:filter_nav_menu_items\(\) has parameter \$items with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -337,30 +319,6 @@ parameters:
 			path: src/Configuration/Plugins.php
 
 		-
-			message: '#^Method PressGang\\Configuration\\QueryVars\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Configuration/QueryVars.php
-
-		-
-			message: '#^Property PressGang\\Configuration\\QueryVars\:\:\$config type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Configuration/QueryVars.php
-
-		-
-			message: '#^Method PressGang\\Configuration\\RemoveMenus\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Configuration/RemoveMenus.php
-
-		-
-			message: '#^Property PressGang\\Configuration\\RemoveMenus\:\:\$config type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Configuration/RemoveMenus.php
-
-		-
 			message: '#^Method PressGang\\Configuration\\RemoveNodes\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -443,18 +401,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Configuration/Templates.php
-
-		-
-			message: '#^Method PressGang\\Configuration\\TimberClassMap\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Configuration/TimberClassMap.php
-
-		-
-			message: '#^Property PressGang\\Configuration\\TimberClassMap\:\:\$config type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Configuration/TimberClassMap.php
 
 		-
 			message: '#^Method PressGang\\Helpers\\ScriptLoader\:\:register_script\(\) has parameter \$args with no value type specified in iterable type array\.$#'

@@ -12,14 +12,14 @@ namespace PressGang\Configuration;
 class RemoveMenus extends ConfigurationSingleton {
 
 	/**
-	 * @var array Configurations for menu removal.
+	 * @var array<int, string> Configurations for menu removal.
 	 */
 	protected array $config;
 
 	/**
 	 * Initializes the RemoveMenus object with configuration and hooks into the WordPress 'admin_menu' action.
 	 *
-	 * @param array $config An array of admin menu slugs to be removed.
+	 * @param array<int, string> $config An array of admin menu slugs to be removed.
 	 */
 	#[\Override]
 	public function initialize( array $config ): void {

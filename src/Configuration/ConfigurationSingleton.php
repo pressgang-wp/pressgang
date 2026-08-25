@@ -6,14 +6,17 @@ namespace PressGang\Configuration;
  * Base singleton for all Configuration classes. Ensures each config handler is
  * instantiated only once and provides the shared $config property that is populated
  * by initialize() during the Loader boot sequence.
+ *
+ * @phpstan-consistent-constructor
  */
 abstract class ConfigurationSingleton implements ConfigurationInterface {
+	/** @var array<class-string, static> */
 	private static array $instances = [];
 
 	/**
 	 * Configuration array for the class loaded from the config files.
 	 *
-	 * @var array
+	 * @var array<array-key, mixed>
 	 */
 	protected array $config = [];
 
@@ -49,5 +52,8 @@ abstract class ConfigurationSingleton implements ConfigurationInterface {
 		self::$instances = [];
 	}
 
+	/**
+	 * @param array<array-key, mixed> $config
+	 */
 	abstract public function initialize( array $config ): void;
 }
