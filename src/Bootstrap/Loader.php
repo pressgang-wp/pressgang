@@ -40,10 +40,6 @@ class Loader {
 
 		foreach ( Config::get() as $key => $config ) {
 			if ( ! is_array( $config ) ) {
-				// Config files must return arrays only — a non-array value here is
-				// an authoring bug in a config file, not a supported case.
-				error_log( sprintf( 'PressGang: config key "%s" did not return an array — skipped.', $key ) );
-
 				continue;
 			}
 
