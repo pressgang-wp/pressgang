@@ -9,6 +9,7 @@ namespace PressGang\Controllers\WooCommerce;
  */
 trait HasProducts {
 
+	/** @var array<int, \WC_Product>|null */
 	protected ?array $products = null;
 
 	/**
@@ -18,13 +19,17 @@ trait HasProducts {
 	 * This method iterates over each post obtained from get_posts() and converts them to WooCommerce product objects.
 	 *
 	 * @see https://woocommerce.github.io/code-reference/files/woocommerce-includes-wc-product-functions.html#function_wc_get_product
-	 * @return array An array of WooCommerce product objects.
+	 * @return array<int, \WC_Product> An array of WooCommerce product objects.
 	 */
 	protected function get_products(): array {
 		if ( $this->products === null ) {
 			$this->products = [];
 			foreach ( $this->get_posts() as $post ) {
-				$this->products[] = \wc_get_product( $post->id );
+				$product = \wc_get_product( $post->id );
+
+				if ( $product instanceof \WC_Product ) {
+					$this->products[] = $product;
+				}
 			}
 		}
 

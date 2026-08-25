@@ -58,7 +58,7 @@ class ProductController extends PostController {
 	 * Extends the base get_context method from AbstractController, adding specific data
 	 * like the widget sidebar, product details, and post data to the context for rendering in the template.
 	 *
-	 * @return array The context array with additional data for the single product page.
+	 * @return array<string, mixed> The context array with additional data for the single product page.
 	 */
 	#[\Override]
 	public function get_context(): array {

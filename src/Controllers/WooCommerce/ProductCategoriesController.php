@@ -35,7 +35,7 @@ class ProductCategoriesController extends AbstractController {
 	 * Extends the base get_context method from TaxonomyController, adding specific data like product categories,
 	 * shop sidebar, and shop page display settings to the context for use in the Twig template.
 	 *
-	 * @return array The context array with additional data for the product category archive.
+	 * @return array<string, mixed> The context array with additional data for the product category archive.
 	 */
 	#[\Override]
 	protected function get_context(): array {

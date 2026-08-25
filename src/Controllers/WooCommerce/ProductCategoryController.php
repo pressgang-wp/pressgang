@@ -31,7 +31,7 @@ class ProductCategoryController extends TaxonomyController {
 	 * This method extends the base get_context method, adding specific data like the current category
 	 * and the category title to the context for rendering in the Twig template.
 	 *
-	 * @return array The context array with additional data for the product category archive.
+	 * @return array<string, mixed> The context array with additional data for the product category archive.
 	 */
 	#[\Override]
 	protected function get_context(): array {

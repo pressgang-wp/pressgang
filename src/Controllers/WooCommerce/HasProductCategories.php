@@ -11,6 +11,7 @@ use Timber\Timber;
  */
 trait HasProductCategories {
 
+	/** @var array<int, \Timber\Term>|null */
 	protected ?array $product_categories = null;
 
 	/**
@@ -19,7 +20,7 @@ trait HasProductCategories {
 	 * Retrieves and caches the product categories for the current term. Each category is enhanced with additional
 	 * data like thumbnail images. This method uses Timber to convert categories into term objects.
 	 *
-	 * @return array An array of Timber term objects representing product categories.
+	 * @return array<int, \Timber\Term> An array of Timber term objects representing product categories.
 	 */
 	public function get_product_categories(): array {
 
@@ -37,9 +38,10 @@ trait HasProductCategories {
 				'pad_counts'   => 1,
 			] );
 
-			$product_categories = Timber::get_terms( $args );
+			$terms              = Timber::get_terms( $args );
+			$product_categories = is_array( $terms ) ? $terms : iterator_to_array( $terms );
 
-			foreach ( $product_categories as &$category ) {
+			foreach ( $product_categories as $category ) {
 				if ( $thumbnail_id = $category->meta( 'thumbnail_id' ) ) {
 					$category->thumbnail = Timber::get_image( $thumbnail_id );
 				}

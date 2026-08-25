@@ -12,7 +12,7 @@ namespace PressGang\Tests\Unit\Controllers {
 	 */
 	class InspectableProductsController extends ProductsController {
 
-		public function __construct( string|array|null $template = null ) {
+		public function __construct( string|array|null $template = null, private readonly ?string $queried_taxonomy = null ) {
 			// Intentionally does not call parent::__construct().
 		}
 
@@ -21,6 +21,13 @@ namespace PressGang\Tests\Unit\Controllers {
 		 */
 		public function inferred_template(): string|array {
 			return $this->infer_template();
+		}
+
+		/**
+		 * @return string|null
+		 */
+		protected function get_queried_taxonomy_slug(): ?string {
+			return $this->queried_taxonomy;
 		}
 	}
 
@@ -31,12 +38,10 @@ namespace PressGang\Tests\Unit\Controllers {
 	 */
 	class ProductsControllerTemplateTest extends TestCase {
 
-		private function queue_product_taxonomy( string $taxonomy ): void {
-			$term           = new \stdClass();
-			$term->taxonomy = $taxonomy;
-
+		private function product_taxonomy_controller( string $taxonomy ): InspectableProductsController {
 			Functions\when( 'is_product_taxonomy' )->justReturn( true );
-			Functions\when( 'get_queried_object' )->justReturn( $term );
+
+			return new InspectableProductsController( null, $taxonomy );
 		}
 
 		/** @test */
@@ -51,29 +56,23 @@ namespace PressGang\Tests\Unit\Controllers {
 
 		/** @test */
 		public function product_taxonomies_gain_a_taxonomy_specific_candidate(): void {
-			$this->queue_product_taxonomy( 'product_brand' );
-
 			$this->assertSame(
 				[ 'woocommerce/taxonomy-product-brand.twig', 'woocommerce/archive-product.twig' ],
-				( new InspectableProductsController() )->inferred_template()
+				$this->product_taxonomy_controller( 'product_brand' )->inferred_template()
 			);
 		}
 
 		/** @test */
 		public function underscores_in_taxonomy_names_become_hyphens(): void {
-			$this->queue_product_taxonomy( 'product_promotion' );
-
 			$this->assertSame(
 				'woocommerce/taxonomy-product-promotion.twig',
-				( new InspectableProductsController() )->inferred_template()[0]
+				$this->product_taxonomy_controller( 'product_promotion' )->inferred_template()[0]
 			);
 		}
 
 		/** @test */
 		public function the_default_template_remains_the_final_fallback(): void {
-			$this->queue_product_taxonomy( 'product_cat' );
-
-			$candidates = ( new InspectableProductsController() )->inferred_template();
+			$candidates = $this->product_taxonomy_controller( 'product_cat' )->inferred_template();
 
 			$this->assertSame( 'woocommerce/archive-product.twig', \end( $candidates ) );
 		}

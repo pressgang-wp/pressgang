@@ -54,7 +54,13 @@ class ProductsController extends PostsController {
 	protected function infer_template(): string|array {
 
 		if ( \is_product_taxonomy() ) {
-			$taxonomy = \str_replace( '_', '-', \get_queried_object()->taxonomy );
+			$taxonomy = $this->get_queried_taxonomy_slug();
+
+			if ( $taxonomy === null ) {
+				return 'woocommerce/archive-product.twig';
+			}
+
+			$taxonomy = \str_replace( '_', '-', $taxonomy );
 
 			return [ "woocommerce/taxonomy-{$taxonomy}.twig", 'woocommerce/archive-product.twig' ];
 		}
@@ -63,12 +69,25 @@ class ProductsController extends PostsController {
 	}
 
 	/**
+	 * @return string|null
+	 */
+	protected function get_queried_taxonomy_slug(): ?string {
+		$queried_object = \get_queried_object();
+
+		if ( $queried_object instanceof \WP_Term ) {
+			return $queried_object->taxonomy;
+		}
+
+		return null;
+	}
+
+	/**
 	 * Get the context for the template rendering.
 	 *
 	 * Extends the base get_context method from AbstractController, adding specific data
 	 * like products, widget sidebar, and shop page display options to the context for rendering in the template.
 	 *
-	 * @return array The context array with additional data for the product archive page.
+	 * @return array<string, mixed> The context array with additional data for the product archive page.
 	 */
 	#[\Override]
 	protected function get_context(): array {
