@@ -19,7 +19,7 @@ interface RouteHandlerInterface {
 	/**
 	 * Handles a matched route.
 	 *
-	 * @param array $params Route parameters matched from the URL pattern.
+	 * @param array<string, mixed> $params Route parameters matched from the URL pattern.
 	 *
 	 * @return void
 	 */

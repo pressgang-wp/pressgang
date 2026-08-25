@@ -12,15 +12,15 @@ class StyleLoader {
 	/**
 	 * Array to store URLs for pre-connect.
 	 *
-	 * @var array
+	 * @var array<string, string>
 	 */
 	public static array $preconnect = [];
 
 	/**
-	 * @param $handle
-	 * @param $args
+	 * @param string $handle
+	 * @param array<string, mixed>|string $args
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public static function register_style( string $handle, array|string $args ): array {
 
@@ -65,8 +65,12 @@ class StyleLoader {
 			} );
 		}
 
-		if ( $args['preconnect'] ) {
-			static::$preconnect[ $handle ] = filter_var( $args['preconnect'], FILTER_VALIDATE_URL );
+		if ( ! empty( $args['preconnect'] ) && is_string( $args['preconnect'] ) ) {
+			$preconnect = filter_var( $args['preconnect'], FILTER_VALIDATE_URL );
+
+			if ( is_string( $preconnect ) ) {
+				static::$preconnect[ $handle ] = $preconnect;
+			}
 		}
 
 		return $args;

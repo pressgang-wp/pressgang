@@ -21,8 +21,8 @@ interface SnippetInterface {
 	 * The constructor is invoked for each snippet during the theme setup, allowing each snippet to
 	 * be configured with specific arguments.
 	 *
-	 * @param array $args Associative array of arguments for the snippet initialization. The specific
-	 *                    structure of this array varies based on the snippet's requirements.
+	 * @param array<string, mixed> $args Associative array of arguments for the snippet initialization. The specific
+	 *                                   structure of this array varies based on the snippet's requirements.
 	 */
 	public function __construct( array $args );
 }

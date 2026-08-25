@@ -18,18 +18,25 @@ class TimberMapper {
 	/**
 	 * Maps an ACF field to a corresponding Timber object.
 	 *
-	 * @param array $field The ACF field array.
+	 * @param array<string, mixed> $field The ACF field array.
 	 *
 	 * @return mixed The corresponding Timber object, nested array of objects, or the original value.
 	 */
 	public static function map_field( array $field ): mixed {
-		return match ( $field['type'] ) {
-			'post_object'                => Timber::get_post( $field['value'] ),
-			'relationship'               => self::to_timber_posts( $field['value'] ),
-			'term'                       => Timber::get_term( $field['value'] ),
-			'image'                      => Timber::get_image( $field['value'] ),
-			'repeater', 'flexible_content' => $field['value'],
-			default                      => $field['value'],
+		$type  = $field['type'] ?? null;
+		$value = $field['value'] ?? null;
+
+		if ( ! is_string( $type ) ) {
+			return $value;
+		}
+
+		return match ( $type ) {
+			'post_object'                  => Timber::get_post( $value ),
+			'relationship'                 => self::to_timber_posts( $value ),
+			'term'                         => Timber::get_term( $value ),
+			'image'                        => Timber::get_image( $value ),
+			'repeater', 'flexible_content' => $value,
+			default                        => $value,
 		};
 	}
 

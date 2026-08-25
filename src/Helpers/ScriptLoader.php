@@ -10,12 +10,12 @@ namespace PressGang\Helpers;
 class ScriptLoader {
 
 	/**
-	 * @var array
+	 * @var array<int, string>
 	 */
 	private static array $async = [];
 
 	/**
-	 * @var array
+	 * @var array<int, string>
 	 */
 	private static array $defer = [];
 
@@ -28,17 +28,17 @@ class ScriptLoader {
 	 * 'defer' or 'async' attributes.
 	 *
 	 * @param string $handle The script handle.
-	 * @param array|string $args An array of arguments for the script, or a string representing the script source URL.
-	 *                           Possible arguments include:
-	 *                           - 'src' (string)       : The source URL of the script.
-	 *                           - 'deps' (array)       : An array of dependencies.
-	 *                           - 'ver' (string|null)  : The script version.
-	 *                           - 'in_footer' (bool)   : Whether to load the script in the footer.
-	 *                           - 'hook' (string)      : The hook to use for enqueuing the script.
-	 *                           - 'defer' (bool)       : Whether to add the 'defer' attribute to the script tag.
-	 *                           - 'async' (bool)       : Whether to add the 'async' attribute to the script tag.
+	 * @param array<string, mixed>|string $args An array of arguments for the script, or a string representing the script source URL.
+	 *                                          Possible arguments include:
+	 *                                          - 'src' (string)       : The source URL of the script.
+	 *                                          - 'deps' (array)       : An array of dependencies.
+	 *                                          - 'ver' (string|null)  : The script version.
+	 *                                          - 'in_footer' (bool)   : Whether to load the script in the footer.
+	 *                                          - 'hook' (string)      : The hook to use for enqueuing the script.
+	 *                                          - 'defer' (bool)       : Whether to add the 'defer' attribute to the script tag.
+	 *                                          - 'async' (bool)       : Whether to add the 'async' attribute to the script tag.
 	 *
-	 * @return array The processed script arguments.
+	 * @return array<string, mixed> The processed script arguments.
 	 */
 	public static function register_script( string $handle, array|string $args ): array {
 		$defaults = [
