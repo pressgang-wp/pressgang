@@ -2,6 +2,7 @@
 
 namespace PressGang\ContextManagers;
 
+use Timber\Core;
 use Timber\Site;
 
 /**
@@ -19,7 +20,7 @@ class SiteContextManager implements ContextManagerInterface {
 	public function add_to_context( array $context ): array {
 		$site             = $this->make_site();
 		$stylesheet       = $this->get_stylesheet( 'styles.css' );
-		$site->stylesheet = \apply_filters( 'pressgang_stylesheet', $stylesheet );
+		$this->set_site_stylesheet( $site, \apply_filters( 'pressgang_stylesheet', $stylesheet ) );
 
 		$context['site'] = $site;
 
@@ -33,6 +34,26 @@ class SiteContextManager implements ContextManagerInterface {
 	 */
 	protected function make_site(): object {
 		return new Site();
+	}
+
+	/**
+	 * Adds the stylesheet URL to the object exposed as `site` in Twig.
+	 *
+	 * @param object $site
+	 * @param string $stylesheet
+	 *
+	 * @return void
+	 */
+	protected function set_site_stylesheet( object $site, string $stylesheet ): void {
+		if ( $site instanceof Core ) {
+			$site->import( [ 'stylesheet' => $stylesheet ], true );
+
+			return;
+		}
+
+		if ( $site instanceof \stdClass ) {
+			$site->stylesheet = $stylesheet;
+		}
 	}
 
 	/**

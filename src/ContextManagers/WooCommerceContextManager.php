@@ -64,9 +64,29 @@ class WooCommerceContextManager implements ContextManagerInterface {
 	 * @return int
 	 */
 	protected function get_cart_contents_count(): int {
-		return ( \function_exists( 'WC' ) && \WC()->cart )
-			? \WC()->cart->get_cart_contents_count()
-			: 0;
+		$cart = $this->get_cart();
+
+		if ( ! is_object( $cart ) || ! method_exists( $cart, 'get_cart_contents_count' ) ) {
+			return 0;
+		}
+
+		return (int) $cart->get_cart_contents_count();
+	}
+
+	/**
+	 * Returns the WooCommerce cart object when it is available.
+	 *
+	 * @return object|null
+	 */
+	protected function get_cart(): ?object {
+		if ( ! \function_exists( 'WC' ) ) {
+			return null;
+		}
+
+		$properties = get_object_vars( \WC() );
+		$cart       = $properties['cart'] ?? null;
+
+		return is_object( $cart ) ? $cart : null;
 	}
 
 }
