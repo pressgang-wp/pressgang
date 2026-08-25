@@ -7,7 +7,7 @@ trait PostDataAccessor {
 	/**
 	 * Dynamically fetches data from the $_POST array based on a specified key path.
 	 *
-	 * @param array|string $keys The key(s) specifying the path to the desired data within $_POST.
+	 * @param array<int, string>|string $keys The key(s) specifying the path to the desired data within $_POST.
 	 *
 	 * @return mixed The data at the specified path within $_POST, or null if not found.
 	 */

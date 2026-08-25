@@ -22,14 +22,14 @@ abstract class FormSubmission {
 	/**
 	 * Validators to apply to form data.
 	 *
-	 * @var array
+	 * @var array<int, mixed>
 	 */
 	protected array $validators = [];
 
 	/**
 	 * Constructor for the FormSubmission class.
 	 *
-	 * @param array $args Configuration array where 'action' customizes the form action and 'validators' can assign specific validators.
+	 * @param array{action?: string, validators?: array<int, mixed>} $args Configuration array where 'action' customizes the form action and 'validators' can assign specific validators.
 	 */
 	public function __construct( array $args ) {
 		$this->action     = $args['action'] ?? 'default_form';
@@ -72,7 +72,7 @@ abstract class FormSubmission {
 	 * message with keys in dot notation format to preserve the nested structure. The sanitized data is stored using the
 	 * Flash::add method.
 	 *
-	 * @param array $input The input data array, typically $_POST, to be sanitized and flashed.
+	 * @param array<string, mixed> $input The input data array, typically $_POST, to be sanitized and flashed.
 	 * @param string $prefix The prefix for dot notation keys, used for nested arrays. Defaults to an empty string.
 	 *
 	 * @return void
@@ -91,7 +91,7 @@ abstract class FormSubmission {
 	/**
 	 * Runs assigned validators and collects any errors.
 	 *
-	 * @return array An array of errors encountered during validation.
+	 * @return array<int, string> An array of errors encountered during validation.
 	 */
 	protected function run_validators(): array {
 		$errors = [];
@@ -117,7 +117,7 @@ abstract class FormSubmission {
 	/**
 	 * Handles any errors from the form submission.
 	 *
-	 * @param array $errors Errors from the form validation.
+	 * @param array<int, string> $errors Errors from the form validation.
 	 */
 	protected function handle_errors( array $errors ): void {
 		\do_action( 'form_submission_error', $errors );

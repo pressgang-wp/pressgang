@@ -10,7 +10,7 @@ class EmailValidator implements ValidatorInterface {
 	/**
 	 * Construct the EmailValidator
 	 *
-	 * @param array|string $email_path
+	 * @param array<int, string>|string $email_path
 	 */
 	public function __construct( array|string $email_path = [ 'contact', 'email' ] ) {
 		$this->email_path = $email_path;
@@ -19,14 +19,14 @@ class EmailValidator implements ValidatorInterface {
 	/**
 	 * Validate the POSTED email
 	 *
-	 * @return array
+	 * @return array<int, string>
 	 */
 	#[\Override]
 	public function validate(): array {
 		$errors = [];
 		$email  = $this->get_post_data( $this->email_path );
 
-		if ( ! filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
+		if ( ! is_string( $email ) || ! filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
 			$errors[] = \__( "Invalid email address provided.", THEMENAME );
 		}
 

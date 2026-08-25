@@ -29,7 +29,7 @@ trait HasRecaptcha {
 	/**
 	 * Verifies the reCAPTCHA response with Google's reCAPTCHA API.
 	 *
-	 * @param $value - the reCAPTCHA form value to validate.
+	 * @param string $value The reCAPTCHA form value to validate.
 	 *
 	 * @return bool Returns true if the reCAPTCHA verification is successful and meets the minimum score threshold.
 	 */
@@ -67,8 +67,8 @@ trait HasRecaptcha {
 	/**
 	 * Sends the verification request to Google's reCAPTCHA API and retrieves the response.
 	 *
-	 * @param $secret - the reCAPTCHA API Secret
-	 * @param $value - the reCAPTCHA Form Value
+	 * @param string $secret The reCAPTCHA API secret.
+	 * @param string $value The reCAPTCHA form value.
 	 *
 	 * @return object|null The decoded JSON response from the reCAPTCHA API, or null on failure.
 	 */
@@ -82,7 +82,11 @@ trait HasRecaptcha {
 		] );
 
 		if ( ! \is_wp_error( $response ) ) {
-			return json_decode( \wp_remote_retrieve_body( $response ) );
+			$result = json_decode( \wp_remote_retrieve_body( $response ) );
+
+			if ( is_object( $result ) ) {
+				return $result;
+			}
 		}
 
 		return null;
@@ -96,7 +100,15 @@ trait HasRecaptcha {
 	 * @return bool Returns true if the reCAPTCHA verification is successful and meets the minimum score threshold.
 	 */
 	protected static function determine_recaptcha_success( ?object $result ): bool {
-		return $result && $result->success && $result->score > self::$min_score;
+		if ( $result === null || ! property_exists( $result, 'success' ) || $result->success !== true ) {
+			return false;
+		}
+
+		if ( ! property_exists( $result, 'score' ) || ! is_numeric( $result->score ) ) {
+			return false;
+		}
+
+		return (float) $result->score > self::$min_score;
 	}
 
 }

@@ -8,7 +8,9 @@ use Timber\Timber;
 /**
  * Class Contact
  *
- * Extends FormSubmission to handle specific functionality for contact form submissions, including email preparation and sending.
+ * Extends FormSubmission to handle contact form submissions, including email preparation and sending.
+ *
+ * @phpstan-consistent-constructor
  */
 class ContactSubmission extends FormSubmission {
 
@@ -38,7 +40,7 @@ class ContactSubmission extends FormSubmission {
 	 *
 	 * Initializes a new instance of the ContactSubmission form handling class.
 	 *
-	 * @param array $args Associative array of initialization options.
+	 * @param array{action?: string, validators?: array<int, mixed>, template?: string|null, success_message?: string, error_message?: string} $args Associative array of initialization options.
 	 */
 	public function __construct( array $args ) {
 		parent::__construct( $args );
@@ -51,7 +53,7 @@ class ContactSubmission extends FormSubmission {
 	 * Initializes and registers the class instance into the WordPress lifecycle.
 	 * Should be called from the WordPress theme or plugin setup file.
 	 *
-	 * @param array $args Configuration parameters for setting up the class.
+	 * @param array{action?: string, validators?: array<int, mixed>, template?: string|null, success_message?: string, error_message?: string} $args Configuration parameters for setting up the class.
 	 */
 	public static function init( array $args ): void {
 		$instance = new static( $args );
@@ -91,7 +93,9 @@ class ContactSubmission extends FormSubmission {
 	 */
 	protected function prepare_message( string $email, string $message ): string {
 		if ( $this->template ) {
-			return Timber::compile( $this->template, [ 'email' => $email, 'message' => $message ] );
+			$compiled = Timber::compile( $this->template, [ 'email' => $email, 'message' => $message ] );
+
+			return is_string( $compiled ) ? $compiled : '';
 		} else {
 			return "From: $email\r\nMessage: $message\r\n";
 		}

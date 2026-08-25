@@ -10,7 +10,7 @@ class MessageValidator implements ValidatorInterface {
 	/**
 	 * Construct the MessageValidator
 	 *
-	 * @param array|string $message_path
+	 * @param array<int, string>|string $message_path
 	 */
 	public function __construct( array|string $message_path = [ 'contact', 'message' ] ) {
 		$this->message_path = $message_path;
@@ -19,14 +19,14 @@ class MessageValidator implements ValidatorInterface {
 	/**
 	 * Validate the message
 	 *
-	 * @return array
+	 * @return array<int, string>
 	 */
 	#[\Override]
 	public function validate(): array {
 		$errors  = [];
 		$message = $this->get_post_data( $this->message_path );
 
-		if ( empty( trim( $message ) ) ) {
+		if ( ! is_string( $message ) || trim( $message ) === '' ) {
 			$errors[] = \__( "The message field cannot be empty.", THEMENAME );
 		}
 
