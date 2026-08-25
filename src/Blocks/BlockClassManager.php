@@ -20,39 +20,39 @@ class BlockClassManager {
 	 * It handles standard block properties like className, backgroundColor, textColor, align, and text alignment,
 	 * formatting them into appropriate CSS class names to be applied to the block's HTML structure.
 	 *
-	 * @param array $block The array representation of a Gutenberg block, containing its properties and attributes.
+	 * @param array<string, mixed> $block The array representation of a Gutenberg block, containing its properties and attributes.
 	 *
-	 * @return array An array of CSS class names derived from the block's properties.
+	 * @return array<int, string> An array of CSS class names derived from the block's properties.
 	 */
 	public static function get_css_classes( array $block ): array {
 
 		$classes = [];
 
 		// Add the block's custom class name if set
-		if ( isset( $block['className'] ) ) {
+		if ( isset( $block['className'] ) && is_string( $block['className'] ) ) {
 			$classes[] = $block['className'];
 		}
 
 		// Handle background color class
-		if ( isset( $block['backgroundColor'] ) ) {
+		if ( isset( $block['backgroundColor'] ) && is_string( $block['backgroundColor'] ) ) {
 			$classes[] = $block['backgroundColor'];
 			$classes[] = sprintf( "has-%s-background-color", $block['backgroundColor'] );
 		}
 
 		// Handle text color class
-		if ( isset( $block['textColor'] ) ) {
+		if ( isset( $block['textColor'] ) && is_string( $block['textColor'] ) ) {
 			$classes[] = sprintf( "has-%s-color", $block['textColor'] );
 		}
 
 		// Add alignment class if set (block alignment: full, wide, etc.)
-		if ( ! empty( $block['align'] ) ) {
+		if ( ! empty( $block['align'] ) && is_string( $block['align'] ) ) {
 			$classes[] = sprintf( "align-%s", $block['align'] );
 		}
 
 		// Add text alignment class if set
 		// ACF blocks store at $block['alignText'], core blocks at $block['style']['typography']['textAlign']
 		$text_align = $block['alignText'] ?? $block['style']['typography']['textAlign'] ?? null;
-		if ( $text_align ) {
+		if ( is_string( $text_align ) && $text_align !== '' ) {
 			$classes[] = sprintf( "has-text-align-%s", $text_align );
 		}
 

@@ -3,7 +3,7 @@
 namespace PressGang\Blocks;
 
 use PressGang\ACF\TimberMapper;
-use \Timber\Timber;
+use Timber\Timber;
 
 /**
  * BlockContextBuilder class responsible for building the context for rendering blocks.
@@ -24,15 +24,15 @@ class BlockContextBuilder {
 	 *
 	 * @see https://www.advancedcustomfields.com/resources/get_field_objects/
 	 *
-	 * @param array $block The WordPress Block array containing details such as block ID, styles,
-	 *                     and other attributes.
+	 * @param array<string, mixed> $block The WordPress Block array containing details such as block ID, styles,
+	 *                                    and other attributes.
 	 *
-	 * @return array An associative array of context data to be used in rendering the block's template.
+	 * @return array<string, mixed> An associative array of context data to be used in rendering the block's template.
 	 */
 	public static function build_context( array $block ): array {
 		$context = Timber::context();
 		$context['post']  = Timber::get_post();
-		$context['id']    = $block['id'];
+		$context['id']    = $block['id'] ?? '';
 		$context['block'] = $block;
 
 		$context['classes'] = BlockClassManager::get_css_classes( $block );
@@ -41,8 +41,13 @@ class BlockContextBuilder {
 		$context['anchor'] = $block['anchor'] ?? '';
 
 		// Retrieve all ACF custom fields for the Block
-		if ( $fields = \get_field_objects() ) {
+		$fields = \get_field_objects();
+		if ( is_array( $fields ) ) {
 			foreach ( $fields as $field ) {
+				if ( ! is_array( $field ) || empty( $field['name'] ) || ! is_string( $field['name'] ) ) {
+					continue;
+				}
+
 				// Add each field's value to the context array, using the field's name as the key
 				// This makes all ACF custom fields accessible in the block's Twig template
 				$context[ $field['name'] ] = TimberMapper::map_field( $field );

@@ -20,9 +20,9 @@ class BlockStyleManager {
 	 * colors, and typography. It handles WordPress preset values as well, converting them
 	 * into CSS variables.
 	 *
-	 * @param array $block The array representation of a Gutenberg block, containing its style and other attributes.
+	 * @param array<string, mixed> $block The array representation of a Gutenberg block, containing its style and other attributes.
 	 *
-	 * @return array An array of CSS style strings ready to be used in the block's view.
+	 * @return array<int, string> An array of CSS style strings ready to be used in the block's view.
 	 */
 	public static function get_styles( array $block ): array {
 
@@ -31,14 +31,19 @@ class BlockStyleManager {
 		// Handle spacing (margin and padding)
 		$styles = array_merge( $styles, self::get_spacing_styles( $block ) );
 
+		$style = $block['style'] ?? [];
+		if ( ! is_array( $style ) ) {
+			return $styles;
+		}
+
 		// Handle color styles
-		if ( isset( $block['style']['color'] ) ) {
-			$styles = array_merge( $styles, self::get_color_styles( $block['style']['color'] ) );
+		if ( isset( $style['color'] ) && is_array( $style['color'] ) ) {
+			$styles = array_merge( $styles, self::get_color_styles( $style['color'] ) );
 		}
 
 		// Handle typography styles
-		if ( isset( $block['style']['typography'] ) ) {
-			$styles = array_merge( $styles, self::get_typography_styles( $block['style']['typography'] ) );
+		if ( isset( $style['typography'] ) && is_array( $style['typography'] ) ) {
+			$styles = array_merge( $styles, self::get_typography_styles( $style['typography'] ) );
 		}
 
 		return $styles;
@@ -47,20 +52,35 @@ class BlockStyleManager {
 	/**
 	 * Extracts spacing-related styles (margin and padding) from the block.
 	 *
-	 * @param array $block The block array.
+	 * @param array<string, mixed> $block The block array.
 	 *
-	 * @return array CSS style strings for spacing.
+	 * @return array<int, string> CSS style strings for spacing.
 	 */
 	private static function get_spacing_styles( array $block ): array {
 		$styles = [];
+		$style  = $block['style'] ?? [];
+
+		if ( ! is_array( $style ) ) {
+			return $styles;
+		}
+
+		$spacing_styles = $style['spacing'] ?? [];
+
+		if ( ! is_array( $spacing_styles ) ) {
+			return $styles;
+		}
 
 		// Loop through spacing attributes: margin and padding
 		foreach ( [ 'margin', 'padding' ] as $spacing ) {
 			foreach ( [ 'top', 'right', 'bottom', 'left' ] as $position ) {
 
 				// Check if the spacing attribute is set for the current position
-				if ( isset( $block['style']['spacing'][ $spacing ][ $position ] ) ) {
-					$var = $block['style']['spacing'][ $spacing ][ $position ];
+				if ( isset( $spacing_styles[ $spacing ] ) && is_array( $spacing_styles[ $spacing ] ) && isset( $spacing_styles[ $spacing ][ $position ] ) ) {
+					$var = $spacing_styles[ $spacing ][ $position ];
+
+					if ( ! is_string( $var ) || $var === '' ) {
+						continue;
+					}
 
 					// Handle WordPress preset spacing, converting them to CSS variables
 					if ( str_starts_with( $var, 'var:' ) ) {
@@ -80,25 +100,25 @@ class BlockStyleManager {
 	/**
 	 * Extracts color-related styles from the block style array.
 	 *
-	 * @param array $color_styles The color section of $block['style']['color'].
+	 * @param array<string, mixed> $color_styles The color section of $block['style']['color'].
 	 *
-	 * @return array CSS style strings for colors.
+	 * @return array<int, string> CSS style strings for colors.
 	 */
 	private static function get_color_styles( array $color_styles ): array {
 		$styles = [];
 
 		// Handle text color
-		if ( ! empty( $color_styles['text'] ) ) {
+		if ( ! empty( $color_styles['text'] ) && is_string( $color_styles['text'] ) ) {
 			$styles[] = sprintf( 'color: %s', self::process_preset_value( $color_styles['text'], 'color' ) );
 		}
 
 		// Handle background color
-		if ( ! empty( $color_styles['background'] ) ) {
+		if ( ! empty( $color_styles['background'] ) && is_string( $color_styles['background'] ) ) {
 			$styles[] = sprintf( 'background-color: %s', self::process_preset_value( $color_styles['background'], 'color' ) );
 		}
 
 		// Handle gradient background
-		if ( ! empty( $color_styles['gradient'] ) ) {
+		if ( ! empty( $color_styles['gradient'] ) && is_string( $color_styles['gradient'] ) ) {
 			$styles[] = sprintf( 'background: %s', self::process_preset_value( $color_styles['gradient'], 'gradient' ) );
 		}
 
@@ -108,50 +128,50 @@ class BlockStyleManager {
 	/**
 	 * Extracts typography-related styles from the block style array.
 	 *
-	 * @param array $typography_styles The typography section of $block['style']['typography'].
+	 * @param array<string, mixed> $typography_styles The typography section of $block['style']['typography'].
 	 *
-	 * @return array CSS style strings for typography.
+	 * @return array<int, string> CSS style strings for typography.
 	 */
 	private static function get_typography_styles( array $typography_styles ): array {
 		$styles = [];
 
 		// Handle font size
-		if ( ! empty( $typography_styles['fontSize'] ) ) {
+		if ( ! empty( $typography_styles['fontSize'] ) && is_string( $typography_styles['fontSize'] ) ) {
 			$styles[] = sprintf( 'font-size: %s', self::process_preset_value( $typography_styles['fontSize'], 'font-size' ) );
 		}
 
 		// Handle line height
-		if ( ! empty( $typography_styles['lineHeight'] ) ) {
+		if ( ! empty( $typography_styles['lineHeight'] ) && is_string( $typography_styles['lineHeight'] ) ) {
 			$styles[] = sprintf( 'line-height: %s', $typography_styles['lineHeight'] );
 		}
 
 		// Handle font family
-		if ( ! empty( $typography_styles['fontFamily'] ) ) {
+		if ( ! empty( $typography_styles['fontFamily'] ) && is_string( $typography_styles['fontFamily'] ) ) {
 			$styles[] = sprintf( 'font-family: %s', self::process_preset_value( $typography_styles['fontFamily'], 'font-family' ) );
 		}
 
 		// Handle font weight
-		if ( ! empty( $typography_styles['fontWeight'] ) ) {
+		if ( ! empty( $typography_styles['fontWeight'] ) && is_string( $typography_styles['fontWeight'] ) ) {
 			$styles[] = sprintf( 'font-weight: %s', $typography_styles['fontWeight'] );
 		}
 
 		// Handle font style
-		if ( ! empty( $typography_styles['fontStyle'] ) ) {
+		if ( ! empty( $typography_styles['fontStyle'] ) && is_string( $typography_styles['fontStyle'] ) ) {
 			$styles[] = sprintf( 'font-style: %s', $typography_styles['fontStyle'] );
 		}
 
 		// Handle text transform
-		if ( ! empty( $typography_styles['textTransform'] ) ) {
+		if ( ! empty( $typography_styles['textTransform'] ) && is_string( $typography_styles['textTransform'] ) ) {
 			$styles[] = sprintf( 'text-transform: %s', $typography_styles['textTransform'] );
 		}
 
 		// Handle text decoration
-		if ( ! empty( $typography_styles['textDecoration'] ) ) {
+		if ( ! empty( $typography_styles['textDecoration'] ) && is_string( $typography_styles['textDecoration'] ) ) {
 			$styles[] = sprintf( 'text-decoration: %s', $typography_styles['textDecoration'] );
 		}
 
 		// Handle letter spacing
-		if ( ! empty( $typography_styles['letterSpacing'] ) ) {
+		if ( ! empty( $typography_styles['letterSpacing'] ) && is_string( $typography_styles['letterSpacing'] ) ) {
 			$styles[] = sprintf( 'letter-spacing: %s', $typography_styles['letterSpacing'] );
 		}
 
