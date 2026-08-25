@@ -2,6 +2,7 @@
 
 namespace PressGang\TwigExtensions;
 
+use Timber\Timber;
 use Twig\Environment;
 use Twig\TwigFunction;
 
@@ -28,7 +29,7 @@ class WidgetExtensionManager implements TwigExtensionManagerInterface {
 
 		foreach ( $wp_registered_sidebars as $sidebar_id => $sidebar ) {
 			$twig->addFunction( new TwigFunction( "widget_{$sidebar_id}", function () use ( $sidebar_id ) {
-				return \Timber::get_widgets( $sidebar_id );
+				return Timber::get_widgets( $sidebar_id );
 			} ) );
 		}
 

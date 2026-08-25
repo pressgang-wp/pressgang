@@ -34,12 +34,12 @@ class SinglePostExtensionManager implements TwigExtensionManagerInterface {
 			$twig->addFunction( new TwigFunction( 'get_latest_posts', function ( ?int $posts_per_page = null ): array {
 				$post = Timber::get_post();
 
-				return is_a( $post, Post::class ) ? $post->get_latest_posts( $posts_per_page ) : [];
+				return $post instanceof Post ? $post->get_latest_posts( $posts_per_page ) : [];
 			} ) );
 			$twig->addFunction( new TwigFunction( 'get_related_posts', function ( ?int $posts_per_page = null ): array {
 				$post = Timber::get_post();
 
-				return is_a( $post, Post::class ) ? $post->get_related_posts( $posts_per_page ) : [];
+				return $post instanceof Post ? $post->get_related_posts( $posts_per_page ) : [];
 			} ) );
 		}
 	}
