@@ -42,10 +42,12 @@ class MetaDescriptionService {
 		if ( ! $object ) {
 			self::$meta_description = self::get_default_description();
 		} else {
-			$key = self::generate_cache_key( $object );
+			$key         = self::generate_cache_key( $object );
+			$description = \wp_cache_get( $key );
 
-			self::$meta_description = \wp_cache_get( $key );
-			if ( ! self::$meta_description ) {
+			if ( is_string( $description ) && $description !== '' ) {
+				self::$meta_description = $description;
+			} else {
 				self::$meta_description = self::generate_and_cache_description( $object, $key );
 			}
 		}
@@ -56,18 +58,42 @@ class MetaDescriptionService {
 	/**
 	 * Generates a unique cache key based on the queried object.
 	 *
-	 * @param mixed $object The queried object (post, term, etc.).
+	 * @param object $object The queried object (post, term, etc.).
 	 *
 	 * @return string The generated cache key.
 	 */
 	private static function generate_cache_key( object $object ): string {
-		return sprintf( "meta_description_%s_%s", strtolower( get_class( $object ) ), $object->ID ?? $object->name );
+		return sprintf(
+			"meta_description_%s_%s",
+			strtolower( get_class( $object ) ),
+			self::get_object_cache_identifier( $object )
+		);
+	}
+
+	/**
+	 * @param object $object
+	 * @return string
+	 */
+	private static function get_object_cache_identifier( object $object ): string {
+		if ( $object instanceof \WP_Post ) {
+			return (string) $object->ID;
+		}
+
+		if ( $object instanceof \WP_Term ) {
+			return "{$object->taxonomy}_{$object->term_id}";
+		}
+
+		if ( $object instanceof \WP_Post_Type ) {
+			return $object->name;
+		}
+
+		return (string) spl_object_id( $object );
 	}
 
 	/**
 	 * Generates a meta description based on the type of queried object and caches it.
 	 *
-	 * @param mixed $object The queried object (post, term, etc.).
+	 * @param object $object The queried object (post, term, etc.).
 	 * @param string $key The cache key.
 	 *
 	 * @return string The generated meta description.
@@ -83,7 +109,7 @@ class MetaDescriptionService {
 	/**
 	 * Generates a meta description based on the type of queried object.
 	 *
-	 * @param mixed $object The queried object (post, term, etc.).
+	 * @param object $object The queried object (post, term, etc.).
 	 *
 	 * @return string The generated meta description.
 	 */
@@ -93,11 +119,11 @@ class MetaDescriptionService {
 			return self::get_default_description();
 		}
 
-		if ( \is_single() || \is_page() ) {
+		if ( ( \is_single() || \is_page() ) && $object instanceof \WP_Post ) {
 			return self::get_description_for_post( $object ) ?: self::get_default_description();
 		}
 
-		if ( \is_tax() ) {
+		if ( \is_tax() && $object instanceof \WP_Term ) {
 			return self::get_description_for_taxonomy( $object ) ?: self::get_default_description();
 		}
 
@@ -120,15 +146,23 @@ class MetaDescriptionService {
 	 */
 	private static function get_description_for_post( \WP_Post $post ): string {
 		$description = \get_post_meta( $post->ID, '_yoast_wpseo_metadesc', true );
-		if ( ! empty( $description ) ) {
+		if ( is_string( $description ) && $description !== '' ) {
 			return $description;
 		}
 
-		$description = \get_post_meta( $post->ID, 'meta_description', true )
-			?: \get_the_excerpt( $post->ID )
-				?: \apply_filters( 'the_content', \get_the_content( null, false, $post->ID ) );
+		$description = \get_post_meta( $post->ID, 'meta_description', true );
+		if ( is_string( $description ) && $description !== '' ) {
+			return $description;
+		}
 
-		return $description;
+		$description = \get_the_excerpt( $post->ID );
+		if ( $description !== '' ) {
+			return $description;
+		}
+
+		$description = \apply_filters( 'the_content', \get_the_content( null, false, $post->ID ) );
+
+		return is_string( $description ) ? $description : '';
 	}
 
 	/**
@@ -143,7 +177,15 @@ class MetaDescriptionService {
 	private static function get_description_for_taxonomy( \WP_Term $term ): string {
 		$yoast_meta = \get_option( 'wpseo_taxonomy_meta' );
 
-		return $yoast_meta[ $term->taxonomy ][ $term->term_id ]['wpseo_desc'] ?? \term_description( $term, \get_query_var( 'taxonomy' ) );
+		if ( is_array( $yoast_meta ) ) {
+			$description = $yoast_meta[ $term->taxonomy ][ $term->term_id ]['wpseo_desc'] ?? null;
+
+			if ( is_string( $description ) && $description !== '' ) {
+				return $description;
+			}
+		}
+
+		return \term_description( $term->term_id );
 	}
 
 	/**

@@ -841,36 +841,6 @@ parameters:
 			path: src/Routes/RouteHandlerInterface.php
 
 		-
-			message: '#^Access to an undefined property object\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/SEO/MetaDescriptionService.php
-
-		-
-			message: '#^PHPDoc tag @param for parameter \$object with type mixed is not subtype of native type object\.$#'
-			identifier: parameter.phpDocType
-			count: 3
-			path: src/SEO/MetaDescriptionService.php
-
-		-
-			message: '#^Parameter \#1 \$post of static method PressGang\\SEO\\MetaDescriptionService\:\:get_description_for_post\(\) expects WP_Post, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/SEO/MetaDescriptionService.php
-
-		-
-			message: '#^Parameter \#1 \$term of function term_description expects int, WP_Term given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/SEO/MetaDescriptionService.php
-
-		-
-			message: '#^Parameter \#1 \$term of static method PressGang\\SEO\\MetaDescriptionService\:\:get_description_for_taxonomy\(\) expects WP_Term, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/SEO/MetaDescriptionService.php
-
-		-
 			message: '#^Parameter \#1 \$manager of method PressGang\\ServiceProviders\\TimberServiceProvider\:\:register_context_manager\(\) expects PressGang\\ContextManagers\\ContextManagerInterface, object given\.$#'
 			identifier: argument.type
 			count: 1
