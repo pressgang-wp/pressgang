@@ -17,7 +17,9 @@ abstract class Widget extends WP_Widget {
 	protected string $description;
 	protected string $view;
 	protected string $title;
+	/** @var array<string, array{view: string, label: string, class?: string}> */
 	protected array $fields = [];
+	/** @var array<string, mixed> */
 	protected array $defaults = [];
 
 	/**
@@ -51,7 +53,9 @@ abstract class Widget extends WP_Widget {
 	 * @return string
 	 */
 	protected function convert_to_snake_case( string $string ): string {
-		return strtolower( preg_replace( '/(?<!^)[A-Z]/', '_$0', $string ) );
+		$converted = preg_replace( '/(?<!^)[A-Z]/', '_$0', $string );
+
+		return strtolower( $converted ?? $string );
 	}
 
 	/**
@@ -60,8 +64,8 @@ abstract class Widget extends WP_Widget {
 	 * WP_Widget declares these as `mixed` for back-compat; PressGang always
 	 * calls them with arrays, so the docblock keeps the concrete type for IDEs.
 	 *
-	 * @param array $args
-	 * @param array $instance
+	 * @param array<string, mixed> $args
+	 * @param array<string, mixed> $instance
 	 */
 	#[\Override]
 	public function widget( mixed $args, mixed $instance ): void {
@@ -79,10 +83,10 @@ abstract class Widget extends WP_Widget {
 	/**
 	 * Get the instance data for the widget.
 	 *
-	 * @param array $args
-	 * @param array $instance
+	 * @param array<string, mixed> $args
+	 * @param array<string, mixed> $instance
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function get_instance( array $args, array $instance ): array {
 		$instance = array_merge( $instance, [
@@ -101,17 +105,17 @@ abstract class Widget extends WP_Widget {
 	 * WP_Widget declares these as `mixed` for back-compat; PressGang always
 	 * calls them with arrays, so the docblock keeps the concrete type for IDEs.
 	 *
-	 * @param array $new_instance
-	 * @param array $old_instance
+	 * @param array<string, mixed> $new_instance
+	 * @param array<string, mixed> $old_instance
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	#[\Override]
 	public function update( mixed $new_instance, mixed $old_instance ): array {
 		$new_instance = (array) $new_instance;
 		$instance     = (array) $old_instance;
 
-		foreach ( $this->fields as $field => &$config ) {
+		foreach ( $this->fields as $field => $config ) {
 			$instance[ $field ] = \sanitize_text_field( $new_instance[ $field ] ?? '' );
 		}
 
@@ -124,19 +128,19 @@ abstract class Widget extends WP_Widget {
 	 * WP_Widget declares this as `mixed` for back-compat; PressGang always
 	 * calls it with an array, so the docblock keeps the concrete type for IDEs.
 	 *
-	 * @param array $instance
+	 * @param array<string, mixed> $instance
 	 */
 	#[\Override]
 	public function form( mixed $instance ): void {
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 
-		foreach ( $this->fields as $field => &$config ) {
+		foreach ( $this->fields as $field => $config ) {
 			Timber::render( $config['view'], [
 				'label' => __( $config['label'], THEMENAME ),
 				'id'    => $this->get_field_id( $field ),
 				'name'  => $this->get_field_name( $field ),
 				'value' => isset( $instance[ $field ] ) ? esc_attr( $instance[ $field ] ) : '',
-				'class' => $config['class'],
+				'class' => $config['class'] ?? '',
 			] );
 		}
 	}
@@ -146,12 +150,12 @@ abstract class Widget extends WP_Widget {
 	 *
 	 * @param string $widget_id
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function get_acf_fields( string $widget_id ): array {
 		if ( function_exists( 'get_fields' ) ) {
 			$fields = get_fields( "widget_{$widget_id}" );
-			if ( $fields ) {
+			if ( is_array( $fields ) ) {
 				return $fields;
 			}
 		}
@@ -162,14 +166,14 @@ abstract class Widget extends WP_Widget {
 	/**
 	 * Define the default attributes for this widget.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	abstract protected function define_defaults(): array;
 
 	/**
 	 * Define the fields for the widget form.
 	 *
-	 * @return array
+	 * @return array<string, array{view: string, label: string, class?: string}>
 	 */
 	abstract protected function define_fields(): array;
 
@@ -178,7 +182,7 @@ abstract class Widget extends WP_Widget {
 	 *
 	 * This static method can be used by child classes to register themselves.
 	 *
-	 * @param string $widget_class The class name of the widget to register.
+	 * @param class-string<WP_Widget> $widget_class The class name of the widget to register.
 	 */
 	public static function register( string $widget_class ): void {
 		add_action( 'widgets_init', function () use ( $widget_class ) {
