@@ -48,11 +48,11 @@ class WooCommerceContextManager implements ContextManagerInterface {
 	 */
 	protected function build_links(): array {
 		$account_page_id = \get_option( 'woocommerce_myaccount_page_id' );
-		$account_link    = \get_permalink( $account_page_id );
+		$account_link    = \get_permalink( $account_page_id ) ?: null;
 
 		return [
 			'my_account_link' => $account_link,
-			'logout_link'     => \wp_logout_url( $account_link ),
+			'logout_link'     => \wp_logout_url( $account_link ?? '' ),
 			'cart_link'       => \function_exists( 'wc_get_cart_url' ) ? \wc_get_cart_url() : null,
 			'checkout_link'   => \function_exists( 'wc_get_checkout_url' ) ? \wc_get_checkout_url() : null,
 		];

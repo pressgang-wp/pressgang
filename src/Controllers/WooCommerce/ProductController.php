@@ -40,7 +40,13 @@ class ProductController extends PostController {
 	 */
 	protected function get_product(): \WC_Product {
 		if ( $this->product === null ) {
-			$this->product = \wc_get_product( $this->get_post()->id );
+			$product = \wc_get_product( $this->get_post()->id );
+
+			if ( ! $product instanceof \WC_Product ) {
+				throw new \RuntimeException( sprintf( 'PressGang: %s found no WooCommerce product for the current request.', static::class ) );
+			}
+
+			$this->product = $product;
 		}
 
 		return $this->product;

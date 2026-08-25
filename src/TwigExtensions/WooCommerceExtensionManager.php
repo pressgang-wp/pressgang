@@ -56,7 +56,7 @@ class WooCommerceExtensionManager implements TwigExtensionManagerInterface {
 		global $product;
 
 		// Retrieve and return the WC_Product object
-		$product = \wc_get_product( $post->ID );
+		$product = \wc_get_product( $post->ID ) ?: null;
 
 		return $product;
 	}

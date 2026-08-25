@@ -33,7 +33,13 @@ class TaxonomyController extends PostsController {
 	 */
 	protected function get_term(): Term {
 		if ( $this->term === null ) {
-			$this->term = Timber::get_term( \get_queried_object() );
+			$term = Timber::get_term( \get_queried_object() );
+
+			if ( $term === null ) {
+				throw new \RuntimeException( sprintf( 'PressGang: %s found no term for the current request.', static::class ) );
+			}
+
+			$this->term = $term;
 		}
 
 		return $this->term;

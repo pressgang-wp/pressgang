@@ -475,18 +475,6 @@ parameters:
 			path: src/ContextManagers/SiteContextManager.php
 
 		-
-			message: '#^Method PressGang\\ContextManagers\\WooCommerceContextManager\:\:build_links\(\) should return array\<string, string\|null\> but returns array\<string, string\|false\|null\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/ContextManagers/WooCommerceContextManager.php
-
-		-
-			message: '#^Parameter \#1 \$redirect of function wp_logout_url expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/ContextManagers/WooCommerceContextManager.php
-
-		-
 			message: '#^Right side of && is always true\.$#'
 			identifier: booleanAnd.rightAlwaysTrue
 			count: 1
@@ -523,22 +511,10 @@ parameters:
 			path: src/Controllers/ControllerFactory.php
 
 		-
-			message: '#^Property PressGang\\Controllers\\PostController\:\:\$post_type \(string\) does not accept string\|false\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Controllers/PostController.php
-
-		-
 			message: '#^Cannot access property \$taxonomy on WP_Post\|WP_Post_Type\|WP_Term\|WP_User\|null\.$#'
 			identifier: property.nonObject
 			count: 1
 			path: src/Controllers/PostsController.php
-
-		-
-			message: '#^Method PressGang\\Controllers\\TaxonomyController\:\:get_term\(\) should return Timber\\Term but returns Timber\\Term\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Controllers/TaxonomyController.php
 
 		-
 			message: '#^Parameter \#1 \$term of static method Timber\\Timber\:\:get_term\(\) expects int\|WP_Term\|null, WP_Post\|WP_Post_Type\|WP_Term\|WP_User\|null given\.$#'
@@ -615,18 +591,6 @@ parameters:
 		-
 			message: '#^Method PressGang\\Controllers\\WooCommerce\\ProductController\:\:get_context\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Controllers/WooCommerce/ProductController.php
-
-		-
-			message: '#^Method PressGang\\Controllers\\WooCommerce\\ProductController\:\:get_product\(\) should return WC_Product but returns WC_Product\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Controllers/WooCommerce/ProductController.php
-
-		-
-			message: '#^Property PressGang\\Controllers\\WooCommerce\\ProductController\:\:\$product \(WC_Product\|null\) does not accept WC_Product\|false\|null\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: src/Controllers/WooCommerce/ProductController.php
 
@@ -1097,12 +1061,6 @@ parameters:
 			identifier: class.notFound
 			count: 1
 			path: src/TwigExtensions/WidgetExtensionManager.php
-
-		-
-			message: '#^Method PressGang\\TwigExtensions\\WooCommerceExtensionManager\:\:timber_set_product\(\) should return WC_Product\|null but returns WC_Product\|false\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TwigExtensions/WooCommerceExtensionManager.php
 
 		-
 			message: '#^Method PressGang\\Widgets\\Widget\:\:define_defaults\(\) return type has no value type specified in iterable type array\.$#'
