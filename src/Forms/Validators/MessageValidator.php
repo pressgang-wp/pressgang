@@ -24,9 +24,9 @@ class MessageValidator implements ValidatorInterface {
 	#[\Override]
 	public function validate(): array {
 		$errors  = [];
-		$message = $this->get_post_data( $this->message_path );
+		$message = $this->get_post_data_string( $this->message_path );
 
-		if ( ! is_string( $message ) || trim( $message ) === '' ) {
+		if ( $message === null || trim( $message ) === '' ) {
 			$errors[] = \__( "The message field cannot be empty.", THEMENAME );
 		}
 

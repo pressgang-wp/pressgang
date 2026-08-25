@@ -28,13 +28,13 @@ class BlockStyleManager {
 
 		$styles = [];
 
-		// Handle spacing (margin and padding)
-		$styles = array_merge( $styles, self::get_spacing_styles( $block ) );
-
 		$style = $block['style'] ?? [];
 		if ( ! is_array( $style ) ) {
 			return $styles;
 		}
+
+		// Handle spacing (margin and padding)
+		$styles = array_merge( $styles, self::get_spacing_styles( $style ) );
 
 		// Handle color styles
 		if ( isset( $style['color'] ) && is_array( $style['color'] ) ) {
@@ -50,19 +50,14 @@ class BlockStyleManager {
 	}
 
 	/**
-	 * Extracts spacing-related styles (margin and padding) from the block.
+	 * Extracts spacing-related styles (margin and padding) from the block's style array.
 	 *
-	 * @param array<string, mixed> $block The block array.
+	 * @param array<string, mixed> $style The block's style array ($block['style']).
 	 *
 	 * @return array<int, string> CSS style strings for spacing.
 	 */
-	private static function get_spacing_styles( array $block ): array {
+	private static function get_spacing_styles( array $style ): array {
 		$styles = [];
-		$style  = $block['style'] ?? [];
-
-		if ( ! is_array( $style ) ) {
-			return $styles;
-		}
 
 		$spacing_styles = $style['spacing'] ?? [];
 
@@ -107,19 +102,16 @@ class BlockStyleManager {
 	private static function get_color_styles( array $color_styles ): array {
 		$styles = [];
 
-		// Handle text color
-		if ( ! empty( $color_styles['text'] ) && is_string( $color_styles['text'] ) ) {
-			$styles[] = sprintf( 'color: %s', self::process_preset_value( $color_styles['text'], 'color' ) );
+		if ( ( $text = self::style_string( $color_styles, 'text' ) ) !== null ) {
+			$styles[] = sprintf( 'color: %s', self::process_preset_value( $text, 'color' ) );
 		}
 
-		// Handle background color
-		if ( ! empty( $color_styles['background'] ) && is_string( $color_styles['background'] ) ) {
-			$styles[] = sprintf( 'background-color: %s', self::process_preset_value( $color_styles['background'], 'color' ) );
+		if ( ( $background = self::style_string( $color_styles, 'background' ) ) !== null ) {
+			$styles[] = sprintf( 'background-color: %s', self::process_preset_value( $background, 'color' ) );
 		}
 
-		// Handle gradient background
-		if ( ! empty( $color_styles['gradient'] ) && is_string( $color_styles['gradient'] ) ) {
-			$styles[] = sprintf( 'background: %s', self::process_preset_value( $color_styles['gradient'], 'gradient' ) );
+		if ( ( $gradient = self::style_string( $color_styles, 'gradient' ) ) !== null ) {
+			$styles[] = sprintf( 'background: %s', self::process_preset_value( $gradient, 'gradient' ) );
 		}
 
 		return $styles;
@@ -135,47 +127,50 @@ class BlockStyleManager {
 	private static function get_typography_styles( array $typography_styles ): array {
 		$styles = [];
 
-		// Handle font size
-		if ( ! empty( $typography_styles['fontSize'] ) && is_string( $typography_styles['fontSize'] ) ) {
-			$styles[] = sprintf( 'font-size: %s', self::process_preset_value( $typography_styles['fontSize'], 'font-size' ) );
+		if ( ( $font_size = self::style_string( $typography_styles, 'fontSize' ) ) !== null ) {
+			$styles[] = sprintf( 'font-size: %s', self::process_preset_value( $font_size, 'font-size' ) );
 		}
 
-		// Handle line height
-		if ( ! empty( $typography_styles['lineHeight'] ) && is_string( $typography_styles['lineHeight'] ) ) {
-			$styles[] = sprintf( 'line-height: %s', $typography_styles['lineHeight'] );
+		if ( ( $line_height = self::style_string( $typography_styles, 'lineHeight' ) ) !== null ) {
+			$styles[] = sprintf( 'line-height: %s', $line_height );
 		}
 
-		// Handle font family
-		if ( ! empty( $typography_styles['fontFamily'] ) && is_string( $typography_styles['fontFamily'] ) ) {
-			$styles[] = sprintf( 'font-family: %s', self::process_preset_value( $typography_styles['fontFamily'], 'font-family' ) );
+		if ( ( $font_family = self::style_string( $typography_styles, 'fontFamily' ) ) !== null ) {
+			$styles[] = sprintf( 'font-family: %s', self::process_preset_value( $font_family, 'font-family' ) );
 		}
 
-		// Handle font weight
-		if ( ! empty( $typography_styles['fontWeight'] ) && is_string( $typography_styles['fontWeight'] ) ) {
-			$styles[] = sprintf( 'font-weight: %s', $typography_styles['fontWeight'] );
+		if ( ( $font_weight = self::style_string( $typography_styles, 'fontWeight' ) ) !== null ) {
+			$styles[] = sprintf( 'font-weight: %s', $font_weight );
 		}
 
-		// Handle font style
-		if ( ! empty( $typography_styles['fontStyle'] ) && is_string( $typography_styles['fontStyle'] ) ) {
-			$styles[] = sprintf( 'font-style: %s', $typography_styles['fontStyle'] );
+		if ( ( $font_style = self::style_string( $typography_styles, 'fontStyle' ) ) !== null ) {
+			$styles[] = sprintf( 'font-style: %s', $font_style );
 		}
 
-		// Handle text transform
-		if ( ! empty( $typography_styles['textTransform'] ) && is_string( $typography_styles['textTransform'] ) ) {
-			$styles[] = sprintf( 'text-transform: %s', $typography_styles['textTransform'] );
+		if ( ( $text_transform = self::style_string( $typography_styles, 'textTransform' ) ) !== null ) {
+			$styles[] = sprintf( 'text-transform: %s', $text_transform );
 		}
 
-		// Handle text decoration
-		if ( ! empty( $typography_styles['textDecoration'] ) && is_string( $typography_styles['textDecoration'] ) ) {
-			$styles[] = sprintf( 'text-decoration: %s', $typography_styles['textDecoration'] );
+		if ( ( $text_decoration = self::style_string( $typography_styles, 'textDecoration' ) ) !== null ) {
+			$styles[] = sprintf( 'text-decoration: %s', $text_decoration );
 		}
 
-		// Handle letter spacing
-		if ( ! empty( $typography_styles['letterSpacing'] ) && is_string( $typography_styles['letterSpacing'] ) ) {
-			$styles[] = sprintf( 'letter-spacing: %s', $typography_styles['letterSpacing'] );
+		if ( ( $letter_spacing = self::style_string( $typography_styles, 'letterSpacing' ) ) !== null ) {
+			$styles[] = sprintf( 'letter-spacing: %s', $letter_spacing );
 		}
 
 		return $styles;
+	}
+
+	/**
+	 * Narrows $styles[$key] to a non-empty string, or null.
+	 *
+	 * @param array<string, mixed> $styles
+	 */
+	private static function style_string( array $styles, string $key ): ?string {
+		$value = $styles[ $key ] ?? null;
+
+		return ! empty( $value ) && is_string( $value ) ? $value : null;
 	}
 
 	/**

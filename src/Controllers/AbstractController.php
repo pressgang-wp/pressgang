@@ -61,6 +61,23 @@ abstract class AbstractController implements ControllerInterface {
 	}
 
 	/**
+	 * Returns $value, or throws when a controller getter's underlying
+	 * WP/Timber lookup unexpectedly found nothing for the current request.
+	 *
+	 * @template T
+	 * @param T|null $value
+	 * @param string $description What was being looked up, for the exception message.
+	 * @return T
+	 */
+	protected function require_present( mixed $value, string $description ): mixed {
+		if ( $value === null ) {
+			throw new \RuntimeException( sprintf( 'PressGang: %s found no %s for the current request.', static::class, $description ) );
+		}
+
+		return $value;
+	}
+
+	/**
 	 * Renders the template with context, applying pressgang filters and actions.
 	 *
 	 * @return void

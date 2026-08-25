@@ -33,19 +33,9 @@ class TaxonomyController extends PostsController {
 	 */
 	protected function get_term(): Term {
 		if ( $this->term === null ) {
-			$queried_object = \get_queried_object();
+			$queried_term = $this->require_present( $this->get_queried_term(), 'queried term' );
 
-			if ( ! $queried_object instanceof \WP_Term ) {
-				throw new \RuntimeException( sprintf( 'PressGang: %s found no term for the current request.', static::class ) );
-			}
-
-			$term = Timber::get_term( $queried_object );
-
-			if ( $term === null ) {
-				throw new \RuntimeException( sprintf( 'PressGang: %s found no term for the current request.', static::class ) );
-			}
-
-			$this->term = $term;
+			$this->term = $this->require_present( Timber::get_term( $queried_term ), 'term' );
 		}
 
 		return $this->term;

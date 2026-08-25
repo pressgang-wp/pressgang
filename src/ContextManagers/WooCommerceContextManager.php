@@ -83,8 +83,7 @@ class WooCommerceContextManager implements ContextManagerInterface {
 			return null;
 		}
 
-		$properties = get_object_vars( \WC() );
-		$cart       = $properties['cart'] ?? null;
+		$cart = \WC()->cart ?? null;
 
 		return is_object( $cart ) ? $cart : null;
 	}

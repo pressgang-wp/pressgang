@@ -54,13 +54,13 @@ class PostsController extends AbstractController {
 		}
 
 		if ( \is_tax() ) {
-			$queried_object = \get_queried_object();
+			$queried_term = $this->get_queried_term();
 
-			if ( ! $queried_object instanceof \WP_Term ) {
+			if ( $queried_term === null ) {
 				return [ 'taxonomy.twig', 'archive.twig' ];
 			}
 
-			$taxonomy = str_replace( '_', '-', $queried_object->taxonomy );
+			$taxonomy = str_replace( '_', '-', $queried_term->taxonomy );
 
 			return [ "taxonomy-{$taxonomy}.twig", 'taxonomy.twig', 'archive.twig' ];
 		}
@@ -76,6 +76,18 @@ class PostsController extends AbstractController {
 		}
 
 		return 'archive.twig';
+	}
+
+	/**
+	 * Returns the current queried term, or null when the queried object
+	 * isn't a WP_Term (e.g. outside a taxonomy-archive request).
+	 *
+	 * @return \WP_Term|null
+	 */
+	protected function get_queried_term(): ?\WP_Term {
+		$queried_object = \get_queried_object();
+
+		return $queried_object instanceof \WP_Term ? $queried_object : null;
 	}
 
 	/**

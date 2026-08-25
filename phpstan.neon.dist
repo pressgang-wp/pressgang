@@ -20,3 +20,10 @@ parameters:
 		# runtime; they are real and documented but not part of the WP_Post stub.
 		- identifier: property.notFound
 		  path: src/Configuration/CustomMenuItems.php
+		# The WC stub types WooCommerce::$cart as always-initialized WC_Cart, but WC
+		# only sets it on the `wp_loaded` hook — a context manager built earlier in
+		# the request lifecycle can genuinely see it uninitialized.
+		- identifier: nullCoalesce.property
+		  path: src/ContextManagers/WooCommerceContextManager.php
+		- identifier: function.alreadyNarrowedType
+		  path: src/ContextManagers/WooCommerceContextManager.php

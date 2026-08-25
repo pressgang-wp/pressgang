@@ -24,9 +24,9 @@ class EmailValidator implements ValidatorInterface {
 	#[\Override]
 	public function validate(): array {
 		$errors = [];
-		$email  = $this->get_post_data( $this->email_path );
+		$email  = $this->get_post_data_string( $this->email_path );
 
-		if ( ! is_string( $email ) || ! filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
+		if ( $email === null || ! filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
 			$errors[] = \__( "Invalid email address provided.", THEMENAME );
 		}
 

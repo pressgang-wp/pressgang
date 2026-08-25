@@ -30,9 +30,9 @@ class RecaptchaValidator implements ValidatorInterface {
 	public function validate(): array {
 
 		$errors    = [];
-		$recaptcha = $this->get_post_data( $this->recaptcha_path );
+		$recaptcha = $this->get_post_data_string( $this->recaptcha_path );
 
-		if ( ! is_string( $recaptcha ) || ! self::verify_recaptcha( $recaptcha ) ) {
+		if ( $recaptcha === null || ! self::verify_recaptcha( $recaptcha ) ) {
 			$errors[] = \__( "Failed reCAPTCHA verification. Please try again.", THEMENAME );
 		}
 

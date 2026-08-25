@@ -161,7 +161,7 @@ class ControllerFactory {
 
 		foreach ( $candidates as $candidate ) {
 
-			if ( isset( $map[ $candidate ] ) && \class_exists( $map[ $candidate ] ) ) {
+			if ( isset( $map[ $candidate ] ) && self::is_controller_class( $map[ $candidate ] ) ) {
 				return [
 					'controller' => $map[ $candidate ],
 					'twig'       => self::candidate_twig( $candidate ),
@@ -173,7 +173,7 @@ class ControllerFactory {
 				foreach ( self::inferred_controller_names( $candidate ) as $base ) {
 					$class = "{$child_namespace}\\Controllers\\{$base}";
 
-					if ( \class_exists( $class ) ) {
+					if ( self::is_controller_class( $class ) ) {
 						return [
 							'controller' => $class,
 							'twig'       => self::candidate_twig( $candidate ),

@@ -72,13 +72,7 @@ class ProductsController extends PostsController {
 	 * @return string|null
 	 */
 	protected function get_queried_taxonomy_slug(): ?string {
-		$queried_object = \get_queried_object();
-
-		if ( $queried_object instanceof \WP_Term ) {
-			return $queried_object->taxonomy;
-		}
-
-		return null;
+		return $this->get_queried_term()?->taxonomy;
 	}
 
 	/**

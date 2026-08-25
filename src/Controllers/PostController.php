@@ -20,11 +20,7 @@ class PostController extends PageController {
 
 		$post_type = \get_post_type();
 
-		if ( $post_type === false ) {
-			throw new \RuntimeException( sprintf( 'PressGang: %s could not determine the current post type.', static::class ) );
-		}
-
-		$this->post_type = $post_type;
+		$this->post_type = $this->require_present( $post_type !== false ? $post_type : null, 'post type' );
 
 		if ( ! $template ) {
 			$post_type_slug = str_replace( '_', '-', $this->post_type );

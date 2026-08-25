@@ -28,13 +28,7 @@ class PageController extends AbstractController {
 	 */
 	protected function get_post(): Post {
 		if ( $this->post === null ) {
-			$post = Timber::get_post();
-
-			if ( $post === null ) {
-				throw new \RuntimeException( sprintf( 'PressGang: %s found no post for the current request.', static::class ) );
-			}
-
-			$this->post = $post;
+			$this->post = $this->require_present( Timber::get_post(), 'post' );
 		}
 
 		return $this->post;

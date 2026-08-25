@@ -29,7 +29,13 @@ trait HasProducts {
 
 				if ( $product instanceof \WC_Product ) {
 					$this->products[] = $product;
+					continue;
 				}
+
+				// Diverges 'products' from the sibling 'posts'/plural context key
+				// (same underlying query) — log so a stale/orphaned product post
+				// doesn't disappear from the archive silently.
+				error_log( sprintf( 'PressGang: %s could not resolve post #%d to a WooCommerce product.', static::class, $post->id ) );
 			}
 		}
 

@@ -23,4 +23,18 @@ trait PostDataAccessor {
 
 		return $data;
 	}
+
+	/**
+	 * Like get_post_data(), but narrows the result to a string — the shape
+	 * every validator using this trait needs before its own checks.
+	 *
+	 * @param array<int, string>|string $keys
+	 *
+	 * @return string|null The string value, or null if absent or non-string.
+	 */
+	protected function get_post_data_string( array|string $keys ): ?string {
+		$data = $this->get_post_data( $keys );
+
+		return is_string( $data ) ? $data : null;
+	}
 }
