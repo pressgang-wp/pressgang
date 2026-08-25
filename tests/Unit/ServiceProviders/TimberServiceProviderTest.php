@@ -106,6 +106,25 @@ class TimberServiceProviderTest extends TestCase {
 	}
 
 	/** @test */
+	public function boot_skips_context_manager_class_without_required_interface(): void {
+		$configLoader = $this->createStub( ConfigLoaderInterface::class );
+		$configLoader->method( 'load' )->willReturn( [
+			'context-managers' => [ \stdClass::class ],
+			'twig-extensions'  => [],
+		] );
+
+		Config::set_loader( $configLoader );
+		$this->stubApplyFilters();
+		Functions\expect( 'add_filter' )->zeroOrMoreTimes();
+
+		$provider = new TimberServiceProvider();
+		$provider->boot();
+
+		$context = $provider->add_to_context( [ 'existing' => true ] );
+		$this->assertSame( [ 'existing' => true ], $context );
+	}
+
+	/** @test */
 	public function add_to_context_chains_multiple_managers(): void {
 		$configLoader = $this->createStub( ConfigLoaderInterface::class );
 		$configLoader->method( 'load' )->willReturn( [
@@ -149,6 +168,25 @@ class TimberServiceProviderTest extends TestCase {
 		$twig = $provider->add_to_twig( $twig );
 
 		$this->assertTrue( $twig->getFunction( 'stub_function' ) !== false );
+	}
+
+	/** @test */
+	public function boot_skips_twig_extension_manager_class_without_required_interface(): void {
+		$configLoader = $this->createStub( ConfigLoaderInterface::class );
+		$configLoader->method( 'load' )->willReturn( [
+			'context-managers' => [],
+			'twig-extensions'  => [ \stdClass::class ],
+		] );
+
+		Config::set_loader( $configLoader );
+		$this->stubApplyFilters();
+		Functions\expect( 'add_filter' )->zeroOrMoreTimes();
+
+		$provider = new TimberServiceProvider();
+		$provider->boot();
+
+		$twig = new Environment( new ArrayLoader() );
+		$this->assertSame( $twig, $provider->add_to_twig( $twig ) );
 	}
 
 	/** @test */

@@ -13,7 +13,10 @@ use Twig\Environment;
  * registered managers, and adds the pressgang-snippets views directory to Timber's paths.
  */
 class TimberServiceProvider implements ServiceProviderInterface {
+	/** @var array<int, ContextManagerInterface> */
 	protected array $context_managers = [];
+
+	/** @var array<int, TwigExtensionManagerInterface> */
 	protected array $twig_extensions = [];
 
 	/**
@@ -44,7 +47,7 @@ class TimberServiceProvider implements ServiceProviderInterface {
 	 */
 	protected function register_context_managers(): void {
 		foreach ( Config::get( 'context-managers' ) as $manager_class ) {
-			if ( class_exists( $manager_class ) ) {
+			if ( is_string( $manager_class ) && $this->is_context_manager_class( $manager_class ) ) {
 				$this->register_context_manager( new $manager_class() );
 			}
 		}
@@ -55,10 +58,30 @@ class TimberServiceProvider implements ServiceProviderInterface {
 	 */
 	protected function register_twig_extension_managers(): void {
 		foreach ( Config::get( 'twig-extensions' ) as $manager_class ) {
-			if ( class_exists( $manager_class ) ) {
+			if ( is_string( $manager_class ) && $this->is_twig_extension_manager_class( $manager_class ) ) {
 				$this->register_twig_extension_manager( new $manager_class() );
 			}
 		}
+	}
+
+	/**
+	 * @param string $manager_class
+	 * @return bool
+	 *
+	 * @phpstan-assert-if-true class-string<ContextManagerInterface> $manager_class
+	 */
+	protected function is_context_manager_class( string $manager_class ): bool {
+		return is_subclass_of( $manager_class, ContextManagerInterface::class );
+	}
+
+	/**
+	 * @param string $manager_class
+	 * @return bool
+	 *
+	 * @phpstan-assert-if-true class-string<TwigExtensionManagerInterface> $manager_class
+	 */
+	protected function is_twig_extension_manager_class( string $manager_class ): bool {
+		return is_subclass_of( $manager_class, TwigExtensionManagerInterface::class );
 	}
 
 	/**
