@@ -33,3 +33,6 @@ jobs:
 
       - name: Run unit tests with strict error reporting
         run: composer test:compat
+
+      - name: Run PHPStan
+        run: composer phpstan

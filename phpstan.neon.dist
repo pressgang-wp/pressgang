@@ -1,0 +1,25 @@
+includes:
+	- phpstan-baseline.neon
+
+parameters:
+	level: 8
+	paths:
+		- src
+	bootstrapFiles:
+		- phpstan-bootstrap.php
+	scanFiles:
+		- vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+		- vendor/php-stubs/acf-pro-stubs/acf-pro-stubs.php
+	ignoreErrors:
+		# Extension-point traits: pressgang-wp is a parent-theme framework, so these
+		# known traits exist to be consumed by child themes, not by this repo itself.
+		- identifier: trait.unused
+		  path: src/Forms/HasGoogleAnalyticsEvent.php
+		- identifier: trait.unused
+		  path: src/TwigExtensions/HasNoFunctions.php
+		- identifier: trait.unused
+		  path: src/Traits/HandlesDynamicGetters.php
+		# wp_setup_nav_menu_item() dynamically adds these properties to WP_Post at
+		# runtime; they are real and documented but not part of the WP_Post stub.
+		- identifier: property.notFound
+		  path: src/Configuration/CustomMenuItems.php

@@ -139,9 +139,10 @@ composer require pressgang-wp/pressgang
 composer install          # install dev dependencies
 composer test             # run the unit test suite
 composer test:compat      # run tests with strict PHP error reporting
+composer phpstan          # run static analysis (PHPStan, level 8)
 ```
 
-Tests use PHPUnit + BrainMonkey — no WordPress installation required. See the [Testing docs](https://docs.pressgang.dev/TESTING) for details on writing new tests.
+Tests use PHPUnit + BrainMonkey — no WordPress installation required. See the [Testing docs](https://docs.pressgang.dev/TESTING) for details on writing new tests and running static analysis.
 
 ## 📖 Documentation
 

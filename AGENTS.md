@@ -384,7 +384,7 @@ This pattern is **non-optional**.
 	- Registration/wiring → Config
 2. **Fetch content Timber-first.** Convert raw WP objects to Timber objects before Twig.
 3. **Apply WP security conventions** for writes: capability checks + nonces + sanitisation + validation.
-4. **Run `composer test`** to verify nothing is broken.
+4. **Run `composer test` and `composer phpstan`** to verify nothing is broken.
 5. **Keep diffs minimal.** Do not refactor unrelated code unless instructed.
 
 ---
@@ -536,6 +536,17 @@ return `?object` / `object` instead of `?Menu` / `Site`. PHP does not allow wide
 types in subclass overrides, and the anonymous-subclass test pattern requires it. The docblock
 `@return` retains the concrete type for IDE support.
 
+### `trait.unused` ignored in PHPStan
+`phpstan.neon.dist` ignores the `trait.unused` identifier only for known extension-point
+traits. pressgang-wp is a parent-theme framework — traits like `HandlesDynamicGetters` and
+`HasNoFunctions` exist to be consumed by child themes, not by this repo itself, so PHPStan's
+"used zero times" check is structurally always wrong for those specific files.
+
+### `property.notFound` ignored in `CustomMenuItems.php`
+`wp_setup_nav_menu_item()` dynamically adds properties (`menu_item_parent`, `object_id`,
+`url`, etc.) to `WP_Post` at runtime. They're real and documented but not part of the
+`WP_Post` stub, so PHPStan can't see them; the ignore is scoped to this one file.
+
 ---
 
 ## Repo Layout
@@ -566,6 +577,18 @@ composer test           # alias for test:unit
 composer test:unit      # run the full unit suite
 vendor/bin/phpunit --filter ConfigTest          # single class
 vendor/bin/phpunit --filter loads_and_caches    # single test by name
+```
+
+### Static analysis
+
+- **PHPStan 2.x** at level 8, with `szepeviktor/phpstan-wordpress`, `php-stubs/woocommerce-stubs`,
+  and `php-stubs/acf-pro-stubs` for WP/WooCommerce/ACF-aware type checking.
+- Config: `phpstan.neon.dist`. Pre-existing debt is tracked in `phpstan-baseline.neon`
+  rather than fixed inline — new code should not add to it.
+- Two ignored identifiers are architectural, not suppressed bugs — see Known Exceptions below.
+
+```bash
+composer phpstan         # run PHPStan against src/
 ```
 
 ### Directory structure

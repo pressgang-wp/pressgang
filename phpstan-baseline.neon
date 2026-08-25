@@ -1,0 +1,1201 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method PressGang\\ACF\\TimberMapper\:\:map_field\(\) has parameter \$field with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ACF/TimberMapper.php
+
+		-
+			message: '#^Method PressGang\\Blocks\\Block\:\:enqueue_block_assets\(\) has parameter \$block_settings with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/Block.php
+
+		-
+			message: '#^Method PressGang\\Blocks\\Block\:\:get_context\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/Block.php
+
+		-
+			message: '#^Method PressGang\\Blocks\\Block\:\:get_enqueue_action\(\) has parameter \$block_settings with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/Block.php
+
+		-
+			message: '#^Method PressGang\\Blocks\\Block\:\:on_register\(\) has parameter \$block_settings with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/Block.php
+
+		-
+			message: '#^Method PressGang\\Blocks\\Block\:\:render\(\) has parameter \$block with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/Block.php
+
+		-
+			message: '#^Method PressGang\\Blocks\\Block\:\:render\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/Block.php
+
+		-
+			message: '#^Parameter \#1 \$hook_name of function do_action expects non\-empty\-string, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Blocks/Block.php
+
+		-
+			message: '#^Property PressGang\\Blocks\\Block\:\:\$scripts type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/Block.php
+
+		-
+			message: '#^Property PressGang\\Blocks\\Block\:\:\$styles type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/Block.php
+
+		-
+			message: '#^Method PressGang\\Blocks\\BlockClassManager\:\:get_css_classes\(\) has parameter \$block with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/BlockClassManager.php
+
+		-
+			message: '#^Method PressGang\\Blocks\\BlockClassManager\:\:get_css_classes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/BlockClassManager.php
+
+		-
+			message: '#^Method PressGang\\Blocks\\BlockContextBuilder\:\:build_context\(\) has parameter \$block with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/BlockContextBuilder.php
+
+		-
+			message: '#^Method PressGang\\Blocks\\BlockContextBuilder\:\:build_context\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/BlockContextBuilder.php
+
+		-
+			message: '#^Method PressGang\\Blocks\\BlockStyleManager\:\:get_color_styles\(\) has parameter \$color_styles with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/BlockStyleManager.php
+
+		-
+			message: '#^Method PressGang\\Blocks\\BlockStyleManager\:\:get_color_styles\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/BlockStyleManager.php
+
+		-
+			message: '#^Method PressGang\\Blocks\\BlockStyleManager\:\:get_spacing_styles\(\) has parameter \$block with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/BlockStyleManager.php
+
+		-
+			message: '#^Method PressGang\\Blocks\\BlockStyleManager\:\:get_spacing_styles\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/BlockStyleManager.php
+
+		-
+			message: '#^Method PressGang\\Blocks\\BlockStyleManager\:\:get_styles\(\) has parameter \$block with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/BlockStyleManager.php
+
+		-
+			message: '#^Method PressGang\\Blocks\\BlockStyleManager\:\:get_styles\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/BlockStyleManager.php
+
+		-
+			message: '#^Method PressGang\\Blocks\\BlockStyleManager\:\:get_typography_styles\(\) has parameter \$typography_styles with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/BlockStyleManager.php
+
+		-
+			message: '#^Method PressGang\\Blocks\\BlockStyleManager\:\:get_typography_styles\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Blocks/BlockStyleManager.php
+
+		-
+			message: '#^Argument of an invalid type list\<string\>\|false supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: src/Bootstrap/FileConfigLoader.php
+
+		-
+			message: '#^Cannot call method initialize\(\) on class\-string\|object\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Bootstrap/Loader.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\AcfOptions\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/AcfOptions.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\BlockCategories\:\:add_custom_categories\(\) has parameter \$categories with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/BlockCategories.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\BlockCategories\:\:add_custom_categories\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/BlockCategories.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\BlockCategories\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/BlockCategories.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\BlockPatterns\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/BlockPatterns.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\Blocks\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Blocks.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\Blocks\:\:register_block\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Blocks.php
+
+		-
+			message: '#^Parameter \#1 \$callback of function call_user_func expects callable\(\)\: mixed, array\{class\-string, ''on_register''\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Blocks.php
+
+		-
+			message: '#^Parameter \#1 \$json of function json_validate expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Blocks.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\ColorPalette\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/ColorPalette.php
+
+		-
+			message: '#^Property PressGang\\Configuration\\ConfigurationSingleton\:\:\$config type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/ConfigurationSingleton.php
+
+		-
+			message: '#^Property PressGang\\Configuration\\ConfigurationSingleton\:\:\$instances type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/ConfigurationSingleton.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/Configuration/ConfigurationSingleton.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\CustomMenuItems\:\:filter_nav_menu_items\(\) has parameter \$items with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/CustomMenuItems.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\CustomMenuItems\:\:filter_nav_menu_items\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/CustomMenuItems.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\CustomMenuItems\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/CustomMenuItems.php
+
+		-
+			message: '#^Parameter \#2 \$gmt of function current_time expects bool, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Configuration/CustomMenuItems.php
+
+		-
+			message: '#^Property PressGang\\Configuration\\CustomMenuItems\:\:\$menus type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/CustomMenuItems.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\CustomPostTypes\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/CustomPostTypes.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\CustomPostTypes\:\:parse_labels\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/CustomPostTypes.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\CustomPostTypes\:\:parse_labels\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/CustomPostTypes.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\CustomTaxonomies\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/CustomTaxonomies.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\CustomTaxonomies\:\:parse_labels\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/CustomTaxonomies.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\CustomTaxonomies\:\:parse_labels\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/CustomTaxonomies.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\Customizer\:\:add_control_to_setting\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Customizer.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\Customizer\:\:create_setting\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Customizer.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\Customizer\:\:create_settings_for_section\(\) has parameter \$settings with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Customizer.php
+
+		-
+			message: '#^Parameter \#1 \$id of method WP_Customize_Manager\:\:add_control\(\) expects string\|WP_Customize_Control, object given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Customizer.php
+
+		-
+			message: '#^Parameter \#1 \$id of method WP_Customize_Manager\:\:add_setting\(\) expects string\|WP_Customize_Setting, array\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Customizer.php
+
+		-
+			message: '#^Parameter \#1 \$id of method WP_Customize_Manager\:\:get_setting\(\) expects string, array\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Customizer.php
+
+		-
+			message: '#^Parameter \#3 \$setting of method PressGang\\Configuration\\Customizer\:\:add_control_to_setting\(\) expects string, array\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Configuration/Customizer.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\MetaTags\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/MetaTags.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\<string\>\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: src/Configuration/PageTemplates.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\Plugins\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Plugins.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\QueryVars\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/QueryVars.php
+
+		-
+			message: '#^Property PressGang\\Configuration\\QueryVars\:\:\$config type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/QueryVars.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\RemoveMenus\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/RemoveMenus.php
+
+		-
+			message: '#^Property PressGang\\Configuration\\RemoveMenus\:\:\$config type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/RemoveMenus.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\RemoveNodes\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/RemoveNodes.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\RemoveSupport\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/RemoveSupport.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\Routes\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Routes.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\Scripts\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Scripts.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\Sidebars\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Sidebars.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\Sidebars\:\:parse_args\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Sidebars.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\Sidebars\:\:parse_args\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Sidebars.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\Snippets\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Snippets.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\Styles\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Styles.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\Support\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Support.php
+
+		-
+			message: '#^Call to function is_array\(\) with non\-empty\-array\<string\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Configuration/Templates.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\Templates\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Templates.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\Templates\:\:register_templates\(\) has parameter \$atts with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Templates.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\Templates\:\:register_templates\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/Templates.php
+
+		-
+			message: '#^Method PressGang\\Configuration\\TimberClassMap\:\:initialize\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/TimberClassMap.php
+
+		-
+			message: '#^Property PressGang\\Configuration\\TimberClassMap\:\:\$config type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Configuration/TimberClassMap.php
+
+		-
+			message: '#^Access to an undefined property Timber\\Site\:\:\$stylesheet\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ContextManagers/SiteContextManager.php
+
+		-
+			message: '#^Method PressGang\\ContextManagers\\WooCommerceContextManager\:\:build_links\(\) should return array\<string, string\|null\> but returns array\<string, string\|false\|null\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ContextManagers/WooCommerceContextManager.php
+
+		-
+			message: '#^Parameter \#1 \$redirect of function wp_logout_url expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ContextManagers/WooCommerceContextManager.php
+
+		-
+			message: '#^Right side of && is always true\.$#'
+			identifier: booleanAnd.rightAlwaysTrue
+			count: 1
+			path: src/ContextManagers/WooCommerceContextManager.php
+
+		-
+			message: '#^Parameter \#1 \$filenames of static method Timber\\Timber\:\:compile\(\) expects array\|string, array\|string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controllers/AbstractController.php
+
+		-
+			message: '#^Method PressGang\\Controllers\\AuthorController\:\:get_posts\(\) return type has no value type specified in iterable type Timber\\PostCollectionInterface\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Controllers/AuthorController.php
+
+		-
+			message: '#^Property PressGang\\Controllers\\AuthorController\:\:\$posts type has no value type specified in iterable type Timber\\PostCollectionInterface\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Controllers/AuthorController.php
+
+		-
+			message: '#^Method PressGang\\Controllers\\ControllerFactory\:\:make\(\) should return PressGang\\Controllers\\ControllerInterface but returns object\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Controllers/ControllerFactory.php
+
+		-
+			message: '#^Parameter \#1 \$template of static method PressGang\\Controllers\\ControllerFactory\:\:infer_controller_class\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controllers/ControllerFactory.php
+
+		-
+			message: '#^Property PressGang\\Controllers\\PostController\:\:\$post_type \(string\) does not accept string\|false\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Controllers/PostController.php
+
+		-
+			message: '#^Cannot access property \$taxonomy on WP_Post\|WP_Post_Type\|WP_Term\|WP_User\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/Controllers/PostsController.php
+
+		-
+			message: '#^Method PressGang\\Controllers\\TaxonomyController\:\:get_term\(\) should return Timber\\Term but returns Timber\\Term\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Controllers/TaxonomyController.php
+
+		-
+			message: '#^Parameter \#1 \$term of static method Timber\\Timber\:\:get_term\(\) expects int\|WP_Term\|null, WP_Post\|WP_Post_Type\|WP_Term\|WP_User\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controllers/TaxonomyController.php
+
+		-
+			message: '#^Method PressGang\\Controllers\\WooCommerce\\ProductCategoriesAndProductsController\:\:get_context\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Controllers/WooCommerce/ProductCategoriesAndProductsController.php
+
+		-
+			message: '#^Method PressGang\\Controllers\\WooCommerce\\ProductCategoriesAndProductsController\:\:get_product_categories\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Controllers/WooCommerce/ProductCategoriesAndProductsController.php
+
+		-
+			message: '#^Method PressGang\\Controllers\\WooCommerce\\ProductCategoriesAndProductsController\:\:get_products\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Controllers/WooCommerce/ProductCategoriesAndProductsController.php
+
+		-
+			message: '#^Property PressGang\\Controllers\\WooCommerce\\ProductCategoriesAndProductsController\:\:\$product_categories \(array\|null\) does not accept iterable\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Controllers/WooCommerce/ProductCategoriesAndProductsController.php
+
+		-
+			message: '#^Property PressGang\\Controllers\\WooCommerce\\ProductCategoriesAndProductsController\:\:\$product_categories type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Controllers/WooCommerce/ProductCategoriesAndProductsController.php
+
+		-
+			message: '#^Property PressGang\\Controllers\\WooCommerce\\ProductCategoriesAndProductsController\:\:\$products type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Controllers/WooCommerce/ProductCategoriesAndProductsController.php
+
+		-
+			message: '#^Method PressGang\\Controllers\\WooCommerce\\ProductCategoriesController\:\:get_context\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Controllers/WooCommerce/ProductCategoriesController.php
+
+		-
+			message: '#^Method PressGang\\Controllers\\WooCommerce\\ProductCategoriesController\:\:get_product_categories\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Controllers/WooCommerce/ProductCategoriesController.php
+
+		-
+			message: '#^Property PressGang\\Controllers\\WooCommerce\\ProductCategoriesController\:\:\$product_categories \(array\|null\) does not accept iterable\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Controllers/WooCommerce/ProductCategoriesController.php
+
+		-
+			message: '#^Property PressGang\\Controllers\\WooCommerce\\ProductCategoriesController\:\:\$product_categories type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Controllers/WooCommerce/ProductCategoriesController.php
+
+		-
+			message: '#^Method PressGang\\Controllers\\WooCommerce\\ProductCategoryController\:\:get_context\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Controllers/WooCommerce/ProductCategoryController.php
+
+		-
+			message: '#^Method PressGang\\Controllers\\WooCommerce\\ProductController\:\:get_context\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Controllers/WooCommerce/ProductController.php
+
+		-
+			message: '#^Method PressGang\\Controllers\\WooCommerce\\ProductController\:\:get_product\(\) should return WC_Product but returns WC_Product\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Controllers/WooCommerce/ProductController.php
+
+		-
+			message: '#^Property PressGang\\Controllers\\WooCommerce\\ProductController\:\:\$product \(WC_Product\|null\) does not accept WC_Product\|false\|null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Controllers/WooCommerce/ProductController.php
+
+		-
+			message: '#^Cannot access property \$taxonomy on WP_Post\|WP_Post_Type\|WP_Term\|WP_User\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/Controllers/WooCommerce/ProductsController.php
+
+		-
+			message: '#^Method PressGang\\Controllers\\WooCommerce\\ProductsController\:\:get_context\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Controllers/WooCommerce/ProductsController.php
+
+		-
+			message: '#^Method PressGang\\Controllers\\WooCommerce\\ProductsController\:\:get_products\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Controllers/WooCommerce/ProductsController.php
+
+		-
+			message: '#^Property PressGang\\Controllers\\WooCommerce\\ProductsController\:\:\$products type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Controllers/WooCommerce/ProductsController.php
+
+		-
+			message: '#^Method PressGang\\Forms\\ContactSubmission\:\:__construct\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Forms/ContactSubmission.php
+
+		-
+			message: '#^Method PressGang\\Forms\\ContactSubmission\:\:init\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Forms/ContactSubmission.php
+
+		-
+			message: '#^Method PressGang\\Forms\\ContactSubmission\:\:prepare_message\(\) should return string but returns bool\|string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Forms/ContactSubmission.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/Forms/ContactSubmission.php
+
+		-
+			message: '#^Method PressGang\\Forms\\FormSubmission\:\:__construct\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Forms/FormSubmission.php
+
+		-
+			message: '#^Method PressGang\\Forms\\FormSubmission\:\:flash_input_vars\(\) has parameter \$input with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Forms/FormSubmission.php
+
+		-
+			message: '#^Method PressGang\\Forms\\FormSubmission\:\:handle_errors\(\) has parameter \$errors with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Forms/FormSubmission.php
+
+		-
+			message: '#^Method PressGang\\Forms\\FormSubmission\:\:run_validators\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Forms/FormSubmission.php
+
+		-
+			message: '#^Property PressGang\\Forms\\FormSubmission\:\:\$validators type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Forms/FormSubmission.php
+
+		-
+			message: '#^Method PressGang\\Forms\\Validators\\EmailValidator\:\:__construct\(\) has parameter \$email_path with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Forms/Validators/EmailValidator.php
+
+		-
+			message: '#^Method PressGang\\Forms\\Validators\\EmailValidator\:\:get_post_data\(\) has parameter \$keys with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Forms/Validators/EmailValidator.php
+
+		-
+			message: '#^Method PressGang\\Forms\\Validators\\EmailValidator\:\:validate\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Forms/Validators/EmailValidator.php
+
+		-
+			message: '#^Method PressGang\\Forms\\Validators\\MessageValidator\:\:__construct\(\) has parameter \$message_path with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Forms/Validators/MessageValidator.php
+
+		-
+			message: '#^Method PressGang\\Forms\\Validators\\MessageValidator\:\:get_post_data\(\) has parameter \$keys with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Forms/Validators/MessageValidator.php
+
+		-
+			message: '#^Method PressGang\\Forms\\Validators\\MessageValidator\:\:validate\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Forms/Validators/MessageValidator.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$score\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Forms/Validators/RecaptchaValidator.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$success\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Forms/Validators/RecaptchaValidator.php
+
+		-
+			message: '#^Method PressGang\\Forms\\Validators\\RecaptchaValidator\:\:__construct\(\) has parameter \$recaptcha_path with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Forms/Validators/RecaptchaValidator.php
+
+		-
+			message: '#^Method PressGang\\Forms\\Validators\\RecaptchaValidator\:\:get_post_data\(\) has parameter \$keys with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Forms/Validators/RecaptchaValidator.php
+
+		-
+			message: '#^Method PressGang\\Forms\\Validators\\RecaptchaValidator\:\:validate\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Forms/Validators/RecaptchaValidator.php
+
+		-
+			message: '#^Method PressGang\\Forms\\Validators\\ValidatorInterface\:\:validate\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Forms/Validators/ValidatorInterface.php
+
+		-
+			message: '#^Method PressGang\\Helpers\\ScriptLoader\:\:register_script\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Helpers/ScriptLoader.php
+
+		-
+			message: '#^Method PressGang\\Helpers\\ScriptLoader\:\:register_script\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Helpers/ScriptLoader.php
+
+		-
+			message: '#^Property PressGang\\Helpers\\ScriptLoader\:\:\$async type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Helpers/ScriptLoader.php
+
+		-
+			message: '#^Property PressGang\\Helpers\\ScriptLoader\:\:\$defer type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Helpers/ScriptLoader.php
+
+		-
+			message: '#^Method PressGang\\Helpers\\StyleLoader\:\:register_style\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Helpers/StyleLoader.php
+
+		-
+			message: '#^Method PressGang\\Helpers\\StyleLoader\:\:register_style\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Helpers/StyleLoader.php
+
+		-
+			message: '#^Property PressGang\\Helpers\\StyleLoader\:\:\$preconnect type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Helpers/StyleLoader.php
+
+		-
+			message: '#^Function reading_time\(\) has parameter \$text with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Helpers/helper.php
+
+		-
+			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Helpers/helper.php
+
+		-
+			message: '#^Parameter \#1 \$string of function rtrim expects string, int\|string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Helpers/helper.php
+
+		-
+			message: '#^Function timber_set_product\(\) has parameter \$post with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Helpers/woocommerce.php
+
+		-
+			message: '#^Action callback returns int but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: src/Metaboxes/Metabox.php
+
+		-
+			message: '#^Method PressGang\\Metaboxes\\Metabox\:\:__construct\(\) has parameter \$callback_args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Metaboxes/Metabox.php
+
+		-
+			message: '#^Method PressGang\\Metaboxes\\Metabox\:\:__construct\(\) has parameter \$fields with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Metaboxes/Metabox.php
+
+		-
+			message: '#^Method PressGang\\Metaboxes\\Metabox\:\:get_field_values\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Metaboxes/Metabox.php
+
+		-
+			message: '#^Method PressGang\\Metaboxes\\Metabox\:\:sanitize_custom_input\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Metaboxes/Metabox.php
+
+		-
+			message: '#^Parameter \#6 \$priority of function add_meta_box expects ''core''\|''default''\|''high''\|''low'', string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Metaboxes/Metabox.php
+
+		-
+			message: '#^Argument of an invalid type Timber\\PostCollectionInterface\|null supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 3
+			path: src/Post.php
+
+		-
+			message: '#^Cannot call method to_array\(\) on Timber\\PostCollectionInterface\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Post.php
+
+		-
+			message: '#^Method PressGang\\Post\:\:add_taxonomy_queries\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Post.php
+
+		-
+			message: '#^Method PressGang\\Post\:\:fetch_related_posts\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Post.php
+
+		-
+			message: '#^Method PressGang\\Post\:\:fill_insufficient_related_posts\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Post.php
+
+		-
+			message: '#^Method PressGang\\Post\:\:fill_insufficient_related_posts\(\) has parameter \$related_posts with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Post.php
+
+		-
+			message: '#^Method PressGang\\Post\:\:get_latest_posts\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Post.php
+
+		-
+			message: '#^Method PressGang\\Post\:\:get_related_posts\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Post.php
+
+		-
+			message: '#^Property PressGang\\Post\:\:\$latest_posts type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Post.php
+
+		-
+			message: '#^Property PressGang\\Post\:\:\$related_posts type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Post.php
+
+		-
+			message: '#^Method PressGang\\Routes\\RouteHandlerInterface\:\:handle\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Routes/RouteHandlerInterface.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/SEO/MetaDescriptionService.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$object with type mixed is not subtype of native type object\.$#'
+			identifier: parameter.phpDocType
+			count: 3
+			path: src/SEO/MetaDescriptionService.php
+
+		-
+			message: '#^Parameter \#1 \$post of static method PressGang\\SEO\\MetaDescriptionService\:\:get_description_for_post\(\) expects WP_Post, object given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/SEO/MetaDescriptionService.php
+
+		-
+			message: '#^Parameter \#1 \$term of function term_description expects int, WP_Term given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/SEO/MetaDescriptionService.php
+
+		-
+			message: '#^Parameter \#1 \$term of static method PressGang\\SEO\\MetaDescriptionService\:\:get_description_for_taxonomy\(\) expects WP_Term, object given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/SEO/MetaDescriptionService.php
+
+		-
+			message: '#^Parameter \#1 \$manager of method PressGang\\ServiceProviders\\TimberServiceProvider\:\:register_context_manager\(\) expects PressGang\\ContextManagers\\ContextManagerInterface, object given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ServiceProviders/TimberServiceProvider.php
+
+		-
+			message: '#^Parameter \#1 \$manager of method PressGang\\ServiceProviders\\TimberServiceProvider\:\:register_twig_extension_manager\(\) expects PressGang\\TwigExtensions\\TwigExtensionManagerInterface, object given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ServiceProviders/TimberServiceProvider.php
+
+		-
+			message: '#^Property PressGang\\ServiceProviders\\TimberServiceProvider\:\:\$context_managers type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ServiceProviders/TimberServiceProvider.php
+
+		-
+			message: '#^Property PressGang\\ServiceProviders\\TimberServiceProvider\:\:\$twig_extensions type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ServiceProviders/TimberServiceProvider.php
+
+		-
+			message: '#^Method PressGang\\Shortcodes\\Shortcode\:\:define_context\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Shortcodes/Shortcode.php
+
+		-
+			message: '#^Method PressGang\\Shortcodes\\Shortcode\:\:define_context\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Shortcodes/Shortcode.php
+
+		-
+			message: '#^Method PressGang\\Shortcodes\\Shortcode\:\:define_defaults\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Shortcodes/Shortcode.php
+
+		-
+			message: '#^Method PressGang\\Shortcodes\\Shortcode\:\:do_shortcode\(\) has parameter \$atts with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Shortcodes/Shortcode.php
+
+		-
+			message: '#^Method PressGang\\Shortcodes\\Shortcode\:\:do_shortcode\(\) should return string but returns bool\|string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Shortcodes/Shortcode.php
+
+		-
+			message: '#^Method PressGang\\Shortcodes\\Shortcode\:\:get_context\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Shortcodes/Shortcode.php
+
+		-
+			message: '#^Method PressGang\\Shortcodes\\Shortcode\:\:get_context\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Shortcodes/Shortcode.php
+
+		-
+			message: '#^Method PressGang\\Shortcodes\\Shortcode\:\:get_defaults\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Shortcodes/Shortcode.php
+
+		-
+			message: '#^Parameter \#1 \$filenames of static method Timber\\Timber\:\:compile\(\) expects array\|string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Shortcodes/Shortcode.php
+
+		-
+			message: '#^Parameter \#1 \$string of function strtolower expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Shortcodes/Shortcode.php
+
+		-
+			message: '#^Parameter \#1 \$tag of function add_shortcode expects non\-empty\-string, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Shortcodes/Shortcode.php
+
+		-
+			message: '#^Property PressGang\\Shortcodes\\Shortcode\:\:\$context type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Shortcodes/Shortcode.php
+
+		-
+			message: '#^Property PressGang\\Shortcodes\\Shortcode\:\:\$defaults type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Shortcodes/Shortcode.php
+
+		-
+			message: '#^Method PressGang\\Snippets\\SnippetInterface\:\:__construct\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Snippets/SnippetInterface.php
+
+		-
+			message: '#^Parameter \#1 \$object_or_class of function is_a expects object, Timber\\Post\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/TwigExtensions/SinglePostExtensionManager.php
+
+		-
+			message: '#^Call to static method get_widgets\(\) on an unknown class Timber\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/TwigExtensions/WidgetExtensionManager.php
+
+		-
+			message: '#^Method PressGang\\TwigExtensions\\WooCommerceExtensionManager\:\:timber_set_product\(\) should return WC_Product\|null but returns WC_Product\|false\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/TwigExtensions/WooCommerceExtensionManager.php
+
+		-
+			message: '#^Method PressGang\\Widgets\\Widget\:\:define_defaults\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Widgets/Widget.php
+
+		-
+			message: '#^Method PressGang\\Widgets\\Widget\:\:define_fields\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Widgets/Widget.php
+
+		-
+			message: '#^Method PressGang\\Widgets\\Widget\:\:form\(\) has parameter \$instance with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Widgets/Widget.php
+
+		-
+			message: '#^Method PressGang\\Widgets\\Widget\:\:get_acf_fields\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Widgets/Widget.php
+
+		-
+			message: '#^Method PressGang\\Widgets\\Widget\:\:get_instance\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Widgets/Widget.php
+
+		-
+			message: '#^Method PressGang\\Widgets\\Widget\:\:get_instance\(\) has parameter \$instance with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Widgets/Widget.php
+
+		-
+			message: '#^Method PressGang\\Widgets\\Widget\:\:get_instance\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Widgets/Widget.php
+
+		-
+			message: '#^Method PressGang\\Widgets\\Widget\:\:update\(\) has parameter \$new_instance with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Widgets/Widget.php
+
+		-
+			message: '#^Method PressGang\\Widgets\\Widget\:\:update\(\) has parameter \$old_instance with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Widgets/Widget.php
+
+		-
+			message: '#^Method PressGang\\Widgets\\Widget\:\:update\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Widgets/Widget.php
+
+		-
+			message: '#^Method PressGang\\Widgets\\Widget\:\:widget\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Widgets/Widget.php
+
+		-
+			message: '#^Method PressGang\\Widgets\\Widget\:\:widget\(\) has parameter \$instance with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Widgets/Widget.php
+
+		-
+			message: '#^Parameter \#1 \$string of function strtolower expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Widgets/Widget.php
+
+		-
+			message: '#^Parameter \#1 \$widget of function register_widget expects class\-string\<WP_Widget\>\|WP_Widget, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Widgets/Widget.php
+
+		-
+			message: '#^Property PressGang\\Widgets\\Widget\:\:\$defaults type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Widgets/Widget.php
+
+		-
+			message: '#^Property PressGang\\Widgets\\Widget\:\:\$fields type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Widgets/Widget.php

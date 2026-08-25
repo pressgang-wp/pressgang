@@ -1,7 +1,8 @@
 ---
 description: >-
-  PHPUnit unit tests for PressGang's own PHP framework code — no WordPress
-  install required — plus where to go for full theme end-to-end testing.
+  PHPUnit unit tests and PHPStan static analysis for PressGang's own PHP
+  framework code — no WordPress install required — plus where to go for full
+  theme end-to-end testing.
 ---
 
 # 🧪 Testing
@@ -174,6 +175,25 @@ Functions loaded via Composer's `files` autoload (like the `config()` helper) ar
 {% hint style="info" %}
 `YoastTestCase` pre-stubs `wp_parse_args` to behave like `array_merge($defaults, $args)` — no need to mock it yourself.
 {% endhint %}
+
+## 🔬 Static Analysis
+
+PressGang also runs [PHPStan](https://phpstan.org/) at level 8, so type errors and nullability bugs are caught before a test even needs to exist for them.
+
+{% code title="Terminal" %}
+```bash
+composer phpstan
+```
+{% endcode %}
+
+* **`szepeviktor/phpstan-wordpress`** — WordPress core function/class stubs
+* **`php-stubs/woocommerce-stubs`** and **`php-stubs/acf-pro-stubs`** — stubs for the two plugin APIs PressGang integrates with most deeply
+
+{% hint style="info" %}
+Pre-existing findings are tracked in `phpstan-baseline.neon` rather than fixed inline, so the baseline can shrink incrementally. New code should not add to it — if `composer phpstan` fails on something you wrote, fix the type rather than baselining it.
+{% endhint %}
+
+A couple of ignored rules in `phpstan.neon.dist` are architectural, not suppressed bugs — see **Known Exceptions** in [AGENTS.md](https://github.com/pressgang-wp/pressgang/blob/main/AGENTS.md) for why `trait.unused` and `CustomMenuItems.php`'s dynamic `WP_Post` properties are ignored.
 
 ## 🚢 End-to-end testing
 
