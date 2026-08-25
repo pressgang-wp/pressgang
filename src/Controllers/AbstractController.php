@@ -83,7 +83,7 @@ abstract class AbstractController implements ControllerInterface {
 		// exactly the silent-blank-page bug. Compile explicitly (via_render
 		// keeps the timber/render/* filter semantics identical) so failure is
 		// observable.
-		$output = Timber::compile( $this->template, $this->context, $this->expires, Loader::CACHE_USE_DEFAULT, true );
+		$output = Timber::compile( $this->get_template_candidates(), $this->context, $this->expires, Loader::CACHE_USE_DEFAULT, true );
 
 		if ( false === $output ) {
 			$this->handle_render_failure();
@@ -92,6 +92,13 @@ abstract class AbstractController implements ControllerInterface {
 		}
 
 		echo $output;
+	}
+
+	/**
+	 * @return string|array<int, string>
+	 */
+	protected function get_template_candidates(): string|array {
+		return $this->template ?? [];
 	}
 
 	/**

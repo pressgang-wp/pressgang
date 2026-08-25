@@ -5,6 +5,13 @@
 namespace Acme\Theme\Controllers {
 	class SearchController extends \PressGang\Controllers\SearchController {}
 	class PostController extends \PressGang\Controllers\PostController {}
+	class DummyController implements \PressGang\Controllers\ControllerInterface {
+		public function __construct( public ?string $template = null ) {
+		}
+
+		public function render(): void {
+		}
+	}
 }
 
 namespace PressGang\Tests\Unit\Controllers {
@@ -63,6 +70,18 @@ namespace PressGang\Tests\Unit\Controllers {
 				PostController::class,
 				ControllerFactory::resolve_controller_class( 'single-product.php', null )
 			);
+		}
+
+		/** @test */
+		public function make_requires_a_controller_class(): void {
+			$controller = ControllerFactory::make( 'Acme\\Theme\\Controllers\\DummyController', 'dummy.twig' );
+
+			$this->assertInstanceOf( 'Acme\\Theme\\Controllers\\DummyController', $controller );
+			$this->assertSame( 'dummy.twig', $controller->template );
+
+			$this->expectException( \InvalidArgumentException::class );
+
+			ControllerFactory::make( \stdClass::class );
 		}
 	}
 }

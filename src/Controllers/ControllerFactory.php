@@ -29,9 +29,23 @@ class ControllerFactory {
 	 * @return ControllerInterface
 	 */
 	public static function make( string $controller_class, ?string $twig_template = null ): ControllerInterface {
-		// Use the splat operator to unpack filtered arguments (removes null values)
-		// i.e. Honours controller default template args.
-		return new $controller_class( ...array_filter( [ $twig_template ] ) );
+		if ( ! self::is_controller_class( $controller_class ) ) {
+			throw new \InvalidArgumentException( sprintf( 'PressGang: %s is not a controller.', $controller_class ) );
+		}
+
+		return $twig_template === null
+			? new $controller_class()
+			: new $controller_class( $twig_template );
+	}
+
+	/**
+	 * @param string $controller_class
+	 * @return bool
+	 *
+	 * @phpstan-assert-if-true class-string<ControllerInterface> $controller_class
+	 */
+	protected static function is_controller_class( string $controller_class ): bool {
+		return is_subclass_of( $controller_class, ControllerInterface::class );
 	}
 
 	/**
@@ -95,7 +109,7 @@ class ControllerFactory {
 	 * @param string|null $twig
 	 */
 	public static function render( ?string $template = null, ?string $controller = null, ?string $twig = null ): void {
-		$controller = $controller ?? self::infer_controller_class( $template );
+		$controller = $controller ?? self::infer_controller_class( $template ?? '' );
 
 		$controller = self::make( $controller, $twig );
 		$controller->render();

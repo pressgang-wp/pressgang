@@ -54,7 +54,13 @@ class PostsController extends AbstractController {
 		}
 
 		if ( \is_tax() ) {
-			$taxonomy = str_replace( '_', '-', \get_queried_object()->taxonomy );
+			$queried_object = \get_queried_object();
+
+			if ( ! $queried_object instanceof \WP_Term ) {
+				return [ 'taxonomy.twig', 'archive.twig' ];
+			}
+
+			$taxonomy = str_replace( '_', '-', $queried_object->taxonomy );
 
 			return [ "taxonomy-{$taxonomy}.twig", 'taxonomy.twig', 'archive.twig' ];
 		}

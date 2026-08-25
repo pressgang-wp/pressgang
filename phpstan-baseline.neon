@@ -469,48 +469,6 @@ parameters:
 			path: src/ContextManagers/WooCommerceContextManager.php
 
 		-
-			message: '#^Parameter \#1 \$filenames of static method Timber\\Timber\:\:compile\(\) expects array\|string, array\|string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controllers/AbstractController.php
-
-		-
-			message: '#^Method PressGang\\Controllers\\AuthorController\:\:get_posts\(\) return type has no value type specified in iterable type Timber\\PostCollectionInterface\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Controllers/AuthorController.php
-
-		-
-			message: '#^Property PressGang\\Controllers\\AuthorController\:\:\$posts type has no value type specified in iterable type Timber\\PostCollectionInterface\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Controllers/AuthorController.php
-
-		-
-			message: '#^Method PressGang\\Controllers\\ControllerFactory\:\:make\(\) should return PressGang\\Controllers\\ControllerInterface but returns object\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Controllers/ControllerFactory.php
-
-		-
-			message: '#^Parameter \#1 \$template of static method PressGang\\Controllers\\ControllerFactory\:\:infer_controller_class\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controllers/ControllerFactory.php
-
-		-
-			message: '#^Cannot access property \$taxonomy on WP_Post\|WP_Post_Type\|WP_Term\|WP_User\|null\.$#'
-			identifier: property.nonObject
-			count: 1
-			path: src/Controllers/PostsController.php
-
-		-
-			message: '#^Parameter \#1 \$term of static method Timber\\Timber\:\:get_term\(\) expects int\|WP_Term\|null, WP_Post\|WP_Post_Type\|WP_Term\|WP_User\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controllers/TaxonomyController.php
-
-		-
 			message: '#^Method PressGang\\Controllers\\WooCommerce\\ProductCategoriesAndProductsController\:\:get_context\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
