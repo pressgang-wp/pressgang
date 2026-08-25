@@ -12,8 +12,13 @@ use Timber\Timber;
 abstract class Shortcode {
 
 	protected ?string $template = null;
+
+	/** @var array<string, mixed> */
 	protected array $context = [];
+
+	/** @var array<string, mixed> */
 	protected array $defaults = [];
+
 	protected string $view_folder = 'shortcodes';
 
 	/**
@@ -32,7 +37,9 @@ abstract class Shortcode {
 			$this->template = $this->generate_template_name( $classname );
 		}
 
-		\add_shortcode( $shortcode, [ $this, 'do_shortcode' ] );
+		if ( $shortcode !== '' ) {
+			\add_shortcode( $shortcode, [ $this, 'do_shortcode' ] );
+		}
 	}
 
 	/**
@@ -43,7 +50,7 @@ abstract class Shortcode {
 	 * @return string The generated shortcode name.
 	 */
 	protected function generate_shortcode_name( string $classname ): string {
-		return strtolower( preg_replace( '/(?<!^)[A-Z]/', '_$0', $classname ) );
+		return strtolower( preg_replace( '/(?<!^)[A-Z]/', '_$0', $classname ) ?? $classname );
 	}
 
 	/**
@@ -54,7 +61,7 @@ abstract class Shortcode {
 	 * @return string The generated template name.
 	 */
 	protected function generate_template_name( string $classname ): string {
-		$name = strtolower( preg_replace( '/(?<!^)[A-Z]/', '-$0', $classname ) );
+		$name = strtolower( preg_replace( '/(?<!^)[A-Z]/', '-$0', $classname ) ?? $classname );
 
 		return sprintf( "%s/%s.twig", $this->view_folder, $name );
 	}
@@ -64,7 +71,7 @@ abstract class Shortcode {
 	 *
 	 * Override to provide dynamic default values.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function get_defaults(): array {
 		return array_merge( $this->defaults, $this->define_defaults() );
@@ -75,9 +82,9 @@ abstract class Shortcode {
 	 *
 	 * Override to provide custom context.
 	 *
-	 * @param array $args Shortcode attributes.
+	 * @param array<string, mixed> $args Shortcode attributes.
 	 *
-	 * @return array Modified context array.
+	 * @return array<string, mixed> Modified context array.
 	 */
 	protected function get_context( array $args ): array {
 		$context = array_merge( $this->context, $args );
@@ -88,7 +95,7 @@ abstract class Shortcode {
 	/**
 	 * Render the shortcode template.
 	 *
-	 * @param array $atts Shortcode attributes.
+	 * @param array<string, mixed> $atts Shortcode attributes.
 	 * @param string|null $content The enclosed content (if any).
 	 *
 	 * @return string The rendered template output.
@@ -96,22 +103,28 @@ abstract class Shortcode {
 	public function do_shortcode( array $atts, ?string $content = null ): string {
 		$args = \shortcode_atts( $this->get_defaults(), $atts );
 
-		return Timber::compile( $this->template, $this->get_context( $args ) );
+		if ( $this->template === null || $this->template === '' ) {
+			return '';
+		}
+
+		$output = Timber::compile( $this->template, $this->get_context( $args ) );
+
+		return is_string( $output ) ? $output : '';
 	}
 
 	/**
 	 * Abstract method to define the shortcode's default attributes.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	abstract protected function define_defaults(): array;
 
 	/**
 	 * Abstract method to define the context data for the shortcode template.
 	 *
-	 * @param array $args Shortcode attributes.
+	 * @param array<string, mixed> $args Shortcode attributes.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	abstract protected function define_context( array $args ): array;
 }
