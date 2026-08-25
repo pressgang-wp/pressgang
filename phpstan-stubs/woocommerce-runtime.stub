@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * Project-specific WooCommerce runtime type corrections for PHPStan.
+ */
+final class WooCommerce {
+
+	/**
+	 * WooCommerce initializes the cart lazily during the WordPress request lifecycle.
+	 *
+	 * @var WC_Cart|null
+	 */
+	public $cart;
+
+}
+
+/**
+ * Empty shell required because PHPStan analyses stub files independently.
+ *
+ * @see https://phpstan.org/user-guide/stub-files
+ */
+class WC_Cart {
+}

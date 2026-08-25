@@ -547,11 +547,10 @@ traits. pressgang-wp is a parent-theme framework — traits like `HandlesDynamic
 `url`, etc.) to `WP_Post` at runtime. They're real and documented but not part of the
 `WP_Post` stub, so PHPStan can't see them; the ignore is scoped to this one file.
 
-### `nullCoalesce.property` / `function.alreadyNarrowedType` ignored in `WooCommerceContextManager.php`
-The WC stub types `WooCommerce::$cart` as always-initialized `WC_Cart`, but WooCommerce only
-sets it on the `wp_loaded` hook — a context manager built earlier in the request lifecycle
-can genuinely see it uninitialized. `WooCommerceContextManager::get_cart()` keeps the runtime
-null-check PHPStan considers redundant; the ignore is scoped to this one file.
+### WooCommerce runtime PHPStan stub
+`phpstan-stubs/woocommerce-runtime.stub` corrects `WooCommerce::$cart` to `WC_Cart|null`.
+WooCommerce initializes the cart lazily during the WordPress request lifecycle, so context
+managers can genuinely see it unavailable even when WooCommerce itself is active.
 
 ---
 

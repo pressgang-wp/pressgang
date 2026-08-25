@@ -7,6 +7,8 @@ parameters:
 	scanFiles:
 		- vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
 		- vendor/php-stubs/acf-pro-stubs/acf-pro-stubs.php
+	stubFiles:
+		- phpstan-stubs/woocommerce-runtime.stub
 	ignoreErrors:
 		# Extension-point traits: pressgang-wp is a parent-theme framework, so these
 		# known traits exist to be consumed by child themes, not by this repo itself.
@@ -20,10 +22,3 @@ parameters:
 		# runtime; they are real and documented but not part of the WP_Post stub.
 		- identifier: property.notFound
 		  path: src/Configuration/CustomMenuItems.php
-		# The WC stub types WooCommerce::$cart as always-initialized WC_Cart, but WC
-		# only sets it on the `wp_loaded` hook — a context manager built earlier in
-		# the request lifecycle can genuinely see it uninitialized.
-		- identifier: nullCoalesce.property
-		  path: src/ContextManagers/WooCommerceContextManager.php
-		- identifier: function.alreadyNarrowedType
-		  path: src/ContextManagers/WooCommerceContextManager.php
