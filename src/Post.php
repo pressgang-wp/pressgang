@@ -10,7 +10,10 @@ use Timber\Timber;
  * returns PressGang\Post instances instead of the default Timber\Post.
  */
 class Post extends \Timber\Post {
+	/** @var array<int, \Timber\Post> */
 	protected array $related_posts = [];
+
+	/** @var array<int, \Timber\Post> */
 	protected array $latest_posts = [];
 
 	// Define CACHE_TIME as the value from wp-config.php or default to 1 day
@@ -31,16 +34,16 @@ class Post extends \Timber\Post {
 	 *
 	 * @param int|null $posts_per_page Number of related posts to fetch.
 	 *
-	 * @return array Array of related posts.
+	 * @return array<int, \Timber\Post> Array of related posts.
 	 */
 	public function get_related_posts( ?int $posts_per_page = null ): array {
-		$posts_per_page = $posts_per_page ?? \get_option( 'posts_per_page' );
+		$posts_per_page = (int) ( $posts_per_page ?? \get_option( 'posts_per_page' ) );
 
 		if ( empty( $this->related_posts ) ) {
 			$key           = sprintf( "pressgang_related_posts_%d", $this->id );
 			$related_posts = \wp_cache_get( $key, 'related_posts', true );
 
-			if ( empty( $related_posts ) ) {
+			if ( ! is_array( $related_posts ) || empty( $related_posts ) ) {
 				$related_posts = $this->fetch_related_posts( $posts_per_page );
 				\wp_cache_add( $key, $related_posts, 'related_posts', $this->cache_time );
 			}
@@ -61,7 +64,7 @@ class Post extends \Timber\Post {
 	 *
 	 * @param int $posts_per_page
 	 *
-	 * @return array
+	 * @return array<int, \Timber\Post>
 	 */
 	private function fetch_related_posts( int $posts_per_page ): array {
 		$related_posts = [];
@@ -81,8 +84,7 @@ class Post extends \Timber\Post {
 		$this->add_taxonomy_queries( $args );
 
 		// Fetch related posts
-		$posts = Timber::get_posts( $args );
-		foreach ( $posts as $post ) {
+		foreach ( $this->query_posts( $args ) as $post ) {
 			$related_posts[ $post->ID ] = $post;
 		}
 
@@ -101,7 +103,7 @@ class Post extends \Timber\Post {
 	 * based on the current post's taxonomy terms. It adds queries that look for
 	 * posts with matching terms in each taxonomy associated with the post type.
 	 *
-	 * @param array $args
+	 * @param array<string, mixed> $args
 	 *
 	 * @return void
 	 */
@@ -128,8 +130,8 @@ class Post extends \Timber\Post {
 	 * does not return enough posts. It modifies the query arguments to relax the conditions
 	 * and fetch additional posts until the desired number is reached.
 	 *
-	 * @param array $related_posts
-	 * @param array $args
+	 * @param array<int, \Timber\Post> $related_posts
+	 * @param array<string, mixed> $args
 	 * @param int $posts_per_page
 	 *
 	 * @return void
@@ -140,8 +142,7 @@ class Post extends \Timber\Post {
 		$args['post__not_in']          = $not_in;
 		$args['posts_per_page']        = $posts_per_page - count( $related_posts );
 
-		$posts = Timber::get_posts( $args );
-		foreach ( $posts as $post ) {
+		foreach ( $this->query_posts( $args ) as $post ) {
 			$related_posts[ $post->ID ] = $post;
 		}
 
@@ -149,9 +150,7 @@ class Post extends \Timber\Post {
 		if ( count( $related_posts ) < $posts_per_page ) {
 			unset( $args['tax_query'] );
 			$args['posts_per_page'] = $posts_per_page - count( $related_posts );
-			$posts                  = Timber::get_posts( $args );
-
-			foreach ( $posts as $post ) {
+			foreach ( $this->query_posts( $args ) as $post ) {
 				$related_posts[ $post->ID ] = $post;
 			}
 		}
@@ -165,11 +164,11 @@ class Post extends \Timber\Post {
 	 *
 	 * @param int|null $posts_per_page The number of latest posts to retrieve. If null, it defaults to the 'posts_per_page' option.
 	 *
-	 * @return array The array of latest posts.
+	 * @return array<int, \Timber\Post> The array of latest posts.
 	 */
 	public function get_latest_posts( ?int $posts_per_page = null ): array {
 		// Use the default number of posts per page if not provided
-		$posts_per_page = $posts_per_page ?? \get_option( 'posts_per_page' );
+		$posts_per_page = (int) ( $posts_per_page ?? \get_option( 'posts_per_page' ) );
 
 		// Check if latest posts have already been cached
 		if ( empty( $this->latest_posts ) ) {
@@ -179,7 +178,7 @@ class Post extends \Timber\Post {
 			$latest_posts = \wp_cache_get( $key, 'latest_posts', true );
 
 			// If cache is empty, fetch the latest posts
-			if ( empty( $latest_posts ) ) {
+			if ( ! is_array( $latest_posts ) || empty( $latest_posts ) ) {
 				$args = [
 					'post_type'           => $this->post_type,
 					'orderby'             => 'date',
@@ -190,7 +189,7 @@ class Post extends \Timber\Post {
 				];
 
 				// Fetch the latest posts
-				$latest_posts = Timber::get_posts( $args )->to_array();
+				$latest_posts = $this->query_posts( $args );
 
 				// Cache the result for future requests
 				\wp_cache_add( $key, $latest_posts, 'latest_posts', $this->cache_time );
@@ -200,5 +199,21 @@ class Post extends \Timber\Post {
 		}
 
 		return $this->latest_posts;
+	}
+
+	/**
+	 * Runs a Timber posts query and normalises "no query" to an empty array.
+	 *
+	 * @param array<string, mixed> $args
+	 * @return array<int, \Timber\Post>
+	 */
+	protected function query_posts( array $args ): array {
+		$posts = Timber::get_posts( $args );
+
+		if ( $posts === null ) {
+			return [];
+		}
+
+		return $posts->to_array();
 	}
 }
