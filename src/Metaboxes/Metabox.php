@@ -15,10 +15,10 @@ class Metabox {
 	 * @param string $meta_name
 	 * @param string $post_type
 	 * @param string $title
-	 * @param array $fields array(array('id', 'name', 'label', 'type', 'class'), ...)
+	 * @param array<int, array<string, mixed>> $fields array(array('id', 'name', 'label', 'type', 'class'), ...)
 	 * @param string $context
 	 * @param string $priority
-	 * @param array $callback_args
+	 * @param array<string, mixed> $callback_args
 	 */
 	public function __construct(
 		protected string $meta_name,
@@ -51,8 +51,17 @@ class Metabox {
 			add_meta_box( sprintf( "metabox_%s_%s", $this->post_type, $this->meta_name ), $this->title, [
 				$this,
 				'render_meta_box_content'
-			], $this->post_type, $this->context, $this->priority, $this->callback_args );
+			], $this->post_type, $this->context, $this->get_priority(), $this->callback_args );
 		}
+	}
+
+	/**
+	 * @return 'core'|'default'|'high'|'low'
+	 */
+	protected function get_priority(): string {
+		$valid_priorities = [ 'core', 'default', 'high', 'low' ];
+
+		return in_array( $this->priority, $valid_priorities, true ) ? $this->priority : 'default';
 	}
 
 	/**
@@ -90,18 +99,18 @@ class Metabox {
 	 * @param $post_id
 	 * @param $post
 	 */
-	public function save_post_meta( int $post_id, \WP_Post $post ): int {
+	public function save_post_meta( int $post_id, \WP_Post $post ): void {
 		if ( $post->post_type !== $this->post_type ) {
-			return $post_id;
+			return;
 		}
 
 		$nonce = sprintf( "%s_nonce", $this->meta_name );
 		if ( ! wp_verify_nonce( $_POST[ $nonce ] ?? '', $this->meta_name ) ) {
-			return $post_id;
+			return;
 		}
 
 		if ( ! current_user_can( 'edit_posts', $post_id ) ) {
-			return $post_id;
+			return;
 		}
 
 		$old = $this->get_field_values( $post );
@@ -120,8 +129,6 @@ class Metabox {
 				}
 			}
 		}
-
-		return $post_id;
 	}
 
 	/**
@@ -131,7 +138,7 @@ class Metabox {
 	 *
 	 * @param $post
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function get_field_values( \WP_Post $post ): array {
 
@@ -149,7 +156,7 @@ class Metabox {
 	 *
 	 * Sanitize the posted input for the fields according to the field type
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	protected function sanitize_custom_input(): array {
 

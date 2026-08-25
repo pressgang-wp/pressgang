@@ -799,42 +799,6 @@ parameters:
 			path: src/Helpers/woocommerce.php
 
 		-
-			message: '#^Action callback returns int but should not return anything\.$#'
-			identifier: return.void
-			count: 1
-			path: src/Metaboxes/Metabox.php
-
-		-
-			message: '#^Method PressGang\\Metaboxes\\Metabox\:\:__construct\(\) has parameter \$callback_args with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Metaboxes/Metabox.php
-
-		-
-			message: '#^Method PressGang\\Metaboxes\\Metabox\:\:__construct\(\) has parameter \$fields with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Metaboxes/Metabox.php
-
-		-
-			message: '#^Method PressGang\\Metaboxes\\Metabox\:\:get_field_values\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Metaboxes/Metabox.php
-
-		-
-			message: '#^Method PressGang\\Metaboxes\\Metabox\:\:sanitize_custom_input\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Metaboxes/Metabox.php
-
-		-
-			message: '#^Parameter \#6 \$priority of function add_meta_box expects ''core''\|''default''\|''high''\|''low'', string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Metaboxes/Metabox.php
-
-		-
 			message: '#^Method PressGang\\Routes\\RouteHandlerInterface\:\:handle\(\) has parameter \$params with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
