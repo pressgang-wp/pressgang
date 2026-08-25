@@ -775,24 +775,6 @@ parameters:
 			path: src/Helpers/StyleLoader.php
 
 		-
-			message: '#^Function reading_time\(\) has parameter \$text with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Helpers/helper.php
-
-		-
-			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Helpers/helper.php
-
-		-
-			message: '#^Parameter \#1 \$string of function rtrim expects string, int\|string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Helpers/helper.php
-
-		-
 			message: '#^Function timber_set_product\(\) has parameter \$post with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1

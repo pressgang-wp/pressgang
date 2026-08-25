@@ -3,13 +3,13 @@
 /**
  * Calculates a reading time for a given block of text
  *
- * @param $text
+ * @param string $text
  * @param bool $to_nearest_minute
  * @param int $speed
  *
  * @return string
  */
-function reading_time( $text, bool $to_nearest_minute = false, int $speed = 200 ): string {
+function reading_time( string $text, bool $to_nearest_minute = false, int $speed = 200 ): string {
 	$words = str_word_count( strip_tags( $text ) );
 
 	$seconds = 0;
@@ -55,10 +55,20 @@ function get_child_theme_namespace(): ?string {
 	} else {
 		$composer_json_path = \get_stylesheet_directory() . '/composer.json';
 		if ( file_exists( $composer_json_path ) ) {
-			$composer_config = json_decode( file_get_contents( $composer_json_path ), true );
+			$composer_json = file_get_contents( $composer_json_path );
+
+			if ( $composer_json === false ) {
+				return null;
+			}
+
+			$composer_config = json_decode( $composer_json, true );
 			if ( isset( $composer_config['autoload']['psr-4'] ) && is_array( $composer_config['autoload']['psr-4'] ) ) {
 				$namespaces = array_keys( $composer_config['autoload']['psr-4'] );
-				$namespace  = rtrim( reset( $namespaces ), '\\' ); // Returns the first namespace, trimmed of trailing slashes
+				$first_namespace = reset( $namespaces );
+
+				if ( is_string( $first_namespace ) ) {
+					$namespace = rtrim( $first_namespace, '\\' ); // Returns the first namespace, trimmed of trailing slashes
+				}
 			}
 		}
 	}
