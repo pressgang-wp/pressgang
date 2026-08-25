@@ -775,12 +775,6 @@ parameters:
 			path: src/Helpers/StyleLoader.php
 
 		-
-			message: '#^Function timber_set_product\(\) has parameter \$post with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Helpers/woocommerce.php
-
-		-
 			message: '#^Method PressGang\\Routes\\RouteHandlerInterface\:\:handle\(\) has parameter \$params with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
