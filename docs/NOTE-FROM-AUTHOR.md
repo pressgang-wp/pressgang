@@ -1,5 +1,7 @@
 # ✍️ A Note from the Author
 
+I’m [Benedict Wallis](https://benedict-wallis.com/), a senior freelance web developer based in Bristol, UK, and the author of PressGang. For over 20 years, I’ve worked with businesses and agencies to build websites, ecommerce stores and custom web applications.
+
 ## ❤️ A Labour of Love
 
 PressGang is a labour of love more than fifteen years in the making.
@@ -53,6 +55,12 @@ It has powered themes for:
 * Grassroots projects — including my local cyclocross league 🚴‍♂️
 
 That long-term, real-world usage has been its strongest form of validation.
+
+## 🤝 Working Together
+
+Alongside maintaining PressGang, I offer [bespoke WordPress development](https://benedict-wallis.com/services/freelance-wordpress-developer/) and [WooCommerce development](https://benedict-wallis.com/services/freelance-woocommerce-developer/), including custom themes, plugins and integrations.
+
+If you need help building with PressGang or improving an existing site, [explore my work and get in touch](https://benedict-wallis.com/).
 
 ## 🔗 Links
 
