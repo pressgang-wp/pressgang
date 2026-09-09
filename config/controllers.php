@@ -14,8 +14,13 @@
  * hierarchy-semantic inflections — `archive-{type}` => pluralised
  * `{Types}Controller` (`archive-event` => `EventsController`) and
  * `single-{type}` / `taxonomy-{tax}` => `{Subject}Controller`. Use explicit
- * entries only when a controller name defies convention. A physical template
+ * entries when a controller name or Twig path defies convention. A physical template
  * file in the child theme always takes precedence over this mapping.
+ *
+ * Entries may be a controller class or an array with controller and template
+ * keys. An explicit template overrides candidate Twig discovery; omit it to
+ * retain discovery and constructor defaults. Use parent controllers when
+ * only the Twig path differs, rather than creating constructor-only classes.
  *
  * Example:
  *
@@ -23,6 +28,10 @@
  *         'front-page'         => \MyTheme\Controllers\FrontPageController::class,
  *         'archive-event'      => \MyTheme\Controllers\EventsController::class,
  *         'taxonomy-event-type' => \MyTheme\Controllers\EventTypeController::class,
+ *         'research-subpage' => [
+ *             'controller' => \PressGang\Controllers\PageController::class,
+ *             'template'   => 'page/research-subpage.twig',
+ *         ],
  *         'home'               => \PressGang\Controllers\PostsController::class,
  *     ];
  *

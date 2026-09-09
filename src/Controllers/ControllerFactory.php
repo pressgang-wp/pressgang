@@ -151,7 +151,7 @@ class ControllerFactory {
 	 * so a default controller is intent, not hijacking.
 	 *
 	 * @param array<int, string>    $candidates           Candidate slugs, most specific first.
-	 * @param array<string, string> $map                  Candidate slug => controller FQCN.
+	 * @param array<string, string|array{controller: string, template?: string|null}> $map                  Candidate slug => controller FQCN.
 	 * @param string|null           $child_namespace      Active child theme namespace, or null.
 	 * @param array<int, string>    $page_template_slugs  Registered page-template slugs.
 	 *
@@ -161,10 +161,14 @@ class ControllerFactory {
 
 		foreach ( $candidates as $candidate ) {
 
-			if ( isset( $map[ $candidate ] ) && self::is_controller_class( $map[ $candidate ] ) ) {
+			$entry = $map[ $candidate ] ?? null;
+			$class = is_array( $entry ) ? $entry['controller'] : $entry;
+
+			if ( $class !== null && self::is_controller_class( $class ) ) {
 				return [
-					'controller' => $map[ $candidate ],
-					'twig'       => self::candidate_twig( $candidate ),
+					'controller' => $class,
+					'twig'       => ( is_array( $entry ) ? $entry['template'] ?? null : null )
+						?? self::candidate_twig( $candidate ),
 					'candidate'  => $candidate,
 				];
 			}
