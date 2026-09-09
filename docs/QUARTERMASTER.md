@@ -609,6 +609,12 @@ $q = Quartermaster::posts('team_member')
 {% endcode %}
 
 Builds a nested OR group of `LIKE` clauses targeting ACF's serialization format. Each value is wrapped in double-quotes to match the stored representation.
+
+For one related post, use `->whereMetaLikeAny('projects', [$post->ID])` instead
+of manually constructing a quoted `LIKE` value. Pass raw values: the helper adds
+the quotes. This targets serialized string IDs, not serialized integers or
+arbitrary substrings. An empty array adds no constraint, so keep an explicit
+guard when an empty selection must return no posts.
 {% endtab %}
 {% endtabs %}
 
@@ -714,6 +720,11 @@ $allEvents = Quartermaster::posts('event')
     ->get();
 ```
 {% endcode %}
+
+`all()` sets `posts_per_page=-1`, sets `nopaging=true` and removes `paged`.
+`limit(-1)` only changes `posts_per_page`. Prefer `all()` for intentionally
+unpaginated post queries; check pagination before changing an existing chain.
+This helper is not available on the terms builder.
 {% endtab %}
 
 {% tab title="Performance flags" %}
@@ -934,6 +945,18 @@ $timberTerms = Quartermaster::terms('category')
 // Returns array of Timber\Term objects
 ```
 {% endcode %}
+
+With the [term-filter fix](https://github.com/pressgang-wp/pressgang-quartermaster/pull/1)
+(commit `49d5787` or a descendant), the term `timber()` terminal fetches through
+WordPress `get_terms()` and converts each term individually. It preserves final
+result filters, plugin ordering and empty results, while retaining Timber class
+mapping. Scalar field projections retain their values and keys; invalid
+taxonomies and unsupported count results raise `RuntimeException`.
+
+Check the installed dependency revision before relying on this behaviour. Older
+versions query through Timber directly and may bypass a plugin's final term
+ordering filter. Avoid `Timber::get_terms([])` as a conversion shortcut: on
+Timber 2.5.1 an empty list is interpreted as a query.
 {% endtab %}
 
 {% tab title="Pagination" %}
