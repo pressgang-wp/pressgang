@@ -83,5 +83,44 @@ namespace PressGang\Tests\Unit\Controllers {
 
 			ControllerFactory::make( \stdClass::class );
 		}
+		/** @test */
+		public function explicit_template_reaches_the_controller_constructor(): void {
+			$resolved = ControllerFactory::resolve_candidate_for(
+				[ 'example', 'page' ],
+				[ 'example' => [
+					'controller' => \Acme\Theme\Controllers\DummyController::class,
+					'template' => 'page/research-subpage.twig',
+				] ],
+				null
+			);
+			$this->assertSame( 'example', $resolved['candidate'] );
+			$controller = ControllerFactory::make( $resolved['controller'], $resolved['twig'] );
+			$this->assertSame( 'page/research-subpage.twig', $controller->template );
+		}
+
+		/** @test */
+		public function class_and_array_entries_keep_candidate_discovery(): void {
+			\Brain\Monkey\Functions\when( 'get_stylesheet_directory' )->justReturn( dirname( __DIR__, 2 ) . '/fixtures/controller-theme' );
+			foreach ( [ \Acme\Theme\Controllers\DummyController::class,
+				[ 'controller' => \Acme\Theme\Controllers\DummyController::class ],
+				[ 'controller' => \Acme\Theme\Controllers\DummyController::class, 'template' => null ],
+			] as $entry ) {
+				$resolved = ControllerFactory::resolve_candidate_for( [ 'example' ], [ 'example' => $entry ], null );
+				$this->assertSame( \Acme\Theme\Controllers\DummyController::class, $resolved['controller'] );
+				$this->assertSame( 'example.twig', $resolved['twig'] );
+			}
+		}
+
+		/** @test */
+		public function specific_convention_precedes_a_less_specific_mapping(): void {
+			\Brain\Monkey\Functions\when( 'get_stylesheet_directory' )->justReturn( dirname( __DIR__, 2 ) . '/fixtures/controller-theme' );
+			$resolved = ControllerFactory::resolve_candidate_for(
+				[ 'search', 'index' ],
+				[ 'index' => [ 'controller' => PostController::class, 'template' => 'fallback.twig' ] ],
+				self::CHILD
+			);
+			$this->assertSame( 'Acme\\Theme\\Controllers\\SearchController', $resolved['controller'] );
+		}
+
 	}
 }
