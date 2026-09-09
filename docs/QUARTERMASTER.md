@@ -1511,3 +1511,21 @@ clause. Empty `IN` returns no posts; empty `NOT IN` excludes nothing. This remov
 the need for raw arrays for required empty relationships. Optional filters retain
 their existing skip-empty behaviour when the flag is omitted. No plugin is
 installed or index managed by these helpers.
+
+
+## Fluent term metadata ordering
+
+```php
+$themes = Quartermaster::terms('research-theme')
+    ->hideEmpty(false)
+    ->orderByMetaNumeric('sort_order')
+    ->timber();
+```
+
+Terms now support `orderByMeta($key, $order = 'ASC', $metaType = 'CHAR')` and
+`orderByMetaNumeric($key, $order = 'ASC')`, matching the post-builder vocabulary.
+These replace raw `meta_key`/`orderby` seed arguments. Other constraints remain
+intact, and the normal WordPress-backed terminal preserves final term filters.
+WordPress excludes terms without the selected metadata key; verify membership
+when replacing an in-memory sort. Invalid directions use the existing ASC
+fallback and warning.
