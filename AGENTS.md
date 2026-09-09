@@ -731,3 +731,14 @@ Keep custom controllers for additional getters, traits or behaviour. Before
 removing a class, check its class-derived rendering filters and action consumers;
 reusing the parent changes those hook names. This does not accept arbitrary
 constructor arguments.
+
+
+### Quartermaster search input
+
+Prefer standard search bindings over callbacks that sanitize or URL-decode input.
+`Binder::relevanssi('project-search', allowEmpty: true, default: '')` deliberately
+applies an empty search when the query variable is missing/null. Without an
+explicit default, missing/null inputs remain skipped. Malformed non-scalar input
+is skipped; explicit empty values do not use defaults. The builder owns text
+sanitization. Never double-decode GET values: literal plus signs must survive.
+Keep HTML escaping in Twig. See docs/QUARTERMASTER.md for full semantics.
