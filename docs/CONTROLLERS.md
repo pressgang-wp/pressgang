@@ -6,6 +6,24 @@ In PressGang, controllers manage the display logic for different types of pages 
 
 Controllers are your first mates — they prepare everything the view needs, then hand it off cleanly.
 
+### Naming child controllers
+
+Use a singular name for a single post or page and a plural name for a collection
+or archive: `ConferenceController` and `ConferencesController`. The singular
+name already identifies a single view; do not add `Single` as a prefix or suffix.
+A listing backed by a WordPress page still uses the collection name, even when
+its controller extends `PageController`.
+
+Name taxonomy controllers after their subject (`EventTypeController`). Keep
+purpose-based names for special views, such as `SearchController` and
+`NotFoundController`.
+
+Controller names need not copy template filenames. A `conference-single.php`
+stub can render `ConferenceController` explicitly while retaining its Twig path
+and stored page-template ID. When renaming a class, update imports, render calls,
+controller maps and consumers of class-derived hooks. Verify routing: the
+optional dispatcher may require an explicit map for a legacy template name.
+
 ### AbstractController Base Class
 
 The `AbstractController` class provides common functionalities for all controllers, including context management and template rendering.

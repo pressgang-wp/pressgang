@@ -9,6 +9,12 @@ Timber 2 + Twig rendering, and config-driven bootstrapping.
   Each maps to a `PressGang\Configuration\{Studly}` class by filename.
 - Controllers are template-scoped view models in `src/Controllers/`:
   side-effect free, no request globals, no writes, no direct rendering.
+- Name single-post/page controllers in the singular (`ConferenceController`)
+  and collection/archive controllers in the plural (`ConferencesController`).
+  Do not add `Single` to the name or derive it blindly from a legacy template
+  filename. A collection landing page uses a plural name even with PageController.
+  Taxonomies use their subject; special views keep names such as SearchController.
+  On renames, preserve template IDs and update explicit routing and hook consumers.
 - Declare a controller's template contract with a context manifest:
   `protected array $context_getters = [ 'news', 'events' ];` — each key is
   populated from its `get_{key}()` getter. Never auto-publish getters.
