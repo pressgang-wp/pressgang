@@ -74,3 +74,18 @@ resolve`, `wp capstan context`, `wp capstan config dump`, and Shakedown's
 `wp capstan matrix --resolve` oracle. A future `wp capstan check` would only
 orchestrate the theme's existing `composer check` plus `doctor`; it should not
 be built until real child-theme adoption exists.
+
+
+### Controller template mappings
+
+Use a parent controller when a view needs no additional context. In
+`config/controllers.php`, map a hierarchy candidate to a class string or
+`[ 'controller' => PageController::class, 'template' => 'page/research-subpage.twig' ]`
+(with the appropriate imported or fully qualified controller class). The explicit
+Twig path takes precedence over candidate discovery. Omitting `template`, or
+setting it to null, retains candidate discovery and constructor defaults.
+Candidate specificity and physical child PHP template precedence are unchanged.
+Keep custom controllers for additional getters, traits or behaviour. Before
+removing a class, check its class-derived rendering filters and action consumers;
+reusing the parent changes those hook names. This does not accept arbitrary
+constructor arguments.
