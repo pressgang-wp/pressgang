@@ -1465,3 +1465,24 @@ Field defaults to `slug`. Operator defaults to `IN`. Multiple `whereTax()` calls
 - [Packagist: pressgang-wp/quartermaster](https://packagist.org/packages/pressgang-wp/quartermaster)
 
 Smooth seas and predictable queries. Happy sailing. ⚓🚢
+
+
+## Alternative serialized relationship fields
+
+```php
+$query = Quartermaster::posts('research-project')
+    ->whereMetaLikeAny('other_arc_staff', [$post->ID])
+    ->orWhereMetaLikeAny('arc_lead', [$post->ID]);
+```
+
+`orWhereMetaLikeAny()` accepts raw values and shares the existing serialized-string
+quoting. Empty arrays leave the query unchanged. Like `orWhereMeta()`, it forces
+the root meta relation to OR, including previous clauses; later `whereMeta()` calls
+retain that relation. For `required AND (A OR B)`, use an explicitly nested seed
+array. Prefer seed arrays for fixed arguments and `tapArgs()` for transformations
+of an existing query.
+
+When migrating search queries, compare empty searches as well as populated ones.
+`relevanssi('')` leaves arguments unchanged: it does not enable Relevanssi or set
+`s`. Preserve explicit empty-search seed arguments if the plugin changes results
+or ordering for that state. `paged(paged: $page)` also sets the WordPress page size.
