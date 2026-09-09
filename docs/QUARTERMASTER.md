@@ -1486,3 +1486,28 @@ When migrating search queries, compare empty searches as well as populated ones.
 `relevanssi('')` leaves arguments unchanged: it does not enable Relevanssi or set
 `s`. Preserve explicit empty-search seed arguments if the plugin changes results
 or ordering for that state. `paged(paged: $page)` also sets the WordPress page size.
+
+
+## Explicit empty input
+
+```php
+$publications = Quartermaster::posts('publication')
+    ->relevanssi($search, allowEmpty: true)
+    ->paged(paged: $page);
+
+$staff = Quartermaster::posts('staff-member')
+    ->all()
+    ->whereTax('research-team', $teamIds, 'term_id', allowEmpty: true)
+    ->excludeIds([$post->ID]);
+```
+
+Use the optional `allowEmpty` flag when emptiness is meaningful. Relevanssi sets
+an explicit sanitized empty `s` and enables its flag, replacing any prior search;
+null leaves the search unchanged. Both `Binder::relevanssi()` and
+`Bind::relevanssi()` support the option and skip missing/null query-var values.
+
+For `whereTax()` and `orWhereTax()`, the option retains an empty native taxonomy
+clause. Empty `IN` returns no posts; empty `NOT IN` excludes nothing. This removes
+the need for raw arrays for required empty relationships. Optional filters retain
+their existing skip-empty behaviour when the flag is omitted. No plugin is
+installed or index managed by these helpers.
