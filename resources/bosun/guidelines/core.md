@@ -17,7 +17,18 @@ Timber 2 + Twig rendering, and config-driven bootstrapping.
   `PressGang\ACF\TimberMapper::to_timber_posts( $value )`; do not enable
   Timber's global `timber/meta/transform_value` filter.
 - Twig is presentation only: no queries, no request globals, no business
-  logic. Twig escapes (`|e`), PHP sanitises — never `esc_*` in Twig.
+  logic. Escape in Twig, sanitise in PHP — never `esc_*` in Twig.
+- **Timber ships Twig autoescape off**, so `{{ value }}` prints raw HTML and
+  every value a template prints needs escaping by hand: `|e` in text,
+  `|e('html_attr')` in attributes, `|e('wp_kses_post')` where the value is
+  meant to carry markup. Do not read the rule above as "Twig escapes for
+  you". Turning autoescape on globally is not a drop-in fix either — the
+  templates that emit markup on purpose would start escaping it.
+- Snippets are self-contained hook-based behaviours registered in
+  `config/snippets.php`, not view partials. Library snippets carry their
+  sub-namespace (`'Theme\DisableEmojis'`, not `'DisableEmojis'`), and a name
+  that resolves to nothing is skipped **silently** — check `wp capstan
+  snippets` / `wp capstan doctor` after editing the config.
 
 ### Verify static PHP changes with Composer
 

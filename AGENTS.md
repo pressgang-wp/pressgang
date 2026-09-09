@@ -208,18 +208,31 @@ Registered via `config/twig-extensions.php`.
 
 ---
 
-## Escaping (Twig escapes, PHP sanitises)
+## Escaping (escape in Twig, sanitise in PHP)
 
-### In Twig (preferred)
-- Auto-escaping must be enabled; `{{ value }}` escapes by default.
+### Timber ships autoescape OFF
+
+`Timber::$autoescape` defaults to `false` and PressGang does not override it, so
+`{{ value }}` prints **raw**. Every value a template prints must be escaped by
+hand. Do not read the rules below as "Twig escapes for you".
+
+Turning autoescape on globally is not a drop-in fix: templates that emit markup
+on purpose would start escaping it. If a project wants it, that is a deliberate,
+audited migration of every template — not a config flip.
+
+### In Twig
+- Text: `{{ value|e }}`
 - Attributes: `{{ value|e('html_attr') }}`
 - URLs: `{{ value|e('url') }}`
-- `{{ value|raw }}` **only when sanitised in PHP and explicitly intended to contain HTML**
-- Do not call `esc_html()`, `esc_attr()`, etc. inside Twig.
+- Values meant to carry markup: `{{ value|e('wp_kses_post') }}`
+- `{{ value|raw }}` (or a bare `{{ value }}`) **only when sanitised in PHP and
+  explicitly intended to contain HTML**
+- Do not call `esc_html()`, `esc_attr()`, etc. inside Twig — escape with `|e`
+  filters so the strategy stays in one layer.
 
 ### In PHP (before Twig)
 - **Sanitise input** in PHP. Do not pre-escape output intended for Twig.
-- Pass clean, domain-correct values into context; let Twig handle escaping.
+- Pass clean, domain-correct values into context; escape them in the template.
 
 ### Sanitisation functions
 - Text: `sanitize_text_field()`
@@ -257,9 +270,21 @@ Registered via `config/blocks.php`.
 
 ## Snippets
 
-Snippets are **view partials** (reusable UI components), not logic containers.
+Snippets are **self-contained, hook-based behaviours** — a class implementing
+`PressGang\Snippets\SnippetInterface` that registers all its hooks in its
+constructor and does one thing. They are not view partials and not logic
+containers for a template.
 
-- Registered via `config/snippets.php`, exposed to Twig via `TimberServiceProvider`.
+- Registered via `config/snippets.php` as `name => constructor args`.
+- Resolved by `Util\ClassResolver`: a fully qualified name is used as-is;
+  otherwise `{ChildNamespace}\Snippets\{name}` then `PressGang\Snippets\{name}`.
+- The `pressgang-wp/pressgang-snippets` library groups snippets into
+  sub-namespaces (`Theme\`, `Content\`, `Acf\`, `Integration\`, `Seo\`,
+  `Facebook\`, `Google\`, `WooCommerce\`), so library snippets **must** be named
+  with the sub-namespace: `'Theme\DisableEmojis'`, not `'DisableEmojis'`.
+- **Resolution fails silently.** A name matching no class is skipped with no
+  error. Verify with `wp capstan snippets` / `wp capstan doctor`.
+- Check the library for a 1:1 equivalent before writing a theme snippet.
 - Must be self-contained and explicitly parameterised.
 
 ---

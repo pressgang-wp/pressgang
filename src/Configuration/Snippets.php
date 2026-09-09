@@ -10,7 +10,15 @@ use PressGang\Util\ClassResolver;
  * snippet classes from child theme, parent theme, and fully qualified namespaces,
  * then instantiates each SnippetInterface implementation.
  *
- * Why: provides a declarative way to register reusable UI components (snippets).
+ * Why: provides a declarative way to enable self-contained, hook-based
+ * behaviours without scattering add_action/add_filter calls through
+ * functions.php.
+ *
+ * Note: resolution fails silently — a name matching no class is skipped, so a
+ * typo or a missing library sub-namespace (e.g. 'DisableEmojis' instead of
+ * 'Theme\DisableEmojis') disables the snippet with no error. `wp capstan
+ * snippets` and `wp capstan doctor` report unresolved entries.
+ *
  * Extend via: child theme config override or child theme namespace overrides.
  */
 class Snippets extends ConfigurationSingleton {
