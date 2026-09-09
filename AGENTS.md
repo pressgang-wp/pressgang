@@ -716,3 +716,18 @@ Configuration subclass. The base `TestCase` wraps this as `$this->resetSingleton
   cannot be mocked — extract them to protected methods instead.
 - Avoid `@runTestsInSeparateProcesses` when possible; it is 5–10x slower. Prefer the protected method
   pattern over Mockery alias mocks for already-loaded classes.
+
+
+### Controller template mappings
+
+Use a parent controller when a view needs no additional context. In
+`config/controllers.php`, map a hierarchy candidate to a class string or
+`[ 'controller' => PageController::class, 'template' => 'page/research-subpage.twig' ]`
+(with the appropriate imported or fully qualified controller class). The explicit
+Twig path takes precedence over candidate discovery. Omitting `template`, or
+setting it to null, retains candidate discovery and constructor defaults.
+Candidate specificity and physical child PHP template precedence are unchanged.
+Keep custom controllers for additional getters, traits or behaviour. Before
+removing a class, check its class-derived rendering filters and action consumers;
+reusing the parent changes those hook names. This does not accept arbitrary
+constructor arguments.
