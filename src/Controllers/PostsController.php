@@ -2,7 +2,6 @@
 
 namespace PressGang\Controllers;
 
-use Doctrine\Inflector\InflectorFactory;
 use Timber\Pagination;
 use Timber\PostQuery;
 
@@ -12,7 +11,6 @@ use Timber\PostQuery;
  */
 class PostsController extends AbstractController {
 
-	protected string $post_type;
 	protected ?string $page_title = null;
 	protected ?PostQuery $posts = null;
 	protected ?Pagination $pagination = null;
@@ -25,10 +23,6 @@ class PostsController extends AbstractController {
 	 * @param string|array<int, string>|null $template
 	 */
 	public function __construct( string|array|null $template = null ) {
-
-		global $wp_query;
-
-		$this->post_type = $wp_query->query['post_type'] ?? \get_post_type();
 
 		parent::__construct( $template ?: $this->infer_template() );
 	}
@@ -69,13 +63,31 @@ class PostsController extends AbstractController {
 			return [ 'search.twig', 'archive.twig' ];
 		}
 
-		if ( $this->post_type && $this->post_type !== 'post' ) {
-			$post_type_slug = str_replace( '_', '-', $this->post_type );
+		$post_type = $this->get_queried_post_type();
+
+		if ( $post_type !== null && $post_type !== 'post' ) {
+			$post_type_slug = str_replace( '_', '-', $post_type );
 
 			return [ "archive-{$post_type_slug}.twig", 'archive.twig' ];
 		}
 
 		return 'archive.twig';
+	}
+
+	/**
+	 * Returns the post type whose archive is being viewed.
+	 *
+	 * Only a post-type archive names one post type. Every other listing either
+	 * spans several — a search is `post_type=any`, and a taxonomy archive
+	 * covers every post type sharing the taxonomy — or names none at all, so
+	 * they resolve to null and fall back to `archive.twig`.
+	 *
+	 * @return string|null
+	 */
+	protected function get_queried_post_type(): ?string {
+		$queried_object = \get_queried_object();
+
+		return $queried_object instanceof \WP_Post_Type ? $queried_object->name : null;
 	}
 
 	/**
@@ -117,13 +129,6 @@ class PostsController extends AbstractController {
 
 		$this->context['pagination'] = $this->get_pagination();
 		$this->context['posts']      = $this->get_posts();
-
-		if ( $this->post_type ) {
-			$inflector = InflectorFactory::create()->build();
-			$plural    = strtolower( $inflector->pluralize( $this->post_type ) );
-
-			$this->context[ $plural ] = $this->get_posts();
-		}
 
 		return $this->context;
 	}

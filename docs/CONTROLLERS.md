@@ -44,8 +44,8 @@ PressGang ships with controllers for all the common WordPress template types:
 | `PostController`     | `single.twig`   | Single post views (auto-detects post type)   |
 | `PostsController`    | `archive.twig`  | Archive listings, categories, search results |
 | `SearchController`   | `search.twig`   | Search results (extends PostsController)     |
-| `AuthorController`   | `author.twig`   | Author archive pages                         |
-| `TaxonomyController` | varies          | Taxonomy archive pages                       |
+| `AuthorController`   | `author.twig`   | Author archive pages (extends PostsController) |
+| `TaxonomyController` | varies          | Taxonomy archive pages (extends PostsController) |
 | `CommentsController` | `comments.twig` | Comments template                            |
 | `NotFoundController` | `404.twig`      | 404 error page                               |
 
@@ -211,8 +211,9 @@ inherited block bodies, includes, macro arguments, dynamic access and PHP hooks.
 
 ## Pagination belongs to the displayed collection
 
-`PostsController` exposes `posts` and `pagination` for the current WordPress
-query. Keep that inherited contract for ordinary archives. A custom PageController
+`PostsController` exposes `posts`, `pagination` and `page_title` for the current
+WordPress query — those three keys are the whole listing contract. Keep that
+inherited contract for ordinary archives. A custom PageController
 listing can instead pass pagination explicitly from its own collection:
 
 ```twig
