@@ -161,23 +161,31 @@ Wiring context keys one line at a time gets old fast. Instead, declare the keys 
 namespace MyTheme\Controllers;
 
 use PressGang\Controllers\PageController;
+use PressGang\Quartermaster\Quartermaster;
 
 class FrontPageController extends PageController {
 
     /**
-     * Template contract for front-page.twig: latest news and upcoming
+     * Template contract for front-page.twig: latest news and
      * events, each populated from its get_{key}() getter.
      *
      * @var array<int|string, string>
      */
-    protected array $context_getters = [ 'news', 'events' ];
+    protected array $context_getters = [
+        'news',
+        'events',
+    ];
 
     protected function get_news(): array {
-        return $this->news ??= /* ... query ... */;
+        return Quartermaster::posts( 'post' )
+            ->limit( 4 )
+            ->toArray();
     }
 
     protected function get_events(): array {
-        return $this->events ??= /* ... query ... */;
+        return Quartermaster::posts( 'event' )
+            ->limit( 4 )
+            ->toArray();
     }
 }
 ```
@@ -188,6 +196,36 @@ Each plain entry calls `get_{key}()`; use `'key' => 'method'` to point a key at 
 {% hint style="info" %}
 This is the controller counterpart to the `HandlesDynamicGetters` trait on models: getters own the _fetching_, the manifest declares which of them form the _template contract_. Keep it a declared list — the framework deliberately never auto-publishes getters, or your internal helpers would silently become template API.
 {% endhint %}
+
+
+Expose additional prepared data, not a duplicate of every model field. Read
+presentation-only metadata with `post.meta('intro_title')` or `term.meta()` in
+Twig, retaining the appropriate output escaping. Local Twig variables are useful
+for repeated fields. Keep query construction, relationship normalization and
+selection/enrichment rules in PHP.
+
+A manifest invokes each entry once per application; it is not a general getter
+cache. Add a cache only when another getter or execution path needs the same
+result. Avoid one-use getter/resolver pairs. Before removing context keys, inspect
+inherited block bodies, includes, macro arguments, dynamic access and PHP hooks.
+
+## Pagination belongs to the displayed collection
+
+`PostsController` exposes `posts` and `pagination` for the current WordPress
+query. Keep that inherited contract for ordinary archives. A custom PageController
+listing can instead pass pagination explicitly from its own collection:
+
+```twig
+{% include 'partials/modules/pagination.twig' with {
+    pagination: news_items.pagination()
+} %}
+```
+
+This removes a forwarding getter without changing the partial's input.
+`PostQuery::pagination()` already caches the pagination object. Keep the
+collection cache if PHP also uses it for a heading or enrichment; otherwise a
+single-use context getter need not cache its result. Do not build a second query
+for pagination, and do not add pagination to an unpaged listing.
 
 ## Working with ACF Values
 

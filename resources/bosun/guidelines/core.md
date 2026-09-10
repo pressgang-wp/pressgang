@@ -100,3 +100,24 @@ explicit default, missing/null inputs remain skipped. Malformed non-scalar input
 is skipped; explicit empty values do not use defaults. The builder owns text
 sanitization. Never double-decode GET values: literal plus signs must survive.
 Keep HTML escaping in Twig. See docs/QUARTERMASTER.md for full semantics.
+
+## Lean controller context
+
+Expose additional prepared data, not a duplicate of every model field. Read
+presentation-only metadata with `post.meta('intro_title')` or `term.meta()` in
+Twig, retaining the appropriate output escaping. Local Twig variables are useful
+for repeated fields. Keep query construction, relationship normalization and
+selection/enrichment rules in PHP.
+
+A manifest invokes each entry once per application; it is not a general getter
+cache. Add a cache only when another getter or execution path needs the same
+result. Avoid one-use getter/resolver pairs. Before removing context keys, inspect
+inherited block bodies, includes, macro arguments, dynamic access and PHP hooks.
+
+For custom page listings, pass the displayed collection's `pagination()` to the
+partial explicitly when this removes forwarding getters. Keep PostsController's
+inherited pagination for ordinary archives. PostQuery caches pagination itself;
+retain collection caches only for actual reuse, including headings/enrichment.
+Metadata access on an existing model and pagination on an existing collection
+are presentation operations; the prohibition on Twig queries concerns building
+or executing independent queries, not these model APIs.
