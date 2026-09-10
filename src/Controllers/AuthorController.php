@@ -3,19 +3,20 @@
 namespace PressGang\Controllers;
 
 use Override;
-use Timber\PostQuery;
 use Timber\Timber;
 use Timber\User;
 
 /**
- * Controller for author archive pages. Retrieves the queried author as a Timber
- * User and their paginated posts, and adds both to the template context.
+ * Controller for author archive pages. Adds the queried author as a Timber User
+ * alongside the inherited listing context.
+ *
+ * The main query on an author archive already *is* that author's posts, ordered
+ * and paginated by WordPress and open to `pre_get_posts`, so the listing comes
+ * from PostsController rather than a second query of our own.
  */
-class AuthorController extends AbstractController {
+class AuthorController extends PostsController {
 
 	protected ?User $author = null;
-
-	protected ?PostQuery $posts = null;
 
 	/**
 	 * @param string|null $template
@@ -31,7 +32,8 @@ class AuthorController extends AbstractController {
 	 */
 	protected function get_author(): ?User {
 		if ( $this->author === null ) {
-			$id = get_queried_object_id();
+			$id = \get_queried_object_id();
+
 			if ( $id ) {
 				$this->author = Timber::get_user( $id );
 			}
@@ -41,45 +43,14 @@ class AuthorController extends AbstractController {
 	}
 
 	/**
-	 * Returns the author's posts, lazily initialised. Empty array when the
-	 * queried object has no author (e.g. current user is not a post author).
-	 *
-	 * @return PostQuery|array<int, never>
-	 */
-	protected function get_posts(): PostQuery|array {
-		if ( $this->posts === null ) {
-			$author = $this->get_author();
-
-			if ( ! $author ) {
-				return [];
-			}
-
-			$args = [
-				'author' => $author->id,
-				'paged'  => get_query_var( 'paged' ) ?: 1,
-			];
-
-			$posts = Timber::get_posts( $args );
-
-			if ( ! $posts instanceof PostQuery ) {
-				return [];
-			}
-
-			$this->posts = $posts;
-		}
-
-		return $this->posts;
-	}
-
-	/**
-	 * Adds the author and their posts to the context.
+	 * Adds the author to the inherited listing context.
 	 *
 	 * @return array<string, mixed>
 	 */
 	#[Override]
 	protected function get_context(): array {
+		$this->context           = parent::get_context();
 		$this->context['author'] = $this->get_author();
-		$this->context['posts']  = $this->get_posts();
 
 		return $this->context;
 	}
