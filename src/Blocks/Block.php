@@ -69,13 +69,12 @@ class Block {
 	 *
 	 * This method is used to build the context for a given block.
 	 *
-	 * @param mixed $block The block for which the context is to be built.
-	 *                     This could be any type depending on how the context is structured.
+	 * @param array<string, mixed> $block The block attributes passed by render().
 	 *
 	 * @return array<string, mixed> An array representing the context for the specified block.
 	 */
 	protected static function get_context( mixed $block ): array {
-		return is_array( $block ) ? BlockContextBuilder::build_context( $block ) : [];
+		return BlockContextBuilder::build_context( $block );
 	}
 
 	/**
