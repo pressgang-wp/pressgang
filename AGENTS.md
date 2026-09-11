@@ -648,8 +648,8 @@ not add baselines unless explicitly requested.
 - `wp capstan check` is unbuilt and blocked until at least one child theme has
   a working `composer check`; if built, it must only shell out to that command,
   run `doctor`, and report both.
-- Do not extract a shared `pressgang/phpstan` package until a second PressGang
-  repo independently adopts PHPStan level 8 and hits the same stubs/ignores.
+- Keep shared stubs/ignore-list extraction separate from the convention extension
+  below; share those only when a second repo independently needs the same corrections.
 
 ### Directory structure
 
@@ -769,3 +769,27 @@ retain collection caches only for actual reuse, including headings/enrichment.
 Metadata access on an existing model and pagination on an existing collection
 are presentation operations; the prohibition on Twig queries concerns building
 or executing independent queries, not these model APIs.
+
+## PressGang PHPStan extension
+
+`pressgang-wp/phpstan` (sibling checkout `../pressgang-phpstan`) analyses pure-source
+contracts: controller `context_getters`, getter-backed model properties and
+`meta()` calls, and direct getter/meta recursion. Child themes install it with
+`composer require --dev pressgang-wp/phpstan:@dev phpstan/extension-installer`
+after adding a Composer path repository for the local checkout (until published).
+Allow `phpstan/extension-installer`; it automatically includes `extension.neon`.
+Continue using the WordPress extension and ACF stubs, with theme source analysed
+at an appropriate level. The framework remains at level 8.
+
+Include `vendor/pressgang-wp/phpstan/rules.neon` explicitly for advisory orphan
+getter checks. An intentional helper can use `@pressgang-context-helper` on its
+method PHPDoc. An absent manifest entry is not proof of dead code; inherited
+helpers and direct callers still matter. PHPStan treats opt-in advice as ordinary
+diagnostics, with no separate warning exit status.
+
+`AbstractController` currently does not use `HandlesDynamicGetters`; model typing
+requires actual trait use. Getter-backed meta dispatch precedes Timber/ACF
+transformation; other meta fields retain their declared types. Runtime config,
+snippet resolution and bootstrap checks remain with `wp capstan doctor`.
+See [package documentation](../pressgang-phpstan/README.md) for limitations and
+the worked PenARC comparison.
