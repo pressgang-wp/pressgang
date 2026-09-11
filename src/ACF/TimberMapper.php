@@ -63,13 +63,11 @@ class TimberMapper {
 	 * to Timber posts. Accepts the raw field value, so empty/false values are
 	 * fine.
 	 *
-	 * Note: for top-level fields, Timber's `timber/meta/transform_value`
-	 * filter (globally or per `meta()` call) can transform values without this
-	 * helper. The transformer keys off the queried field's type, however, so
-	 * values read from flexible-content or group sub-fields still come through
-	 * raw — this helper covers those cases. See CLAUDE.md "Timber-First Data
-	 * Access" for the full rationale on preferring explicit conversion over
-	 * the global filter.
+	 * Timber's per-call transform_value option also converts supported nested
+	 * ACF fields. Prefer it for audited presentation reads; retain this helper
+	 * when normal ACF values must coexist with mapped objects in a request.
+	 * It preserves a native array contract and does not accept Timber collections.
+	 * See docs/ACF-VALUES.md for cache limitations and migration examples.
 	 *
 	 * @param mixed $value Raw ACF field value.
 	 *

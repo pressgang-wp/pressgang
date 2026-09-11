@@ -65,35 +65,39 @@ Use direct WordPress calls only when:
 
 ### ACF relationship/post-object values
 
-ACF returns raw `WP_Post` objects or IDs. To satisfy the rule above, convert
-them with `PressGang\ACF\TimberMapper::to_timber_posts( $value )` — the same
-mapper `AcfOptionsContextManager` uses for options fields, so all ACF → Timber
-conversion goes through one class.
+Use Timber's existing bridge for audited presentation fields:
+`$post->meta( 'x', [ 'transform_value' => true ] )`. ACF invokes Timber's
+replacement type formatters recursively inside groups, repeaters and flexible
+content. Containers remain arrays; relationship values can be
+`Timber\PostArrayObject` collections. Existing Timber class maps apply.
 
-Timber 2 has its own transform mapping — the `timber/meta/transform_value`
-filter (globally, or per call via `$post->meta( 'x', [ 'transform_value' => true ] )`)
-— which converts ACF post_object/relationship/image/gallery/file/taxonomy/
-user/date values into Timber objects. **PressGang prefers explicit conversion
-via TimberMapper over enabling the global filter**, because:
+**Do not enable `timber/meta/transform_value` globally.** Dates become
+`DateTimeImmutable`, images/files stop following ACF's configured array/ID/URL
+format, and relationships/taxonomies can no longer be used as query IDs.
+Per-call adoption preserves migration parity for fields that are not opted in.
 
-- **Explicit over magic.** The helper marks exactly where conversion happens;
-  the global filter silently changes the return type of *every* `meta()`
-  call — dates become `DateTimeImmutable`, images become `Timber\Image`
-  instead of ACF arrays — a blast radius that is hard to audit and breaks
-  code that feeds raw IDs into query args (`post__not_in`, `meta_query`).
-- **One canonical bridge.** `TimberMapper` already converts options-page
-  fields for the context manager; using the same class for meta values keeps
-  a single, auditable conversion surface instead of two mechanisms.
-- **Coverage gap.** The Timber transformer keys off the *queried field's*
-  type — values read from flexible-content, group, or repeater sub-fields are
-  never transformed. Those sites need explicit conversion whatever the filter
-  says, and one idiom everywhere beats two.
-- **Migration parity.** PressGang v1 themes were built against raw ACF
-  semantics with inline `new TimberPost()` conversion; explicit conversion
-  preserves those semantics exactly during v1 → v2 migrations.
+**Use one formatted mode per field/entity per request, including nested reads.**
+On Timber 2.5.1 with ACF 6.8.9, ACF caches normal and transformed values under
+the same key: a normal read can prevent transformation, and a transformed read
+can leak objects into a later normal read. `transform_value => false` alone
+is not a reliable raw-value escape after transformation. For query inputs, use
+`raw_meta()` (WP storage) or both `transform_value => false` and
+`format_value => false` (unformatted ACF). Neither promises normal ACF image
+arrays or formatted date strings. Keep explicit mapping when those normal
+ACF values must coexist with Timber objects.
 
-Per-call `[ 'transform_value' => true ]` is acceptable for a one-off
-top-level field; do not enable the filter globally.
+Timber also leaves its temporary formatters installed if formatting throws.
+Do not assume catching that exception restores ACF formatting for subsequent
+reads. PressGang does not add a cache/hook wrapper or patch vendor code.
+
+`PressGang\ACF\TimberMapper::to_timber_posts()` remains supported for existing
+consumers and mixed-use fields. Its array return contract is unchanged; do not
+pass a Timber collection into it. Options and block contexts keep the existing
+mapper behaviour. New per-call adoption reuses Timber rather than extending
+that mapper into a second recursive bridge.
+
+See [ACF values and consuming-theme upgrade examples](docs/ACF-VALUES.md) for
+return types, raw reads, the four penarc examples and measured limitations.
 
 ---
 
@@ -536,10 +540,12 @@ See the [Timber WooCommerce docs](https://timber.github.io/docs/v2/guides/woocom
 Random ordering is normally discouraged for performance, but it is acceptable here because
 the results are cached via `wp_cache` with a configurable TTL (`PRESSGANG_CACHE_TIME`).
 
-### Commented-out repeater/flexible_content mapping in `TimberMapper`
-The recursive mapping of ACF repeater and flexible_content sub-fields is intentionally
-commented out. It was deferred pending a stable recursive strategy that handles all
-ACF field type edge cases.
+### Repeater/flexible_content mapping in `TimberMapper`
+The legacy mapper passes nested values through unchanged. Keep that behaviour
+for existing options/block consumers. Timber's per-call ACF bridge already
+supports recursive formatting; a bespoke recursive mapper is not planned.
+The `term` case is retained for compatibility, but ACF's standard field type
+is `taxonomy`, which Timber supports. See [ACF values](docs/ACF-VALUES.md).
 
 ### `Templates` class — potential deprecation
 The `Templates` configuration class carries a `TODO maybe deprecate` marker. WordPress
