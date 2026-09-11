@@ -9,6 +9,9 @@
  * replaces this file entirely.
  */
 return [
+	// Audit child-theme metadata consumers before enabling transformation.
+	'transform_acf_values' => false,
+
 	'twig' => [
 		// Keep disabled by default at the framework level.
 		'cache_enabled' => false,

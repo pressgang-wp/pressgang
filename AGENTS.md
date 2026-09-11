@@ -71,10 +71,12 @@ replacement type formatters recursively inside groups, repeaters and flexible
 content. Containers remain arrays; relationship values can be
 `Timber\PostArrayObject` collections. Existing Timber class maps apply.
 
-**Do not enable `timber/meta/transform_value` globally.** Dates become
+**Global transformation is opt-in for audited child themes**, via
+`config/timber.php`: `transform_acf_values => true`. Dates become
 `DateTimeImmutable`, images/files stop following ACF's configured array/ID/URL
 format, and relationships/taxonomies can no longer be used as query IDs.
-Per-call adoption preserves migration parity for fields that are not opted in.
+The parent default remains false to preserve migration parity.
+
 
 **Use one formatted mode per field/entity per request, including nested reads.**
 On Timber 2.5.1 with ACF 6.8.9, ACF caches normal and transformed values under

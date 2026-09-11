@@ -1,7 +1,7 @@
 # ACF values and consuming-theme upgrade notes
 
-Use Timber's existing per-call bridge for presentation fields. PressGang adds
-no wrapper, automatic global filter, configuration or dependency for this.
+Use Timber's existing bridge for presentation fields, per call or through the
+opt-in setting in config/timber.php. PressGang adds no replacement bridge.
 Existing themes need no changes on upgrade. ACF remains optional; these ACF
 examples require it, while ordinary Timber metadata access still works without it.
 
@@ -69,8 +69,8 @@ rechecked on dependency upgrades; this change does not fix them upstream.
 ## Opting out and reading IDs
 
 Transformation remains off by default. Opt in or out for a selected root at its
-`meta()` call. Do not enable the global `timber/meta/transform_value` filter in a
-migration: query IDs, date strings and image/file arrays have existing consumers.
+`meta()` call, or enable `transform_acf_values` after auditing the child theme:
+query IDs, date strings and image/file arrays have existing consumers.
 There is no per-type or nested-path switch in this policy. Keep a mixed-use root
 untransformed and use explicit mapping where necessary.
 
@@ -95,8 +95,8 @@ values: a raw repeater root can be a row count, and unformatted ACF sub-fields
 can be keyed by field keys. Do not substitute either escape into a template
 expecting image arrays or formatted dates.
 
-If a child theme already registers a global transform filter, remove that
-registration to return to the default. There is no additional PressGang switch.
+Set `transform_acf_values` to false to return to the parent default. Remove any
+local global-transform filter registration too; the setting does not override it.
 
 ## Worked penarc migrations
 
@@ -238,3 +238,29 @@ the displayed page and measure rendered listings, not just warmed CLI loops.
 See [Timber's ACF documentation](https://timber.github.io/docs/v2/integrations/advanced-custom-fields/)
 for the upstream API. The runtime findings above qualify its per-call opt-out
 advice for the versions tested.
+
+
+## Configuring an audited child theme
+
+Keep existing Twig settings when adding this option to `config/timber.php`
+(child configuration replaces the parent file):
+
+```php
+return [
+    'transform_acf_values' => true,
+];
+```
+
+The setting defaults to false. Replace a local `TransformAcfValues` snippet and its
+registration with this configuration. Call `PressGang\Bootstrap\Config::clear_cache()`
+after changing configuration. Transformation uses Timber's existing bridge and
+class maps; ACF remains optional. Hook registration is harmless without ACF and
+no ACF functions are called by this configuration handler.
+
+Missing references may still produce null collection entries. Keep presentation
+checks for missing values; this option does not add filtering or repair data.
+
+Use raw_meta() for stored query IDs. Setting transform_value to false per call
+opts out of Timber transformation, but ACF's shared formatted cache still applies
+as described above. Disable the configuration option to stop registering its
+policy; false does not override filters installed by another plugin or theme.
