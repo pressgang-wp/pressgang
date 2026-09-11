@@ -18,6 +18,7 @@
 
 ## Ecosystem
 
+* [PHPStan Extension](PHPSTAN.md)
 * [⚓ Quartermaster](QUARTERMASTER.md)
 * [🛞 Capstan](CAPSTAN.md)
 * [🧭 Bosun](BOSUN.md)

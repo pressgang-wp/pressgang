@@ -196,6 +196,10 @@ and nothing else. Keep CI jobs split into their existing separate steps so the
 Actions UI still shows whether tests, compatibility, static analysis, or
 browser/runtime checks failed.
 
+For controller manifests and getter-backed model access, install the
+[PressGang PHPStan extension](PHPSTAN.md) in the child theme. Its guide covers
+installation, automatic checks and optional manifest-omission advice.
+
 ## 🧭 Theme tooling convention
 
 Child themes should use the same shape:
@@ -233,8 +237,8 @@ signals:
 Do not design new route, controller, context, or config-dump validation here:
 those surfaces already exist in Capstan and Shakedown.
 
-There is no shared `pressgang/phpstan` package yet. Track repeated extraction
-candidates — nav-menu `WP_Post` dynamic properties, WooCommerce cart lifecycle
+The [convention extension](PHPSTAN.md) is separate from shared project stubs
+and ignore lists. Track repeated extraction candidates — nav-menu `WP_Post` dynamic properties, WooCommerce cart lifecycle
 stubs, WooCommerce/ACF stub bundling, and `phpstan-bootstrap.php` constants —
 but extract only after a second PressGang repo independently adopts PHPStan
 level 8 and hits the same needs. One consumer is not a package.

@@ -791,5 +791,5 @@ diagnostics, with no separate warning exit status.
 requires actual trait use. Getter-backed meta dispatch precedes Timber/ACF
 transformation; other meta fields retain their declared types. Runtime config,
 snippet resolution and bootstrap checks remain with `wp capstan doctor`.
-See [package documentation](../pressgang-phpstan/README.md) for limitations and
-the worked PenARC comparison.
+See the [PHPStan extension guide](docs/PHPSTAN.md) for generic adoption examples,
+diagnostics and limitations.
