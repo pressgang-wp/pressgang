@@ -231,6 +231,23 @@ methods or recursion. PHPStan has no separate warning severity: opting in makes
 these findings affect its normal exit status. Review callers before removing a
 getter; absence from a manifest does not itself cause a query to run.
 
+## Themes with blocks
+
+Include `src/Blocks` in your analysis paths (analysing all of `src` includes it).
+Block subclasses use ordinary static `get_context()` and `render()` methods;
+PHPStan checks those calls and overrides directly. They do not use controller
+manifests, so block `get_*()` helpers do not need `@pressgang-context-helper`.
+
+Document a custom `get_context()` input as `array<string, mixed>` and its return
+as `array<string, mixed>`, retaining the framework's native `mixed` parameter.
+Inherited implementations, trait helpers and intentionally replaced contexts are
+supported; calling `parent::get_context()` is not mandatory. Model getters used
+inside blocks receive the same property and `meta()` typing as elsewhere.
+
+The extension does not promise a fixed block-context shape: ACF fields can replace
+context keys, and their values depend on runtime field configuration. Block
+registration, callback wiring and template discovery need separate runtime checks.
+
 ## Handling findings and scope
 
 Fix incorrect source or return contracts first. The extension preserves ordinary
