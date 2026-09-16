@@ -264,6 +264,22 @@ Shakedown is in active development (beta). Commands and config are stable in sha
 
 ## Comparing production with an updated child theme
 
+Run `npx shakedown init` from the consumer project to create its configuration.
+The setup detects local WordPress and reads its home URL, then asks for production
+and optional staging origins. It creates `shakedown.config.json` and adds
+`/.shakedown/` to `.gitignore`; commit both files. It does not install dependencies,
+run tests or modify WordPress data. Existing configs are never overwritten or
+shadowed. For scripted setup:
+
+```sh
+npx shakedown init --site-path=./wp --base-url=https://theme.test \
+  --reference=https://example.org --staging=https://staging.example.org --yes
+```
+
+Paths resolve relative to the config file. Use `shakedown init --help` for options.
+Leave production blank in interactive setup for attached-only testing. Run reports
+belong to the invocation directory, so run tests from the same consumer project.
+
 Regression separates **discovery** (a local WordPress/PressGang installation),
 **reference** (production) and **candidate** (local or staging). Existing `sitePath`
 and `baseUrl` identify discovery. Add named environments to the same target config:

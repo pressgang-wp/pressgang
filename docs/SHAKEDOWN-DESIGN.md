@@ -129,6 +129,17 @@ The [SQLite Database Integration plugin](https://github.com/WordPress/sqlite-dat
 The [workflow](https://github.com/pressgang-wp/pressgang-shakedown/blob/main/.github/workflows/shakedown.yml) checks the theme out *into* a WordPress-shaped tree, then: [`shivammathur/setup-php`](https://github.com/shivammathur/setup-php) (PHP + WP-CLI + Composer), `wp core download --skip-content`, `composer install` in the theme (parent + plugins land via installer-paths; ACF Pro credentials via the `COMPOSER_AUTH` secret — [Composer auth docs](https://getcomposer.org/doc/articles/authentication-for-private-packages.md)), the workflow's pinned `muster-ref` fetched for fixtures, Capstan installed for the oracle, then `npx shakedown sandbox`. Composer and [Playwright browser caches](https://playwright.dev/docs/ci#caching-browsers) keep warm runs fast; the Trial Report uploads as an artifact either way.
 
 
+### Project setup
+
+`shakedown init` belongs to Shakedown rather than Capstan: it owns the runner's
+configuration and artifact ignore rules. `lib/init.mjs` runs before target
+resolution, discovers WordPress through a bounded set of paths, optionally reads
+its home URL through WP-CLI, and collects named regression origins. Interactive
+prompts and explicit flags feed the same validation. Non-interactive invocations
+never wait for input. Existing local or ancestor configs are preserved; relative
+site paths resolve against the config directory. Setup writes only project-local
+config and ignore files, never WordPress data, baselines or dependencies.
+
 ### Regression — one discovery matrix, two observed environments
 
 `lib/target.mjs` retains local discovery and resolves named reference/candidate
