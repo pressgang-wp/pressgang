@@ -6,7 +6,7 @@ description: >-
 
 # 🧭 Shakedown: Design & Internals
 
-The [Shakedown guide](SHAKEDOWN.md) tells you what to run. This page explains **why it's built this way** and **how each layer works** — useful when you're extending it, debugging it, or deciding whether to trust it.
+The [Shakedown guide](SHAKEDOWN.md) explains installation, initialisation and configuration. The [Regression testing walkthrough](SHAKEDOWN-REGRESSION.md) covers production comparisons and reviewing findings. This page explains **why it's built this way** and **how each layer works** — useful when you're extending it, debugging it, or deciding whether to trust it.
 
 ## 🤔 Design decisions
 
@@ -93,7 +93,7 @@ Because every one of those assertions is guarded on its header existing, an obse
 
 ### The passes — Playwright
 
-Shakedown runs Playwright with a packaged config; your theme directory is the *workspace* (reports, matrix, and baselines land there; a `tests/e2e/` dir joins the run as the journeys project). Pass 00 uses Playwright's [APIRequestContext](https://playwright.dev/docs/api-testing) (no browser — whole-site sweep in seconds); passes 01–03 drive Chromium. Failures retain a **trace** — open with `npx playwright show-trace <trace.zip>` for a time-travel replay ([trace viewer docs](https://playwright.dev/docs/trace-viewer)). The developer-grade HTML report lands in `playwright-report/` ([reporter docs](https://playwright.dev/docs/test-reporters)).
+For attached and sandbox tests, Shakedown runs Playwright with a packaged config; the invocation directory is the *workspace* (reports, matrix, and baselines land there; a `tests/e2e/` dir joins the run as the journeys project). Pass 00 uses Playwright's [APIRequestContext](https://playwright.dev/docs/api-testing) (no browser — whole-site sweep in seconds); passes 01–03 drive Chromium. Failures retain a **trace** — open with `npx playwright show-trace <trace.zip>` for a time-travel replay ([trace viewer docs](https://playwright.dev/docs/trace-viewer)). The developer-grade HTML report lands in `playwright-report/` ([reporter docs](https://playwright.dev/docs/test-reporters)).
 
 ### Accessibility — axe-core
 
@@ -139,6 +139,12 @@ prompts and explicit flags feed the same validation. Non-interactive invocations
 never wait for input. Existing local or ancestor configs are preserved; relative
 site paths resolve against the config directory. Setup writes only project-local
 config and ignore files, never WordPress data, baselines or dependencies.
+
+Configuration discovery and the workspace are distinct. The nearest ancestor
+config supplies target settings; relative `sitePath` values are anchored there.
+Reports and consumer journeys remain anchored to the invocation directory, so
+users should run from the consumer project root even when the executable is
+installed through a local link to the Shakedown checkout.
 
 ### Regression — one discovery matrix, two observed environments
 
@@ -193,6 +199,12 @@ discovery, updated during work and retained per run; a failed discovery cannot
 leave an old all-clear looking current. Interstitial titles trigger an explicit
 incomplete result and stop additional route traffic. These heuristics are evidence
 of uncertainty, not proof that an access barrier exists.
+
+The summary counts route/viewport observations, not unique paths or root causes.
+A complete execution can still exit 1 for health failures or 2 for unmatched or
+inconclusive evidence. Advisory differences alone can exit 0 and still require
+review. Regression reports are opened directly as HTML; the Playwright report
+viewer and ordinary Trial Report belong to the other execution path.
 
 ACF's regression role is deliberately narrower than fixture generation. Locations
 can identify representative content surfaces, but optional relationships,
