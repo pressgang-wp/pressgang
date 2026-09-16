@@ -299,6 +299,10 @@ matrix remain untouched. Candidate health failures, differences, additions,
 reference-only routes, accepted differences and inconclusive comparisons are
 reported separately. Production itself can be defective.
 
+Captures scroll through each page within a fixed budget before returning to the
+top, so lazy images can load. Pending images or a reached scroll limit are
+disclosed in the report rather than silently treated as complete evidence.
+
 Candidate health shares passes 00–02: expected status, PHP/Twig signatures, title,
 optional observable oracle, JavaScript/console/request errors, broken images and
 serious/critical WCAG violations. Comparison evidence covers redirects, title/H1,

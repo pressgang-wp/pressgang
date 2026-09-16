@@ -152,6 +152,12 @@ The existing sandbox baseline pass and consumer journeys are never collected by
 regression. Each route, viewport and side gets a fresh context, without retries;
 an unsuccessful capture cannot be overwritten by a successful retry.
 
+Before collecting evidence, bounded scrolling triggers lazy images, then returns
+to the top. The report records scroll limits and pending images; broken lazy
+images join health checks when the page bottom was reached. The runner owns
+SIGINT/SIGTERM handling so interruption preserves an explicit incomplete report
+before browser teardown.
+
 `lib/regression-browser.mjs` enforces anonymous GET-only requests below JavaScript.
 Redirects are inspected before following; top-level and iframe navigation cannot
 leave the selected origin. Non-GET requests, WebSockets, service workers, known
