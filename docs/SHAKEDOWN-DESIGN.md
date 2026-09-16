@@ -127,3 +127,59 @@ The [SQLite Database Integration plugin](https://github.com/WordPress/sqlite-dat
 ### CI — the reusable workflow
 
 The [workflow](https://github.com/pressgang-wp/pressgang-shakedown/blob/main/.github/workflows/shakedown.yml) checks the theme out *into* a WordPress-shaped tree, then: [`shivammathur/setup-php`](https://github.com/shivammathur/setup-php) (PHP + WP-CLI + Composer), `wp core download --skip-content`, `composer install` in the theme (parent + plugins land via installer-paths; ACF Pro credentials via the `COMPOSER_AUTH` secret — [Composer auth docs](https://getcomposer.org/doc/articles/authentication-for-private-packages.md)), the workflow's pinned `muster-ref` fetched for fixtures, Capstan installed for the oracle, then `npx shakedown sandbox`. Composer and [Playwright browser caches](https://playwright.dev/docs/ci#caching-browsers) keep warm runs fast; the Trial Report uploads as an artifact either way.
+
+
+### Regression — one discovery matrix, two observed environments
+
+`lib/target.mjs` retains local discovery and resolves named reference/candidate
+origins from the same target's `regression` object. `lib/regression-plan.mjs`
+creates a separate versioned paired plan preserving kind, expected status, oracle
+metadata, exact path/query and provenance. It rejects foreign-origin and unsafe
+routes, with exclusions disclosed. Normal attached/sandbox matrices are not
+rewritten for remote origins.
+
+`lib/regression.mjs` runs Capstan/fallback derivation plus supplementary families
+inside a unique evidence directory. Production homepage navigation adds at most a
+configured number of same-origin links; it is explicitly a sample, not a full
+inventory. Sitemaps are deferred to avoid quietly growing a second crawler. Missing
+paths are never inferred solely from a sampled matrix. Shared paths compare
+directly; different redirect destinations remain unmatched.
+
+`lib/health.mjs` holds correctness checks shared with passes 00–02. Production
+parity is never a correctness assertion. Candidate health blocks, while semantic
+and visual differences begin advisory until narrower rules have field evidence.
+The existing sandbox baseline pass and consumer journeys are never collected by
+regression. Each route, viewport and side gets a fresh context, without retries;
+an unsuccessful capture cannot be overwritten by a successful retry.
+
+`lib/regression-browser.mjs` enforces anonymous GET-only requests below JavaScript.
+Redirects are inspected before following; top-level and iframe navigation cannot
+leave the selected origin. Non-GET requests, WebSockets, service workers, known
+administrative/action URLs and cookies/authorization are blocked. A separate HTTP
+context is necessary: Playwright's `route.fetch()` populates the browser cookie jar
+before a caller strips response cookies. An adversarial browser fixture proves
+that requests cannot bypass these restrictions. Blocked traffic is evidence because
+these restrictions can change the rendered page. As in attached mode, this does
+not control WordPress/plugin side effects of serving a GET or booting WP-CLI.
+
+Semantic evidence uses normalized title/H1, landmarks and positions, visible form
+schemas, image URLs and natural/displayed dimensions, empty links/headings and a
+basic content structure sequence. No CSS class is assumed to mean a card. Hidden
+form state and exact body text are excluded; dynamic selectors and accepted
+finding signatures require explicit disclosed policies. Different image identities
+or sampled posts are not relabelled as equivalent content.
+
+`lib/regression-report.mjs` writes a distinct Regression Report alongside JSON and
+runtime PNGs. Candidate health, differences, additions/removals, accepted differences
+and inconclusive/unmatched evidence stay separate. Reports are initialized before
+discovery, updated during work and retained per run; a failed discovery cannot
+leave an old all-clear looking current. Interstitial titles trigger an explicit
+incomplete result and stop additional route traffic. These heuristics are evidence
+of uncertainty, not proof that an access barrier exists.
+
+ACF's regression role is deliberately narrower than fixture generation. Locations
+can identify representative content surfaces, but optional relationships,
+conditional groups and nested flexible content do not establish a universal
+field-to-DOM contract. A future read-only coverage inventory and explicit PressGang
+markup conventions can close that gap without duplicating Capstan or Muster.
+The initial release does not seed existing content or claim complete ACF coverage.

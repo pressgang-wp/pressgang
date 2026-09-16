@@ -14,16 +14,18 @@ A shakedown cruise is the sea trial of a new vessel: take her out, push every sy
 
 ## 🧰 Commands at a glance
 
-Shakedown runs in one of two **modes** — keep the distinction in mind, everything below builds on it:
+Shakedown runs in one of three **modes** — keep the distinction in mind, everything below builds on it:
 
 | Mode | Answers | Touches your database? |
 | --- | --- | --- |
 | **Attached** — your live local site | "Is my site healthy *right now*?" | Never writes — read-only GETs |
+| **Regression** — derived production/candidate comparison | "What changed, and is the candidate healthy?" | Anonymous GETs; browser writes blocked |
 | **Sandbox** — a disposable throwaway WordPress | "Is my *theme* correct, independent of content?" | N/A — its own database, vaporised after |
 
 | Command | Mode | What it does |
 | --- | --- | --- |
 | `npx shakedown` | Attached | Runs every pass against your local site |
+| `npx shakedown regression --against=production --candidate=staging` | Regression | Compares derived paths and captures paired desktop/mobile evidence |
 | `npx shakedown matrix` | Attached | Prints the route matrix without running checks |
 | `npx shakedown sandbox` | Sandbox | Spins up the throwaway WordPress, seeds fixtures, runs every pass |
 | `npx shakedown sandbox --update-snapshots` | Sandbox | Re-mints visual regression baselines |
@@ -87,7 +89,7 @@ Feeds are checked by pass 00 only: a full-page screenshot or an axe audit of XML
 | **00 · Availability** | Right HTTP status · no PHP/Twig error output · a `<title>` present. HTTP-only, so it sweeps the whole site in seconds. |
 | **01 · Integrity** | Real Chromium render: no JS exceptions, console errors, failed requests, or broken images. |
 | **02 · Accessibility** | axe-core against WCAG 2.1 A/AA. Serious/critical violations fail; minor ones report as advisory. |
-| **03 · Visual** | Full-page screenshots against baselines committed in your theme. Skips politely until baselines exist. |
+| **03 · Visual** | Full-page screenshots against baselines committed in your theme. Missing baselines fail; only an explicit sandbox update writes them. |
 
 When something fails you get the exact URL, what was expected, and a Playwright trace to replay step-by-step. `npx shakedown ui` gives you watch mode while you fix it; `npx playwright show-report` browses the last run.
 
@@ -258,3 +260,80 @@ The sandbox also counts **PHP notices, warnings and deprecations on every reques
 {% hint style="info" %}
 Shakedown is in active development (beta). Commands and config are stable in shape but may still grow — pin a tag once releases are cut, and expect the odd sharp edge to have a friendly error message.
 {% endhint %}
+
+
+## Comparing production with an updated child theme
+
+Regression separates **discovery** (a local WordPress/PressGang installation),
+**reference** (production) and **candidate** (local or staging). Existing `sitePath`
+and `baseUrl` identify discovery. Add named environments to the same target config:
+
+```json
+{
+  "sitePath": "/path/to/wordpress",
+  "baseUrl": "https://theme.test",
+  "regression": {
+    "references": { "production": "https://example.org" },
+    "candidates": {
+      "local": "https://theme.test",
+      "staging": "https://staging.example.org"
+    }
+  }
+}
+```
+
+```sh
+npx shakedown regression --against=production
+npx shakedown regression --against=production --candidate=staging
+```
+
+The existing Capstan/fallback pipeline and supplementary families derive the plan.
+Exact path and query identify content; two sampled posts are never paired merely
+because their post type matches. A bounded production homepage-navigation
+supplement exposes possible removals or discovery gaps without becoming a crawler.
+
+Each run writes `.shakedown/regression/run-<unique>/index.html`, JSON and paired
+screenshots at desktop/mobile widths. Share the whole folder. These captures are
+run artifacts, never committed sandbox baselines. The ordinary Trial Report and
+matrix remain untouched. Candidate health failures, differences, additions,
+reference-only routes, accepted differences and inconclusive comparisons are
+reported separately. Production itself can be defective.
+
+Candidate health shares passes 00–02: expected status, PHP/Twig signatures, title,
+optional observable oracle, JavaScript/console/request errors, broken images and
+serious/critical WCAG violations. Comparison evidence covers redirects, title/H1,
+landmarks, image dimensions, empty links/headings, form structure and major
+main-content elements. Screenshots and semantic differences are initially advisory;
+exact text/pixel equality is not a gate. Exit 1 means candidate health failures;
+exit 2 means incomplete or inconclusive/unmatched evidence and takes precedence.
+A maintenance/access interstitial stops early with remaining coverage disclosed.
+
+Both sides receive anonymous GET-only traffic. Browser writes, WebSockets,
+service workers and unsafe navigation are blocked; cookies and credentials are not
+sent. Third-party frame navigations are blocked and disclosed. No login, form
+submission, authored journey, database mutation command, observer installation or
+baseline update runs. There are no automatic retries to hide a transient failure.
+
+Optional `regression` settings:
+
+- `viewports`: named `{name, width, height}` entries; defaults 1280×900 and 390×844.
+- `navigationLimit`: 0–200, default 40; zero disables reference navigation discovery.
+- `timeout`: 1000–120000ms per operation, default 20000.
+- `criticalRoutes`: additional paths, never a replacement for derived coverage.
+- `ignoreSelectors`: dynamic regions omitted from semantics and masked in screenshots;
+  candidate health still checks them.
+- `accept`: case-sensitive substring signatures such as `title on /about/`.
+  Accepted differences remain in evidence rather than disappearing.
+- `defaultReference` / `defaultCandidate`: default named selections, initially
+  `production` / `local`.
+
+All policies, exclusions and blocked traffic are disclosed. Unknown config keys
+fail. Environment URLs must be plain HTTP(S) origins without credentials or path
+prefixes. Normalization collapses whitespace, maps same-origin URLs to paths and
+omits hidden form values; it does not silently remove random staff or editorial
+content changes. ACF locations motivate representative post-type/template coverage,
+but schema alone does not prove rendered component content; complete ACF coverage
+and field-to-DOM assertions are not claimed.
+
+See [the regression contract](https://github.com/pressgang-wp/pressgang-shakedown/blob/main/docs/REGRESSION.md)
+for precise classification and safety limitations.
