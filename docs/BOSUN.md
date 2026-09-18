@@ -39,6 +39,7 @@ That's it — all hands briefed. Commit the generated files so agents on machine
 The document always opens with an **inventory of reality** — installed package versions with lock refs, and the feature opt-ins detected in `config/` — so agents reason about what the theme actually runs, not the ecosystem's newest ideas:
 
 * Guidance for [Template Routing](TEMPLATE-ROUTING.md) only comes aboard when `config/service-providers.php` registers the provider.
+* [ACF value transformation](ACF-VALUES.md) guidance only comes aboard when `config/timber.php` sets `'transform_acf_values' => true`.
 * [Quartermaster](QUARTERMASTER.md) guidance appears only when the package is installed — along with a pointer to its machine-readable API index (`docs/api-index.json`, every method signature and the WP args it sets).
 * Testing guidance tells agents to prefer `composer check` when a theme provides it, and otherwise run the theme's documented test and static-analysis commands separately.
 * Skills (Agent Skills format) install to `.claude/skills/` — including a v1 → v2 migration skill that appears **only** on themes still booting through PressGang v1, and disappears once they're migrated.

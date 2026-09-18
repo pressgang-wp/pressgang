@@ -18,10 +18,12 @@ Timber 2 + Twig rendering, and config-driven bootstrapping.
 - Declare a controller's template contract with a context manifest:
   `protected array $context_getters = [ 'news', 'events' ];` — each key is
   populated from its `get_{key}()` getter. Never auto-publish getters.
-- Data that reaches Twig should be Timber objects. Convert raw ACF
-  relationship/post-object values with
-  `PressGang\ACF\TimberMapper::to_timber_posts( $value )`; do not enable
-  Timber's global `timber/meta/transform_value` filter.
+- Data that reaches Twig should be Timber objects. By default, convert raw
+  ACF relationship/post-object values with
+  `PressGang\ACF\TimberMapper::to_timber_posts( $value )`. A theme may opt
+  into Timber's ACF value transformation with `'transform_acf_values' => true`
+  in `config/timber.php` after auditing its consumers (docs/ACF-VALUES.md);
+  never register the `timber/meta/transform_value` filter by hand.
 - Twig is presentation only: no queries, no request globals, no business
   logic. Escape in Twig, sanitise in PHP — never `esc_*` in Twig.
 - **Timber ships Twig autoescape off**, so `{{ value }}` prints raw HTML and
