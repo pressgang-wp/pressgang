@@ -26,7 +26,9 @@ Shakedown runs in one of three **modes** — keep the distinction in mind, every
 | --- | --- | --- |
 | `npx shakedown init` | Setup | Creates project configuration and ignores generated reports |
 | `npx shakedown` | Attached | Runs every pass against your local site |
-| `npx shakedown regression --against=production --candidate=staging` | Regression | Compares derived paths and captures paired desktop/mobile evidence |
+| `npx shakedown regression --against=production --candidate=staging` | Regression | Compares derived paths and captures evidence at selected viewport sizes |
+| `npx shakedown regression --level=full --coverage=exhaustive` | Regression | Adds eligible public content and terms to the route plan |
+| `npx shakedown regression --level=full --viewports=desktop --routes=/about/` | Regression | Focuses on one discovered route at desktop size |
 | `npx shakedown matrix` | Attached | Prints the route matrix without running checks |
 | `npx shakedown sandbox` | Sandbox | Spins up the throwaway WordPress, seeds fixtures, runs every pass |
 | `npx shakedown sandbox --update-snapshots` | Sandbox | Re-mints visual regression baselines |
@@ -158,17 +160,30 @@ Use `--candidate=staging` for a configured, anonymously reachable staging site.
 Password-protected staging is not currently supported. Both sites receive
 anonymous GET-only observations; no forms are submitted or baselines updated.
 
-Shakedown derives one route plan and captures matching paths at desktop and mobile
+Shakedown derives one route plan and captures matching paths at the selected viewport
 sizes. It reports candidate health separately from reference differences: a
 production defect does not make the candidate correct, and an intentional content
 change is not automatically a regression.
 
 At the end, open the printed `.shakedown/regression/run-…/index.html` path in your
-browser. Expand **Route index**, read **Candidate correctness** and **Differences**,
-then compare the paired screenshots. Click a screenshot to see it at full size.
+browser. Check coverage, review **Repeated changes**, then use **Route index** to
+open **Candidate correctness**, **Behaviour changes** and **Presentation and content
+changes**. Plain-language summaries precede Technical evidence. Full runs include
+paired screenshots and advisory highlighted pixel diffs for matched pages.
 This report is separate from `npx playwright show-report` and the ordinary Trial
 Report. Each rerun creates a new folder; share the whole folder so screenshots
 remain available.
+
+Levels (`errors`, `core`, `full`), coverage (`sampled`, `exhaustive`) and viewports
+are independent choices. Defaults are full checks, sampled routes and all three
+viewport presets unless your config selects otherwise. Use `--routes` for focused
+investigation of discovered paths. A full run does not imply exhaustive coverage
+or exercise JavaScript controls.
+
+The report provides acceptance snippets for intentional comparison differences
+and a downloadable `summary.md` for handovers. Acceptance policies are explicit
+and disclosed; they do not clear candidate health failures. Structural capture
+limitations and unavailable screenshot diffs remain visible for review.
 
 See [Regression testing](SHAKEDOWN-REGRESSION.md) for the complete walkthrough,
 result categories, exit codes and accepting intentional differences.

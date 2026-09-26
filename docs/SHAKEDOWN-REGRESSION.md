@@ -1,7 +1,7 @@
 ---
 description: >-
   Install Shakedown in your project, compare an updated site with production,
-  and review paired desktop and mobile evidence.
+  and review evidence at selected viewport sizes.
 ---
 
 # Regression testing
@@ -103,6 +103,7 @@ A typical generated config is:
   "sitePath": "wp",
   "baseUrl": "https://your-site.test",
   "regression": {
+    "defaultViewports": ["desktop", "tablet", "mobile"],
     "references": {
       "production": "https://example.org"
     },
@@ -163,8 +164,9 @@ Keep running from the project directory: it determines where reports are written
 The run derives its plan through Capstan (or the bundled fallback), adds
 supplementary routes such as feeds and page 2, and can add a bounded sample of
 production navigation links. It checks candidate health and captures paired
-screenshots at desktop and mobile sizes. Feeds receive HTTP checks only. This is
-representative derived coverage, not an exhaustive crawl of every post.
+screenshots at the selected viewport sizes in full runs. Feeds receive HTTP checks only. This is
+sampled coverage by default. Use `--coverage=exhaustive` to add the discovered
+public content inventory, or `--routes` to investigate particular discovered paths.
 
 Both sites are observed anonymously using GET requests. No forms are submitted,
 no observer is installed on production, and no sandbox baselines are created or
@@ -204,13 +206,16 @@ Work through the report in this order:
    that the candidate passed. Counts are route/viewport observations: a page
    checked on desktop and mobile contributes two observations. The health count
    is observations with findings, not the number of unique underlying bugs.
-2. **Expand Route index.** Select a path and viewport to jump to its evidence.
+2. **Check coverage and Repeated changes.** Confirm that the route and viewport
+   you care about were visited. Review repeated changes together, then use Route
+   index to open individual page evidence.
 3. **Read Candidate correctness.** This lists HTTP/rendering, JavaScript, asset
    and accessibility failures independently of how production behaves.
-4. **Expand Differences.** Review changed titles/headings, landmarks, forms,
-   empty links/headings, image dimensions and content structure.
+4. **Read Behaviour changes and Presentation and content changes.** Start with
+   the plain-language summaries. Expand Technical evidence for the recorded values.
 5. **Compare the screenshots.** Reference is production; candidate is the updated
-   site. Click a thumbnail to view the full-size capture.
+   site. Click a thumbnail to view the full-size capture, or open the highlighted
+   diff under Screenshot comparison when available.
 6. **Check transport restrictions and capture limits.** Blocked third-party
    requests, pending lazy images or a reached scrolling limit can affect evidence.
 
@@ -226,11 +231,21 @@ The report separates these outcomes:
 | Inconclusive | Access, transport or server problems prevented a reliable comparison. |
 | Accepted difference | An explicit config rule matched it; the evidence remains visible. |
 
-A difference count is **not a defect count**. For example, a shorter local image
-width with an unchanged height can expose stretching, but image-proportion defects
-are not yet a named automatic blocking check. Review the dimensions and paired
-screenshots. Likewise, an empty button destination may come from missing local
-content rather than a code change. Production is a reference, not proof of correctness.
+A difference count is **not a defect count**. A smaller image derivative can be
+intentional if its displayed size and quality remain suitable. A missing dropdown
+option may be intentional when the candidate hides empty terms. Confirm the reason
+before accepting it. Production is a reference, not proof of correctness.
+
+Missing or broken image sources can fail candidate health checks. Possible image
+distortion and document horizontal overflow are advisories: review their element
+selectors and highlighted screenshots. Intentional `object-fit: cover` or `contain`
+cropping is excluded from the distortion check; clipped carousel tracks alone do
+not establish document overflow. These checks also run at the errors level.
+
+Structural comparison needs exactly one captured `<main>` on each side. Missing
+or ambiguous regions produce a disclosed limitation, not a claim that every local
+structure was newly added. Location evidence for empty links is retained, but
+movement alone does not establish an empty-link change.
 
 ## 5. Fix, rerun and share
 
@@ -239,10 +254,15 @@ invocation creates a new `run-…` directory, so previous evidence remains avail
 There are no automatic retries within a run. Old run folders are not automatically
 removed; keep the evidence you need and delete older generated folders yourself.
 
-Zip the **whole run directory** to share it. It contains `index.html`, paired PNGs,
+Zip the **whole run directory** to share it. It contains `index.html`, `summary.md`, paired and diff PNGs where captured,
 `run.json`, `plan.json` and the discovery matrix. Sending the HTML file alone loses
 the screenshots. Keep sandbox baselines in `tests/__screenshots__/` separate from
 these generated reference/candidate captures.
+
+Use **Download Markdown summary** or open `summary.md` for a text summary suitable
+for a pull request or handover. It includes health failures, behaviour changes,
+accepted differences, limitations, screenshot guidance and coverage counts. Keep
+the HTML and raw evidence available for the complete review.
 
 For scripts and CI, exit codes mean:
 
@@ -267,21 +287,178 @@ All policies are disclosed. No date, random-content or text suppression is added
 automatically. Invalid regression keys and selectors fail rather than silently
 removing evidence.
 
+Expand **Accept this difference in future runs** beside a comparison finding for
+a JSON fragment. Merge its entry into your existing `regression.accept` array;
+do not replace the rest of your configuration. For example:
+
+```json
+"accept": ["forms on /making-a-difference/"]
+```
+
+This accepts all form differences matching that signature, across viewports and
+future runs, including future changes beyond the one reviewed. Substring matching
+can also match longer route names. It does not clear HTTP or other health failures.
+Remove the entry when you want that comparison reviewed again.
+
+For an intentionally removed route, a separate top-level `ignore.routes` entry
+excludes its checks altogether. Use that only when excluding the route is intended;
+accepting a status difference alone will not clear its candidate health failure.
+
 ## Other settings and limits
 
 | Regression setting | Default / purpose |
 | --- | --- |
-| `viewports` | Desktop 1280×900 and mobile 390×844; entries contain `name`, `width`, `height`. |
+| `viewports` | Custom sizes: entries contain `name`, `width`, `height`; preset names can be overridden. |
+| `defaultViewports` | New setup selects desktop, tablet and mobile. Existing explicit selections are preserved. |
+| `coverage` | `sampled`; choose `exhaustive` to add eligible published public content and public terms, including empty terms. CLI `--coverage` overrides it. |
+| `defaultLevel` | `full` unless set to `errors` or `core`; CLI `--level` overrides it. |
 | `navigationLimit` | 40 production-navigation links, bounded to 0–200; zero disables that supplement. |
 | `timeout` | 20,000 ms per operation, configurable from 1,000–120,000 ms. |
 | `criticalRoutes` | Extra paths to supplement the derived matrix, never replace it. |
 | `defaultReference` / `defaultCandidate` | `production` / `local`. |
 
-Forms are inspected but not submitted. Menu/filter interaction journeys and pixel
-equality gates are outside this first regression mode. ACF schema helps identify
+Forms are inspected but not submitted. Generic JavaScript interaction testing
+(including carousel controls, menus and filter operation) remains deferred.
+Screenshot diffs are advisory rather than pixel-equality gates. ACF schema helps identify
 representative surfaces but does not establish that every relationship or rendered
 component should be populated; complete ACF coverage is not claimed. The runner
 does not control WordPress/plugin side effects of serving GET requests or booting
 WP-CLI.
 
 For implementation details, see [Design & Internals](SHAKEDOWN-DESIGN.md).
+
+## Identifying accessibility elements
+
+Under **Accessibility: element details**, expand a rule and then an element.
+Each element includes its selector, escaped HTML, axe's explanation and check
+data. Contrast checks include measured and required ratios and foreground and
+background colours when axe provides them.
+
+The close-up outlines the element on a saved screenshot. Expand **Show location
+on full page** for context, or **Open original screenshot** for the unaltered
+image. Highlights are report overlays; they do not modify the tested page or
+visual baselines. Missing, hidden or ambiguous elements retain their details with
+an explicit explanation when a highlight cannot be captured.
+
+These are candidate accessibility findings, not proof of a change from production.
+Existing rule suppressions still apply and remain disclosed. Trial reports also
+include element evidence, retaining each retry attempt separately. Share the
+report directory with its images, not just the HTML file.
+
+Older reports cannot recover details that were not saved. Run Shakedown again
+with the updated version to capture this evidence.
+
+## Choose the testing level and viewports
+
+Start with application health, then expand the scope when you are ready:
+
+```sh
+npx shakedown regression --level=errors --viewports=desktop
+npx shakedown regression --level=core --viewports=desktop
+npx shakedown regression --level=full --viewports=desktop,tablet,mobile
+```
+
+| Level | What runs |
+| --- | --- |
+| `errors` | Candidate HTTP status, PHP/Twig error output, title presence, browser JS/console/request failures and broken/missing image sources; distortion and overflow advisories. No production requests, axe audit or paired comparison screenshots. |
+| `core` | Application checks plus serious/critical axe findings, status/redirect comparisons, form definitions and empty-link differences. Accessibility findings retain element highlights. |
+| `full` | Core checks plus all axe findings, title/heading/image/layout/structure differences, paired screenshots and advisory pixel diffs for matched pages. |
+
+Levels are cumulative in check coverage. Core changes are review priorities, not
+proof of a severe regression. Forms are inspected, never submitted; these levels
+do not claim to test interactive workflows. All profiles retain existing route,
+request and rule suppressions. Core reports disclose omitted minor/moderate axe
+findings; the underlying axe engine may still evaluate those rules.
+
+The **Review** filter narrows observations to broken candidate pages, serious
+accessibility issues, behaviour changes, presentation/content changes, inconclusive observations,
+or observations with no findings in the selected checks. **Viewport** further
+narrows the report. Filters do not change totals, exit status or saved evidence.
+
+Built-in viewport presets are desktop **1280×900**, tablet **768×1024** and mobile
+**390×844**. These are Chromium viewport dimensions, not device/touch emulation.
+Custom `viewports` entries override preset dimensions or add named sizes. Unknown
+or duplicate names fail early. Selection order is preserved; feeds run once.
+
+Save defaults inside the existing `regression` object:
+
+```json
+"defaultLevel": "core",
+"defaultViewports": ["desktop"]
+```
+
+CLI flags override defaults for one run without editing configuration. New
+`init` configurations select desktop, tablet and mobile. Existing configurations
+retain their explicit `defaultViewports` or `viewports` selection. With neither
+setting, all three presets are selected. The level defaults to full.
+
+Each command creates a separate report. Limited runs prominently show omitted
+checks; an errors-only pass does not mean the site passed full regression.
+Candidate-only errors runs use the derived route matrix without the production
+navigation supplement, and classify visited routes as `candidate-checked`.
+The errors level still uses the regression environment configuration.
+
+## Choose coverage or focus on a route
+
+Testing level determines **which checks** run. Coverage determines **which routes**
+are selected; viewports determine **which sizes** are captured. A full run is still
+sampled unless you change coverage.
+
+```sh
+npx shakedown regression --level=full --coverage=exhaustive
+```
+
+Exhaustive adds eligible published public singles/pages and public taxonomy terms,
+including empty terms which may have their own landing-page content. Route
+exclusions still apply. It does not exhaustively test author/date archives,
+pagination, arbitrary query combinations, remote-only content or interactions.
+Inventory failure makes an exhaustive run incomplete; it cannot silently claim
+complete coverage. Large inventories across three viewports can take considerably
+longer than a sampled run.
+
+The report lists known routes not selected and selected observations not visited.
+An unavailable inventory means omitted-route counts are unknown. A page absent
+from the tested observations has not passed.
+
+To investigate one page quickly:
+
+```sh
+npx shakedown regression --level=full --viewports=desktop --routes=/training-type/health-service-modelling-associates-programme-hsma/
+```
+
+For several pages, use `--routes=/about/,/contact/`. These are exact paths, not
+patterns. Quote the argument when a query contains shell characters, and encode
+literal commas as `%2C`. Shakedown selects only discovered, allowed routes;
+eligible inventoried content can be selected even when sampling would omit it.
+Unknown, ignored or unsafe paths fail explicitly. Production homepage discovery
+may still run to resolve navigation routes. The report discloses the focused
+selection; remove `--routes` to restore broader coverage.
+
+## Review repeated changes and screenshot diffs
+
+**Repeated changes** groups identical recorded changes and recognised title
+separator changes. It also groups source changes for images uniquely matched by
+alt text with equal rendered dimensions, and repeated landmark role/label changes.
+Ambiguous images are not guessed for grouping. Expand a group to open each route
+and viewport. Grouping does not suppress findings or decide whether they are
+improvements; other changes on the same pages still need review.
+
+Image summaries distinguish source changes at the same rendered size from changes
+in displayed dimensions. Equal dimensions alone do not prove identical content
+or quality. Use Technical evidence and **Images, links and forms: element details**
+for selectors, HTML excerpts and annotated captures. Captured groups can contain
+unchanged elements as well as changed ones.
+
+In full runs, **Screenshot comparison** shows reference/candidate dimensions,
+changed-area percentage and a link to a highlighted diff for matched pages.
+Pink pixels mark changes. The percentage uses the combined canvas: extra width
+or height counts as changed. A channel tolerance of 16/255 reduces tiny pixel
+noise. Font rendering, moving content and capture timing can still contribute.
+A large percentage is not automatically a severe regression, and zero does not
+prove that controls work.
+
+Diffs exceeding 16 million pixels, missing captures and decoding failures are
+disclosed as unavailable. Originals remain available when captured. Screenshot
+changes request review but do not themselves fail the process exit code or create
+baselines. Existing saved reports remain as generated; new runs use the updated
+report format from the installed Shakedown version.
