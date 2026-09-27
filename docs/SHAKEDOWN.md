@@ -169,7 +169,10 @@ At the end, open the printed `.shakedown/regression/run-…/index.html` path in 
 browser. Check coverage, review **Repeated changes**, then use **Route index** to
 open **Candidate correctness**, **Behaviour changes** and **Presentation and content
 changes**. Plain-language summaries precede Technical evidence. Full runs include
-paired screenshots and advisory highlighted pixel diffs for matched pages.
+paired screenshots and links to Playwright visual comparisons for matched pages.
+Repeated image advisories share one representative; element panels omit unchanged
+values and keep position-only image movement in layout evidence. Full arrays and
+omitted-route inventories remain available in `run.json`.
 This report is separate from `npx playwright show-report` and the ordinary Trial
 Report. Each rerun creates a new folder; share the whole folder so screenshots
 remain available.
@@ -298,6 +301,28 @@ Everything a baseline rests on is pinned to an exact version: the WordPress core
 Attached and sandbox runs write `.shakedown/trial-report.html` — a self-contained, client-readable page: summary numbers, a screenshot preview per route, a route × pass matrix, and failures in plain English (no stack traces). Attach it to a PR, or send it with a handover. The developer-grade report with traces lives separately in `playwright-report/`, and `run.json` beside it carries the same run for anything that wants to consume it.
 
 It reports what happened rather than the tidiest version of it. A route that failed and then passed on a retry is marked **flaky** with its first failure shown, not folded into the passes — on a shared server a retry absorbs a load transient, but the same signature can mean a race in your theme, and that's your call to make rather than the report's. Suppressed categories are listed. A run that checked nothing says so, instead of leaving the previous run's report sitting there looking current.
+
+## Save regression preferences in your theme
+
+Keep settings in the theme's `shakedown.config.json`. Merge these entries into its
+existing `regression` object, preserving the reference and candidate URLs:
+
+```json
+"defaultLevel": "full",
+"coverage": "exhaustive",
+"defaultViewports": ["desktop", "tablet", "mobile"],
+"accessibility": "off"
+```
+
+Then run `npx shakedown regression` from that directory. CLI flags override saved
+settings for one run. `--routes` is currently command-line only. Accessibility is
+on by default for core/full; the example opts out explicitly while retaining
+visual comparisons. To opt out just once, use `--accessibility=off`.
+
+Axe accessibility findings describe candidate health, not newly introduced
+regressions. The report discloses skipped audits. See the walkthrough for
+[accessibility and deployment review](SHAKEDOWN-REGRESSION.md#accessibility-and-deployment-review)
+and [all regression settings](SHAKEDOWN-REGRESSION.md#other-settings-and-limits).
 
 ## Additional configuration
 

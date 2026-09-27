@@ -209,13 +209,14 @@ Work through the report in this order:
 2. **Check coverage and Repeated changes.** Confirm that the route and viewport
    you care about were visited. Review repeated changes together, then use Route
    index to open individual page evidence.
-3. **Read Candidate correctness.** This lists HTTP/rendering, JavaScript, asset
-   and accessibility failures independently of how production behaves.
+3. **Check the route status and Candidate correctness when present.** Detailed
+   HTTP/rendering, JavaScript, asset and enabled accessibility failures appear
+   here. Routes without recorded health failures use a compact heading status.
 4. **Read Behaviour changes and Presentation and content changes.** Start with
-   the plain-language summaries. Expand Technical evidence for the recorded values.
+   the plain-language summaries. Expand Technical evidence for the concise delta; full arrays remain in `run.json`.
 5. **Compare the screenshots.** Reference is production; candidate is the updated
    site. Click a thumbnail to view the full-size capture, or open the highlighted
-   diff under Screenshot comparison when available.
+   Playwright comparison under Appearance changed when available.
 6. **Check transport restrictions and capture limits.** Blocked third-party
    requests, pending lazy images or a reached scrolling limit can affect evidence.
 
@@ -311,6 +312,7 @@ accepting a status difference alone will not clear its candidate health failure.
 | `viewports` | Custom sizes: entries contain `name`, `width`, `height`; preset names can be overridden. |
 | `defaultViewports` | New setup selects desktop, tablet and mobile. Existing explicit selections are preserved. |
 | `coverage` | `sampled`; choose `exhaustive` to add eligible published public content and public terms, including empty terms. CLI `--coverage` overrides it. |
+| `accessibility` | `"on"`; set `"off"` to skip axe while retaining the chosen comparison level. CLI `--accessibility` overrides it. |
 | `defaultLevel` | `full` unless set to `errors` or `core`; CLI `--level` overrides it. |
 | `navigationLimit` | 40 production-navigation links, bounded to 0–200; zero disables that supplement. |
 | `timeout` | 20,000 ms per operation, configurable from 1,000–120,000 ms. |
@@ -327,6 +329,32 @@ WP-CLI.
 
 For implementation details, see [Design & Internals](SHAKEDOWN-DESIGN.md).
 
+## Accessibility and deployment review
+
+Accessibility checks come from Deque's axe-core through `@axe-core/playwright`;
+Playwright supplies the browser. They check WCAG 2.0/2.1 A and AA rules on the
+candidate, not differences from production. A serious or critical rating describes
+accessibility impact and currently contributes a candidate health failure; it
+does not establish that this release introduced the issue or assign release risk.
+
+To review visual and structural regressions without an accessibility audit:
+
+```sh
+npx shakedown regression --level=full --accessibility=off
+```
+
+Save `"accessibility": "off"` inside `regression` for a project preference, or use
+`--accessibility=on` to override it for one run. The default is on for core/full;
+errors always omits the audit. The report explicitly lists accessibility as not
+checked when disabled. This switch affects regression mode only, not attached
+or sandbox passes. Alternatively, `ignore.a11yRules` narrows individual rules.
+
+For deployment review, distinguish candidate application failures, unexpected
+reference differences, intentional changes and existing accessibility debt.
+Review incomplete coverage and visual changes even when the exit code is zero.
+A passing selected suite is evidence for a release decision, not a guarantee
+that every route, browser or interaction works.
+
 ## Identifying accessibility elements
 
 Under **Accessibility: element details**, expand a rule and then an element.
@@ -334,9 +362,9 @@ Each element includes its selector, escaped HTML, axe's explanation and check
 data. Contrast checks include measured and required ratios and foreground and
 background colours when axe provides them.
 
-The close-up outlines the element on a saved screenshot. Expand **Show location
-on full page** for context, or **Open original screenshot** for the unaltered
-image. Highlights are report overlays; they do not modify the tested page or
+The close-up outlines the element on a saved screenshot. Use **Open original
+screenshot** for full-page context. A second full-page overlay is no longer
+embedded for every element. Highlights are report overlays; they do not modify the tested page or
 visual baselines. Missing, hidden or ambiguous elements retain their details with
 an explicit explanation when a highlight cannot be captured.
 
@@ -383,9 +411,16 @@ or duplicate names fail early. Selection order is preserved; feeds run once.
 Save defaults inside the existing `regression` object:
 
 ```json
-"defaultLevel": "core",
-"defaultViewports": ["desktop"]
+"defaultLevel": "full",
+"coverage": "exhaustive",
+"defaultViewports": ["desktop", "tablet", "mobile"],
+"accessibility": "off"
 ```
+
+Merge these settings into the theme's existing `shakedown.config.json`, inside
+`regression`, keeping its reference and candidate URLs. This example deliberately
+skips accessibility. Then run `npx shakedown regression` from the theme directory.
+`--routes` remains a command-line-only focus option; it has no saved config key.
 
 CLI flags override defaults for one run without editing configuration. New
 `init` configurations select desktop, tablet and mobile. Existing configurations
@@ -416,7 +451,9 @@ Inventory failure makes an exhaustive run incomplete; it cannot silently claim
 complete coverage. Large inventories across three viewports can take considerably
 longer than a sampled run.
 
-The report lists known routes not selected and selected observations not visited.
+The report counts known routes not selected and lists selected observations not
+visited. Download `run.json` for the complete omitted-content inventory; HTML
+retains the count and the command for exhaustive coverage.
 An unavailable inventory means omitted-route counts are unknown. A page absent
 from the tested observations has not passed.
 
@@ -443,19 +480,45 @@ Ambiguous images are not guessed for grouping. Expand a group to open each route
 and viewport. Grouping does not suppress findings or decide whether they are
 improvements; other changes on the same pages still need review.
 
-Image summaries distinguish source changes at the same rendered size from changes
-in displayed dimensions. Equal dimensions alone do not prove identical content
-or quality. Use Technical evidence and **Images, links and forms: element details**
-for selectors, HTML excerpts and annotated captures. Captured groups can contain
-unchanged elements as well as changed ones.
+Image evidence omits equal comparison values using duplicate-aware matching,
+so an insertion or reordering does not make every later image appear changed.
+The remaining values are **changed or unmatched**, not assumed one-to-one pairs.
+Source, alternative text, dimensions and rendering metadata remain reviewable.
+Position-only image movement is described as layout evidence and kept out of the
+image-content element panel; positions remain in raw JSON and visual comparisons.
+Empty-link movement alone is not a content change. Legacy or mismatched evidence
+arrays retain their full captured group with an explicit explanation.
 
-In full runs, **Screenshot comparison** shows reference/candidate dimensions,
-changed-area percentage and a link to a highlighted diff for matched pages.
-Pink pixels mark changes. The percentage uses the combined canvas: extra width
-or height counts as changed. A channel tolerance of 16/255 reduces tiny pixel
-noise. Font rendering, moving content and capture timing can still contribute.
-A large percentage is not automatically a severe regression, and zero does not
-prove that controls work.
+**Repeated image advisories** groups identical image-distortion findings using
+recorded messages, element targets, dimensions and suppression state. Each group
+shows one representative and affected-route/observation counts. Different cases
+remain separate. This reduces repeated footer-logo findings without changing
+page verdicts or deleting raw evidence. Distortion is still a candidate advisory:
+it does not yet classify a finding as new, unchanged, worsened or resolved
+relative to production.
+
+**Technical evidence** shows unmatched values rather than full arrays of unchanged
+members. Use `run.json` for complete evidence. Acceptance scope is explained once
+under **Accepting intentional differences**; each finding links there and supplies
+its config snippet. Transport panels are omitted when there are no restrictions,
+advisories or capture limitations; successful lazy-loading bookkeeping remains in
+raw evidence. These presentation changes do not alter checks, counts or exit codes.
+
+In full runs, **Appearance changed** links to Playwright's visual comparison
+viewer for matched pages. Inspect the reference, candidate and highlighted diff
+at a readable scale. Shakedown uses Playwright's `toMatchSnapshot` comparator
+with a colour threshold of 0.2 and zero allowed differing pixels. Current reports
+do not use the older changed-area percentage or 16/255 channel tolerance.
+Font rendering, moving content and capture timing can still contribute; a
+mismatch requests review rather than diagnosing its cause or severity.
+
+Screenshots retain the selected viewport width while capturing the full document
+height. Shakedown does not inject overflow styles or remove off-screen elements.
+Horizontal scrolling is checked separately. Large document dimensions or an
+element positioned outside the viewport alone do not establish a defect: root
+clipping and ancestor overflow clipping are considered before suggesting
+contributors. The raw JSON retains document/viewport widths, measured horizontal
+scroll range and element positions. Suggested contributors are not proven causes.
 
 Diffs exceeding 16 million pixels, missing captures and decoding failures are
 disclosed as unavailable. Originals remain available when captured. Screenshot

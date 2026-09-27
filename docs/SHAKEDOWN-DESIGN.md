@@ -204,7 +204,20 @@ The summary counts route/viewport observations, not unique paths or root causes.
 A complete execution can still exit 1 for health failures or 2 for unmatched or
 inconclusive evidence. Advisory differences alone can exit 0 and still require
 review. Regression reports are opened directly as HTML; the Playwright report
-viewer and ordinary Trial Report belong to the other execution path.
+viewer for the whole suite and ordinary Trial Report belong to the other execution
+path. Regression findings additionally link to a generated Playwright visual
+comparison viewer for each compared screenshot pair.
+
+Paired regression screenshots use the selected viewport width and full document
+height without changing page CSS. Playwright `toMatchSnapshot` compares disposable
+reference/candidate captures (threshold 0.2, zero allowed differing pixels); these
+captures never become approved baselines. Horizontal scroll range and clipped
+element evidence are assessed separately from the visible screenshot comparison.
+
+The regression `accessibility` setting accepts `"on"` (default) or `"off"`, with a
+CLI override. Disabling it leaves visual/structural comparison intact and discloses
+the omitted audit. Axe findings describe candidate accessibility health rather
+than a reference-to-candidate accessibility comparison.
 
 ACF's regression role is deliberately narrower than fixture generation. Locations
 can identify representative content surfaces, but optional relationships,
@@ -212,3 +225,27 @@ conditional groups and nested flexible content do not establish a universal
 field-to-DOM contract. A future read-only coverage inventory and explicit PressGang
 markup conventions can close that gap without duplicating Capstan or Muster.
 The initial release does not seed existing content or claim complete ACF coverage.
+
+
+### Compact regression report projections
+
+`lib/report-compact.mjs` builds reviewer-facing projections without mutating the
+saved run. Technical arrays cancel equal values as multisets; unmatched values
+are not guessed pairs. Image-content panels exclude position-only movement,
+while screenshot/layout comparisons and raw coordinates preserve it. Legacy
+captures without usable array mappings retain their full evidence group.
+
+Identical candidate image-aspect-ratio advisories share a representative by
+message, target, dimensions and suppression state. Route counts remain visible;
+raw findings, verdicts and exit status stay unchanged. The complete omitted-route
+inventory stays in JSON. Element evidence uses one close-up plus an original-image
+link, acceptance guidance is global, and empty transport panels are omitted.
+
+### Planned work versus current features
+
+Regression currently runs Chromium. Optional Firefox/WebKit coverage, richer
+regression traces and ARIA snapshot evaluation are roadmap items, not supported
+configuration options. See `docs/ROADMAP.md` in the Shakedown repository.
+The Shakedown repository's `docs/CI-DEPLOYMENT-SPEC.md` is a proposal for PR reports, gate policy, approvals and notifications. It does not
+add a shipped deployment gate, Slack integration or retained-reference importer.
+The existing reusable workflow remains the sandbox testing lane.
