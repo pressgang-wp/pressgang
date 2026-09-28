@@ -217,6 +217,13 @@ class ControllerFactory {
 	 */
 	public static function inferred_controller_names( string $candidate ): array {
 
+		// WordPress emits single-{type}- for drafts without a post slug.
+		// StudlyCase would collapse it onto the type controller and bypass
+		// the next candidate's configured Twig path. Explicit maps still apply.
+		if ( \str_starts_with( $candidate, 'single-' ) && \str_ends_with( $candidate, '-' ) ) {
+			return [];
+		}
+
 		$names = [ self::to_studly_case( $candidate ) . 'Controller' ];
 
 		if ( \str_starts_with( $candidate, 'archive-' ) ) {
