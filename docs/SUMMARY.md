@@ -24,6 +24,7 @@
 * [🧭 Bosun](BOSUN.md)
 * [🍪 Muster](MUSTER.md)
 * [🚢 Shakedown](SHAKEDOWN.md)
+  * [Regression testing](SHAKEDOWN-REGRESSION.md)
   * [🧭 Design & Internals](SHAKEDOWN-DESIGN.md)
 
 ## About

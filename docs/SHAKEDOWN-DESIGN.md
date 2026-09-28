@@ -6,7 +6,7 @@ description: >-
 
 # 🧭 Shakedown: Design & Internals
 
-The [Shakedown guide](SHAKEDOWN.md) tells you what to run. This page explains **why it's built this way** and **how each layer works** — useful when you're extending it, debugging it, or deciding whether to trust it.
+The [Shakedown guide](SHAKEDOWN.md) explains installation, initialisation and configuration. The [Regression testing walkthrough](SHAKEDOWN-REGRESSION.md) covers production comparisons and reviewing findings. This page explains **why it's built this way** and **how each layer works** — useful when you're extending it, debugging it, or deciding whether to trust it.
 
 ## 🤔 Design decisions
 
@@ -93,7 +93,7 @@ Because every one of those assertions is guarded on its header existing, an obse
 
 ### The passes — Playwright
 
-Shakedown runs Playwright with a packaged config; your theme directory is the *workspace* (reports, matrix, and baselines land there; a `tests/e2e/` dir joins the run as the journeys project). Pass 00 uses Playwright's [APIRequestContext](https://playwright.dev/docs/api-testing) (no browser — whole-site sweep in seconds); passes 01–03 drive Chromium. Failures retain a **trace** — open with `npx playwright show-trace <trace.zip>` for a time-travel replay ([trace viewer docs](https://playwright.dev/docs/trace-viewer)). The developer-grade HTML report lands in `playwright-report/` ([reporter docs](https://playwright.dev/docs/test-reporters)).
+For attached and sandbox tests, Shakedown runs Playwright with a packaged config; the invocation directory is the *workspace* (reports, matrix, and baselines land there; a `tests/e2e/` dir joins the run as the journeys project). Pass 00 uses Playwright's [APIRequestContext](https://playwright.dev/docs/api-testing) (no browser — whole-site sweep in seconds); passes 01–03 drive Chromium. Failures retain a **trace** — open with `npx playwright show-trace <trace.zip>` for a time-travel replay ([trace viewer docs](https://playwright.dev/docs/trace-viewer)). The developer-grade HTML report lands in `playwright-report/` ([reporter docs](https://playwright.dev/docs/test-reporters)).
 
 ### Accessibility — axe-core
 
@@ -127,3 +127,125 @@ The [SQLite Database Integration plugin](https://github.com/WordPress/sqlite-dat
 ### CI — the reusable workflow
 
 The [workflow](https://github.com/pressgang-wp/pressgang-shakedown/blob/main/.github/workflows/shakedown.yml) checks the theme out *into* a WordPress-shaped tree, then: [`shivammathur/setup-php`](https://github.com/shivammathur/setup-php) (PHP + WP-CLI + Composer), `wp core download --skip-content`, `composer install` in the theme (parent + plugins land via installer-paths; ACF Pro credentials via the `COMPOSER_AUTH` secret — [Composer auth docs](https://getcomposer.org/doc/articles/authentication-for-private-packages.md)), the workflow's pinned `muster-ref` fetched for fixtures, Capstan installed for the oracle, then `npx shakedown sandbox`. Composer and [Playwright browser caches](https://playwright.dev/docs/ci#caching-browsers) keep warm runs fast; the Trial Report uploads as an artifact either way.
+
+
+### Project setup
+
+`shakedown init` belongs to Shakedown rather than Capstan: it owns the runner's
+configuration and artifact ignore rules. `lib/init.mjs` runs before target
+resolution, discovers WordPress through a bounded set of paths, optionally reads
+its home URL through WP-CLI, and collects named regression origins. Interactive
+prompts and explicit flags feed the same validation. Non-interactive invocations
+never wait for input. Existing local or ancestor configs are preserved; relative
+site paths resolve against the config directory. Setup writes only project-local
+config and ignore files, never WordPress data, baselines or dependencies.
+
+Configuration discovery and the workspace are distinct. The nearest ancestor
+config supplies target settings; relative `sitePath` values are anchored there.
+Reports and consumer journeys remain anchored to the invocation directory, so
+users should run from the consumer project root even when the executable is
+installed through a local link to the Shakedown checkout.
+
+### Regression — one discovery matrix, two observed environments
+
+`lib/target.mjs` retains local discovery and resolves named reference/candidate
+origins from the same target's `regression` object. `lib/regression-plan.mjs`
+creates a separate versioned paired plan preserving kind, expected status, oracle
+metadata, exact path/query and provenance. It rejects foreign-origin and unsafe
+routes, with exclusions disclosed. Normal attached/sandbox matrices are not
+rewritten for remote origins.
+
+`lib/regression.mjs` runs Capstan/fallback derivation plus supplementary families
+inside a unique evidence directory. Production homepage navigation adds at most a
+configured number of same-origin links; it is explicitly a sample, not a full
+inventory. Sitemaps are deferred to avoid quietly growing a second crawler. Missing
+paths are never inferred solely from a sampled matrix. Shared paths compare
+directly; different redirect destinations remain unmatched.
+
+`lib/health.mjs` holds correctness checks shared with passes 00–02. Production
+parity is never a correctness assertion. Candidate health blocks, while semantic
+and visual differences begin advisory until narrower rules have field evidence.
+The existing sandbox baseline pass and consumer journeys are never collected by
+regression. Each route, viewport and side gets a fresh context, without retries;
+an unsuccessful capture cannot be overwritten by a successful retry.
+
+Before collecting evidence, bounded scrolling triggers lazy images, then returns
+to the top. The report records scroll limits and pending images; broken lazy
+images join health checks when the page bottom was reached. The runner owns
+SIGINT/SIGTERM handling so interruption preserves an explicit incomplete report
+before browser teardown.
+
+`lib/regression-browser.mjs` enforces anonymous GET-only requests below JavaScript.
+Redirects are inspected before following; top-level and iframe navigation cannot
+leave the selected origin. Non-GET requests, WebSockets, service workers, known
+administrative/action URLs and cookies/authorization are blocked. A separate HTTP
+context is necessary: Playwright's `route.fetch()` populates the browser cookie jar
+before a caller strips response cookies. An adversarial browser fixture proves
+that requests cannot bypass these restrictions. Blocked traffic is evidence because
+these restrictions can change the rendered page. As in attached mode, this does
+not control WordPress/plugin side effects of serving a GET or booting WP-CLI.
+
+Semantic evidence uses normalized title/H1, landmarks and positions, visible form
+schemas, image URLs and natural/displayed dimensions, empty links/headings and a
+basic content structure sequence. No CSS class is assumed to mean a card. Hidden
+form state and exact body text are excluded; dynamic selectors and accepted
+finding signatures require explicit disclosed policies. Different image identities
+or sampled posts are not relabelled as equivalent content.
+
+`lib/regression-report.mjs` writes a distinct Regression Report alongside JSON and
+runtime PNGs. Candidate health, differences, additions/removals, accepted differences
+and inconclusive/unmatched evidence stay separate. Reports are initialized before
+discovery, updated during work and retained per run; a failed discovery cannot
+leave an old all-clear looking current. Interstitial titles trigger an explicit
+incomplete result and stop additional route traffic. These heuristics are evidence
+of uncertainty, not proof that an access barrier exists.
+
+The summary counts route/viewport observations, not unique paths or root causes.
+A complete execution can still exit 1 for health failures or 2 for unmatched or
+inconclusive evidence. Advisory differences alone can exit 0 and still require
+review. Regression reports are opened directly as HTML; the Playwright report
+viewer for the whole suite and ordinary Trial Report belong to the other execution
+path. Regression findings additionally link to a generated Playwright visual
+comparison viewer for each compared screenshot pair.
+
+Paired regression screenshots use the selected viewport width and full document
+height without changing page CSS. Playwright `toMatchSnapshot` compares disposable
+reference/candidate captures (threshold 0.2, zero allowed differing pixels); these
+captures never become approved baselines. Horizontal scroll range and clipped
+element evidence are assessed separately from the visible screenshot comparison.
+
+The regression `accessibility` setting accepts `"on"` (default) or `"off"`, with a
+CLI override. Disabling it leaves visual/structural comparison intact and discloses
+the omitted audit. Axe findings describe candidate accessibility health rather
+than a reference-to-candidate accessibility comparison.
+
+ACF's regression role is deliberately narrower than fixture generation. Locations
+can identify representative content surfaces, but optional relationships,
+conditional groups and nested flexible content do not establish a universal
+field-to-DOM contract. A future read-only coverage inventory and explicit PressGang
+markup conventions can close that gap without duplicating Capstan or Muster.
+The initial release does not seed existing content or claim complete ACF coverage.
+
+
+### Compact regression report projections
+
+`lib/report-compact.mjs` builds reviewer-facing projections without mutating the
+saved run. Technical arrays cancel equal values as multisets; unmatched values
+are not guessed pairs. Image-content panels exclude position-only movement,
+while screenshot/layout comparisons and raw coordinates preserve it. Legacy
+captures without usable array mappings retain their full evidence group.
+
+Identical candidate image-aspect-ratio advisories share a representative by
+message, target, dimensions and suppression state. Route counts remain visible;
+raw findings, verdicts and exit status stay unchanged. The complete omitted-route
+inventory stays in JSON. Element evidence uses one close-up plus an original-image
+link, acceptance guidance is global, and empty transport panels are omitted.
+
+### Planned work versus current features
+
+Regression currently runs Chromium. Optional Firefox/WebKit coverage, richer
+regression traces and ARIA snapshot evaluation are roadmap items, not supported
+configuration options. See `docs/ROADMAP.md` in the Shakedown repository.
+The Shakedown repository's `docs/CI-DEPLOYMENT-SPEC.md` is a proposal for PR reports, gate policy, approvals and notifications. It does not
+add a shipped deployment gate, Slack integration or retained-reference importer.
+The existing reusable workflow remains the sandbox testing lane.

@@ -9,39 +9,189 @@ description: >-
 A shakedown cruise is the sea trial of a new vessel: take her out, push every system, find what rattles before the passengers board. Shakedown does the same for your theme — and because PressGang themes declare their post types, taxonomies, templates and menus in `config/`, it can **derive the whole test suite from the site itself**. You write nothing to get started.
 
 {% hint style="success" %}
-**The one-liner:** run `npx shakedown` inside your theme and, in about a minute, every page your site serves has been checked for errors, broken assets, and accessibility problems — in a real browser.
+**Start in the project you want to test.** Install Shakedown there, run `npx shakedown init`, then choose an attached, sandbox or regression run. Shakedown derives representative routes from your site; you do not maintain a separate generic URL list.
 {% endhint %}
 
 ## 🧰 Commands at a glance
 
-Shakedown runs in one of two **modes** — keep the distinction in mind, everything below builds on it:
+Shakedown runs in one of three **modes** — keep the distinction in mind, everything below builds on it:
 
 | Mode | Answers | Touches your database? |
 | --- | --- | --- |
 | **Attached** — your live local site | "Is my site healthy *right now*?" | Never writes — read-only GETs |
+| **Regression** — derived production/candidate comparison | "What changed, and is the candidate healthy?" | Anonymous GETs; browser writes blocked |
 | **Sandbox** — a disposable throwaway WordPress | "Is my *theme* correct, independent of content?" | N/A — its own database, vaporised after |
 
 | Command | Mode | What it does |
 | --- | --- | --- |
+| `npx shakedown init` | Setup | Creates project configuration and ignores generated reports |
 | `npx shakedown` | Attached | Runs every pass against your local site |
+| `npx shakedown regression --against=production --candidate=staging` | Regression | Compares derived paths and captures evidence at selected viewport sizes |
+| `npx shakedown regression --level=full --coverage=exhaustive` | Regression | Adds eligible public content and terms to the route plan |
+| `npx shakedown regression --level=full --viewports=desktop --routes=/about/` | Regression | Focuses on one discovered route at desktop size |
 | `npx shakedown matrix` | Attached | Prints the route matrix without running checks |
 | `npx shakedown sandbox` | Sandbox | Spins up the throwaway WordPress, seeds fixtures, runs every pass |
 | `npx shakedown sandbox --update-snapshots` | Sandbox | Re-mints visual regression baselines |
-| `npx shakedown ui` | Either | Playwright's UI / watch mode, for fixing failures |
-| `npx playwright show-report` | Either | Opens the last HTML report |
+| `npx shakedown ui` | Attached | Playwright's UI / watch mode for the ordinary passes |
+| `npx playwright show-report` | Attached / sandbox reports | Opens a Playwright HTML report, not a Regression Report |
 
-## 📦 Install
+## 📦 Installation and project setup
 
-You need Node 20+, [WP-CLI](https://wp-cli.org/), and your site running locally (any server — Herd, Valet, DDEV, MAMP… it's just a URL). From inside your theme:
+You need Node 20+, [WP-CLI](https://wp-cli.org/), and a local WordPress installation.
+Choose the directory that will own your tests and reports. For a complete site
+repository such as PenARC, use its project root. For a repository containing only
+a theme, use the theme root. Keep using that same directory for subsequent commands.
 
-{% code title="Terminal" %}
-```bash
-npm i -D @pressgang-wp/shakedown
-npx playwright install chromium   # once per machine
+```sh
+cd ~/Projects/your-site
 ```
-{% endcode %}
 
-## ⚡ First trial
+If it has no `package.json`, create a private one first:
+
+```sh
+npm init -y
+npm pkg set private=true --json
+```
+
+Install a Shakedown release containing the commands you want to use:
+
+```sh
+npm install --save-dev @pressgang-wp/shakedown
+npx playwright install chromium
+```
+
+Shakedown is a development dependency. `npx shakedown` invokes the installed CLI;
+it does not mean you should run tests inside the Shakedown source repository.
+Commit the package manifest and lockfile with your project.
+
+If your npm release does not yet contain `init` or `regression`, use a development
+checkout containing those commands. See [installing from a local checkout](SHAKEDOWN-REGRESSION.md#using-a-development-checkout).
+
+## 🛠️ Initialise with `shakedown init`
+
+From the project directory, run:
+
+```sh
+npx shakedown init
+```
+
+The command detects WordPress in the current directory, an ancestor, or common
+locations such as `wp`, `wordpress`, `web/wp`, `public/wp` and `public`. It asks you
+to confirm the WordPress directory and local URL, reading the URL through WP-CLI
+when possible. It then asks for a production URL and optional staging URL.
+Enter production to configure regression testing; leave it blank for attached-only
+setup. The WordPress directory must contain `wp-load.php`.
+
+`init` creates two project-level settings:
+
+- **`shakedown.config.json`** — the WordPress location, local URL and any regression
+  environments you supplied.
+- **`.gitignore`** — appends `/.shakedown/` so generated reports are not committed.
+  Existing ignore rules are preserved.
+
+Commit these changes. `init` does not install packages, start tests, migrate your
+database or create visual baselines. It will not overwrite a config or create a
+second one below an existing parent config. If configuration already exists, edit
+it directly and skip this step.
+
+For setup without prompts:
+
+```sh
+npx shakedown init --site-path=./wp --base-url=https://your-site.test \
+  --reference=https://example.org --staging=https://staging.example.org --yes
+```
+
+`--yes` accepts detected values without asking questions. Non-interactive runs
+never wait for input; supply missing values with flags. Use
+`npx shakedown init --help` to see all options. If WP-CLI cannot read the local URL,
+provide `--base-url`; ambiguous WordPress locations require a choice or `--site-path`.
+
+## ⚙️ How configuration works
+
+Shakedown looks for `shakedown.config.json` in the current directory, then its
+ancestors. A generated regression config looks like this:
+
+```json
+{
+  "sitePath": "wp",
+  "baseUrl": "https://your-site.test",
+  "regression": {
+    "references": { "production": "https://example.org" },
+    "candidates": {
+      "local": "https://your-site.test",
+      "staging": "https://staging.example.org"
+    }
+  }
+}
+```
+
+| Setting | Meaning |
+| --- | --- |
+| `sitePath` | Directory WP-CLI inspects. Relative paths resolve from the config file's directory. |
+| `baseUrl` | Public URL of that local installation; also the source origin for derived routes. |
+| `regression.references` | Named comparison references, usually production. |
+| `regression.candidates` | Named updated sites, usually local and optionally staging. |
+
+The config describes environments, not a hand-maintained test plan. Routes come
+from the theme and WordPress state. Regression URLs are plain HTTP(S) origins,
+without credentials or path prefixes. Selecting staging does not remove the need
+for local WordPress discovery.
+
+The **directory where you invoke Shakedown** is the workspace: reports, matrices,
+`tests/e2e/` journeys and `tests/__screenshots__/` baselines are resolved there.
+Finding a config in an ancestor does not move that workspace. Run consistently
+from your chosen project root to keep artifacts together.
+
+Attached testing can still work without a config when Shakedown finds
+`wp-config.php` in the current directory or an ancestor and WP-CLI can read the
+home URL. Regression needs named references and candidates. Additional settings
+for fixtures, search and suppressions are covered [below](#additional-configuration).
+
+## Regression tests
+
+Once the local site is running, its migrations are applied and uploads are
+available, compare it with production:
+
+```sh
+npx shakedown regression --against=production --candidate=local
+```
+
+Use `--candidate=staging` for a configured, anonymously reachable staging site.
+Password-protected staging is not currently supported. Both sites receive
+anonymous GET-only observations; no forms are submitted or baselines updated.
+
+Shakedown derives one route plan and captures matching paths at the selected viewport
+sizes. It reports candidate health separately from reference differences: a
+production defect does not make the candidate correct, and an intentional content
+change is not automatically a regression.
+
+At the end, open the printed `.shakedown/regression/run-…/index.html` path in your
+browser. Check coverage, review **Repeated changes**, then use **Route index** to
+open **Candidate correctness**, **Behaviour changes** and **Presentation and content
+changes**. Plain-language summaries precede Technical evidence. Full runs include
+paired screenshots and links to Playwright visual comparisons for matched pages.
+Repeated image advisories share one representative; element panels omit unchanged
+values and keep position-only image movement in layout evidence. Full arrays and
+omitted-route inventories remain available in `run.json`.
+This report is separate from `npx playwright show-report` and the ordinary Trial
+Report. Each rerun creates a new folder; share the whole folder so screenshots
+remain available.
+
+Levels (`errors`, `core`, `full`), coverage (`sampled`, `exhaustive`) and viewports
+are independent choices. Defaults are full checks, sampled routes and all three
+viewport presets unless your config selects otherwise. Use `--routes` for focused
+investigation of discovered paths. A full run does not imply exhaustive coverage
+or exercise JavaScript controls.
+
+The report provides acceptance snippets for intentional comparison differences
+and a downloadable `summary.md` for handovers. Acceptance policies are explicit
+and disclosed; they do not clear candidate health failures. Structural capture
+limitations and unavailable screenshot diffs remain visible for review.
+
+See [Regression testing](SHAKEDOWN-REGRESSION.md) for the complete walkthrough,
+result categories, exit codes and accepting intentional differences.
+
+## ⚡ Attached tests
 
 {% code title="Terminal" %}
 ```bash
@@ -49,7 +199,7 @@ npx shakedown
 ```
 {% endcode %}
 
-That's it — no config. Shakedown walks up from your theme to find `wp-config.php`, asks WP-CLI for the site URL, enumerates every route, and checks them all. Want to see the map before sailing?
+This uses your configured local site, or automatic discovery when no config is needed. The ordinary passes include visual baseline checks, so missing baselines can fail even when the page renders correctly. Want to inspect the derived routes first?
 
 {% code title="Terminal" %}
 ```bash
@@ -87,7 +237,7 @@ Feeds are checked by pass 00 only: a full-page screenshot or an axe audit of XML
 | **00 · Availability** | Right HTTP status · no PHP/Twig error output · a `<title>` present. HTTP-only, so it sweeps the whole site in seconds. |
 | **01 · Integrity** | Real Chromium render: no JS exceptions, console errors, failed requests, or broken images. |
 | **02 · Accessibility** | axe-core against WCAG 2.1 A/AA. Serious/critical violations fail; minor ones report as advisory. |
-| **03 · Visual** | Full-page screenshots against baselines committed in your theme. Skips politely until baselines exist. |
+| **03 · Visual** | Full-page screenshots against baselines committed in your theme. Missing baselines fail; only an explicit sandbox update writes them. |
 
 When something fails you get the exact URL, what was expected, and a Playwright trace to replay step-by-step. `npx shakedown ui` gives you watch mode while you fix it; `npx playwright show-report` browses the last run.
 
@@ -148,13 +298,36 @@ Everything a baseline rests on is pinned to an exact version: the WordPress core
 
 ## 📋 The Trial Report
 
-Every run writes `.shakedown/trial-report.html` — a self-contained, client-readable page: summary numbers, a screenshot preview per route, a route × pass matrix, and failures in plain English (no stack traces). Attach it to a PR, or send it with a handover. The developer-grade report with traces lives separately in `playwright-report/`, and `run.json` beside it carries the same run for anything that wants to consume it.
+Attached and sandbox runs write `.shakedown/trial-report.html` — a self-contained, client-readable page: summary numbers, a screenshot preview per route, a route × pass matrix, and failures in plain English (no stack traces). Attach it to a PR, or send it with a handover. The developer-grade report with traces lives separately in `playwright-report/`, and `run.json` beside it carries the same run for anything that wants to consume it.
 
 It reports what happened rather than the tidiest version of it. A route that failed and then passed on a retry is marked **flaky** with its first failure shown, not folded into the passes — on a shared server a retry absorbs a load transient, but the same signature can mean a race in your theme, and that's your call to make rather than the report's. Suppressed categories are listed. A run that checked nothing says so, instead of leaving the previous run's report sitting there looking current.
 
-## ⚙️ Configuration
+## Save regression preferences in your theme
 
-None required. An optional `shakedown.config.json` in the theme handles the exceptions:
+Keep settings in the theme's `shakedown.config.json`. Merge these entries into its
+existing `regression` object, preserving the reference and candidate URLs:
+
+```json
+"defaultLevel": "full",
+"coverage": "exhaustive",
+"defaultViewports": ["desktop", "tablet", "mobile"],
+"accessibility": "off"
+```
+
+Then run `npx shakedown regression` from that directory. CLI flags override saved
+settings for one run. `--routes` is currently command-line only. Accessibility is
+on by default for core/full; the example opts out explicitly while retaining
+visual comparisons. To opt out just once, use `--accessibility=off`.
+
+Axe accessibility findings describe candidate health, not newly introduced
+regressions. The report discloses skipped audits. See the walkthrough for
+[accessibility and deployment review](SHAKEDOWN-REGRESSION.md#accessibility-and-deployment-review)
+and [all regression settings](SHAKEDOWN-REGRESSION.md#other-settings-and-limits).
+
+## Additional configuration
+
+Merge optional settings into the config created by `init`; keep its site and
+regression settings. For example, these settings control search and sandbox fixtures:
 
 {% code title="shakedown.config.json" %}
 ```json
@@ -178,7 +351,7 @@ None required. An optional `shakedown.config.json` in the theme handles the exce
   dates and every relative Victuals/ACF date helper. Randomness and time are
   separate inputs.
 
-Your own journey tests (form submissions, checkout flows) live in the theme's `tests/e2e/` — when present, they run alongside the derived passes.
+Your own journey tests (form submissions, checkout flows) live in the workspace's `tests/e2e/` — when present, they run alongside the ordinary attached/sandbox passes. Regression mode does not run those journeys.
 
 ### 🔇 Suppressing what isn't yours
 
@@ -249,7 +422,10 @@ The sandbox also counts **PHP notices, warnings and deprecations on every reques
 
 ## 🧯 Troubleshooting
 
-* **"No WordPress found"** — run from inside the theme (or anywhere below `wp-config.php`), or set `sitePath` in the config.
+* **"No WordPress found"** — run `npx shakedown init` from the project root and supply `--site-path` if discovery is ambiguous. For an existing config, check that `sitePath` resolves to the intended installation.
+* **"Configuration already exists"** — setup is already present locally or in a parent directory. Edit that config; `init` deliberately does not overwrite or shadow it.
+* **Unknown `init` or `regression` command** — your installed Shakedown version lacks the feature. Use a version or [development checkout](SHAKEDOWN-REGRESSION.md#using-a-development-checkout) containing it.
+* **Cannot find the regression report** — open the `index.html` path printed by the regression command. `npx playwright show-report` opens the separate Playwright report.
 * **Pattern-library themes** — if your Twig partials live outside the theme (e.g. `patterns/templates/`), register that path with Timber via a `timber/locations` snippet, and map its assets with `sandbox.map`.
 * **Sandbox asset 404s** — that's `sandbox.map` territory: tell it what your server rewrites.
 * **WooCommerce / WPML / multisite** — attached mode only for now; their schemas need the MySQL lane (on the roadmap).
