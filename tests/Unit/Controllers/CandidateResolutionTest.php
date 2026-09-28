@@ -8,6 +8,9 @@ namespace Acme\Theme\Controllers {
 	if ( ! class_exists( 'Acme\\Theme\\Controllers\\GigsController' ) ) {
 		class GigsController extends \PressGang\Controllers\PostsController {}
 	}
+	if ( ! class_exists( 'Acme\\Theme\\Controllers\\VenueFeaturedController' ) ) {
+		class VenueFeaturedController extends \PressGang\Controllers\PostController {}
+	}
 	if ( ! class_exists( 'Acme\\Theme\\Controllers\\VenueController' ) ) {
 		class VenueController extends \PressGang\Controllers\PostController {}
 	}
@@ -88,6 +91,66 @@ namespace PressGang\Tests\Unit\Controllers {
 			$resolved = ControllerFactory::resolve_candidate_for( [ 'single-venue', 'single' ], [], self::CHILD );
 
 			$this->assertSame( 'Acme\\Theme\\Controllers\\VenueController', $resolved['controller'] );
+		}
+
+		/** @test */
+		public function empty_post_slug_preserves_type_template_mapping(): void {
+			$resolved = ControllerFactory::resolve_candidate_for(
+				[ 'single-venue-', 'single-venue', 'single' ],
+				[
+					'single-venue' => [
+						'controller' => \Acme\Theme\Controllers\VenueController::class,
+						'template'   => 'page/venue-single.twig',
+					],
+				],
+				self::CHILD
+			);
+
+			$this->assertSame( \Acme\Theme\Controllers\VenueController::class, $resolved['controller'] );
+			$this->assertSame( 'single-venue', $resolved['candidate'] );
+			$this->assertSame( 'page/venue-single.twig', $resolved['twig'] );
+		}
+
+		/** @test */
+		public function empty_post_slug_falls_through_to_type_convention(): void {
+			$resolved = ControllerFactory::resolve_candidate_for(
+				[ 'single-venue-', 'single-venue', 'single' ],
+				[],
+				self::CHILD
+			);
+
+			$this->assertSame( \Acme\Theme\Controllers\VenueController::class, $resolved['controller'] );
+			$this->assertSame( 'single-venue', $resolved['candidate'] );
+		}
+
+		/** @test */
+		public function empty_post_slug_can_still_be_explicitly_mapped(): void {
+			$resolved = ControllerFactory::resolve_candidate_for(
+				[ 'single-venue-', 'single-venue', 'single' ],
+				[
+					'single-venue-' => [
+						'controller' => \Acme\Theme\Controllers\VenueController::class,
+						'template'   => 'page/venue-preview.twig',
+					],
+				],
+				self::CHILD
+			);
+
+			$this->assertSame( \Acme\Theme\Controllers\VenueController::class, $resolved['controller'] );
+			$this->assertSame( 'single-venue-', $resolved['candidate'] );
+			$this->assertSame( 'page/venue-preview.twig', $resolved['twig'] );
+		}
+
+		/** @test */
+		public function named_post_convention_retains_specificity_over_type_mapping(): void {
+			$resolved = ControllerFactory::resolve_candidate_for(
+				[ 'single-venue-featured', 'single-venue', 'single' ],
+				[ 'single-venue' => \Acme\Theme\Controllers\VenueController::class ],
+				self::CHILD
+			);
+
+			$this->assertSame( \Acme\Theme\Controllers\VenueFeaturedController::class, $resolved['controller'] );
+			$this->assertSame( 'single-venue-featured', $resolved['candidate'] );
 		}
 
 		/** @test */
