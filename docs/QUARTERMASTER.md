@@ -774,6 +774,23 @@ Use `noFoundRows()` and `idsOnly()` when you don't need the full post objects or
 {% endtab %}
 {% endtabs %}
 
+### First match
+
+When you only need one post, `first()` returns it directly, or `null` when nothing matches. It runs on a copy of the builder with `posts_per_page = 1` and `no_found_rows = true`, and ignores any `paged` state, so the builder is left untouched.
+
+{% code title="Controller" lineNumbers="true" %}
+```php
+$landing = Quartermaster::posts('page')
+    ->status('publish')
+    ->wherePageTemplate('page-templates/landing.php')
+    ->first();
+```
+{% endcode %}
+
+{% hint style="info" %}
+Like `toArray()`, `first()` returns a `Timber\Post` when Timber is available and a `WP_Post` otherwise.
+{% endhint %}
+
 ---
 
 ## ↕️ Ordering
@@ -1440,6 +1457,7 @@ Field defaults to `slug`. Operator defaults to `IN`. Multiple `whereTax()` calls
 |---|---|
 | `get()` | `WP_Post[]` — execute and return posts |
 | `toArray()` | `array` — smart Timber/WP detection |
+| `first()` | `Timber\Post\|WP_Post\|null` — first match, builder unchanged |
 | `wpQuery()` | `WP_Query` — full query object |
 | `timber()` | `Timber\PostQuery` — Timber post collection |
 | `applyTo($query)` | `void` — modify existing `WP_Query` in place (for `pre_get_posts`) |
