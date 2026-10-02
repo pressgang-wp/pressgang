@@ -599,6 +599,21 @@ $q = Quartermaster::posts('event')
 {% endhint %}
 {% endtab %}
 
+{% tab title="Page template" %}
+{% code title="Controller" lineNumbers="true" %}
+```php
+// Pages assigned to a given page template
+$q = Quartermaster::posts('page')
+    ->status('publish')
+    ->wherePageTemplate('page-templates/landing.php');
+```
+{% endcode %}
+
+{% hint style="info" %}
+WordPress stores the selected template in the `_wp_page_template` meta key, so `wherePageTemplate()` is a shorthand for `whereMeta('_wp_page_template', $template)`. Pass the stored value: the template path relative to the theme, or the bare slug for file-less templates. Pages with no template selected store `default`.
+{% endhint %}
+{% endtab %}
+
 {% tab title="ACF serialized" %}
 {% code title="Controller" lineNumbers="true" %}
 ```php
@@ -1302,6 +1317,7 @@ Quartermaster automatically detects common gotchas:
 | `whereMetaDate($key, $operator, $value?, $format?)` | Date comparison (defaults to today) |
 | `whereMetaExists($key)` | Key exists check |
 | `whereMetaNotExists($key)` | Key does not exist check |
+| `wherePageTemplate($template)` | Match pages by `_wp_page_template` |
 | `whereMetaLikeAny($key, $values)` | Match serialized ACF fields |
 
 </details>
