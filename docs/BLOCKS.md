@@ -115,3 +115,48 @@ Block rendering should be a pure function of block context — no side effects, 
 * Keep block templates simple and focused.
 * Prefer Twig templates over inline PHP render callbacks.
 * For new UI elements, prefer blocks over shortcodes — they give editors a much better experience.
+
+## WordPress 7.1 and ACF v3 editor profiles
+
+WordPress 7.1 isolates the block canvas in an iframe. Legacy ACF v2 edit forms
+cannot rely on wp-admin assets inside that canvas. Upgrade ACF Pro to 6.8.9 or
+later before enabling these profiles (6.8.10 is the tested migration release).
+
+The parent default is disabled. A child theme can opt its theme-owned ACF blocks
+into v3 without changing every block.json by adding `config/block-editor.php`:
+
+```php
+return [
+    'acf_profile' => 'form',
+    'acf_blocks' => [
+        'acf/hero' => 'preview',
+        'acf/legacy' => null,
+    ],
+];
+```
+
+- `form`: a placeholder and Edit Block button; fields open in ACF's expanded editor.
+- `preview`: a live preview; fields open in the same expanded editor.
+- `null`: preserves a block's original metadata, including its ACF version.
+
+Profiles set WordPress `apiVersion` and ACF `blockVersion` to 3, replace legacy
+`mode: edit` with `mode: preview`, and default `hideFieldsInSidebar` to true.
+Explicit `renderPreview` and `hideFieldsInSidebar` values in block.json take
+precedence over profile defaults. Per-block config takes precedence over the
+theme profile. Render callbacks/templates, supports, field definitions and
+storage are not replaced. No profile is applied with ACF older than 6.8.9.
+
+The metadata filter only accepts files inside the active child or parent theme
+directories. Plugin blocks, core blocks and unrelated themes are unaffected.
+Profiles apply at registration time, before WordPress and ACF derive settings.
+
+This changes the editing workflow: v3 uses the expanded editor, not the old
+in-canvas field form. Editors still save/publish the page after finishing edits.
+The `form` placeholder is editor-only; frontend rendering continues as usual.
+
+Before release, verify representative repeaters, image fields, WYSIWYG fields,
+validation, duplicate blocks, draft save/reload and frontend output. Use ACF's
+official v2 iframe compatibility plugin only as a temporary migration bridge.
+
+See [ACF's migration explanation](https://www.advancedcustomfields.com/blog/acf-6-8-9-released/)
+and [block.json options](https://www.advancedcustomfields.com/resources/acf-block-configuration-via-block-json/).
