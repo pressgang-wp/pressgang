@@ -94,6 +94,32 @@ These config files map to a singleton Configuration class that registers the def
 
 `styles.php` Registers and enqueues styles.
 
+`preloads.php` Declares resources using WordPress's `wp_preload_resources`
+filter. The parent default is empty; a child theme opts in by returning a list
+of resource definitions. Existing plugin preloads are preserved. WordPress
+handles output, escaping, and duplicate suppression.
+
+```php
+<?php
+return [
+    [
+        'href' => get_stylesheet_directory_uri() . '/fonts/text.woff2',
+        'as' => 'font',
+        'type' => 'font/woff2',
+        'crossorigin' => 'anonymous',
+    ],
+];
+```
+
+Use WordPress's native resource attributes, including `media`, `imagesrcset`,
+`imagesizes`, and `fetchpriority` where appropriate. Preloads initiate downloads;
+include only resources needed early in the page. Font preloads should match the
+CSS font URL and include `crossorigin`. This does not register or enqueue scripts
+or stylesheets, and does not replace those configurations.
+
+[WordPress preload API](https://developer.wordpress.org/reference/hooks/wp_preload_resources/)
+
+
 `dequeue-styles.php` Handles dequeueing of unwanted styles.
 
 `deregister-scripts.php` Manages deregistration of unwanted scripts.
