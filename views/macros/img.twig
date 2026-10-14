@@ -3,7 +3,7 @@
 	{% set pathinfo = thumbnail.pathinfo %}
 	{% set sizes = sizes is iterable ? sizes|sort : sizes %}
 	{% set loading = attrs.loading|default('lazy') %}
-	{% set eager = loading == 'eager' %}
+	{% set native = attrs.native|default(false) or loading == 'eager' %}
 	{% set sizes_attr = attrs.sizes|default('100vw') %}
 
 	{% if pathinfo.extension|lower == 'svg' %}
@@ -25,7 +25,7 @@
 			{% if thumbnail.src %}
 				<source
 					type="image/webp"
-					{% if eager %}
+					{% if native %}
 						srcset="
 						{% for size in sizes %}
 							{% if size is iterable %}
@@ -66,7 +66,7 @@
 		{% set target_h = last_size is iterable ? last_size[1] : null %}
 		{% set width = (target_w / 2)|round %}
 		{% set loading = attrs.loading|default('lazy') %}
-		{% set eager = loading == 'eager' %}
+		{% set native = attrs.native|default(false) or loading == 'eager' %}
 		{% set sizes_attr = attrs.sizes|default('100vw') %}
 
 		{% if target_h %}
@@ -88,7 +88,7 @@
 			width="{{ width }}"
 			height="{{ height }}"
 			src="{{ (last_size is iterable ? thumbnail.src|resize(last_size[0], last_size[1]) : thumbnail.src|resize(last_size))|relative }}"
-			{% if eager %}
+			{% if native %}
 				srcset="
 				{% for size in sizes %}
 					{% if size is iterable %}
@@ -116,8 +116,8 @@
 				"
 			{% endif %}
 			alt="{{ alt|default(thumbnail.alt)|e('html_attr') }}"
-			{% if eager %}
-				loading="eager"
+			{% if native %}
+				loading="{{ attrs.loading|default('lazy')|e('html_attr') }}"
 			{% endif %}
 			decoding="{{ attrs.decoding|default('async')|e('html_attr') }}"
 			{% if attrs.fetchpriority is defined %}
@@ -137,8 +137,8 @@
 			src="{{ 'https://placehold.co/%dx%d/333/fff?text=%s'|format(w, h, alt|striptags|upper|url_encode) }}"
 			alt="{{ alt|default(thumbnail.alt)|e('html_attr') }}"
 			class="{{ class|e('html_attr') }}"
-			{% if attrs.loading|default('lazy') == 'eager' %}
-				loading="eager"
+			{% if attrs.native|default(false) or attrs.loading|default('lazy') == 'eager' %}
+				loading="{{ attrs.loading|default('lazy')|e('html_attr') }}"
 			{% endif %}
 			decoding="{{ attrs.decoding|default('async')|e('html_attr') }}"
 			{% if img_styles %}
