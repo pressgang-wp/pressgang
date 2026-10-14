@@ -1486,6 +1486,7 @@ Field defaults to `slug`. Operator defaults to `IN`. Multiple `whereTax()` calls
 | `page(int, int)` | Convenience pagination |
 | `orderBy(string, string)` | Order terms |
 | `whereMeta()` / `orWhereMeta()` | Term meta queries |
+| `whereMetaExists($key)` / `whereMetaNotExists($key)` | Valueless term metadata existence checks |
 | `get()` | Execute and return terms |
 | `timber()` | Execute and return `Timber\Term[]` |
 
@@ -1593,3 +1594,16 @@ strips percent-encoded characters; Quartermaster retains that established behavi
 See [PHP's urldecode guidance](https://www.php.net/manual/en/function.urldecode.php)
 and [WordPress sanitization](https://developer.wordpress.org/reference/functions/sanitize_text_field/).
 Use custom preparation only for a documented source encoding, before sanitization.
+
+### Term metadata existence
+
+```php
+$terms = Quartermaster::terms('category')
+    ->whereMetaExists('image')
+    ->whereMeta('image', '', '!=')
+    ->get();
+```
+
+Use `whereMetaNotExists('hidden')` to require an absent key. Both helpers omit
+`value` and `type`, matching the post builder. A generic `whereMeta()` call with
+`EXISTS` and a value (including null) does not have the same WordPress semantics.
